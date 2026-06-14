@@ -1,0 +1,87 @@
+{
+  "nav": {
+    "Home": "ראשי",
+    "About": "אודות",
+    "Projects": "פרויקטים",
+    "Contact": "צור קשר"
+  },
+  "home": {
+    "available": "זמין לעבודות Full Stack ואוטומציה",
+    "greeting": "היי, אני",
+    "name": "אביתר חזן",
+    "subtitle": "Full Stack Developer & Automation Builder",
+    "description": "אני בונה תוכנה פרקטית שמוכנה לעבודה: ממשקי React, שרתי Express, מערכות מבוססות Prisma, מונוריפוז, בסיסים לאפליקציות מובייל וכלים ששומרים על פרטיות. חשוב לי שריפו יהיה ברור, בדוק, מתועד ואמין.",
+    "viewProjects": "צפה בפרויקטים",
+    "contactMe": "צור קשר"
+  },
+  "about": {
+    "title1": "קצת",
+    "title2": "עליי",
+    "p1": "אני מתמקד בפיתוח מוצרי Full Stack עם דגש על ארכיטקטורה נקייה, חוויית משתמש נגישה ותהליכי פיתוח אמינים. הפרויקטים שלי מאורגנים כריפוזיטוריז ברורים עם סקריפטים, CI וטיפול זהיר בסודות.",
+    "p2": "הפורטפוליו הנוכחי כולל מונוריפוז ציבוריים, כלים שרצים בצד לקוח, מערכות לעולמות רפואיים ועמותות, מחולל סיסמאות ב-React Native ומוצרים עם Backend. אני אוהב להפוך היסטוריית פרויקטים מבולגנת לנכסי תוכנה ממוקדים ואמינים.",
+    "techStack": "הכלים והטכנולוגיות שלי",
+    "categories": {
+      "webMobile": "Web & Mobile",
+      "languages": "שפות תכנות",
+      "aiCv": "אוטומציה ו-AI",
+      "devops": "תשתיות ו-DevOps",
+      "databases": "מסדי נתונים",
+      "automation": "QA וולידציה",
+      "methodologies": "פיתוח מוצר"
+    }
+  },
+  "projects": {
+    "title1": "פרויקטים",
+    "title2": "נבחרים",
+    "code": "ריפו",
+    "liveDemo": "צפייה",
+    "items": {
+      "online_converter": {
+        "title": "ממיר נתונים מקוון",
+        "description": "כלי המרה שרץ בדפדפן בלבד עבור JSON, CSV, XML ו-YAML. כולל React, TypeScript, תמיכה בשפות, העתקה/הורדה ו-CI."
+      },
+      "emergency_protocol": {
+        "title": "פרוטוקול חירום אינטראקטיבי",
+        "description": "מונוריפו Full Stack לפרוטוקולי חירום עם לקוח React, שרת Express, Prisma, Google OAuth, תגובות ו-CI."
+      },
+      "lev_chedva": {
+        "title": "לב חדוה",
+        "description": "מונוריפו Full Stack פעיל עבור אתר, אפליקציית לקוח ושרת API של לב חדוה."
+      },
+      "password_gen": {
+        "title": "מחולל סיסמאות",
+        "description": "מונוריפו Privacy-first למחולל סיסמאות עם אפליקציית React Native וחבילת core לשימוש חוזר."
+      },
+      "test_yourself": {
+        "title": "Test Yourself",
+        "description": "מונוריפו לפלטפורמת לימוד ושאלונים עם לקוח React, שרת Express, סקריפטי ולידציה ו-CI."
+      },
+      "united_hatzalah": {
+        "title": "איחוד הצלה סניף שוהם",
+        "description": "מונוריפו Full Stack לאתר סניף ולממשק ניהול, עם React, Express, Prisma, Cloudinary ו-CI."
+      }
+    }
+  },
+  "contact": {
+    "title1": "בואו נבנה",
+    "title2": "משהו שימושי",
+    "subtitle": "אפשר לפנות אליי לגבי פרויקטי Full Stack, אוטומציה, סידור ריפוזיטוריז או ארכיטקטורת Frontend.",
+    "getInTouch": "צרו קשר",
+    "getInTouchDesc": "השאירו הודעה קצרה ואחזור אליכם.",
+    "emailLbl": "אימייל",
+    "form": {
+      "nameLbl": "שם מלא",
+      "namePh": "ישראל ישראלי",
+      "emailLbl": "כתובת אימייל",
+      "emailPh": "israel@example.com",
+      "msgLbl": "הודעה",
+      "msgPh": "ספרו לי על הפרויקט שלכם...",
+      "sendBtn": "שלח הודעה",
+      "successMsg": "ההודעה נשלחה בהצלחה!",
+      "errorMsg": "שליחת ההודעה נכשלה. אנא נסו שוב מאוחר יותר."
+    }
+  },
+  "footer": {
+    "copyright": "© {{year}} אביתר חזן. כל הזכויות שמורות."
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "nav": {
+    "Home": "Home",
+    "About": "About",
+    "Projects": "Projects",
+    "Contact": "Contact"
+  },
+  "home": {
+    "available": "Available for full-stack and automation work",
+    "greeting": "Hi, I'm",
+    "name": "Evyatar Hazan",
+    "subtitle": "Full Stack Developer & Automation Builder",
+    "description": "I build practical, production-ready software: React interfaces, Express APIs, Prisma-backed systems, monorepos, mobile app foundations, and privacy-conscious tools. I care about repositories that are clear, tested, documented, and easy to trust.",
+    "viewProjects": "View Projects",
+    "contactMe": "Contact Me"
+  },
+  "about": {
+    "title1": "About",
+    "title2": "Me",
+    "p1": "I focus on full-stack product development with a strong emphasis on clean architecture, accessible user experiences, and reliable developer workflows. My projects are organized as maintainable repositories with clear scripts, CI, and careful handling of secrets.",
+    "p2": "My current portfolio includes public monorepos, client-side utilities, medical and nonprofit tools, a React Native password generator, and several backend-driven products. I like turning messy project history into focused, credible software assets.",
+    "techStack": "Technical Stack",
+    "categories": {
+      "webMobile": "Web & Mobile",
+      "languages": "Programming Languages",
+      "aiCv": "Automation & AI",
+      "devops": "Infrastructure & DevOps",
+      "databases": "Databases",
+      "automation": "QA & Validation",
+      "methodologies": "Product Engineering"
+    }
+  },
+  "projects": {
+    "title1": "Selected",
+    "title2": "Projects",
+    "code": "Repository",
+    "liveDemo": "Live",
+    "items": {
+      "online_converter": {
+        "title": "Online Converter",
+        "description": "A browser-only conversion tool for JSON, CSV, XML, and YAML. Built with React, TypeScript, i18n, copy/download flows, and CI."
+      },
+      "emergency_protocol": {
+        "title": "Emergency Protocol Diagram",
+        "description": "A full-stack emergency protocol monorepo with a React client, Express API, Prisma, Google OAuth, comments, and CI."
+      },
+      "lev_chedva": {
+        "title": "Lev Hedva",
+        "description": "An active full-stack monorepo for the Lev Hedva website, client app, and backend API."
+      },
+      "password_gen": {
+        "title": "Password Generator",
+        "description": "A privacy-first password generator monorepo with a React Native mobile app and reusable core package."
+      },
+      "test_yourself": {
+        "title": "Test Yourself",
+        "description": "A full-stack learning and quiz platform monorepo with a React client, Express API, validation scripts, and CI."
+      },
+      "united_hatzalah": {
+        "title": "United Hatzalah Shoham Branch",
+        "description": "A full-stack branch website and admin API monorepo with React, Express, Prisma, Cloudinary integration, and CI."
+      }
+    }
+  },
+  "contact": {
+    "title1": "Let's build",
+    "title2": "something useful",
+    "subtitle": "Reach out for full-stack projects, automation workflows, repository cleanup, or frontend architecture work.",
+    "getInTouch": "Get in touch",
+    "getInTouchDesc": "Send a short note and I'll get back to you.",
+    "emailLbl": "Email",
+    "form": {
+      "nameLbl": "Name",
+      "namePh": "John Doe",
+      "emailLbl": "Email",
+      "emailPh": "john@example.com",
+      "msgLbl": "Message",
+      "msgPh": "Tell me about your project...",
+      "sendBtn": "Send Message",
+      "successMsg": "Message sent successfully!",
+      "errorMsg": "Failed to send message. Please try again later."
+    }
+  },
+  "footer": {
+    "copyright": "© {{year}} Evyatar Hazan. All rights reserved."
+  }
+}
