@@ -31,6 +31,30 @@ if (typeof Element !== 'undefined' && !Element.prototype.scrollIntoView) {
   Element.prototype.scrollIntoView = () => {};
 }
 
+class IntersectionObserverMock implements IntersectionObserver {
+  readonly root = null;
+  readonly rootMargin = '';
+  readonly thresholds = [];
+
+  disconnect() {}
+  observe() {}
+  takeRecords(): IntersectionObserverEntry[] {
+    return [];
+  }
+  unobserve() {}
+}
+
+if (typeof window !== 'undefined' && !window.IntersectionObserver) {
+  Object.defineProperty(window, 'IntersectionObserver', {
+    value: IntersectionObserverMock,
+    configurable: true,
+  });
+  Object.defineProperty(globalThis, 'IntersectionObserver', {
+    value: IntersectionObserverMock,
+    configurable: true,
+  });
+}
+
 afterEach(() => {
   cleanup();
 });

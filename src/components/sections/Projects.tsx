@@ -1,9 +1,10 @@
 import Card from '../Card';
-import { ArrowUpRight, CheckCircle2, Github, Lock, MonitorSmartphone, PanelsTopLeft, Route, Shield, Workflow } from 'lucide-react';
+import { ArrowUpRight, CheckCircle2, Github, Lock, MonitorSmartphone, PanelsTopLeft, Route, Shield, UtensilsCrossed, Workflow } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { projects, type Project } from '../../data/profile';
 
 const visualIcons: Record<Project['visual'], typeof PanelsTopLeft> = {
+  catering: UtensilsCrossed,
   converter: PanelsTopLeft,
   protocol: Route,
   nonprofit: Workflow,
@@ -109,9 +110,10 @@ const Projects = () => {
                     href={project.liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded-lg border border-primary-200 bg-primary-50 px-4 py-3 text-sm font-bold text-primary-700 transition-colors hover:bg-primary-100 dark:border-primary-900 dark:bg-primary-950/40 dark:text-primary-300"
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-primary-200 bg-primary-50 px-4 py-3 text-sm font-bold text-primary-700 transition-colors hover:bg-primary-100 dark:border-primary-900 dark:bg-primary-950/40 dark:text-primary-300"
                     aria-label={t('projects.liveDemo')}
                   >
+                    <span className="hidden sm:inline">{t('projects.liveDemo')}</span>
                     <ArrowUpRight className="h-4 w-4" />
                   </a>
                 ) : (

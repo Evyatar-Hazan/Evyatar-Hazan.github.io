@@ -32,6 +32,16 @@ describe('App', () => {
     });
   });
 
+  it('renders the Nis Boutique Catering project with its live link', async () => {
+    render(<App />);
+
+    expect(await screen.findByText('projects.items.nis_boutique.title')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'projects.liveDemo' })).toHaveAttribute(
+      'href',
+      'https://nisboutiquecatering.com/'
+    );
+  });
+
   it('locks and unlocks body scroll when mobile menu toggles', () => {
     render(<App />);
 

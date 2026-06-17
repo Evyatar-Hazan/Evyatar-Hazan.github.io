@@ -6,35 +6,35 @@
     "Contact": "Contact"
   },
   "home": {
-    "available": "Available for full-stack, automation, and repository cleanup work",
+    "available": "Available for web products, full-stack systems, and automation",
     "greeting": "Hi, I'm",
     "name": "Evyatar Hazan",
-    "subtitle": "Full Stack Developer building reliable, clean, production-ready products",
-    "description": "I connect sharp frontends, structured backends, and developer workflows that hold up over time. This site highlights real projects, public repositories, CI, monorepos, and tools that show how I think about product, code, and trust.",
+    "subtitle": "Full Stack Developer turning business needs into stable digital products",
+    "description": "I build product websites, admin systems, and practical tools end to end: clear UX, polished frontends, structured backends, and validation workflows that make future development safer.",
     "viewProjects": "View projects",
     "contactMe": "Contact me",
     "whatsappCta": "Talk on WhatsApp",
     "whatsappText": "Hi Evyatar, I saw your website and would like to talk about a project.",
     "proof": {
       "repos": {
-        "title": "6 selected projects",
-        "description": "Public products and tools across React, TypeScript, backend, mobile, and CI."
+        "title": "7 selected projects",
+        "description": "Live websites, monorepos, and public tools across React, TypeScript, backend, and mobile."
       },
       "delivery": {
-        "title": "Built for trust",
-        "description": "Clean repositories, validation scripts, careful secrets handling, and checkable documentation."
+        "title": "Structured delivery",
+        "description": "Short discovery, phased implementation, validation, deployment, and documentation for future maintenance."
       },
       "systems": {
-        "title": "Real full stack",
-        "description": "Interfaces, APIs, Prisma, OAuth, Cloudinary, React Native, and monorepos."
+        "title": "Broad product range",
+        "description": "Business websites, admin systems, APIs, Prisma, OAuth, Cloudinary, and React Native."
       }
     }
   },
   "about": {
     "title1": "About",
     "title2": "Me",
-    "p1": "I focus on full-stack product development with a strong emphasis on clean architecture, accessible user experiences, and reliable developer workflows. My projects are organized as maintainable repositories with clear scripts, CI, and careful handling of secrets.",
-    "p2": "My current portfolio includes public monorepos, client-side utilities, medical and nonprofit tools, a React Native password generator, and several backend-driven products. I like turning messy project history into focused, credible software assets.",
+    "p1": "I focus on web and full-stack products that remain maintainable after launch: clear code structure, accessible user experiences, validation scripts, and deployment flows that teams can rely on.",
+    "p2": "My work ranges from live business websites and public monorepos to client-side tools, nonprofit and team systems, mobile apps, and backend-driven products. Across projects, I focus on the right connection between business need, user experience, and technical execution.",
     "techStack": "Technical Stack",
     "categories": {
       "webMobile": "Web & Mobile",
@@ -47,73 +47,81 @@
     }
   },
   "projects": {
-    "eyebrow": "Evidence, not just a list",
+    "eyebrow": "Selected work",
     "title1": "Selected",
     "title2": "Projects",
-    "subtitle": "Each card shows the problem, the solution, my role, and the project status. Live links only appear when they are verified, keeping the portfolio credible.",
-    "code": "Repository",
+    "subtitle": "Work that combines product thinking, technical execution, and user experience. Some projects are live websites, others are public systems and tools, and each one was built around a real need.",
+    "code": "Code",
     "liveDemo": "Live",
     "noLive": "No verified live link yet",
-    "problem": "Problem:",
-    "solution": "Solution:",
-    "role": "My role:",
+    "problem": "Challenge:",
+    "solution": "Built:",
+    "role": "Contribution:",
     "items": {
+      "nis_boutique": {
+        "title": "Nis Boutique Catering",
+        "description": "A conversion-focused boutique catering website from Beitar Illit, built around WhatsApp, SEO, and RTL UX.",
+        "status": "Live",
+        "problem": "A local service business needed a site that communicates quality, earns trust, and drives inquiries without relying on pricing or heavy content.",
+        "solution": "A Hebrew landing page with clear messaging hierarchy, service categories, gallery, FAQ, persistent CTA, and custom-domain deployment.",
+        "role": "Discovery, copy, frontend design, motion, SEO, baseline accessibility, and Vercel deployment."
+      },
       "online_converter": {
         "title": "Online Converter",
-        "description": "A browser-only conversion tool for JSON, CSV, XML, and YAML.",
+        "description": "A client-side conversion tool for JSON, CSV, XML, and YAML.",
         "status": "Active",
-        "problem": "Users need to convert data without uploading files to an external server.",
-        "solution": "A React and TypeScript interface with i18n, copy, download, and client-side validation.",
-        "role": "Architecture, frontend, UX flows, and CI scripts."
+        "problem": "Developers and technical users need fast data conversion without sending sensitive content to an external server.",
+        "solution": "A React and TypeScript interface with i18n, client-side validation, copy, download, and a short task flow.",
+        "role": "Product planning, frontend architecture, interaction flow, and CI scripts."
       },
       "emergency_protocol": {
         "title": "Emergency Protocol Diagram",
-        "description": "A full-stack monorepo for managing and discussing emergency protocols.",
+        "description": "A full-stack system for presenting, managing, and discussing emergency protocols.",
         "status": "Full stack",
         "problem": "Complex protocols are hard to understand, update, and share across stakeholders.",
-        "solution": "A React client, Express API, Prisma, Google OAuth, comments, and validation flow.",
-        "role": "Monorepo structure, API, authentication, UI, and test infrastructure."
+        "solution": "A React client, Express API, Prisma, Google OAuth, comments, and a structured validation flow.",
+        "role": "Monorepo structure, API, authentication, user interface, and test infrastructure."
       },
       "lev_chedva": {
         "title": "Lev Hedva",
-        "description": "A monorepo for the Lev Hedva website, client app, and backend API.",
+        "description": "Web and API infrastructure for a nonprofit, including website, client app, and server.",
         "status": "Monorepo",
         "problem": "A nonprofit digital property needs to be clear, maintainable, and ready to grow.",
-        "solution": "A separated website, client, and backend with shared infrastructure and organized scripts.",
-        "role": "Repository organization, frontend layer, API, and developer workflows."
+        "solution": "A separated website, client app, and backend with shared infrastructure and consistent scripts.",
+        "role": "Repository organization, frontend layer, API, and day-to-day developer workflows."
       },
       "password_gen": {
         "title": "Password Generator",
-        "description": "A privacy-first monorepo with a React Native app and reusable core package.",
+        "description": "A privacy-first password generator with a React Native app and reusable core package.",
         "status": "Privacy-first",
         "problem": "A basic security tool must be simple, local, and independent of external services.",
-        "solution": "A reusable core package and mobile app that generate passwords on-device.",
-        "role": "Core logic, package structure, React Native, and privacy-first design."
+        "solution": "A reusable core package and mobile app that generate passwords locally on the device.",
+        "role": "Core logic, package structure, React Native, and privacy-led product decisions."
       },
       "test_yourself": {
         "title": "Test Yourself",
-        "description": "A learning and quiz platform with a React client and Express API.",
+        "description": "A practice and quiz platform with a React client and Express API.",
         "status": "Learning",
         "problem": "Practice systems need to be easy to extend and validate without breaking existing content.",
         "solution": "A TypeScript monorepo with client, API, validation scripts, and CI.",
-        "role": "Product structure, frontend, backend, and validation flow."
+        "role": "Product structure, frontend, backend, and testing flow."
       },
       "united_hatzalah": {
         "title": "United Hatzalah Shoham Branch",
-        "description": "A branch website and admin interface with React, Express, Prisma, and Cloudinary.",
+        "description": "A nonprofit branch website and admin interface with React, Express, Prisma, and Cloudinary.",
         "status": "Nonprofit",
         "problem": "A local branch needs a reliable website and admin workflow without code changes for every update.",
-        "solution": "A full-stack system with media, database models, API, and structured deployment.",
-        "role": "Frontend, backend, data models, media uploads, and CI."
+        "solution": "A full-stack system with media management, database models, API, and structured deployment.",
+        "role": "Frontend, backend, data models, media uploads, and CI workflows."
       }
     }
   },
   "contact": {
-    "title1": "Let's build",
-    "title2": "something useful",
-    "subtitle": "Reach out for full-stack products, automation workflows, repository cleanup, frontend products, or technical credibility work.",
-    "getInTouch": "The fastest way to start",
-    "getInTouchDesc": "WhatsApp is the most direct channel. Email and LinkedIn are available too.",
+    "title1": "Have a product",
+    "title2": "that needs building?",
+    "subtitle": "I can help with business websites, full-stack systems, automation, development workflow improvements, or sharpening an existing product.",
+    "getInTouch": "Start with a short conversation",
+    "getInTouchDesc": "Send a few lines about the need, the current state, and what should happen next. If it fits, we can move into a short scope and work plan.",
     "whatsappLbl": "WhatsApp",
     "whatsappDesc": "Open a direct project conversation",
     "whatsappText": "Hi Evyatar, I saw your website and would like to talk about a project.",

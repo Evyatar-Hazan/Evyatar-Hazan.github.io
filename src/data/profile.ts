@@ -10,11 +10,18 @@ export type Project = {
   id: string;
   tags: string[];
   githubUrl: string;
-  visual: 'converter' | 'protocol' | 'nonprofit' | 'mobile' | 'learning' | 'branch';
+  visual: 'catering' | 'converter' | 'protocol' | 'nonprofit' | 'mobile' | 'learning' | 'branch';
   liveUrl?: string;
 };
 
 export const projects: Project[] = [
+  {
+    id: 'nis_boutique',
+    tags: ['React', 'TypeScript', 'Vite', 'Vercel', 'SEO', 'RTL'],
+    githubUrl: 'https://github.com/Evyatar-Hazan/nis-boutique-catering',
+    liveUrl: 'https://nisboutiquecatering.com/',
+    visual: 'catering',
+  },
   {
     id: 'online_converter',
     tags: ['React', 'TypeScript', 'Vite', 'i18n', 'CI'],
