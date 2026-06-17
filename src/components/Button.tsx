@@ -8,7 +8,7 @@ interface ButtonProps extends HTMLMotionProps<"button"> {
 }
 
 const Button = ({ children, variant = 'primary', className = '', ...props }: ButtonProps) => {
-  const baseStyles = "px-6 py-3 rounded-full font-medium transition-all duration-300 flex items-center justify-center gap-2";
+  const baseStyles = "px-6 py-3 rounded-full font-medium transition-all duration-300 flex items-center justify-center gap-2 disabled:pointer-events-none disabled:opacity-60";
   
   const variants = {
     primary: "bg-primary-600 text-white hover:bg-primary-500 shadow-lg shadow-primary-600/20",

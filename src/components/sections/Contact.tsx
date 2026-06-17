@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Send } from 'lucide-react';
+import { CheckCircle2, Linkedin, Mail, MessageCircle, Send, XCircle } from 'lucide-react';
 import Button from '../Button';
 import { useTranslation } from 'react-i18next';
+import { profileLinks } from '../../data/profile';
 
 const Contact = () => {
   const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -14,6 +16,7 @@ const Contact = () => {
     const formData = new FormData(form);
     
     setIsSubmitting(true);
+    setFormStatus('idle');
     try {
       const response = await fetch("https://formsubmit.co/ajax/evyatarhazan3.14@gmail.com", {
         method: "POST",
@@ -24,13 +27,13 @@ const Contact = () => {
       });
       
       if (response.ok) {
-        alert(t('contact.form.successMsg'));
+        setFormStatus('success');
         form.reset();
       } else {
-        alert(t('contact.form.errorMsg'));
+        setFormStatus('error');
       }
     } catch {
-      alert(t('contact.form.errorMsg'));
+      setFormStatus('error');
     } finally {
       setIsSubmitting(false);
     }
@@ -54,7 +57,7 @@ const Contact = () => {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-10 md:gap-12 bg-white/70 dark:bg-neutral-900/40 p-5 sm:p-8 md:p-12 rounded-3xl border border-neutral-200 dark:border-neutral-800 backdrop-blur-xl shadow-2xl dark:shadow-none transition-colors duration-500">
+        <div className="grid md:grid-cols-2 gap-10 md:gap-12 bg-white/80 dark:bg-neutral-900/40 p-5 sm:p-8 md:p-12 rounded-lg border border-neutral-200 dark:border-neutral-800 backdrop-blur-xl shadow-2xl dark:shadow-none transition-colors duration-500">
           <div className="flex flex-col justify-center">
             <div className="mb-10">
               <h3 className="text-2xl font-bold text-neutral-900 dark:text-white mb-2 transition-colors duration-500">{t('contact.getInTouch')}</h3>
@@ -62,6 +65,21 @@ const Contact = () => {
             </div>
             
             <div className="space-y-6">
+              <a
+                href={`${profileLinks.whatsapp}?text=${encodeURIComponent(t('contact.whatsappText'))}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-4 rounded-lg border border-primary-200 bg-primary-50 p-4 text-primary-800 transition-colors hover:border-primary-300 hover:bg-primary-100 dark:border-primary-900/70 dark:bg-primary-950/30 dark:text-primary-200 dark:hover:bg-primary-950/50"
+              >
+                <div className="p-3 sm:p-4 bg-white dark:bg-neutral-900 rounded-full text-primary-600 dark:text-primary-400 shrink-0">
+                  <MessageCircle className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold">{t('contact.whatsappLbl')}</p>
+                  <p className="text-base text-primary-700 dark:text-primary-300">{t('contact.whatsappDesc')}</p>
+                </div>
+              </a>
+
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-neutral-700 dark:text-neutral-300 transition-colors duration-500">
                 <div className="p-3 sm:p-4 bg-primary-50 dark:bg-neutral-800/50 rounded-full text-primary-600 dark:text-primary-400 shrink-0">
                   <Mail className="w-6 h-6" />
@@ -70,6 +88,18 @@ const Contact = () => {
                   <p className="text-sm text-neutral-500 font-medium transition-colors duration-500">{t('contact.emailLbl')}</p>
                   <a href="mailto:evyatarhazan3.14@gmail.com" className="text-base sm:text-lg hover:text-primary-600 dark:hover:text-primary-400 transition-colors break-all">
                     evyatarhazan3.14@gmail.com
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-neutral-700 dark:text-neutral-300 transition-colors duration-500">
+                <div className="p-3 sm:p-4 bg-primary-50 dark:bg-neutral-800/50 rounded-full text-primary-600 dark:text-primary-400 shrink-0">
+                  <Linkedin className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-sm text-neutral-500 font-medium transition-colors duration-500">{t('contact.linkedinLbl')}</p>
+                  <a href={profileLinks.linkedin} target="_blank" rel="noopener noreferrer" className="text-base sm:text-lg hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                    Evyatar Hazan
                   </a>
                 </div>
               </div>
@@ -111,9 +141,23 @@ const Contact = () => {
               />
             </div>
             <Button type="submit" className="w-full group" disabled={isSubmitting}>
-              {isSubmitting ? '...' : t('contact.form.sendBtn')}
+              {isSubmitting ? t('contact.form.sending') : t('contact.form.sendBtn')}
               <Send className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 rtl:group-hover:-translate-x-1 rtl:rotate-180" />
             </Button>
+            <div aria-live="polite" className="min-h-7">
+              {formStatus === 'success' && (
+                <p className="flex items-center gap-2 text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                  <CheckCircle2 className="h-4 w-4" />
+                  {t('contact.form.successMsg')}
+                </p>
+              )}
+              {formStatus === 'error' && (
+                <p className="flex items-center gap-2 text-sm font-medium text-red-600 dark:text-red-400">
+                  <XCircle className="h-4 w-4" />
+                  {t('contact.form.errorMsg')}
+                </p>
+              )}
+            </div>
           </form>
         </div>
       </div>

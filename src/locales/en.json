@@ -6,13 +6,29 @@
     "Contact": "Contact"
   },
   "home": {
-    "available": "Available for full-stack and automation work",
+    "available": "Available for full-stack, automation, and repository cleanup work",
     "greeting": "Hi, I'm",
     "name": "Evyatar Hazan",
-    "subtitle": "Full Stack Developer & Automation Builder",
-    "description": "I build practical, production-ready software: React interfaces, Express APIs, Prisma-backed systems, monorepos, mobile app foundations, and privacy-conscious tools. I care about repositories that are clear, tested, documented, and easy to trust.",
-    "viewProjects": "View Projects",
-    "contactMe": "Contact Me"
+    "subtitle": "Full Stack Developer building reliable, clean, production-ready products",
+    "description": "I connect sharp frontends, structured backends, and developer workflows that hold up over time. This site highlights real projects, public repositories, CI, monorepos, and tools that show how I think about product, code, and trust.",
+    "viewProjects": "View projects",
+    "contactMe": "Contact me",
+    "whatsappCta": "Talk on WhatsApp",
+    "whatsappText": "Hi Evyatar, I saw your website and would like to talk about a project.",
+    "proof": {
+      "repos": {
+        "title": "6 selected projects",
+        "description": "Public products and tools across React, TypeScript, backend, mobile, and CI."
+      },
+      "delivery": {
+        "title": "Built for trust",
+        "description": "Clean repositories, validation scripts, careful secrets handling, and checkable documentation."
+      },
+      "systems": {
+        "title": "Real full stack",
+        "description": "Interfaces, APIs, Prisma, OAuth, Cloudinary, React Native, and monorepos."
+      }
+    }
   },
   "about": {
     "title1": "About",
@@ -31,54 +47,89 @@
     }
   },
   "projects": {
+    "eyebrow": "Evidence, not just a list",
     "title1": "Selected",
     "title2": "Projects",
+    "subtitle": "Each card shows the problem, the solution, my role, and the project status. Live links only appear when they are verified, keeping the portfolio credible.",
     "code": "Repository",
     "liveDemo": "Live",
+    "noLive": "No verified live link yet",
+    "problem": "Problem:",
+    "solution": "Solution:",
+    "role": "My role:",
     "items": {
       "online_converter": {
         "title": "Online Converter",
-        "description": "A browser-only conversion tool for JSON, CSV, XML, and YAML. Built with React, TypeScript, i18n, copy/download flows, and CI."
+        "description": "A browser-only conversion tool for JSON, CSV, XML, and YAML.",
+        "status": "Active",
+        "problem": "Users need to convert data without uploading files to an external server.",
+        "solution": "A React and TypeScript interface with i18n, copy, download, and client-side validation.",
+        "role": "Architecture, frontend, UX flows, and CI scripts."
       },
       "emergency_protocol": {
         "title": "Emergency Protocol Diagram",
-        "description": "A full-stack emergency protocol monorepo with a React client, Express API, Prisma, Google OAuth, comments, and CI."
+        "description": "A full-stack monorepo for managing and discussing emergency protocols.",
+        "status": "Full stack",
+        "problem": "Complex protocols are hard to understand, update, and share across stakeholders.",
+        "solution": "A React client, Express API, Prisma, Google OAuth, comments, and validation flow.",
+        "role": "Monorepo structure, API, authentication, UI, and test infrastructure."
       },
       "lev_chedva": {
         "title": "Lev Hedva",
-        "description": "An active full-stack monorepo for the Lev Hedva website, client app, and backend API."
+        "description": "A monorepo for the Lev Hedva website, client app, and backend API.",
+        "status": "Monorepo",
+        "problem": "A nonprofit digital property needs to be clear, maintainable, and ready to grow.",
+        "solution": "A separated website, client, and backend with shared infrastructure and organized scripts.",
+        "role": "Repository organization, frontend layer, API, and developer workflows."
       },
       "password_gen": {
         "title": "Password Generator",
-        "description": "A privacy-first password generator monorepo with a React Native mobile app and reusable core package."
+        "description": "A privacy-first monorepo with a React Native app and reusable core package.",
+        "status": "Privacy-first",
+        "problem": "A basic security tool must be simple, local, and independent of external services.",
+        "solution": "A reusable core package and mobile app that generate passwords on-device.",
+        "role": "Core logic, package structure, React Native, and privacy-first design."
       },
       "test_yourself": {
         "title": "Test Yourself",
-        "description": "A full-stack learning and quiz platform monorepo with a React client, Express API, validation scripts, and CI."
+        "description": "A learning and quiz platform with a React client and Express API.",
+        "status": "Learning",
+        "problem": "Practice systems need to be easy to extend and validate without breaking existing content.",
+        "solution": "A TypeScript monorepo with client, API, validation scripts, and CI.",
+        "role": "Product structure, frontend, backend, and validation flow."
       },
       "united_hatzalah": {
         "title": "United Hatzalah Shoham Branch",
-        "description": "A full-stack branch website and admin API monorepo with React, Express, Prisma, Cloudinary integration, and CI."
+        "description": "A branch website and admin interface with React, Express, Prisma, and Cloudinary.",
+        "status": "Nonprofit",
+        "problem": "A local branch needs a reliable website and admin workflow without code changes for every update.",
+        "solution": "A full-stack system with media, database models, API, and structured deployment.",
+        "role": "Frontend, backend, data models, media uploads, and CI."
       }
     }
   },
   "contact": {
     "title1": "Let's build",
     "title2": "something useful",
-    "subtitle": "Reach out for full-stack projects, automation workflows, repository cleanup, or frontend architecture work.",
-    "getInTouch": "Get in touch",
-    "getInTouchDesc": "Send a short note and I'll get back to you.",
+    "subtitle": "Reach out for full-stack products, automation workflows, repository cleanup, frontend products, or technical credibility work.",
+    "getInTouch": "The fastest way to start",
+    "getInTouchDesc": "WhatsApp is the most direct channel. Email and LinkedIn are available too.",
+    "whatsappLbl": "WhatsApp",
+    "whatsappDesc": "Open a direct project conversation",
+    "whatsappText": "Hi Evyatar, I saw your website and would like to talk about a project.",
     "emailLbl": "Email",
+    "linkedinLbl": "LinkedIn",
     "form": {
       "nameLbl": "Name",
       "namePh": "John Doe",
       "emailLbl": "Email",
       "emailPh": "john@example.com",
       "msgLbl": "Message",
-      "msgPh": "Tell me about your project...",
-      "sendBtn": "Send Message",
-      "successMsg": "Message sent successfully!",
-      "errorMsg": "Failed to send message. Please try again later."
+      "msgPh": "Tell me briefly what you want to build...",
+      "sendBtn": "Send message",
+      "sending": "Sending...",
+      "successMsg": "Message sent successfully. I will get back to you soon.",
+      "errorMsg": "Message delivery failed. You can reach out directly on WhatsApp or email."
     }
   },
   "footer": {

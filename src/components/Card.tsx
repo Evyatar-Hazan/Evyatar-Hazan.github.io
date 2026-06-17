@@ -44,10 +44,10 @@ const Card = ({ children, className = '' }: CardProps) => {
         rotateY,
         transformStyle: "preserve-3d"
       }}
-      className={`group relative p-6 bg-white dark:bg-neutral-900/40 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-xl overflow-hidden transition-colors duration-500 transform-gpu ${className}`}
+      className={`group relative p-6 bg-white dark:bg-neutral-900/40 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-xl overflow-hidden transition-colors duration-500 transform-gpu ${className}`}
     >
       <motion.div
-        className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-300 group-hover:opacity-100"
+        className="pointer-events-none absolute -inset-px rounded-lg opacity-0 transition duration-300 group-hover:opacity-100"
         style={{
           background: useMotionTemplate`
             radial-gradient(

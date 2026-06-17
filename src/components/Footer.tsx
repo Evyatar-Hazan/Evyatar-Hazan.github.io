@@ -1,5 +1,6 @@
-import { Github, Mail } from 'lucide-react';
+import { Github, Linkedin, Mail, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { profileLinks } from '../data/profile';
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -7,8 +8,10 @@ const Footer = () => {
   const appVersion = import.meta.env.VITE_APP_VERSION;
   
   const socialLinks = [
-    { name: 'Github', icon: Github, href: 'https://github.com/Evyatar-Hazan' },
-    { name: 'Email', icon: Mail, href: 'mailto:evyatarhazan3.14@gmail.com' },
+    { name: 'Github', icon: Github, href: profileLinks.github },
+    { name: 'LinkedIn', icon: Linkedin, href: profileLinks.linkedin },
+    { name: 'WhatsApp', icon: MessageCircle, href: profileLinks.whatsapp },
+    { name: 'Email', icon: Mail, href: profileLinks.email },
   ];
 
   return (

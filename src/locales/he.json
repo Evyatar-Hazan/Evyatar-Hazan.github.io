@@ -6,13 +6,29 @@
     "Contact": "צור קשר"
   },
   "home": {
-    "available": "זמין לעבודות Full Stack ואוטומציה",
+    "available": "זמין לפרויקטי Full Stack, אוטומציה וסידור ריפוזיטוריז",
     "greeting": "היי, אני",
     "name": "אביתר חזן",
-    "subtitle": "Full Stack Developer & Automation Builder",
-    "description": "אני בונה תוכנה פרקטית שמוכנה לעבודה: ממשקי React, שרתי Express, מערכות מבוססות Prisma, מונוריפוז, בסיסים לאפליקציות מובייל וכלים ששומרים על פרטיות. חשוב לי שריפו יהיה ברור, בדוק, מתועד ואמין.",
-    "viewProjects": "צפה בפרויקטים",
-    "contactMe": "צור קשר"
+    "subtitle": "מפתח Full Stack שבונה מוצרים אמינים, נקיים ומוכנים לעבודה",
+    "description": "אני מחבר Frontend חד, Backend מסודר ותהליכי פיתוח שמחזיקים לאורך זמן. באתר הזה תמצאו פרויקטים אמיתיים, ריפוזיטוריז ציבוריים, CI, מונוריפוז וכלים שמראים איך אני חושב על מוצר, קוד ואמינות.",
+    "viewProjects": "ראה פרויקטים",
+    "contactMe": "צור קשר",
+    "whatsappCta": "דברו איתי ב-WhatsApp",
+    "whatsappText": "היי אביתר, ראיתי את האתר שלך ורוצה לדבר על פרויקט.",
+    "proof": {
+      "repos": {
+        "title": "6 פרויקטים נבחרים",
+        "description": "מוצרים וכלים ציבוריים עם React, TypeScript, Backend, מובייל ו-CI."
+      },
+      "delivery": {
+        "title": "בנוי לאמון",
+        "description": "ריפוזיטוריז נקיים, סקריפטי ולידציה, טיפול בסודות ותיעוד שמאפשר לבדוק."
+      },
+      "systems": {
+        "title": "Full Stack אמיתי",
+        "description": "ממשקים, APIs, Prisma, OAuth, Cloudinary, React Native ומונוריפוז."
+      }
+    }
   },
   "about": {
     "title1": "קצת",
@@ -31,54 +47,89 @@
     }
   },
   "projects": {
+    "eyebrow": "ראיות, לא רק רשימה",
     "title1": "פרויקטים",
     "title2": "נבחרים",
+    "subtitle": "כל כרטיס מציג מה הבעיה, איך בניתי את הפתרון, מה היה החלק שלי ומה מצב הפרויקט. קישורי Live יוצגו רק כשהם מאומתים, כדי שהאתר יישאר אמין.",
     "code": "ריפו",
     "liveDemo": "צפייה",
+    "noLive": "אין קישור Live מאומת כרגע",
+    "problem": "בעיה:",
+    "solution": "פתרון:",
+    "role": "התפקיד שלי:",
     "items": {
       "online_converter": {
         "title": "ממיר נתונים מקוון",
-        "description": "כלי המרה שרץ בדפדפן בלבד עבור JSON, CSV, XML ו-YAML. כולל React, TypeScript, תמיכה בשפות, העתקה/הורדה ו-CI."
+        "description": "כלי המרה שרץ בדפדפן בלבד עבור JSON, CSV, XML ו-YAML.",
+        "status": "פעיל",
+        "problem": "משתמשים צריכים להמיר נתונים בלי להעלות קבצים לשרת חיצוני.",
+        "solution": "ממשק React/TypeScript עם i18n, העתקה, הורדה וולידציה בצד לקוח.",
+        "role": "ארכיטקטורה, Frontend, זרימות UX וסקריפטי CI."
       },
       "emergency_protocol": {
         "title": "פרוטוקול חירום אינטראקטיבי",
-        "description": "מונוריפו Full Stack לפרוטוקולי חירום עם לקוח React, שרת Express, Prisma, Google OAuth, תגובות ו-CI."
+        "description": "מונוריפו Full Stack לניהול ודיון סביב פרוטוקולי חירום.",
+        "status": "Full Stack",
+        "problem": "פרוטוקולים מורכבים קשה להבין, לעדכן ולשתף בין בעלי תפקידים.",
+        "solution": "לקוח React, שרת Express, Prisma, Google OAuth, תגובות ותהליך ולידציה.",
+        "role": "מבנה מונוריפו, API, אימות, UI ותשתית בדיקות."
       },
       "lev_chedva": {
         "title": "לב חדוה",
-        "description": "מונוריפו Full Stack פעיל עבור אתר, אפליקציית לקוח ושרת API של לב חדוה."
+        "description": "מונוריפו עבור אתר, אפליקציית לקוח ושרת API של לב חדוה.",
+        "status": "מונוריפו",
+        "problem": "נכס דיגיטלי לעמותה צריך להיות ברור, ניתן לתחזוקה ומוכן להתרחבות.",
+        "solution": "הפרדה בין אתר, לקוח ו-Backend עם תשתית משותפת וסקריפטים מסודרים.",
+        "role": "ארגון ריפו, שכבת Frontend, API ותהליכי עבודה."
       },
       "password_gen": {
         "title": "מחולל סיסמאות",
-        "description": "מונוריפו Privacy-first למחולל סיסמאות עם אפליקציית React Native וחבילת core לשימוש חוזר."
+        "description": "מונוריפו Privacy-first עם אפליקציית React Native וחבילת core.",
+        "status": "Privacy-first",
+        "problem": "כלי אבטחה בסיסי חייב להיות פשוט, מקומי ולא תלוי בשירות חיצוני.",
+        "solution": "חבילת core לשימוש חוזר ואפליקציית מובייל שמייצרת סיסמאות בצד המכשיר.",
+        "role": "לוגיקת core, מבנה חבילות, React Native וגישה מוכוונת פרטיות."
       },
       "test_yourself": {
         "title": "Test Yourself",
-        "description": "מונוריפו לפלטפורמת לימוד ושאלונים עם לקוח React, שרת Express, סקריפטי ולידציה ו-CI."
+        "description": "פלטפורמת לימוד ושאלונים עם לקוח React ושרת Express.",
+        "status": "למידה",
+        "problem": "מערכות תרגול צריכות להיות נוחות להרחבה ולבדיקה בלי לשבור תוכן קיים.",
+        "solution": "מונוריפו TypeScript עם לקוח, API, סקריפטי ולידציה ו-CI.",
+        "role": "מבנה מוצר, Frontend, Backend וזרימת ולידציה."
       },
       "united_hatzalah": {
         "title": "איחוד הצלה סניף שוהם",
-        "description": "מונוריפו Full Stack לאתר סניף ולממשק ניהול, עם React, Express, Prisma, Cloudinary ו-CI."
+        "description": "אתר סניף וממשק ניהול עם React, Express, Prisma ו-Cloudinary.",
+        "status": "עמותה",
+        "problem": "סניף מקומי צריך אתר אמין וממשק ניהול בלי תלות בעדכוני קוד לכל שינוי.",
+        "solution": "מערכת Full Stack עם מדיה, בסיס נתונים, API ופריסה מסודרת.",
+        "role": "Frontend, Backend, מודלי נתונים, העלאות מדיה ו-CI."
       }
     }
   },
   "contact": {
     "title1": "בואו נבנה",
     "title2": "משהו שימושי",
-    "subtitle": "אפשר לפנות אליי לגבי פרויקטי Full Stack, אוטומציה, סידור ריפוזיטוריז או ארכיטקטורת Frontend.",
-    "getInTouch": "צרו קשר",
-    "getInTouchDesc": "השאירו הודעה קצרה ואחזור אליכם.",
+    "subtitle": "אפשר לפנות אליי לגבי פרויקטי Full Stack, אוטומציה, סידור ריפוזיטוריז, מוצרי Frontend או חיזוק אמינות טכנית.",
+    "getInTouch": "הדרך המהירה להתחיל",
+    "getInTouchDesc": "WhatsApp הוא הערוץ הכי ישיר. אפשר גם לשלוח אימייל או להתחבר ב-LinkedIn.",
+    "whatsappLbl": "WhatsApp",
+    "whatsappDesc": "פתיחת שיחה ישירה על הפרויקט",
+    "whatsappText": "היי אביתר, ראיתי את האתר שלך ורוצה לדבר על פרויקט.",
     "emailLbl": "אימייל",
+    "linkedinLbl": "LinkedIn",
     "form": {
       "nameLbl": "שם מלא",
       "namePh": "ישראל ישראלי",
       "emailLbl": "כתובת אימייל",
       "emailPh": "israel@example.com",
       "msgLbl": "הודעה",
-      "msgPh": "ספרו לי על הפרויקט שלכם...",
+      "msgPh": "ספרו לי בקצרה מה רוצים לבנות...",
       "sendBtn": "שלח הודעה",
-      "successMsg": "ההודעה נשלחה בהצלחה!",
-      "errorMsg": "שליחת ההודעה נכשלה. אנא נסו שוב מאוחר יותר."
+      "sending": "שולח...",
+      "successMsg": "ההודעה נשלחה בהצלחה. אחזור אליך בהקדם.",
+      "errorMsg": "שליחת ההודעה נכשלה. אפשר לפנות ישירות ב-WhatsApp או באימייל."
     }
   },
   "footer": {

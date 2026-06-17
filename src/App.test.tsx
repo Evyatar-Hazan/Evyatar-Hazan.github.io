@@ -20,6 +20,18 @@ describe('App', () => {
     expect(document.querySelector('#home')).toBeInTheDocument();
   });
 
+  it('renders the primary contact and profile links', () => {
+    render(<App />);
+
+    expect(screen.getByRole('link', { name: 'home.whatsappCta' })).toHaveAttribute(
+      'href',
+      expect.stringContaining('https://wa.me/972587127547')
+    );
+    screen.getAllByRole('link', { name: 'LinkedIn' }).forEach((link) => {
+      expect(link).toHaveAttribute('href', 'https://www.linkedin.com/in/evyatar-hazan-662235210/');
+    });
+  });
+
   it('locks and unlocks body scroll when mobile menu toggles', () => {
     render(<App />);
 
