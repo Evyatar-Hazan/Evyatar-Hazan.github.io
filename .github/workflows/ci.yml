@@ -12,6 +12,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  deployments: write
 
 concurrency:
   group: pages
@@ -44,7 +45,15 @@ jobs:
         with:
           path: dist
 
-  deploy:
+      - name: Upload Cloudflare artifact
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-dist
+          path: dist
+          if-no-files-found: error
+
+  github-pages:
     name: Deploy to GitHub Pages
     if: github.event_name == 'push'
     needs: quality
@@ -57,3 +66,26 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+
+  cloudflare-pages:
+    name: Deploy to Cloudflare Pages
+    if: github.event_name == 'push'
+    needs: quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Cloudflare artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site-dist
+          path: dist
+
+      - name: Deploy
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: ${{ vars.CLOUDFLARE_PAGES_PROJECT_NAME }}
+          directory: dist
+          branch: main
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}

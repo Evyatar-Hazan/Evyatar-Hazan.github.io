@@ -28,7 +28,7 @@ This runs linting, tests, and a production build.
 
 ## Production
 
-The `Deploy portfolio` GitHub Actions workflow builds the site once from `main` and publishes the same `dist` artifact to:
+The `Validate and Deploy` GitHub Actions workflow builds the site once from `main` and publishes the same `dist` artifact to:
 
 - GitHub Pages: https://evyatar-hazan.github.io/
 - Cloudflare Pages: https://evyatarhazan.com/
