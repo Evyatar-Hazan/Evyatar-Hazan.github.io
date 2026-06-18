@@ -53,14 +53,41 @@
     "subtitle": "Work that combines product thinking, technical execution, and user experience. Some projects are live websites, others are public systems and tools, and each one was built around a real need.",
     "code": "Code",
     "liveDemo": "Live",
+    "livePreview": "Live preview",
+    "open": "Open",
+    "openLivePreview": "Open live preview for",
     "noLive": "No verified live link yet",
+    "featuredLabel": "Featured projects",
+    "indexEyebrow": "Project index",
+    "indexTitle": "All public projects",
+    "indexSubtitle": "A compact scan of the relevant public repositories, with status, type, core stack, and available links.",
+    "impact": "Value:",
     "problem": "Challenge:",
     "solution": "Built:",
     "role": "Contribution:",
+    "categories": {
+      "business": "Business site",
+      "fullstack": "Full-stack system",
+      "nonprofit": "Nonprofits & teams",
+      "tool": "Web tool",
+      "mobile": "Mobile"
+    },
+    "statuses": {
+      "live": "Live",
+      "active": "Active",
+      "fullstack": "Full stack",
+      "monorepo": "Monorepo",
+      "privacy": "Privacy-first",
+      "learning": "Learning",
+      "nonprofit": "Nonprofit"
+    },
     "items": {
       "nis_boutique": {
         "title": "Nis Boutique Catering",
         "description": "A conversion-focused boutique catering website from Beitar Illit, built around WhatsApp, SEO, and RTL UX.",
+        "summary": "A live business website for a boutique catering brand, guiding visitors from first impression to a WhatsApp conversation.",
+        "impact": "The site brings brand positioning, service categories, gallery, FAQ, and one clear CTA into a shareable marketing asset.",
+        "previewTitle": "Live preview of the Nis Boutique Catering website",
         "status": "Live",
         "problem": "A local service business needed a site that communicates quality, earns trust, and drives inquiries without relying on pricing or heavy content.",
         "solution": "A Hebrew landing page with clear messaging hierarchy, service categories, gallery, FAQ, persistent CTA, and custom-domain deployment.",
@@ -69,6 +96,9 @@
       "online_converter": {
         "title": "Online Converter",
         "description": "A client-side conversion tool for JSON, CSV, XML, and YAML.",
+        "summary": "A browser tool for converting common data formats without sending content to an external server.",
+        "impact": "Useful for sensitive data or technical drafts, with a short workflow for validation, copying, and downloading.",
+        "previewTitle": "Live preview of Online Converter",
         "status": "Active",
         "problem": "Developers and technical users need fast data conversion without sending sensitive content to an external server.",
         "solution": "A React and TypeScript interface with i18n, client-side validation, copy, download, and a short task flow.",
@@ -77,6 +107,9 @@
       "emergency_protocol": {
         "title": "Emergency Protocol Diagram",
         "description": "A full-stack system for presenting, managing, and discussing emergency protocols.",
+        "summary": "A system that turns complex emergency protocols into an interactive workspace with users, auth, and comments.",
+        "impact": "The project shows how a static document can become a structured product with permissions, database models, and maintainable delivery.",
+        "previewTitle": "Live preview of Emergency Protocol Diagram",
         "status": "Full stack",
         "problem": "Complex protocols are hard to understand, update, and share across stakeholders.",
         "solution": "A React client, Express API, Prisma, Google OAuth, comments, and a structured validation flow.",
@@ -85,6 +118,9 @@
       "lev_chedva": {
         "title": "Lev Hedva",
         "description": "Web and API infrastructure for a nonprofit, including website, client app, and server.",
+        "summary": "A nonprofit monorepo separating the public site, client app, and backend API.",
+        "impact": "The structure supports multiple interfaces around one product while keeping scripts, responsibilities, and code boundaries clear.",
+        "previewTitle": "Live preview of Lev Hedva",
         "status": "Monorepo",
         "problem": "A nonprofit digital property needs to be clear, maintainable, and ready to grow.",
         "solution": "A separated website, client app, and backend with shared infrastructure and consistent scripts.",
@@ -93,6 +129,8 @@
       "password_gen": {
         "title": "Password Generator",
         "description": "A privacy-first password generator with a React Native app and reusable core package.",
+        "summary": "A mobile app and reusable core package for generating passwords locally on-device.",
+        "impact": "The project keeps a basic security workflow private and reusable instead of tying it to an external service.",
         "status": "Privacy-first",
         "problem": "A basic security tool must be simple, local, and independent of external services.",
         "solution": "A reusable core package and mobile app that generate passwords locally on the device.",
@@ -101,6 +139,8 @@
       "test_yourself": {
         "title": "Test Yourself",
         "description": "A practice and quiz platform with a React client and Express API.",
+        "summary": "A learning platform foundation with client, API, validation scripts, and monorepo structure.",
+        "impact": "Built for educational content that needs to grow gradually without breaking existing quizzes, exercises, or flows.",
         "status": "Learning",
         "problem": "Practice systems need to be easy to extend and validate without breaking existing content.",
         "solution": "A TypeScript monorepo with client, API, validation scripts, and CI.",
@@ -109,6 +149,8 @@
       "united_hatzalah": {
         "title": "United Hatzalah Shoham Branch",
         "description": "A nonprofit branch website and admin interface with React, Express, Prisma, and Cloudinary.",
+        "summary": "A full-stack system for a local branch website, content management, media, and operational data.",
+        "impact": "The project reduces reliance on code changes for every update by introducing content, media, and public display workflows.",
         "status": "Nonprofit",
         "problem": "A local branch needs a reliable website and admin workflow without code changes for every update.",
         "solution": "A full-stack system with media management, database models, API, and structured deployment.",

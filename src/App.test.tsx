@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { projects } from './data/profile';
 import { describe, expect, it, vi } from 'vitest';
 
 const changeLanguageMock = vi.fn().mockResolvedValue(undefined);
@@ -35,10 +36,56 @@ describe('App', () => {
   it('renders the Nis Boutique Catering project with its live link', async () => {
     render(<App />);
 
-    expect(await screen.findByText('projects.items.nis_boutique.title')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'projects.liveDemo' })).toHaveAttribute(
-      'href',
+    expect(await screen.findAllByText('projects.items.nis_boutique.title')).not.toHaveLength(0);
+    screen
+      .getAllByRole('link', { name: 'projects.liveDemo projects.items.nis_boutique.title' })
+      .forEach((link) => {
+        expect(link).toHaveAttribute('href', 'https://nisboutiquecatering.com/');
+      });
+  });
+
+  it('renders the selected featured projects and public project index', async () => {
+    render(<App />);
+
+    const featuredIds = projects.filter((project) => project.featured).map((project) => project.id);
+    expect(featuredIds).toEqual([
+      'nis_boutique',
+      'online_converter',
+      'emergency_protocol',
+      'united_hatzalah',
+    ]);
+
+    for (const project of projects) {
+      expect(await screen.findAllByText(`projects.items.${project.id}.title`)).not.toHaveLength(0);
+    }
+
+    expect(screen.getByText('projects.indexTitle')).toBeInTheDocument();
+  });
+
+  it('only renders live links for projects with a liveUrl', async () => {
+    render(<App />);
+
+    await screen.findByText('projects.indexTitle');
+
+    const expectedLiveActions = projects.filter((project) => project.liveUrl).length
+      + projects.filter((project) => project.featured && project.liveUrl).length;
+    expect(screen.getAllByText('projects.liveDemo')).toHaveLength(expectedLiveActions);
+  });
+
+  it('uses live embeds for projects with verified live URLs', async () => {
+    render(<App />);
+
+    expect(await screen.findByTitle('projects.items.nis_boutique.previewTitle')).toHaveAttribute(
+      'src',
       'https://nisboutiquecatering.com/'
+    );
+    expect(screen.getByTitle('projects.items.online_converter.previewTitle')).toHaveAttribute(
+      'src',
+      'https://online-converter.evyatarhazan.com/'
+    );
+    expect(screen.getByTitle('projects.items.emergency_protocol.previewTitle')).toHaveAttribute(
+      'src',
+      'https://bls-protocol.evyatarhazan.com/'
     );
   });
 
