@@ -13,12 +13,18 @@ vi.mock('react-i18next', () => ({
 
 import App from './App';
 
+const renderAt = (path: string) => {
+  window.history.pushState({}, '', path);
+  return render(<App />);
+};
+
 describe('App', () => {
   it('renders the main navigation and hero section', () => {
     render(<App />);
 
     expect(screen.getByRole('navigation')).toBeInTheDocument();
     expect(document.querySelector('#home')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'nav.Blog' })).toHaveAttribute('href', '/blog');
   });
 
   it('renders the primary contact and profile links', () => {
@@ -60,6 +66,14 @@ describe('App', () => {
     }
 
     expect(screen.getByText('projects.indexTitle')).toBeInTheDocument();
+  });
+
+  it('surfaces recent writing on the home page', async () => {
+    render(<App />);
+
+    expect(await screen.findByText('blogPreview.eyebrow')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /blogPreview.viewAll/i })).toHaveAttribute('href', '/blog');
+    expect(screen.getByRole('heading', { name: 'How I built a business site around WhatsApp' })).toBeInTheDocument();
   });
 
   it('only renders live links for projects with a liveUrl', async () => {
@@ -118,6 +132,29 @@ describe('App', () => {
 
     fireEvent.click(screen.getByRole('link', { name: 'nav.About' }));
     expect(screen.getByRole('link', { name: 'nav.About' })).toHaveAttribute('aria-current', 'page');
+  });
+
+  it('renders the blog index with posts for the active language', async () => {
+    renderAt('/blog');
+
+    expect(await screen.findByRole('heading', { name: 'blog.title' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'How I built a business site around WhatsApp' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'What I learned from building a credible portfolio' })).toBeInTheDocument();
+  });
+
+  it('renders a single blog post by slug', async () => {
+    renderAt('/blog/catering-whatsapp');
+
+    expect(await screen.findByRole('heading', { name: 'How I built a business site around WhatsApp' })).toBeInTheDocument();
+    expect(screen.getByText(/The solution was almost funny in its simplicity/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /blog.backToBlog/i })).toHaveAttribute('href', '/blog');
+  });
+
+  it('renders a not found state for an unknown blog post', async () => {
+    renderAt('/blog/missing-post');
+
+    expect(await screen.findByRole('heading', { name: 'blog.notFoundTitle' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /blog.backToBlog/i })).toHaveAttribute('href', '/blog');
   });
 
   it('closes the mobile menu when clicking the backdrop', () => {

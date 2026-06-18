@@ -1,6 +1,7 @@
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Moon, Sun, Menu, X } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
 
@@ -8,16 +9,18 @@ const navItems = [
   { name: 'Home', href: '#home' },
   { name: 'About', href: '#about' },
   { name: 'Projects', href: '#projects' },
+  { name: 'Blog', href: '/blog' },
   { name: 'Contact', href: '#contact' },
 ];
 
 const Navbar = () => {
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
-  const [active, setActive] = useState('Home');
   const [isOpen, setIsOpen] = useState(false);
   const { t, i18n } = useTranslation();
   const { theme, toggleTheme } = useTheme();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isOpen) {
@@ -40,14 +43,35 @@ const Navbar = () => {
     }
   });
 
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string, name: string) => {
-    e.preventDefault();
-    setActive(name);
-    setIsOpen(false);
+  const activeItem = location.pathname.startsWith('/blog')
+    ? 'Blog'
+    : navItems.find((item) => item.href === location.hash)?.name ?? 'Home';
+
+  const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    setIsOpen(false);
+
+    if (href.startsWith('/')) {
+      navigate(href);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (location.pathname !== '/') {
+      navigate({ pathname: '/', hash: href });
+      window.setTimeout(() => scrollToSection(href), 50);
+      return;
+    }
+
+    navigate({ hash: href });
+    scrollToSection(href);
   };
 
   const toggleLanguage = async () => {
@@ -69,7 +93,7 @@ const Navbar = () => {
       <div className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 rounded-full px-6 py-3 flex items-center justify-between w-full max-w-2xl shadow-2xl pointer-events-auto transition-colors duration-500">
         <a 
           href="#home" 
-          onClick={(e) => handleClick(e, '#home', 'Home')}
+          onClick={(e) => handleClick(e, '#home')}
           className="text-neutral-900 dark:text-white font-bold tracking-tight text-xl transition-colors"
           aria-label="Go to home section"
         >
@@ -82,10 +106,10 @@ const Navbar = () => {
             <a
               key={item.name}
               href={item.href}
-              onClick={(e) => handleClick(e, item.href, item.name)}
-              aria-current={active === item.name ? 'page' : undefined}
+              onClick={(e) => handleClick(e, item.href)}
+              aria-current={activeItem === item.name ? 'page' : undefined}
               className={`text-sm font-medium transition-colors ${
-                active === item.name ? 'text-primary-500 dark:text-primary-400' : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                activeItem === item.name ? 'text-primary-500 dark:text-primary-400' : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
               }`}
             >
               {t(`nav.${item.name}`)}
@@ -163,10 +187,10 @@ const Navbar = () => {
                   <a
                     key={item.name}
                     href={item.href}
-                    onClick={(e) => handleClick(e, item.href, item.name)}
-                    aria-current={active === item.name ? 'page' : undefined}
+                    onClick={(e) => handleClick(e, item.href)}
+                    aria-current={activeItem === item.name ? 'page' : undefined}
                     className={`text-2xl font-bold transition-colors ${
-                      active === item.name ? 'text-primary-500' : 'text-neutral-600 dark:text-neutral-400'
+                      activeItem === item.name ? 'text-primary-500' : 'text-neutral-600 dark:text-neutral-400'
                     }`}
                   >
                     {t(`nav.${item.name}`)}

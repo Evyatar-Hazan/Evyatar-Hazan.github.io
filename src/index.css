@@ -62,3 +62,31 @@ body {
 .glow-border {
   animation: glow 3s infinite alternate ease-in-out;
 }
+
+.blog-prose {
+  @apply text-lg leading-8 text-neutral-700 dark:text-neutral-300;
+}
+
+.blog-prose h1 {
+  @apply sr-only;
+}
+
+.blog-prose h2 {
+  @apply mt-12 text-2xl font-bold tracking-tight text-neutral-950 dark:text-white;
+}
+
+.blog-prose p {
+  @apply mt-6;
+}
+
+.blog-prose ul {
+  @apply mt-6 space-y-3;
+}
+
+.blog-prose li {
+  @apply relative ps-6;
+}
+
+.blog-prose li::before {
+  @apply absolute start-0 top-3 h-2 w-2 rounded-full bg-primary-500 content-[''];
+}

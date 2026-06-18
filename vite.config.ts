@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import mdx from '@mdx-js/rollup'
 import { readFileSync } from 'node:fs'
 
 const packageJson = JSON.parse(
@@ -13,6 +14,7 @@ export default defineConfig({
     'import.meta.env.VITE_APP_VERSION': JSON.stringify(packageJson.version),
   },
   plugins: [
+    mdx(),
     react(),
     tailwindcss(),
   ],
