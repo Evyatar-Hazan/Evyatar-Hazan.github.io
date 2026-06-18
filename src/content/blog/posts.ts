@@ -2,9 +2,33 @@ import CateringWhatsappEn from './catering-whatsapp.en.mdx';
 import CateringWhatsappHe from './catering-whatsapp.he.mdx';
 import CrediblePortfolioEn from './credible-portfolio.en.mdx';
 import CrediblePortfolioHe from './credible-portfolio.he.mdx';
+import DeploymentIsProductEn from './deployment-is-product.en.mdx';
+import DeploymentIsProductHe from './deployment-is-product.he.mdx';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'deployment-is-product',
+    language: 'he',
+    title: 'למה פריסה היא חלק מהמוצר',
+    excerpt: 'על ההבדל בין “עובד אצלי” לבין מוצר קטן שאפשר לסמוך עליו, ולמה build, דומיין ובדיקות הם חלק מחוויית המשתמש.',
+    date: '2026-06-19',
+    readTime: '5 דקות קריאה',
+    tags: ['Deployment', 'Product', 'Credibility'],
+    featured: false,
+    Content: DeploymentIsProductHe,
+  },
+  {
+    slug: 'deployment-is-product',
+    language: 'en',
+    title: 'Why deployment is part of the product',
+    excerpt: 'About the gap between “works on my machine” and a small product people can trust, and why builds, domains, and tests shape the user experience.',
+    date: '2026-06-19',
+    readTime: '5 min read',
+    tags: ['Deployment', 'Product', 'Credibility'],
+    featured: false,
+    Content: DeploymentIsProductEn,
+  },
   {
     slug: 'catering-whatsapp',
     language: 'he',

@@ -1,0 +1,43 @@
+There is a common habit of treating deployment as the final step of a project. First you build, then you "put it online", then you check the box. In reality, that is where the real test begins: does the thing I built still hold up when it leaves my machine and meets a real user, a real domain, real cache, and sometimes a real bug at the least convenient moment?
+
+In a portfolio, a business website, or an internal tool, deployment is not a technical decoration. It is part of the product.
+
+## The problem: "works on my machine" does not build trust
+
+It is easy to feel that a project is ready when it looks good in development. The buttons respond, the animations run, the tests might pass, and the demo looks clean. But users do not see your development environment. They see a URL.
+
+If the link does not open, if refresh breaks a route, if the domain shows an older version, or if a small build issue takes the site down, the credibility of the whole experience drops. This is especially true in a portfolio: the project does not only need to look good, it needs to be verifiable.
+
+The sentence "you can see it here" is a promise. It says there is a process behind the screen that holds.
+
+## The solution: treat deployment as part of the design
+
+When I think about a product, I do not fully separate UI, content, tests, and deployment. They are part of the same experience. Users feel all of them, even when they do not know the technical names.
+
+In my projects, I try to keep every meaningful change moving through a few practical questions:
+
+- Does the site still build without errors?
+- Do the tests protect the important behavior?
+- Do routes work after refresh?
+- Does the domain show what is actually on main?
+- Can I explain with confidence what was shipped?
+
+That does not turn every project into a huge system. The opposite is true. It keeps a small project trustworthy.
+
+## Why it matters to a client or recruiter
+
+A client may not know to ask about CI, routing, cache, or fallback pages. But they do feel when their site is stable. A recruiter may not inspect the pipeline, but they will click the links.
+
+Good deployment is one of the clearest ways to show ownership. Not just "I wrote code", but "I brought this to a state where someone can use it".
+
+That is the difference between a project that sits in a folder and a small product that exists in the world.
+
+## What I learned
+
+The lesson for me is that deployment should enter the conversation early. Not at the end, not after the design is "done", and not on the day you need to send a link to someone important.
+
+It is worth thinking ahead about the domain, the build process, basic tests, fallback pages, and what happens when the site needs to change again two weeks later. A live product is not a one-time event. It is a small system of decisions that repeat.
+
+In the end, it is also about professional language. Not only saying "I built a website", but being able to say: I built it, tested it, deployed it, verified it, and I know how to keep maintaining it.
+
+That is where credibility starts.
