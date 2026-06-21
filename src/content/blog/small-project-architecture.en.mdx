@@ -1,0 +1,51 @@
+There is a small and dangerous myth in web projects: if the project is small, you do not need to think about architecture. Just build quickly, place a few components, keep some data in one file, put a few conditions inside the UI, and move on. It is only a business site, only a portfolio, only a small tool.
+
+The problem is that "small" does not mean "one-time". Many small projects are the ones you keep returning to: adding an article, replacing a project, changing copy, adjusting a CTA, connecting a domain, updating SEO. If the boundaries are not clear early, every small change becomes an archaeological dig.
+
+## The problem: small code can become fragile code
+
+In a small project, shortcuts are easy to justify. There is no large team, no huge product, no long documentation. But familiar signs appear quickly:
+
+- The same text appears in several places.
+- One component knows too much.
+- Content, presentation, and logic are mixed together.
+- A change in one language breaks another language.
+- It is hard to know where to add a new item without worrying about breaking something.
+
+This does not always look like dramatic technical debt. Sometimes it is just ten minutes of confusion every time you return to the project. But those ten minutes add up, and more importantly, they create hesitation.
+
+## The solution: simple boundaries, not a heavy system
+
+I do not think every small website needs fancy architectural layers. Most of the time, that just adds noise. But it does need a few clear boundaries.
+
+In my portfolio, for example, there is separation between React pages, components, translations, profile data, and blog content. That means a new article is not "search for the right JSX to edit". It is adding MDX and updating a clear index. A new project does not require opening half the site. It goes into a data structure designed for it.
+
+Those boundaries do not make the project more complicated. They reduce pressure.
+
+## What a good boundary gives you
+
+A good boundary does three things:
+
+- It says where a change should happen.
+- It reduces the chance that one change breaks another area.
+- It gives you confidence to return to the project after a month.
+
+That matters especially in public projects. A portfolio is not measured only on launch day. It is measured every time someone clicks a link, reads a case study, switches languages, or checks whether the work is still live.
+
+If the structure lets you keep updating without fear, the site stays alive. If every change feels like open surgery, the site starts falling behind.
+
+## Why this is a product issue
+
+Good architecture in a small project is not only about "clean code". It affects the product.
+
+If it is easy to add an article, the blog gets updated. If it is easy to update a project, the portfolio stays credible. If it is easy to translate content, both languages stay aligned. If it is easy to run tests, it is more likely that the tests will actually be run.
+
+In the end, code structure is not only something developers see. Users feel its result through a site that stays current, stable, and clear.
+
+## What I learned
+
+The approach that works for me is not to build a framework that is too large for the project. It is to ask one simple question: if I come back here in a month, will I understand where to make the change?
+
+If the answer is yes, the architecture is probably good enough for the size of the project. If the answer is no, even a small site needs a little more structure.
+
+A small project does not need to look like a huge system. It does need to be built in a way that lets you keep working on it without breaking trust.

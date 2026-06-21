@@ -4,9 +4,33 @@ import CrediblePortfolioEn from './credible-portfolio.en.mdx';
 import CrediblePortfolioHe from './credible-portfolio.he.mdx';
 import DeploymentIsProductEn from './deployment-is-product.en.mdx';
 import DeploymentIsProductHe from './deployment-is-product.he.mdx';
+import SmallProjectArchitectureEn from './small-project-architecture.en.mdx';
+import SmallProjectArchitectureHe from './small-project-architecture.he.mdx';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'small-project-architecture',
+    language: 'he',
+    title: 'גם פרויקט קטן צריך גבולות ברורים',
+    excerpt: 'למה אתר קטן או פורטפוליו צריכים מבנה קוד שמאפשר לחזור, לעדכן ולהמשיך לעבוד בלי לפחד לשבור אמון.',
+    date: '2026-06-21',
+    readTime: '5 דקות קריאה',
+    tags: ['Architecture', 'Frontend', 'Product'],
+    featured: false,
+    Content: SmallProjectArchitectureHe,
+  },
+  {
+    slug: 'small-project-architecture',
+    language: 'en',
+    title: 'Even small projects need clear boundaries',
+    excerpt: 'Why a small website or portfolio still needs code structure that makes it easy to return, update, and keep working without breaking trust.',
+    date: '2026-06-21',
+    readTime: '5 min read',
+    tags: ['Architecture', 'Frontend', 'Product'],
+    featured: false,
+    Content: SmallProjectArchitectureEn,
+  },
   {
     slug: 'deployment-is-product',
     language: 'he',
