@@ -96,6 +96,7 @@ const Navbar = () => {
           onClick={(e) => handleClick(e, '#home')}
           className="text-neutral-900 dark:text-white font-bold tracking-tight text-xl transition-colors"
           aria-label="Go to home section"
+          translate="no"
         >
           EH<span className="text-primary-500">.</span>
         </a>

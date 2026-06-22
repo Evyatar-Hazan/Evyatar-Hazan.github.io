@@ -61,11 +61,12 @@ const Home = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5, type: "spring", stiffness: 100 }}
               className="text-primary-500"
+              translate="no"
             >
               {t('home.name')}
             </motion.span>
           ) : (
-            <span className="inline-flex text-primary-500">
+            <span className="inline-flex text-primary-500" translate="no">
               {nameText.map((char, index) => (
                 <motion.span
                   key={index}
