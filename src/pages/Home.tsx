@@ -6,7 +6,7 @@ import Magnetic from '../components/animations/Magnetic';
 import { profileLinks } from '../data/profile';
 
 const Home = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const scrollTo = (id: string) => {
     const el = document.querySelector(id);
@@ -14,6 +14,7 @@ const Home = () => {
   };
 
   const nameText = t('home.name').split('');
+  const isHebrew = i18n.language === 'he';
   const proofItems = [
     { key: 'repos', icon: Code2 },
     { key: 'delivery', icon: ShieldCheck },
@@ -54,18 +55,29 @@ const Home = () => {
           className="mx-auto mb-5 flex max-w-5xl flex-wrap items-center justify-center gap-x-4 text-center text-5xl font-bold tracking-tight text-neutral-950 transition-colors duration-500 dark:text-white md:text-8xl"
         >
           <span className="bg-gradient-to-b from-neutral-900 to-neutral-500 bg-clip-text text-transparent dark:from-white dark:to-neutral-500">{t('home.greeting')}</span>
-          <span className="inline-flex text-primary-500">
-            {nameText.map((char, index) => (
-              <motion.span
-                key={index}
-                initial={{ opacity: 0, y: 50, rotateX: -90 }}
-                animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                transition={{ duration: 0.8, delay: 0.5 + index * 0.05, type: "spring", stiffness: 100 }}
-              >
-                {char === " " ? "\u00A0" : char}
-              </motion.span>
-            ))}
-          </span>
+          {isHebrew ? (
+            <motion.span
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5, type: "spring", stiffness: 100 }}
+              className="text-primary-500"
+            >
+              {t('home.name')}
+            </motion.span>
+          ) : (
+            <span className="inline-flex text-primary-500">
+              {nameText.map((char, index) => (
+                <motion.span
+                  key={index}
+                  initial={{ opacity: 0, y: 50, rotateX: -90 }}
+                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                  transition={{ duration: 0.8, delay: 0.5 + index * 0.05, type: "spring", stiffness: 100 }}
+                >
+                  {char === " " ? "\u00A0" : char}
+                </motion.span>
+              ))}
+            </span>
+          )}
         </motion.h1>
 
         <motion.h2
