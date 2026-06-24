@@ -4,11 +4,35 @@ import CrediblePortfolioEn from './credible-portfolio.en.mdx';
 import CrediblePortfolioHe from './credible-portfolio.he.mdx';
 import DeploymentIsProductEn from './deployment-is-product.en.mdx';
 import DeploymentIsProductHe from './deployment-is-product.he.mdx';
+import GoogleTranslateNameBugEn from './google-translate-name-bug.en.mdx';
+import GoogleTranslateNameBugHe from './google-translate-name-bug.he.mdx';
 import SmallProjectArchitectureEn from './small-project-architecture.en.mdx';
 import SmallProjectArchitectureHe from './small-project-architecture.he.mdx';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'google-translate-name-bug',
+    language: 'he',
+    title: 'כשגוגל תרגם את השם שלי לג׳יבריש',
+    excerpt: 'איך תרגום אוטומטי שיבש את השם שלי בפורטפוליו, ולמה שמות, לוגואים וזהות מותג צריכים גבולות ברורים ב-DOM.',
+    date: '2026-06-24',
+    readTime: '5 דקות קריאה',
+    tags: ['Frontend', 'i18n', 'UX'],
+    featured: false,
+    Content: GoogleTranslateNameBugHe,
+  },
+  {
+    slug: 'google-translate-name-bug',
+    language: 'en',
+    title: 'When Google translated my name into gibberish',
+    excerpt: 'How automatic translation corrupted my portfolio name, and why names, logos, and brand identity need clear boundaries in the DOM.',
+    date: '2026-06-24',
+    readTime: '5 min read',
+    tags: ['Frontend', 'i18n', 'UX'],
+    featured: false,
+    Content: GoogleTranslateNameBugEn,
+  },
   {
     slug: 'small-project-architecture',
     language: 'he',

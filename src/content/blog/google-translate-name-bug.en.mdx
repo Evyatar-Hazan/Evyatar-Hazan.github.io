@@ -1,0 +1,48 @@
+Sometimes a bug looks small only because it appears in a single word. In my case, that word was my name.
+
+People opened my portfolio, and Google decided to "help" with automatic translation. The result was strange: instead of seeing my name the way it should appear, they saw gibberish. No JavaScript error, no broken layout, no failed API. Just one of the most basic things in the first viewport of the site: my name stopped being my name.
+
+That is exactly the kind of bug that reminds me why small details on a personal site are not really small.
+
+## The problem: automatic translation does not know what not to translate
+
+Google Translate is useful in many situations, but it does not always understand the difference between a normal sentence and a name, logo, brand, or UI element that should stay fixed.
+
+On a bilingual site, that becomes even more sensitive. My site already has real i18n support. Hebrew and English are defined as actual translations, and the user can switch languages inside the app. But when a browser or Google adds an automatic translation layer on top of the app, it may not respect those boundaries.
+
+From the user's point of view, it does not matter who caused the bug. If the hero section of a portfolio shows the owner's name incorrectly, trust drops immediately.
+
+## The diagnosis: it was not only text, it was DOM
+
+The first fix was understanding that the Hebrew name should not use the same character-by-character animation as the English name.
+
+In English, splitting the name into characters works nicely: each letter can animate in. In Hebrew, especially with text direction, possible marks, spacing, and the bidi algorithm, that split is a more fragile thing to manage. So I separated the behavior: in Hebrew, the name renders as one unit; in English, the character animation stays.
+
+That fixed part of the issue, but not all of it. Even after the Hebrew rendering was correct, an external automatic translation layer could still interfere.
+
+## The fix: define translation boundaries
+
+The final fix was a combination of a few small layers:
+
+- Add `meta name="google" content="notranslate"` to the main HTML document.
+- Add `translate="no"` to the short `EH` logo.
+- Add `translate="no"` to the hero name in both Hebrew and English paths.
+- Tighten the i18n setup with `supportedLngs` and explicit language lookup from `localStorage`.
+
+The important part is that I did not stop at "it looks fine on my machine". Names, logos, and identity strings should be marked as text that translation engines must not rewrite.
+
+## Why it matters beyond this bug
+
+A portfolio is not only a list of projects. It is a trust surface.
+
+When someone lands on my site, the first few seconds decide whether it feels like there is a professional person behind it who pays attention to details. If the first thing they see is a corrupted name, every other part of the site starts from a weaker position.
+
+It is also a broader product lesson: not every bug comes from the code I wrote. Sometimes the bug comes from the layer above the site: the browser, an extension, automatic translation, cache, SEO previews, or an external tool trying to "help". A good product needs to hold up even when the surrounding environment interferes.
+
+## What I learned
+
+Some text should be translatable, and some text should be an anchor.
+
+Names, logos, brand abbreviations, addresses, certain product terms, and delicate CTAs should not always be left to automatic translation. If the site already supports languages itself, it is better to let the internal translation system own the experience instead of leaving it to the browser's guess.
+
+This bug was small in lines of code, but not small in meaning. It reminded me that good frontend work is not only about how things look when every condition is perfect. It is also about preserving identity, readability, and trust when the outside world tries to rewrite the DOM for you.
