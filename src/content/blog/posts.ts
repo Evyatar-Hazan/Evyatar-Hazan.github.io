@@ -6,11 +6,35 @@ import DeploymentIsProductEn from './deployment-is-product.en.mdx';
 import DeploymentIsProductHe from './deployment-is-product.he.mdx';
 import GoogleTranslateNameBugEn from './google-translate-name-bug.en.mdx';
 import GoogleTranslateNameBugHe from './google-translate-name-bug.he.mdx';
+import PrivacySafeProductAnalyticsEn from './privacy-safe-product-analytics.en.mdx';
+import PrivacySafeProductAnalyticsHe from './privacy-safe-product-analytics.he.mdx';
 import SmallProjectArchitectureEn from './small-project-architecture.en.mdx';
 import SmallProjectArchitectureHe from './small-project-architecture.he.mdx';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'privacy-safe-product-analytics',
+    language: 'he',
+    title: 'איך מודדים מוצר בלי לקרוא את הדאטה של המשתמש',
+    excerpt: 'על הוספת אנליטיקה ל-Online Converter בצורה שמודדת פעולות, לא תוכן רגיש, ושומרת על ההבטחה של כלי שרץ בצד לקוח.',
+    date: '2026-06-24',
+    readTime: '5 דקות קריאה',
+    tags: ['Analytics', 'Privacy', 'Product'],
+    featured: false,
+    Content: PrivacySafeProductAnalyticsHe,
+  },
+  {
+    slug: 'privacy-safe-product-analytics',
+    language: 'en',
+    title: 'Measuring product usage without reading user data',
+    excerpt: 'About adding analytics to Online Converter in a way that measures actions, not sensitive content, and preserves the client-side privacy promise.',
+    date: '2026-06-24',
+    readTime: '5 min read',
+    tags: ['Analytics', 'Privacy', 'Product'],
+    featured: false,
+    Content: PrivacySafeProductAnalyticsEn,
+  },
   {
     slug: 'google-translate-name-bug',
     language: 'he',

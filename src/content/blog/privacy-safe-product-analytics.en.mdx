@@ -1,0 +1,47 @@
+There is a kind of feature that sounds small until you realize how easy it is to build it wrong: analytics.
+
+In Online Converter, I wanted to understand how people use the tool without turning a privacy-focused product into a tracking product. That sounds like a nice sentence, but in practice it is a product decision with very concrete technical boundaries: measure usage, not content. Know that someone converted JSON to CSV, not what was inside their JSON.
+
+That is the difference between building a product you can improve and building a product that asks for more trust than it needs.
+
+## The problem: converter tools can see sensitive data
+
+A converter tool may receive real text: JSON from a system, CSV with customer records, XML from an integration, YAML configuration. Even if everything runs client-side, the user experience depends on the promise that their data is not being sent elsewhere.
+
+But with no measurement at all, the product becomes harder to improve. It is hard to know which tools are actually used, where people get stuck, whether search works, whether categories help, or whether a button is ever clicked.
+
+The tension is simple: I want to learn from product behavior, but not from the user's data.
+
+## The diagnosis: the event matters, the content does not
+
+The fix started with a simple separation: some things are safe to measure, and some things are not.
+
+It is useful to measure that an event happened: a user opened a tool, converted data, changed an option, loaded a sample, cleared input, opened a reverse tool, clicked an external link, or viewed an ad slot. It is not acceptable to measure the input, the output, or the actual search query.
+
+So instead of sending arbitrary payloads, I built an analytics layer that accepts events with narrow props and sanitizes them down to simple values only: string, number, and boolean. Even when the user searches, the event stores query length and visible tool count, not the words they typed.
+
+The principle was: analytics should answer a product question, not create a window into private content.
+
+## The fix: one event layer with boundaries
+
+Instead of scattering analytics provider calls across components, I added one layer that owns tracking.
+
+Pages pass basic context such as page type, locale, category, tool, and converter. Components emit events like `convert_tool`, `clear_input`, `toggle_auto_convert`, or `open_reverse_tool`. The analytics layer combines those pieces, pushes to `dataLayer`, and, when Plausible is configured, forwards the event there too.
+
+The benefit is that the component does not need to know which analytics provider exists. It only reports that something meaningful happened. Most importantly, it does not pass along the data the user entered.
+
+Ads received the same careful treatment: not "who is this user", but whether a specific ad placement became visible, and whether it was a real ad or a placeholder. That is enough to understand the layout without turning the page into a tracking machine.
+
+## How I tested that it stayed safe
+
+I added an E2E test that verifies a tool page emits `view_tool`, a conversion emits `convert_tool`, and the conversion event includes the tool identifier. The test does not look for user input inside the event, because that is the whole point: the content should not be there.
+
+That kind of test is not only QA. It is a boundary. It says that if I later add another analytics provider or more events, there is still a clear expectation: measure actions, do not read personal data.
+
+## What I learned
+
+Good analytics does not start with "what can we collect?" It starts with "what do we actually need to know to improve the product?"
+
+When you answer that honestly, a lot of unnecessary data falls away. You do not need conversion content to know a tool is useful. You do not need search terms to know search helps. You do not need to identify a user to know whether a button gets used.
+
+In a product that promises privacy, measurement has to be part of that promise. Not a technical afterthought, not something added at the end, but a product decision in its own right.
