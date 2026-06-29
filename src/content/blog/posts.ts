@@ -8,11 +8,35 @@ import GoogleTranslateNameBugEn from './google-translate-name-bug.en.mdx';
 import GoogleTranslateNameBugHe from './google-translate-name-bug.he.mdx';
 import PrivacySafeProductAnalyticsEn from './privacy-safe-product-analytics.en.mdx';
 import PrivacySafeProductAnalyticsHe from './privacy-safe-product-analytics.he.mdx';
+import SeoDiscoveryIsProductWorkEn from './seo-discovery-is-product-work.en.mdx';
+import SeoDiscoveryIsProductWorkHe from './seo-discovery-is-product-work.he.mdx';
 import SmallProjectArchitectureEn from './small-project-architecture.en.mdx';
 import SmallProjectArchitectureHe from './small-project-architecture.he.mdx';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'seo-discovery-is-product-work',
+    language: 'he',
+    title: 'SEO הוא לא קישוט, הוא שכבת גילוי במוצר',
+    excerpt: 'על העבודה ב-Online Converter שהפכה דפי קטגוריה, קישורים פנימיים ו-snippets ממטלת SEO לשכבת discovery שנבדקת כמו קוד.',
+    date: '2026-06-28',
+    readTime: '6 דקות קריאה',
+    tags: ['SEO', 'Product', 'Discovery'],
+    featured: false,
+    Content: SeoDiscoveryIsProductWorkHe,
+  },
+  {
+    slug: 'seo-discovery-is-product-work',
+    language: 'en',
+    title: 'SEO is not decoration, it is product discovery',
+    excerpt: 'About turning category pages, internal links, and snippets in Online Converter from an SEO checklist into a tested discovery layer.',
+    date: '2026-06-28',
+    readTime: '6 min read',
+    tags: ['SEO', 'Product', 'Discovery'],
+    featured: false,
+    Content: SeoDiscoveryIsProductWorkEn,
+  },
   {
     slug: 'privacy-safe-product-analytics',
     language: 'he',

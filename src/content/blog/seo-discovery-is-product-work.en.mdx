@@ -1,0 +1,48 @@
+It is easy to treat SEO as something you add at the end: write a better title, add a meta description, maybe adjust a few keywords, and move on. But in a product like Online Converter, that is not enough. When the product has many small tools, each tool needs to be discoverable, connected to the right category, and able to lead the user to the next useful action.
+
+This week I worked on that layer: not another isolated tool page, but a small discovery system. Category pages with useful content, internal links, related tools, unique snippets, and tests that keep the structure from falling apart as more tools are added.
+
+## The problem: a useful tool is weak if people cannot find it
+
+Converter products have a constant gap between what the product can do and what the user can discover. Someone who lands on JSON to CSV may not know there is also a JSON formatter, CSV to JSON, a YAML converter, or a reverse tool that saves another search.
+
+If every page behaves like an island, two things happen:
+
+- Search engines get less context about the category.
+- Users who arrive on one tool do not get a clear path to the next relevant tool.
+
+The fix was not to write more generic copy. The content had to help the product work: explain the category, surface recommended tools, answer relevant questions, and create internal links based on real relationships between tools.
+
+## The diagnosis: SEO is information architecture too
+
+The recent Online Converter commits strengthened three layers.
+
+The first layer is category pages. Instead of a flat list of tools, each category now highlights recommended tools, popular tools, new tools, common uses, and quick links. That turns the category from a simple index into a page that explains what can be done there.
+
+The second layer is tool-to-category linking. Tool pages now include the category in the breadcrumb, a "more from this category" section, and priority links to related tools from the same family. A user who starts with one tool can keep moving without restarting the journey.
+
+The third layer is unique snippets. I added helpers that generate localized page titles and meta descriptions for every category in Hebrew and English, with tests that check uniqueness and reasonable length.
+
+## The fix: discovery that is tested like code
+
+What I liked about this change is that it did not stop at "looks better." It entered the test suite.
+
+The tests check that every category gets a unique title and description, that snippet length stays within useful limits, that tools inside a category can be ranked, and that related tools are selected from real signals: reverse tools, category match, input/output type, popularity, and newness.
+
+That matters because SEO often gets treated as a marketing layer, but here it depends on product logic. If that logic is not tested, it is easy to add a new tool and later discover that it is not linked correctly, not ranked where it should be, or described with copy that is too generic.
+
+## Why this is product work
+
+Good SEO is not only about bringing traffic. It should respect the user's intent after they arrive.
+
+If someone opens Base64 Decode, they may also need Base64 Encode or URL Decode. If they land on Data Format Converters, they probably want to understand quickly which tool fits their task. If the page helps them do that, search becomes part of the product, not only an acquisition channel.
+
+In other words: discoverability is user experience. Good internal links are not only "SEO juice"; they are navigation. A useful FAQ is not only schema; it is an answer to a real hesitation. A good meta description is not only text for Google; it is a short promise about what the page will deliver.
+
+## What I learned
+
+The lesson for me is that SEO in a product should be built like a feature, not applied like decoration.
+
+It needs data structures that hold categories, relationships, popular/new markers, FAQs, and examples. It needs helpers that centralize title and description generation. It needs UI that exposes those relationships in a useful way. And it needs tests that prevent the system from becoming a pile of disconnected copy.
+
+When that works, SEO stops being a checklist at the end of the project. It becomes part of the product architecture: the way users, search engines, and I as the developer understand what exists, where it belongs, and what should be opened next.
