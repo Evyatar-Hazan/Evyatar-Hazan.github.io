@@ -78,6 +78,7 @@ const BlogIndex = () => {
   usePageSeo({
     title: t('blog.seo.indexTitle'),
     description: t('blog.seo.indexDescription'),
+    path: '/blog/'
   });
 
   return (

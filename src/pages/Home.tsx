@@ -4,9 +4,19 @@ import Button from '../components/Button';
 import { useTranslation } from 'react-i18next';
 import Magnetic from '../components/animations/Magnetic';
 import { profileLinks } from '../data/profile';
+import { usePageSeo } from '../hooks/usePageSeo';
 
 const Home = () => {
   const { t, i18n } = useTranslation();
+  const isHebrew = i18n.language === 'he';
+
+  usePageSeo({
+    title: isHebrew ? 'אביתר חזן | Full Stack Developer' : 'Evyatar Hazan | Full Stack Developer',
+    description: isHebrew
+      ? 'פורטפוליו של אביתר חזן עם אתרים עסקיים, מערכות Full Stack, כלי מוצר, כתיבה מקצועית ודרכי יצירת קשר ישירות.'
+      : 'Portfolio of Evyatar Hazan with business websites, full-stack systems, product tools, technical writing, and direct contact paths.',
+    path: '/'
+  });
 
   const scrollTo = (id: string) => {
     const el = document.querySelector(id);
@@ -14,7 +24,6 @@ const Home = () => {
   };
 
   const nameText = t('home.name').split('');
-  const isHebrew = i18n.language === 'he';
   const proofItems = [
     { key: 'repos', icon: Code2 },
     { key: 'delivery', icon: ShieldCheck },

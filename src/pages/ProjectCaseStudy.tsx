@@ -14,7 +14,8 @@ const ProjectCaseStudy = () => {
 
   usePageSeo({
     title: caseStudy ? pick(caseStudy.seoTitle, i18n.language) : t('projects.caseStudyNotFoundSeoTitle'),
-    description: caseStudy ? pick(caseStudy.seoDescription, i18n.language) : t('projects.caseStudyNotFoundDescription')
+    description: caseStudy ? pick(caseStudy.seoDescription, i18n.language) : t('projects.caseStudyNotFoundDescription'),
+    path: projectId ? `/projects/${projectId}/` : '/'
   });
 
   if (!project || !caseStudy) {

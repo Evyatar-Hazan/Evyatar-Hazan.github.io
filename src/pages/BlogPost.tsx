@@ -25,6 +25,7 @@ const BlogPost = () => {
   usePageSeo({
     title: post ? `${post.title} | ${t('blog.title')}` : t('blog.notFoundSeoTitle'),
     description: post?.excerpt ?? t('blog.notFoundDescription'),
+    path: post ? `/blog/${post.slug}/` : '/blog/'
   });
 
   if (!post) {

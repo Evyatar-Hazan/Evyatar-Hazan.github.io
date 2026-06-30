@@ -5,6 +5,8 @@ import Home from './pages/Home';
 import BlogIndex from './pages/BlogIndex';
 import BlogPost from './pages/BlogPost';
 import ProjectCaseStudy from './pages/ProjectCaseStudy';
+import ContactPage from './pages/ContactPage';
+import PrivacyPage from './pages/PrivacyPage';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { useTheme } from './hooks/useTheme';
@@ -81,6 +83,8 @@ const AppShell = () => {
         <Route path="/projects/:projectId" element={<ProjectCaseStudy />} />
         <Route path="/blog" element={<BlogIndex />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="*" element={<PortfolioHome />} />
       </Routes>
       <Footer />

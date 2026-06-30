@@ -4,6 +4,8 @@ import './index.css';
 import App from './App.tsx';
 import './i18n';
 
+document.getElementById('route-preview')?.remove();
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />

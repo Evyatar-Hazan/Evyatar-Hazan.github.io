@@ -1,11 +1,13 @@
 import { Github, Linkedin, Mail, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { profileLinks } from '../data/profile';
 
 const Footer = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const currentYear = new Date().getFullYear();
   const appVersion = import.meta.env.VITE_APP_VERSION;
+  const isHebrew = i18n.language === 'he';
   
   const socialLinks = [
     { name: 'Github', icon: Github, href: profileLinks.github },
@@ -20,6 +22,11 @@ const Footer = () => {
         <div className="text-center md:text-left">
           <div className="text-neutral-500 dark:text-neutral-400 text-sm transition-colors duration-500">
             {t('footer.copyright', { year: currentYear })}
+          </div>
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-sm text-neutral-500 dark:text-neutral-400 md:justify-start">
+            <Link to="/privacy" className="transition hover:text-neutral-900 dark:hover:text-white">{isHebrew ? 'פרטיות' : 'Privacy'}</Link>
+            <Link to="/contact" className="transition hover:text-neutral-900 dark:hover:text-white">{isHebrew ? 'יצירת קשר' : 'Contact'}</Link>
+            <Link to="/blog" className="transition hover:text-neutral-900 dark:hover:text-white">{isHebrew ? 'כתיבה' : 'Writing'}</Link>
           </div>
           <div className="mt-2 inline-flex items-center rounded-full border border-neutral-200 dark:border-neutral-800 bg-white/70 dark:bg-neutral-900/70 px-3 py-1 text-xs font-medium tracking-wide text-neutral-600 dark:text-neutral-300 transition-colors duration-500">
             Version {appVersion}
