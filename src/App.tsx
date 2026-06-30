@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import BlogIndex from './pages/BlogIndex';
 import BlogPost from './pages/BlogPost';
+import ProjectCaseStudy from './pages/ProjectCaseStudy';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { useTheme } from './hooks/useTheme';
@@ -77,6 +78,7 @@ const AppShell = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<PortfolioHome />} />
+        <Route path="/projects/:projectId" element={<ProjectCaseStudy />} />
         <Route path="/blog" element={<BlogIndex />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="*" element={<PortfolioHome />} />

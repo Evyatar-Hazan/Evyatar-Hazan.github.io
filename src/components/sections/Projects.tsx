@@ -11,6 +11,7 @@ import {
   Workflow,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { projects, type Project } from '../../data/profile';
 
 const visualIcons: Record<Project['visual'], typeof PanelsTopLeft> = {
@@ -108,6 +109,14 @@ const ProjectActions = ({ project, compact = false }: { project: Project; compac
 
   return (
     <div className="flex flex-wrap items-center gap-2">
+      {project.caseStudy && (
+        <Link
+          to={`/projects/${project.id}`}
+          className={`${baseClass} border-neutral-200 bg-neutral-50 text-neutral-700 hover:border-neutral-300 hover:text-neutral-950 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:text-white`}
+        >
+          {t('projects.caseStudy')}
+        </Link>
+      )}
       <a
         href={project.githubUrl}
         target="_blank"
@@ -157,7 +166,13 @@ const FeaturedProjectCard = ({ project, index }: { project: Project; index: numb
         </div>
 
         <h3 className="mb-3 text-2xl font-bold text-neutral-950 transition-colors group-hover:text-primary-600 dark:text-white dark:group-hover:text-primary-400">
-          {t(`projects.items.${project.id}.title`)}
+          {project.caseStudy ? (
+            <Link to={`/projects/${project.id}`} className="outline-none focus-visible:text-primary-500">
+              {t(`projects.items.${project.id}.title`)}
+            </Link>
+          ) : (
+            t(`projects.items.${project.id}.title`)
+          )}
         </h3>
         <p className="mb-4 text-base leading-relaxed text-neutral-600 dark:text-neutral-400">
           {t(project.summaryKey)}
@@ -192,7 +207,13 @@ const ProjectIndexRow = ({ project }: { project: Project }) => {
       <div>
         <div className="flex flex-wrap items-center gap-2">
           <h3 className="text-base font-bold text-neutral-950 dark:text-white">
-            {t(`projects.items.${project.id}.title`)}
+            {project.caseStudy ? (
+              <Link to={`/projects/${project.id}`} className="outline-none focus-visible:text-primary-500">
+                {t(`projects.items.${project.id}.title`)}
+              </Link>
+            ) : (
+              t(`projects.items.${project.id}.title`)
+            )}
           </h3>
           <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-xs font-bold text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400">
             {t(`projects.statuses.${project.status}`)}

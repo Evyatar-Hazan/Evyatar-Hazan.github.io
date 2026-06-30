@@ -66,6 +66,7 @@ describe('App', () => {
     }
 
     expect(screen.getByText('projects.indexTitle')).toBeInTheDocument();
+    expect(screen.getAllByText('projects.caseStudy').length).toBeGreaterThan(0);
   });
 
   it('surfaces recent writing on the home page', async () => {
@@ -148,6 +149,14 @@ describe('App', () => {
     expect(await screen.findByRole('heading', { name: 'How I built a business site around WhatsApp' })).toBeInTheDocument();
     expect(screen.getByText(/The solution was almost funny in its simplicity/i)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /blog.backToBlog/i })).toHaveAttribute('href', '/blog');
+  });
+
+  it('renders a featured project case study page', async () => {
+    renderAt('/projects/online_converter');
+
+    expect(await screen.findByRole('heading', { name: 'projects.items.online_converter.title' })).toBeInTheDocument();
+    expect(screen.getByText('projects.caseStudyAudience')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'projects.caseStudyBack' })).toHaveAttribute('href', '/#projects');
   });
 
   it('renders a not found state for an unknown blog post', async () => {
