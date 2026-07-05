@@ -12,9 +12,33 @@ import SeoDiscoveryIsProductWorkEn from './seo-discovery-is-product-work.en.mdx'
 import SeoDiscoveryIsProductWorkHe from './seo-discovery-is-product-work.he.mdx';
 import SmallProjectArchitectureEn from './small-project-architecture.en.mdx';
 import SmallProjectArchitectureHe from './small-project-architecture.he.mdx';
+import SpaRoutesNeedRealHttpEn from './spa-routes-need-real-http.en.mdx';
+import SpaRoutesNeedRealHttpHe from './spa-routes-need-real-http.he.mdx';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'spa-routes-need-real-http',
+    language: 'he',
+    title: 'גם SPA צריך URL אמיתי',
+    excerpt: 'על תיקון נתיבי בלוג ו-case studies בפורטפוליו כך שיחזירו HTTP 200, metadata נכון ו-sitemap, ולא רק ירונדרו אחרי טעינת React.',
+    date: '2026-07-05',
+    readTime: '6 דקות קריאה',
+    tags: ['Frontend', 'SEO', 'Production'],
+    featured: false,
+    Content: SpaRoutesNeedRealHttpHe,
+  },
+  {
+    slug: 'spa-routes-need-real-http',
+    language: 'en',
+    title: 'Even an SPA needs real URLs',
+    excerpt: 'About fixing portfolio blog and case study routes so they return HTTP 200, correct metadata, and sitemap coverage, not only client-side rendering after React loads.',
+    date: '2026-07-05',
+    readTime: '6 min read',
+    tags: ['Frontend', 'SEO', 'Production'],
+    featured: false,
+    Content: SpaRoutesNeedRealHttpEn,
+  },
   {
     slug: 'seo-discovery-is-product-work',
     language: 'he',

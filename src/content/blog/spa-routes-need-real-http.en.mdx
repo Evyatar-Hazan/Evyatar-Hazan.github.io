@@ -1,0 +1,62 @@
+There is a specific kind of bug that feels misleading: you open a URL in the browser, the app looks correct, navigation works, the content appears, and then a simple `curl` check shows that the server is returning HTTP 404.
+
+That happened in my portfolio. Routes like `/blog/`, `/blog/seo-discovery-is-product-work/`, case study pages, contact, and privacy could look fine because React Router knew how to render them on the client. But from the server's point of view, and from the point of view of a crawler, a link preview, or an SEO check, some of those URLs were not really there.
+
+That is a small technical detail with a large trust cost: a public URL should be a real product surface, not only a route that React rescues after the shell loads.
+
+## The problem: an SPA can hide broken HTTP
+
+In a Single Page Application, this is easy to miss. During development, the dev server returns `index.html` for every route and the router takes over. In production, if you enter through the home page and click an internal link, the app can show the correct page without the server ever needing to serve that route directly.
+
+But the outside world does not always start at the home page.
+
+A user can open a direct post link. Google can crawl `/blog/some-post/`. LinkedIn can fetch Open Graph metadata. Someone can send a case study to a client, and the client can refresh right there.
+
+If the URL returns 404, even if the app shell eventually loads, the contract is broken.
+
+## The diagnosis: rendering correctly is not the same as responding correctly
+
+The key was separating two questions:
+
+- Can React render this route?
+- Does the server return the right response for this public URL?
+
+The first is a UI question. The second is a product, SEO, and infrastructure question.
+
+In production checks, I saw that the branded domain and GitHub Pages did not always behave the same way, and internal routes could return 404 even while the app bundle loaded. That meant I needed to check HTTP status, bundle content, canonical URLs, metadata, and the sitemap, not only whether the page looked fine in a browser.
+
+## The fix: fallback plus static entries
+
+The first fix was a Cloudflare Pages `_redirects` rule:
+
+`/* /index.html 200`
+
+That gives the SPA a proper fallback so internal routes do not fail before the app loads.
+
+But I did not stop there. I added a build script called `create-static-routes.mjs` that creates physical `index.html` entries for important public routes: `/blog/`, every blog post, case studies, `/contact/`, and `/privacy/`. The same script also generates `sitemap.xml` and injects route-specific title, description, canonical, and Open Graph metadata.
+
+The result is that these URLs no longer depend only on React Router after load. They have a static presence in production.
+
+## Why metadata is part of the fix
+
+It would have been easy to stop at "now it returns 200." But a public URL is not measured only by its status code.
+
+When a post is shared, the preview should show the right title and description. When a search engine reads the page, the canonical URL should point to the branded domain `https://evyatarhazan.com/`, not the secondary GitHub Pages domain. When someone opens a case study, they should get metadata for that case study, not generic home page metadata.
+
+So I also added centralized SEO data in `src/data/site.ts` and a hook that updates title, description, canonical, Open Graph, and Twitter metadata on the client. The build provides the static layer; the client keeps navigation consistent after the app is running.
+
+## How I verified it
+
+The check did not end at `npm run validate`. I checked production directly.
+
+I verified that routes like `/blog/`, `/blog/seo-discovery-is-product-work/`, `/projects/nis_boutique/`, `/contact/`, `/privacy/`, `sitemap.xml`, `robots.txt`, and `ads.txt` returned HTTP 200 on the branded domain. I also checked that GitHub Pages returned 200 for the blog and project routes I tested. Finally, I verified that canonical and social metadata pointed to the branded domain.
+
+That is the difference between "it seems to work" and "I can send this link with confidence."
+
+## What I learned
+
+In an SPA, a route that works after hydration is not necessarily a valid URL.
+
+If a route is public, it needs to be treated as a product asset: correct HTTP status, correct metadata, correct canonical, sitemap coverage, fallback behavior, and verification against the real domains. Otherwise the site can look fine to a person and still look broken to the systems that decide whether the link is trustworthy.
+
+The practical lesson is simple: it is not enough to check that the app can reach a page. You also need to check that the outside world can reach it.
