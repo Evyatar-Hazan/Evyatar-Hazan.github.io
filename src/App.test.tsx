@@ -102,6 +102,10 @@ describe('App', () => {
       'src',
       'https://bls-protocol.evyatarhazan.com/'
     );
+    expect(screen.getByTitle('projects.items.united_hatzalah.previewTitle')).toHaveAttribute(
+      'src',
+      'https://hatzalah-shoham.evyatarhazan.com/'
+    );
   });
 
   it('locks and unlocks body scroll when mobile menu toggles', () => {

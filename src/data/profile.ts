@@ -349,6 +349,7 @@ export const projects: Project[] = [
     status: 'nonprofit',
     tags: ['React', 'Express', 'Prisma', 'Cloudinary', 'Render'],
     githubUrl: 'https://github.com/Evyatar-Hazan/united-hatzalah-shoham-branch',
+    liveUrl: 'https://hatzalah-shoham.evyatarhazan.com/',
     visual: 'branch',
     summaryKey: 'projects.items.united_hatzalah.summary',
     impactKey: 'projects.items.united_hatzalah.impact',
