@@ -1,0 +1,297 @@
+When we write software, it is easy to imagine that the computer simply "runs the code." In reality, every line of code goes through a long chain of transformations, and at the end of that chain the CPU executes very small machine instructions.
+
+The CPU is the part of the computer responsible for executing instructions from running programs. It performs calculations, compares values, moves data, makes decisions, and advances through the program.
+
+But the CPU does not directly understand Python, Java, or JavaScript. It understands only the instruction set of its architecture, such as ARM64 or x86-64.
+
+## How does a CPU execute an instruction?
+
+In a simplified model, instruction execution goes through a few stages:
+
+```text
+Fetch -> Decode -> Execute -> Write Back
+```
+
+### Fetch
+
+The CPU needs to know which instruction to execute next.
+
+For that, it uses a special register called the Program Counter, or PC. The PC stores the address of the next instruction.
+
+During Fetch, the CPU reads the instruction from the address pointed to by the PC. Usually the instruction comes from the Instruction Cache. If it is not there, the CPU may need to fetch it from a lower level of the memory hierarchy.
+
+After fetching the instruction, the PC usually advances to the next instruction address. In a jump, function call, or function return, the PC can change to a different address.
+
+### Decode
+
+During Decode, the CPU identifies:
+
+- Which operation needs to run.
+- Which registers contain the input data.
+- Where the result should be stored.
+- Whether memory access is needed.
+- Whether the instruction is a calculation, comparison, branch, or another operation.
+
+For example:
+
+```asm
+ADD R3, R1, R2
+```
+
+This means: add the value in R1 to the value in R2 and store the result in R3.
+
+### Execute
+
+During Execute, the execution unit performs the actual operation.
+
+If:
+
+```text
+R1 = 10
+R2 = 7
+```
+
+then the arithmetic unit computes:
+
+```text
+10 + 7 = 17
+```
+
+The CPU may also update status flags, such as:
+
+- Zero Flag - whether the result is zero.
+- Sign Flag - whether the result is negative.
+- Carry Flag - whether an unsigned calculation carried out.
+- Overflow Flag - whether a signed calculation overflowed.
+
+### Write Back
+
+After the calculation, the result is usually written to the destination register:
+
+```text
+R3 = 17
+```
+
+It is important to separate writing to a register from writing to memory. A normal add instruction does not have to write to RAM. To store a value from a register back into memory, the CPU usually needs a `STORE` instruction.
+
+## What are registers for?
+
+Registers are tiny, extremely fast storage locations inside the CPU.
+
+They are used for:
+
+- Data needed for immediate calculation.
+- Temporary results.
+- Memory addresses.
+- Function parameters.
+- The address of the next instruction.
+- The current state of the calculation.
+
+A common data flow looks like this:
+
+```text
+RAM or Cache
+↓
+Registers
+↓
+Execution unit
+↓
+Registers
+↓
+Sometimes STORE back to memory
+```
+
+The CPU prefers registers because they are much faster than RAM.
+
+## Why does cache matter?
+
+The CPU is much faster than RAM. If it had to wait for RAM before every instruction or data access, it would spend a large part of its time stalled.
+
+That is why CPUs use several levels of cache:
+
+```text
+L1 -> L2 -> L3 -> RAM
+```
+
+The closer the cache is to the core, the faster and usually smaller it is.
+
+Cache stores data and instructions that the CPU is likely to need soon. It relies heavily on two ideas:
+
+- Temporal Locality - data used recently may be needed again.
+- Spatial Locality - data located near other recently used data may be needed together.
+
+An efficient cache can allow a lower-frequency CPU to beat a higher-frequency CPU.
+
+## What is a pipeline?
+
+A pipeline is an internal CPU mechanism that lets multiple instructions be in different execution stages at the same time.
+
+For example, while one instruction is in Execute, another can be in Decode and another can be in Fetch.
+
+You can think of it like a factory line:
+
+```text
+Instruction A: Execute
+Instruction B: Decode
+Instruction C: Fetch
+```
+
+This does not mean every instruction finishes immediately or that all instructions are independent. Dependencies between instructions, cache misses, and wrong branch predictions can all create stalls.
+
+Modern CPUs also use techniques such as:
+
+- Out-of-Order Execution.
+- Branch Prediction.
+- Speculative Execution.
+- Completing multiple instructions per cycle.
+
+All of these affect how many instructions the CPU actually completes.
+
+## Why is GHz not enough?
+
+GHz tells us how many clock cycles the CPU performs per second.
+
+A 4GHz CPU performs roughly four billion cycles per second, but one clock cycle is not necessarily one completed instruction.
+
+Another important metric is IPC:
+
+```text
+IPC = Instructions Per Cycle
+```
+
+That means the average number of instructions completed per cycle.
+
+Roughly:
+
+```text
+Core performance ≈ frequency × IPC
+```
+
+For example:
+
+```text
+CPU A: 4GHz × IPC 2 = 8
+CPU B: 3GHz × IPC 3 = 9
+```
+
+Even though CPU B has a lower frequency, it may be faster because it does more work per cycle.
+
+IPC is not fixed either. It depends on the program, cache behavior, instruction dependencies, branch prediction, and the CPU microarchitecture.
+
+CPU frequency also changes in real time. Under heavy load, the CPU can heat up and trigger thermal throttling, reducing frequency to protect itself.
+
+## Why do more cores not speed up every program?
+
+A core is an execution unit that can run a stream of instructions.
+
+When a computer has multiple cores, it can run multiple tasks in parallel. But for one program to use multiple cores, its work must be divisible.
+
+A normal Python loop does not automatically spread itself across all cores:
+
+```python
+total = 0
+
+for number in range(20_000_000):
+    total += number * number
+```
+
+To use multiple cores, we might split the range between several processes:
+
+```text
+Process 1 -> computes one part of the range
+Process 2 -> computes another part
+Main process -> combines the results
+```
+
+Even then, the speedup will not necessarily be linear.
+
+Some reasons:
+
+- Process creation overhead.
+- Work splitting overhead.
+- Result transfer overhead.
+- Operating system scheduling.
+- Competition for cache and memory bandwidth.
+- Heat and reduced frequency.
+- Parts of the program that cannot be parallelized.
+- Logical cores that are not the same as full physical cores.
+
+According to Amdahl's Law, the serial part of a program limits the maximum possible speedup. If part of the program cannot be divided, no number of cores can remove the time spent there.
+
+## How does Python reach the CPU?
+
+In CPython, the path looks roughly like this:
+
+```text
+Python Source
+↓
+Python Compiler
+↓
+Python Bytecode
+↓
+CPython Interpreter
+↓
+Machine code of the interpreter
+↓
+CPU
+```
+
+Python source code is written for humans.
+
+The Python compiler turns it into bytecode. That bytecode is not ARM64 or x86-64 machine code. It is an instruction set for the Python virtual machine and interpreter.
+
+The CPython interpreter is a program that has already been compiled to the machine code of the computer. The CPU runs the machine code of the interpreter, and the interpreter reads and handles the Python bytecode.
+
+That is why the same Python program can run on both ARM64 and x86-64 machines, as long as each machine has a Python interpreter built for its architecture.
+
+## A practical experiment
+
+I ran a Python loop that computes a sum of squares on an ARM64 macOS machine with 18 logical CPUs.
+
+The results were:
+
+```text
+20 million iterations:
+0.42 seconds
+CPU: 99.9%
+Peak RSS: 16.69MB
+
+40 million iterations:
+0.83 seconds
+CPU: 99.9%
+Peak RSS: 16.69MB
+```
+
+The ratio between the runtimes was:
+
+```text
+0.83 ÷ 0.42 ≈ 1.98
+```
+
+In other words, doubling the number of iterations almost exactly doubled the runtime.
+
+The roughly 100% CPU usage for the process on macOS indicated near-full use of one core, not all 18 logical CPUs.
+
+Memory usage stayed the same because the program did not store all results. It mostly held the current sum, the loop counter, and temporary objects. So the extra memory stayed approximately constant even though the amount of computation doubled.
+
+The experiment showed three things:
+
+1. A single CPython loop does not automatically spread across all cores.
+2. For this kind of task, runtime grows roughly with the amount of work.
+3. Many cores do not help a program that was not written to use parallelism.
+
+## Summary
+
+The CPU executes machine instructions through a process that includes fetching an instruction, decoding it, reading data, executing the operation, and writing back the result.
+
+The PC stores the address of the next instruction, registers act as the CPU's fast working area, and cache reduces the time spent waiting for memory.
+
+CPU performance is not determined only by GHz. It also depends on IPC, cache, pipeline structure, dependencies, prediction, and temperature.
+
+Core count alone does not guarantee speed either. To use multiple cores, the program must be divisible, and the cost of splitting the work must be small enough compared with the work itself.
+
+In the end, the useful question is not only "how many GHz and how many cores does this CPU have?"
+
+It is:
+
+> How much work can this CPU actually complete for the specific program we are running?

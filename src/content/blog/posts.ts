@@ -14,9 +14,33 @@ import SmallProjectArchitectureEn from './small-project-architecture.en.mdx';
 import SmallProjectArchitectureHe from './small-project-architecture.he.mdx';
 import SpaRoutesNeedRealHttpEn from './spa-routes-need-real-http.en.mdx';
 import SpaRoutesNeedRealHttpHe from './spa-routes-need-real-http.he.mdx';
+import WhatTheCpuReallyDoesEn from './what-the-cpu-really-does.en.mdx';
+import WhatTheCpuReallyDoesHe from './what-the-cpu-really-does.he.mdx';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'what-the-cpu-really-does',
+    language: 'he',
+    title: 'מה המעבד באמת עושה',
+    excerpt: 'הסבר מעשי על Fetch, Decode, Execute, אוגרים, Cache, Pipeline, IPC, ליבות, GHz ולמה לולאת Python אחת לא משתמשת אוטומטית בכל המעבדים.',
+    date: '2026-07-11',
+    readTime: '10 דקות קריאה',
+    tags: ['CPU', 'Performance', 'Python'],
+    featured: false,
+    Content: WhatTheCpuReallyDoesHe,
+  },
+  {
+    slug: 'what-the-cpu-really-does',
+    language: 'en',
+    title: 'What the CPU really does',
+    excerpt: 'A practical explanation of Fetch, Decode, Execute, registers, cache, pipelines, IPC, cores, GHz, and why one Python loop does not automatically use every CPU.',
+    date: '2026-07-11',
+    readTime: '10 min read',
+    tags: ['CPU', 'Performance', 'Python'],
+    featured: false,
+    Content: WhatTheCpuReallyDoesEn,
+  },
   {
     slug: 'spa-routes-need-real-http',
     language: 'he',
