@@ -16,11 +16,35 @@ import SpaRoutesNeedRealHttpEn from './spa-routes-need-real-http.en.mdx';
 import SpaRoutesNeedRealHttpHe from './spa-routes-need-real-http.he.mdx';
 import RamVsStorageEn from './ram-vs-storage.en.mdx';
 import RamVsStorageHe from './ram-vs-storage.he.mdx';
+import WhatIsInsideAFileEn from './what-is-inside-a-file.en.mdx';
+import WhatIsInsideAFileHe from './what-is-inside-a-file.he.mdx';
 import WhatTheCpuReallyDoesEn from './what-the-cpu-really-does.en.mdx';
 import WhatTheCpuReallyDoesHe from './what-the-cpu-really-does.he.mdx';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'what-is-inside-a-file',
+    language: 'he',
+    title: 'מה באמת יש בתוך קובץ?',
+    excerpt: 'הסבר מעשי על ביטים, בתים, UTF-8, תמונות, signed ו-unsigned, overflow, byte ב-Java, גודל בדיסק וסדר בתים.',
+    date: '2026-07-12',
+    readTime: '10 דקות קריאה',
+    tags: ['Data', 'Files', 'Java'],
+    featured: false,
+    Content: WhatIsInsideAFileHe,
+  },
+  {
+    slug: 'what-is-inside-a-file',
+    language: 'en',
+    title: 'What is really inside a file?',
+    excerpt: 'A practical explanation of bits, bytes, UTF-8, images, signed and unsigned numbers, overflow, Java bytes, size on disk, and byte order.',
+    date: '2026-07-12',
+    readTime: '10 min read',
+    tags: ['Data', 'Files', 'Java'],
+    featured: false,
+    Content: WhatIsInsideAFileEn,
+  },
   {
     slug: 'ram-vs-storage',
     language: 'he',

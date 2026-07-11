@@ -1,0 +1,491 @@
+We open an image and see a landscape, read a Hebrew document, listen to music, and run a program. To us, these feel like completely different kinds of information. To the computer, they all begin in the same place: a long sequence of zeros and ones.
+
+The computer does not store an "image", a "letter", or a "number" on the drive in the human sense. It stores bits. The software, file format, and data type explain how those bits should be interpreted.
+
+The same sequence can be interpreted as a positive number, a negative number, part of a pixel color, a character in text, or an instruction for the CPU. The bits did not change. Only the meaning assigned to them changed.
+
+## What is a bit?
+
+A bit is the most basic unit of information in a computer. It can be in only one of two states:
+
+```text
+0
+1
+```
+
+One bit allows two possible combinations. Two bits allow four:
+
+```text
+00
+01
+10
+11
+```
+
+In general, the number of combinations that can be represented with `n` bits is:
+
+```text
+2^n
+```
+
+So:
+
+| Number of bits | Number of combinations |
+| --- | ---: |
+| 1 | 2 |
+| 2 | 4 |
+| 4 | 16 |
+| 8 | 256 |
+| 16 | 65,536 |
+
+It is important to separate the number of combinations from the maximum value. Eight bits allow 256 combinations, but if we start counting from 0, the maximum value is 255:
+
+```text
+0-255
+```
+
+## What is a byte?
+
+A byte is a group of eight bits:
+
+```text
+10110110
+```
+
+Because a byte has eight bits, it allows:
+
+```text
+2^8 = 256
+```
+
+different combinations.
+
+Lowercase and uppercase letters matter here:
+
+```text
+b = bit
+B = Byte
+```
+
+So:
+
+```text
+Mb = Megabit
+MB = Megabyte
+```
+
+One byte contains eight bits, and the same ratio applies at larger units:
+
+```text
+8 Mb = 1 MB
+800 Mb = 100 MB
+```
+
+That is why an internet connection of `500Mbps` does not download files at `500MB/s`. To convert from bits to bytes, divide by 8:
+
+```text
+500Mbps / 8 = 62.5MB/s
+```
+
+That is the theoretical maximum. In practice, the speed is usually lower because of Wi-Fi conditions, congestion, protocol overhead, server limits, and other factors.
+
+## How long will a file take to download?
+
+To calculate download time, first make sure that file size and speed are measured in the same unit.
+
+Suppose we download a `2.5GB` file over a `400Mbps` connection.
+
+First convert the speed:
+
+```text
+400Mbps / 8 = 50MB/s
+```
+
+Now convert the file size:
+
+```text
+2.5GB = 2,500MB
+```
+
+Then:
+
+```text
+2,500MB / 50MB/s = 50 seconds
+```
+
+The general formula is:
+
+```text
+time = size / speed
+```
+
+But it is only correct after the units match.
+
+## Why does a 1TB drive appear as 931GiB?
+
+The drive manufacturer and the operating system may use different measurement systems.
+
+In the decimal system:
+
+```text
+1 KB = 1,000 Bytes
+1 MB = 1,000,000 Bytes
+1 GB = 1,000,000,000 Bytes
+1 TB = 1,000,000,000,000 Bytes
+```
+
+In the binary system:
+
+```text
+1 KiB = 1,024 Bytes
+1 MiB = 1,048,576 Bytes
+1 GiB = 1,073,741,824 Bytes
+```
+
+When one trillion bytes are expressed in `GiB`, the result is:
+
+```text
+1,000,000,000,000 / 1,073,741,824 ~= 931.3GiB
+```
+
+No space disappeared from the drive. It is the same number of bytes, displayed using a different unit.
+
+That is also why it is useful to distinguish between:
+
+```text
+GB  - decimal unit
+GiB - binary unit
+```
+
+## How does a computer store text?
+
+Text is also a sequence of bytes. To know which sequence represents which character, computers use character encodings.
+
+One of the most common encodings is `UTF-8`. It can represent letters from many languages, symbols, and emoji, but not every character takes the same number of bytes.
+
+Usually:
+
+```text
+Regular English letter: one byte
+Hebrew letter: two bytes
+Simple emoji: often four bytes
+```
+
+For example, the text:
+
+```text
+ABCשלום
+```
+
+contains three English letters and four Hebrew letters.
+
+The three English letters usually require three bytes, and the Hebrew letters require eight bytes:
+
+```text
+3 * 1 + 4 * 2 = 11 Bytes
+```
+
+So the number of characters we see on the screen is not necessarily the number of bytes in the file.
+
+An emoji that looks like a single symbol on the screen can also be made of several Unicode code points, such as a person, skin tone, gender, or a join between several figures. In that case it may require much more than four bytes.
+
+## How does a computer store an image?
+
+A digital image is made of pixels. In an uncompressed `RGB` image, each pixel contains three color channels:
+
+```text
+Red
+Green
+Blue
+```
+
+Each channel is usually stored in one byte, so each pixel requires three bytes.
+
+The raw size formula is:
+
+```text
+width * height * 3 bytes
+```
+
+For an `800x600` image:
+
+```text
+800 * 600 * 3 = 1,440,000 Bytes
+```
+
+For an image with transparency, formats sometimes use `RGBA`, where a fourth channel called Alpha is added:
+
+```text
+width * height * 4 bytes
+```
+
+In practice, `JPEG`, `PNG`, and other file formats are not necessarily that size. They contain headers, metadata, and especially compression.
+
+A JPEG image can be much smaller than the raw size because the format does not store every pixel in the direct, simple form described above.
+
+Renaming a file from `.jpg` to `.txt` also does not turn it into a text file. The extension helps the system decide how to try to open the file, but it does not change the bytes inside it.
+
+## Same bits, different numbers
+
+Take this sequence of bits:
+
+```text
+11111001
+```
+
+If we interpret it as an unsigned number, we get:
+
+```text
+128 + 64 + 32 + 16 + 8 + 1 = 249
+```
+
+But if we interpret the same bits as a signed number using Two's Complement, we get:
+
+```text
+-7
+```
+
+So:
+
+| Bits | unsigned | signed |
+| --- | ---: | ---: |
+| `11111001` | 249 | -7 |
+
+The bits themselves do not contain a label saying "249" or "-7". The data type tells the software how to interpret them.
+
+## What is the range of an eight-bit number?
+
+In an unsigned number, all 256 combinations are used for non-negative numbers:
+
+```text
+0-255
+```
+
+In a signed number using Two's Complement, the combinations are divided between negative numbers, zero, and positive numbers:
+
+```text
+-128-127
+```
+
+Both cases still have 256 possible values. The difference is only how the meanings are assigned.
+
+| Bits | unsigned | signed |
+| --- | ---: | ---: |
+| `00000000` | 0 | 0 |
+| `01111111` | 127 | 127 |
+| `10000000` | 128 | -128 |
+| `11111111` | 255 | -1 |
+
+## How are negative numbers represented?
+
+To find the Two's Complement representation of a negative number:
+
+1. Write the positive number in binary.
+2. Flip every 0 to 1 and every 1 to 0.
+3. Add 1.
+
+For example, to represent `-5`:
+
+```text
+ 5: 00000101
+    11111010   flip the bits
+    11111011   add 1
+```
+
+So:
+
+```text
+-5 = 11111011
+```
+
+A quick way to interpret an unsigned byte value greater than 127 as signed is to subtract 256.
+
+For example:
+
+```text
+249 - 256 = -7
+254 - 256 = -2
+255 - 256 = -1
+```
+
+## What is overflow?
+
+A fixed-width number has a limited range. When a result leaves that range, overflow occurs.
+
+For an eight-bit unsigned number, the maximum value is 255. So:
+
+```text
+255 + 1 = 256
+```
+
+But 256 cannot be stored in eight bits. The ninth bit is discarded, and what remains is:
+
+```text
+00000000
+```
+
+So:
+
+```text
+255 + 1 -> 0
+```
+
+You can think of it like an odometer that returns to zero after reaching its maximum value.
+
+Signed arithmetic can wrap too:
+
+```text
+127 + 1 -> -128
+```
+
+However, the exact behavior depends on the programming language and the numeric type. Some systems wrap, others raise an error, widen the number, or prevent the operation.
+
+## What does this look like in Java?
+
+The `byte` type in Java is a signed eight-bit number, so its range is:
+
+```text
+-128-127
+```
+
+The following code stores the lowest eight bits of 253:
+
+```java
+byte value = (byte) 253;
+```
+
+The stored bit pattern is:
+
+```text
+11111101
+```
+
+When we print the variable directly, Java interprets it as signed:
+
+```java
+System.out.println(value); // -3
+```
+
+To interpret the same bits as unsigned:
+
+```java
+System.out.println(Byte.toUnsignedInt(value)); // 253
+```
+
+Here is a full experiment:
+
+```java
+public class ByteExperiment {
+
+    private static String toEightBits(byte value) {
+        return String.format(
+                "%8s",
+                Integer.toBinaryString(Byte.toUnsignedInt(value))
+        ).replace(' ', '0');
+    }
+
+    public static void main(String[] args) {
+        System.out.printf(
+                "%-8s %-8s %-10s %-8s%n",
+                "Input", "Signed", "Unsigned", "Bits"
+        );
+
+        for (int input = 250; input <= 260; input++) {
+            byte value = (byte) input;
+
+            System.out.printf(
+                    "%-8d %-8d %-10d %-8s%n",
+                    input,
+                    value,
+                    Byte.toUnsignedInt(value),
+                    toEightBits(value)
+            );
+        }
+    }
+}
+```
+
+Part of the output:
+
+```text
+Input    Signed   Unsigned   Bits
+250      -6       250        11111010
+251      -5       251        11111011
+252      -4       252        11111100
+253      -3       253        11111101
+254      -2       254        11111110
+255      -1       255        11111111
+256      0        0          00000000
+257      1        1          00000001
+258      2        2          00000010
+259      3        3          00000011
+260      4        4          00000100
+```
+
+The `Input` column keeps increasing, but inside the `byte` only the lowest eight bits are stored. That is why 256 becomes 0, and 260 becomes 4.
+
+## File size is not always size on disk
+
+File systems allocate space in fixed units, often called blocks or allocation units.
+
+If the allocation unit is `4KiB`, even a file containing only 100 bytes may receive a full unit:
+
+```text
+file size:    100 Bytes
+size on disk: 4 KiB
+```
+
+That does not mean thousands of content bytes were added to the file. The file system simply allocated a larger unit for it.
+
+There are also sparse files, where the logical size can be larger than the actually allocated space because empty regions in the file are not fully stored on disk.
+
+## Byte order matters too
+
+When a number needs more than one byte, the system has to decide in which order to store those bytes.
+
+For example, these two bytes:
+
+```text
+12 34
+```
+
+can be read as:
+
+```text
+Big-endian:    0x1234
+Little-endian: 0x3412
+```
+
+The bytes are the same, but the reading order is different. That is why file formats and network protocols must define byte order explicitly.
+
+## Common mistakes to remember
+
+The letter `b` is not the same as `B`:
+
+```text
+b = bit
+B = Byte
+```
+
+`MB` and `MiB` are not the same unit:
+
+```text
+1 MB  = 1,000,000 Bytes
+1 MiB = 1,048,576 Bytes
+```
+
+The number of characters in text is not necessarily the number of bytes, and the size of an image on the screen is not necessarily the image file size.
+
+Finally, a sequence of bits does not carry meaning by itself. Meaning comes from the data type, the encoding, the file format, and the software reading it.
+
+## Summary
+
+Everything a computer stores, including numbers, text, images, code, music, and video, is ultimately represented using bits.
+
+Eight bits make a byte. The number of bits determines how many combinations can be represented, but the encoding determines what those combinations mean.
+
+The same eight bits can be 249 or -7, depending on whether they are interpreted as unsigned or signed. The same bytes can become text when read as UTF-8, or colors when read as part of an image.
+
+The most important principle is simple:
+
+> The computer stores bits; we give them meaning.
