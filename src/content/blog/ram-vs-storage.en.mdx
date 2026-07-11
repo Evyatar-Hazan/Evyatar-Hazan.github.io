@@ -1,0 +1,284 @@
+My computer has a 1TB SSD and hundreds of gigabytes free. So why does it still freeze when I run Android Studio, an emulator, a browser, and several development tools at the same time?
+
+That question usually comes from mixing up two very different parts of the machine: working memory, RAM, and persistent storage, usually an SSD.
+
+Both are measured in gigabytes, and both hold data, but they do different jobs. A large SSD does not replace RAM, just like a large cabinet does not replace a wide desk.
+
+## The cabinet and the desk
+
+Storage is like a large filing cabinet. RAM is like the desk where the current work happens.
+
+The cabinet can hold thousands of documents for years. But when you want to work on one document, you take it out of the cabinet and place it on the desk.
+
+The SSD is the cabinet:
+
+- The operating system is installed on it.
+- Applications are stored on it.
+- Files, images, videos, and projects live on it.
+- The data remains there after the computer shuts down.
+
+RAM is the desk:
+
+- It holds the code and data that programs are using right now.
+- It is much faster than the SSD.
+- It lets the CPU access active data quickly.
+- Its contents disappear when power is removed, unless the data was saved to storage first.
+
+A small desk does not become larger just because a huge cabinet is standing next to it.
+
+## What happens when a program starts?
+
+Imagine a game installed on the SSD that takes 80GB of disk space. That does not mean it needs 80GB of RAM to run.
+
+The game files stay in storage. When the game runs, the operating system loads only the needed parts into RAM: active code, the current area of the map, characters, textures, sounds, and the data the game is using at that moment.
+
+The program also receives a virtual address space. From the program's point of view, it runs inside a large, organized memory space, but not every address in that space must be backed by physical RAM at that exact moment.
+
+The operating system divides memory into pages and decides where each page lives:
+
+- In RAM.
+- In swap on storage.
+- Inside a mapped file.
+- Or not yet backed by a physical page at all.
+
+## What is the working set?
+
+The working set is the group of code and data pages that a process is actively using during the current period.
+
+It is not the full size of the program, not the full mapped file, and not the full virtual address space.
+
+For example, a program can map a 40GB file but actually read only 200MB from it. In that case:
+
+- Virtual memory may grow by about 40GB.
+- RSS may be closer to 200MB.
+- The whole file does not have to be loaded into RAM.
+- Swap does not necessarily have to grow.
+
+As long as the working sets of all active programs fit in RAM, the computer can remain responsive.
+
+The problem starts when the total active working set becomes larger than the available RAM.
+
+## Why do Android Studio, an emulator, and a browser use so much RAM?
+
+Each of these programs holds a significant working environment.
+
+Android Studio keeps the IDE, project indexes, code, plugins, build tools, and Java processes in memory.
+
+The emulator effectively runs another operating system inside your computer. It needs memory for Android itself, the apps inside it, and the graphics system.
+
+The browser often splits tabs, extensions, and sites into separate processes. A complex website can use hundreds of megabytes, and sometimes much more.
+
+When all of these run on a machine with 8GB of RAM, the active working set can quickly exceed physical memory.
+
+Hundreds of free gigabytes on the SSD do not change the fact that there is not enough fast workspace.
+
+## How does the operating system handle low RAM?
+
+The operating system does not give up immediately. It tries to make room in several ways.
+
+### Evicting cache
+
+The system uses free RAM as a cache for files and data that are likely to be needed again. That is an efficient use of memory.
+
+When a program needs more RAM, the system can evict some of that cache, because it can reload it from the original source later.
+
+That is why seeing 15GB out of 16GB of RAM marked as "used" is not automatically a problem. If memory pressure is green, swap is not growing, and the machine is responsive, the system may simply be using available memory well.
+
+### Memory compression
+
+Systems such as macOS can compress pages inside RAM.
+
+Instead of a page taking its full size, it is stored in a compressed form and takes less space. This costs some CPU time, but it can delay or avoid the slower move to SSD-backed swap.
+
+### Using swap
+
+If there is still not enough room, the system can move less active pages from RAM to an area on storage called swap. On Windows, the related term is pagefile.
+
+When the program needs one of those pages again, a page fault occurs. The operating system has to:
+
+1. Find free space in RAM.
+2. Read the page from the SSD.
+3. Update the memory mapping.
+4. Restart the instruction that tried to access it.
+
+The CPU does not work directly on a page while it is in swap. The page must first return to RAM.
+
+## Why is swap not the same as RAM?
+
+A modern SSD can be very fast compared with a hard drive, but it is still much slower than RAM.
+
+The difference is not only how much data can be moved per second. There is also a large difference in latency for each access, especially when the system performs many small random accesses.
+
+RAM is designed to be active working memory. SSD storage is designed to be persistent storage.
+
+So:
+
+> 8GB of RAM plus 8GB of swap does not perform like 16GB of RAM.
+
+Swap allows the computer to keep running when RAM is not enough. It is an important survival mechanism, but it is not an equal replacement.
+
+## What is thrashing?
+
+When the active working set is much larger than RAM, programs repeatedly ask for pages that were moved to swap.
+
+The system brings one page into RAM, evicts another page, and then immediately needs that other page again. Instead of spending most of its time running programs, it spends time moving data back and forth between RAM and the SSD.
+
+This state is called thrashing.
+
+Possible signs include:
+
+- Slow switching between applications.
+- Freezes that last several seconds.
+- Delayed response to clicks.
+- Rapid swap growth.
+- High memory pressure.
+- Heavy storage activity even when you are not saving files.
+
+A fast SSD can reduce some of the waiting time, but it cannot solve the underlying problem: the active working set is larger than RAM.
+
+## What happens when even that is not enough?
+
+If the system can no longer provide memory, it reaches OOM: Out of Memory.
+
+The result depends on the operating system and the program:
+
+- An allocation request fails.
+- The program receives `MemoryError` or `OutOfMemoryError`.
+- The process crashes because it did not handle the failure.
+- The operating system closes a process to free memory.
+- On Linux, the OOM Killer may choose a process and terminate it.
+
+OOM is not the same as a memory leak. A leak is a bug where a program keeps holding memory that is no longer needed. A long-running leak can eventually cause OOM.
+
+## How do you identify a memory leak?
+
+A one-time increase in RSS does not prove a leak.
+
+A program can allocate memory, release the objects, and still keep pages inside its allocator so it can reuse them later. Because of that, RSS does not always drop immediately.
+
+A normal pattern might look like this:
+
+- The first operation raises RSS to 1GB.
+- The second operation raises it to 1.2GB.
+- Later operations stay around 1.2GB.
+
+A more suspicious pattern looks like this:
+
+- The same operation runs again and again.
+- RSS grows every time.
+- It does not stabilize after the work is done.
+- There is no business reason for the old data to remain in memory.
+
+Even then, it is a signal to investigate, not proof by itself.
+
+## A practical macOS experiment
+
+You can see this behavior with a small Python experiment.
+
+In the experiment, I gradually allocated 512MiB and touched every page so the allocation became real. RSS rose to about 526.7MiB, slightly above the data size itself because of Python, libraries, and process-management structures.
+
+Swap did not grow, because the system had enough available memory.
+
+After deleting the objects, RSS stayed high even after 20 seconds. That did not prove a leak. Python or the system allocator could be keeping the memory inside the process for reuse.
+
+When the process exits, the operating system releases its private memory.
+
+On macOS, you can inspect memory state with:
+
+```bash
+ps
+vm_stat
+memory_pressure
+sysctl vm.swapusage
+```
+
+You can also use Activity Monitor and look at Memory Pressure, Compressed Memory, and Swap Used.
+
+## Virtual memory, RSS, and shared memory
+
+When inspecting a process, it is important not to confuse the metrics.
+
+### Virtual memory
+
+This is the process address space. It can include:
+
+- Reserved addresses.
+- Mapped files.
+- Shared libraries.
+- Pages that are not loaded into RAM.
+- Lazily allocated memory.
+- Large regions that the process is not actively using.
+
+Virtual memory of 60GB does not mean the process is consuming 60GB of RAM.
+
+### RSS
+
+RSS is roughly the amount of the process's pages currently resident in RAM.
+
+It is not always perfect either, because it may include shared pages that are counted for multiple processes.
+
+### Shared memory
+
+These are pages that can be mapped into more than one process, such as shared library code.
+
+It is not always correct to add RSS and shared memory together, because shared memory may already be included in RSS.
+
+## Unified memory on Apple Silicon
+
+On Apple Silicon Macs, the CPU and GPU use the same pool of physical memory.
+
+This can reduce unnecessary copying between CPU RAM and separate graphics memory, but it does not multiply the amount of memory.
+
+On a machine with 16GB of unified memory, there is not 16GB for the CPU plus another 16GB for graphics. There is one shared pool of 16GB.
+
+If the GPU is using 5GB, that amount is not available to the rest of the system at the same time.
+
+Unified memory is still RAM:
+
+- It is fast.
+- It is used for active work.
+- It is volatile.
+- Its contents are lost on a full shutdown unless saved to storage.
+- It is not an SSD.
+
+## Sleep versus hibernate
+
+The difference between sleep and hibernate also shows the difference between RAM and storage.
+
+In sleep, program state remains in RAM, and RAM continues to receive power. That is why waking is fast. If power is lost and there is no saved copy, memory contents are lost.
+
+In hibernate, the operating system writes an image of RAM to storage. The computer can then fully power off. On the next boot, that image is loaded from storage back into RAM.
+
+Some systems use hybrid modes, but the principle stays the same: RAM needs power; persistent storage does not need power to keep data.
+
+## What should you upgrade?
+
+When the computer shows:
+
+- High memory pressure.
+- Swap that keeps growing.
+- Freezes during parallel work.
+- Significant slowdown when switching between applications.
+- Android Studio, an emulator, and a browser running together.
+
+The direct upgrade is usually more RAM.
+
+When you cannot upgrade, reduce the active working set:
+
+- Close applications and tabs that are not needed.
+- Run fewer emulators.
+- Limit memory allocated to heavy tools.
+- Disable unnecessary processes, extensions, and services.
+- Use a physical device instead of an emulator when appropriate.
+
+By contrast, when the problem is `No space left`, failed installations, or inability to save files, the problem is storage. In that case you need to free space or increase SSD capacity.
+
+## The bottom line
+
+RAM and SSD storage are not just fast and slow versions of the same thing.
+
+The SSD is where data is kept over time. RAM is the fast working area where active programs keep the code and data they need right now.
+
+When RAM fills up, the operating system can evict cache, compress pages, and use swap. Those mechanisms help the computer keep running, but they do not turn the SSD into RAM.
+
+That is why a computer with a 1TB SSD and 8GB of RAM can still freeze under heavy load. The storage is large, but the desk is small.

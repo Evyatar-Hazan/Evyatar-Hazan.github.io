@@ -14,11 +14,35 @@ import SmallProjectArchitectureEn from './small-project-architecture.en.mdx';
 import SmallProjectArchitectureHe from './small-project-architecture.he.mdx';
 import SpaRoutesNeedRealHttpEn from './spa-routes-need-real-http.en.mdx';
 import SpaRoutesNeedRealHttpHe from './spa-routes-need-real-http.he.mdx';
+import RamVsStorageEn from './ram-vs-storage.en.mdx';
+import RamVsStorageHe from './ram-vs-storage.he.mdx';
 import WhatTheCpuReallyDoesEn from './what-the-cpu-really-does.en.mdx';
 import WhatTheCpuReallyDoesHe from './what-the-cpu-really-does.he.mdx';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'ram-vs-storage',
+    language: 'he',
+    title: 'RAM לעומת אחסון',
+    excerpt: 'למה SSD פנוי לא מונע מהמחשב להיתקע, איך RAM, Working Set, Swap, RSS ו-Memory Pressure משפיעים על עבודה עם Android Studio, אמולטור ודפדפן.',
+    date: '2026-07-12',
+    readTime: '10 דקות קריאה',
+    tags: ['Memory', 'Performance', 'macOS'],
+    featured: false,
+    Content: RamVsStorageHe,
+  },
+  {
+    slug: 'ram-vs-storage',
+    language: 'en',
+    title: 'RAM versus storage',
+    excerpt: 'Why free SSD space does not stop a computer from freezing, and how RAM, working set, swap, RSS, and memory pressure affect real development work.',
+    date: '2026-07-12',
+    readTime: '10 min read',
+    tags: ['Memory', 'Performance', 'macOS'],
+    featured: false,
+    Content: RamVsStorageEn,
+  },
   {
     slug: 'what-the-cpu-really-does',
     language: 'he',
