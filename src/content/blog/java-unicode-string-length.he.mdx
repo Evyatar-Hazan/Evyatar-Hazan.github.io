@@ -1,0 +1,568 @@
+מפתח מגדיר ששדה כינוי מוגבל לעשרה תווים. הוא כותב:
+
+```java
+if (nickname.length() > 10) {
+    throw new IllegalArgumentException("Nickname is too long");
+}
+```
+
+הכול עובד היטב עם אותיות אנגליות ועבריות רגילות. ואז משתמש מזין אימוג'ים, נדחה מוקדם מדי, או מקבל אימוג'י חתוך. במקרה אחר, שתי מחרוזות שנראות בדיוק כמו `é` אינן שוות לפי `equals()`.
+
+הבעיה אינה ב-Java ולא באימוג'י. הבעיה היא שהמילה "תו" יכולה לתאר כמה דברים שונים.
+
+כדי לעבוד נכון עם טקסט, צריך קודם להחליט מה מודדים: יחידות UTF-16, נקודות קוד, בתים לאחר קידוד, או סמלים שהמשתמש רואה.
+
+## המחשב אינו שומר אותיות
+
+המחשב שומר מספרים ובתים. Unicode הוא התקן שמעניק לכל תו מספר ייחודי שנקרא נקודת קוד, או Code Point.
+
+```text
+A  -> U+0041
+א  -> U+05D0
+😀 -> U+1F600
+```
+
+נקודת הקוד אינה רצף הבתים שנשמר בקובץ. זהו מספר מופשט שמזהה את התו.
+
+כדי לשמור את נקודת הקוד בקובץ, במסד נתונים או בתעבורת רשת, צריך לבחור קידוד כגון UTF-8, UTF-16 או UTF-32.
+
+```text
+תו מופשט
+    ↓
+נקודת קוד של Unicode
+    ↓
+קידוד
+    ↓
+בתים
+```
+
+לדוגמה, האות `א`:
+
+```text
+תו:          א
+נקודת קוד:   U+05D0
+קידוד:       UTF-8
+בתים:        D7 90
+```
+
+Unicode קובע את זהות התו. UTF-8 קובע כיצד לייצג אותו כבתים.
+
+## UTF-8, UTF-16 ו-UTF-32
+
+שלושת הקידודים יכולים לייצג את אותן נקודות קוד, אך הם משתמשים במספר שונה של בתים.
+
+```text
+UTF-8  -> בין 1 ל-4 בתים לנקודת קוד
+UTF-16 -> 2 או 4 בתים לנקודת קוד
+UTF-32 -> 4 בתים לנקודת קוד
+```
+
+ניקח את המחרוזת:
+
+```text
+Aא😀
+```
+
+ב-UTF-8:
+
+```text
+A  -> בית אחד
+א  -> שני בתים
+😀 -> ארבעה בתים
+```
+
+סה"כ: 7 בתים.
+
+ב-UTF-16:
+
+```text
+A  -> שני בתים
+א  -> שני בתים
+😀 -> ארבעה בתים
+```
+
+סה"כ: 8 בתים.
+
+ב-UTF-32:
+
+```text
+A  -> ארבעה בתים
+א  -> ארבעה בתים
+😀 -> ארבעה בתים
+```
+
+סה"כ: 12 בתים.
+
+UTF-8 הוא בדרך כלל הבחירה המתאימה לקבצים חדשים, JSON ו-API. הוא תואם ל-ASCII, אינו דורש בחירת סדר בתים, וחסכוני במיוחד בטקסט אנגלי ובקוד תוכנה.
+
+## מה `String.length()` מודד ב-Java?
+
+ממשקי המחרוזות של Java משתמשים באינדקסים המבוססים על יחידות UTF-16.
+
+```java
+String emoji = "😀";
+
+System.out.println(emoji.length()); // 2
+```
+
+המשתמש רואה אימוג'י אחד, אבל `length()` מחזיר `2`.
+
+הסיבה היא שנקודת הקוד של `😀` נמצאת מחוץ לטווח שניתן לייצג ביחידת UTF-16 אחת. היא מיוצגת באמצעות שתי יחידות שנקראות יחד Surrogate Pair.
+
+חשוב לדייק: `length()` אינו מחזיר מספר בתים, מספר ביטים או מספר תווים חזותיים. הוא מחזיר את מספר יחידות ה-UTF-16 שעליהן מבוסס ממשק ה-`String`.
+
+## ארבע ספירות שונות לאותה מחרוזת
+
+ניקח:
+
+```java
+String text = "A😀ב";
+```
+
+המשתמש רואה שלושה סמלים: `A`, `😀`, ו-`ב`.
+
+אבל המדדים השונים מחזירים תוצאות שונות:
+
+```java
+int utf16Units = text.length();
+
+int codePoints = text.codePointCount(
+        0,
+        text.length()
+);
+
+int utf8Bytes = text
+        .getBytes(StandardCharsets.UTF_8)
+        .length;
+```
+
+התוצאה:
+
+```text
+יחידות UTF-16: 4
+נקודות קוד:    3
+בתי UTF-8:     7
+```
+
+הפירוק:
+
+```text
+A  -> יחידת UTF-16 אחת, נקודת קוד אחת, בית UTF-8 אחד
+😀 -> שתי יחידות UTF-16, נקודת קוד אחת, ארבעה בתי UTF-8
+ב  -> יחידת UTF-16 אחת, נקודת קוד אחת, שני בתי UTF-8
+```
+
+לכן לפני שמגדירים מגבלת אורך, צריך לשאול: האם הדרישה היא לפי אחסון, לפי נקודות קוד, או לפי מה שהמשתמש רואה?
+
+## למה `charAt()` עלול לפרק אימוג'י?
+
+הפעולה `charAt()` מחזירה יחידת UTF-16 אחת:
+
+```java
+String emoji = "😀";
+
+char first = emoji.charAt(0);
+char second = emoji.charAt(1);
+```
+
+אף אחד משני המשתנים אינו מכיל את האימוג'י השלם. כל אחד מכיל חצי מה-surrogate pair.
+
+גם לולאה רגילה עלולה לפרק תווים:
+
+```java
+for (int i = 0; i < text.length(); i++) {
+    char current = text.charAt(i);
+}
+```
+
+כאשר רוצים לעבור על נקודות קוד, עדיף להשתמש ב-`codePoints()`:
+
+```java
+text.codePoints().forEach(codePoint -> {
+    String character =
+            new String(Character.toChars(codePoint));
+
+    System.out.printf(
+            "%s -> U+%04X%n",
+            character,
+            codePoint
+    );
+});
+```
+
+עבור `A😀ב` נקבל:
+
+```text
+A  -> U+0041
+😀 -> U+1F600
+ב  -> U+05D1
+```
+
+## גם נקודת קוד אינה תמיד סמל אחד
+
+אפשר לחשוב שהפתרון לכל בעיה הוא להשתמש ב-`codePointCount()`, אבל גם זה לא תמיד מייצג את מה שהמשתמש רואה.
+
+האימוג'י המשפחתי:
+
+```text
+👨‍👩‍👧‍👦
+```
+
+נראה כמו סמל אחד, אך הוא מורכב מכמה נקודות קוד שמחוברות באמצעות תווי Zero Width Joiner.
+
+גם האות `é` יכולה להיבנות משתי נקודות קוד:
+
+```text
+e  -> U+0065
+◌́ -> U+0301
+```
+
+המשתמש רואה אות אחת, אבל המחשב מחזיק שתי נקודות קוד.
+
+רצף נקודות הקוד שמוצג למשתמש כסמל אחד נקרא Grapheme Cluster.
+
+לכן קיימים לפחות ארבעה מדדים שונים:
+
+```text
+יחידות UTF-16
+נקודות קוד
+בתי הקידוד
+Grapheme clusters
+```
+
+## חיתוך מחרוזת בלי לשבור אימוג'י
+
+קוד כזה מסוכן:
+
+```java
+String text = "A😀ב";
+String result = text.substring(0, 2);
+```
+
+`substring()` חותך לפי אינדקסים של יחידות UTF-16. במקרה הזה נקבל את `A` ואת החצי הראשון של האימוג'י.
+
+אפשר לחתוך לפי נקודות קוד:
+
+```java
+public static String truncateCodePoints(
+        String text,
+        int maxCodePoints
+) {
+    int count = text.codePointCount(0, text.length());
+
+    if (count <= maxCodePoints) {
+        return text;
+    }
+
+    int endIndex = text.offsetByCodePoints(
+            0,
+            maxCodePoints
+    );
+
+    return text.substring(0, endIndex);
+}
+```
+
+הפעולה תמנע חיתוך באמצע surrogate pair, אבל היא עדיין עלולה לפרק אימוג'י משפחתי, משום שהוא מורכב מכמה נקודות קוד.
+
+כאשר הדרישה היא לפי מה שהמשתמש רואה, צריך לחתוך לפי grapheme clusters:
+
+```java
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class UnicodeTruncation {
+
+    private static final Pattern GRAPHEME =
+            Pattern.compile("\\X");
+
+    public static String truncateGraphemes(
+            String text,
+            int maxGraphemes
+    ) {
+        if (maxGraphemes < 0) {
+            throw new IllegalArgumentException(
+                    "maxGraphemes must be non-negative"
+            );
+        }
+
+        Matcher matcher = GRAPHEME.matcher(text);
+
+        int count = 0;
+        int endIndex = 0;
+
+        while (count < maxGraphemes && matcher.find()) {
+            endIndex = matcher.end();
+            count++;
+        }
+
+        if (!matcher.find()) {
+            return text;
+        }
+
+        return text.substring(0, endIndex);
+    }
+}
+```
+
+כעת:
+
+```java
+String text = "A👨‍👩‍👧‍👦ב";
+
+System.out.println(
+        truncateGraphemes(text, 2)
+);
+```
+
+יחזיר:
+
+```text
+A👨‍👩‍👧‍👦
+```
+
+האימוג'י המשפחתי נשאר שלם.
+
+## שתי מחרוזות שנראות זהות אך אינן שוות
+
+אפשר לייצג `é` בשתי דרכים:
+
+```java
+String composed = "\u00E9";
+String decomposed = "e\u0301";
+```
+
+שתיהן נראות כך:
+
+```text
+é
+```
+
+אבל:
+
+```java
+System.out.println(
+        composed.equals(decomposed)
+); // false
+```
+
+הסיבה היא שהרצף הפנימי שונה:
+
+```text
+composed:   U+00E9
+decomposed: U+0065 U+0301
+```
+
+`String.equals()` משווה את הייצוג הפנימי, לא את הצורה החזותית.
+
+כדי להשוות טקסט אנושי בצורה עקבית, אפשר לנרמל את שתי המחרוזות ל-NFC:
+
+```java
+import java.text.Normalizer;
+
+String first = Normalizer.normalize(
+        composed,
+        Normalizer.Form.NFC
+);
+
+String second = Normalizer.normalize(
+        decomposed,
+        Normalizer.Form.NFC
+);
+
+System.out.println(first.equals(second)); // true
+```
+
+גישה מקובלת היא לנרמל קלט אנושי בגבול המערכת וליישם את אותו כלל באופן עקבי בעת אחסון, חיפוש והשוואה.
+
+עם זאת, אין לנרמל אוטומטית כל נתון. בסיסמאות, חתימות ומזהים טכניים צריך להגדיר מראש את החוזה המדויק.
+
+## קידוד ופענוח שגויים
+
+כאשר הופכים `String` לבתים, מבצעים קידוד:
+
+```java
+byte[] bytes = text.getBytes(
+        StandardCharsets.UTF_8
+);
+```
+
+כאשר הופכים את הבתים בחזרה לטקסט, מבצעים פענוח:
+
+```java
+String decoded = new String(
+        bytes,
+        StandardCharsets.UTF_8
+);
+```
+
+כאשר משתמשים באותו קידוד בשני הכיוונים מתקבל round trip תקין.
+
+אבל אם טקסט נכתב ב-UTF-8 ונקרא כ-ISO-8859-1:
+
+```java
+byte[] bytes = "שלום".getBytes(
+        StandardCharsets.UTF_8
+);
+
+String broken = new String(
+        bytes,
+        StandardCharsets.ISO_8859_1
+);
+```
+
+נקבל ג'יבריש בסגנון:
+
+```text
+×©×œ×•×ם
+```
+
+הבתים המקוריים לא בהכרח נפגעו. הם פשוט פורשו לפי כללים שגויים.
+
+זו הסיבה שכדאי תמיד לציין charset במפורש:
+
+```java
+text.getBytes(StandardCharsets.UTF_8);
+
+new String(bytes, StandardCharsets.UTF_8);
+```
+
+## מהו התו `�`?
+
+הסימן:
+
+```text
+�
+```
+
+הוא תו Unicode בשם Replacement Character:
+
+```text
+U+FFFD
+```
+
+הוא עשוי להופיע כאשר המפענח פוגש רצף בתים שאינו חוקי או אינו שלם לפי הקידוד שנבחר.
+
+לדוגמה, `א` ב-UTF-8 דורשת את שני הבתים:
+
+```text
+D7 90
+```
+
+אם קיבלנו רק:
+
+```text
+D7
+```
+
+הרצף אינו שלם.
+
+במערכת שבה אסור לקבל מידע פגום, עדיף לבקש מהמפענח להיכשל במקום להחליף את המידע בשקט:
+
+```java
+String decoded = StandardCharsets.UTF_8
+        .newDecoder()
+        .onMalformedInput(CodingErrorAction.REPORT)
+        .onUnmappableCharacter(CodingErrorAction.REPORT)
+        .decode(ByteBuffer.wrap(bytes))
+        .toString();
+```
+
+כך ניתן לזהות תקלה אמיתית במקום לשמור טקסט שכבר איבד מידע.
+
+## BOM וסדר בתים
+
+ב-UTF-16 כל יחידת קידוד מורכבת משני בתים, ולכן צריך לקבוע את הסדר שלהם.
+
+עבור `A`, שערכה `0041`:
+
+```text
+UTF-16BE -> 00 41
+UTF-16LE -> 41 00
+```
+
+קובץ UTF-16 יכול להתחיל ב-BOM:
+
+```text
+FE FF -> UTF-16BE
+FF FE -> UTF-16LE
+```
+
+ל-UTF-8 אין גרסת Little Endian או Big Endian, ולכן הוא אינו זקוק ל-BOM לצורך סדר בתים.
+
+בקבצים וב-API חדשים נהוג בדרך כלל להשתמש ב-UTF-8 ללא BOM, אלא אם הפורמט דורש אחרת.
+
+## Unicode ואבטחה
+
+תווים שונים יכולים להיראות כמעט זהים:
+
+```text
+A -> לטינית, U+0041
+А -> קירילית, U+0410
+```
+
+Normalization לא יאחד אותם, משום שאלו תווים שונים ולא שתי צורות קנוניות של אותו תו.
+
+בנוסף, מחרוזת יכולה להכיל תווים בלתי נראים. לכן שני שמות משתמש עשויים להיראות זהים אך להיות שונים מבחינת המערכת.
+
+כאשר שני מזהים נראים זהים אך `equals()` מחזיר `false`, כדאי להציג את נקודות הקוד:
+
+```java
+text.codePoints().forEach(codePoint ->
+        System.out.printf(
+                "%s -> U+%04X%n",
+                new String(Character.toChars(codePoint)),
+                codePoint
+        )
+);
+```
+
+במזהים רגישים צריך להגדיר מדיניות ברורה לגבי:
+
+- normalization;
+- אלפביתים מותרים;
+- ערבוב שפות;
+- תווי בקרה ותווים בלתי נראים;
+- רגישות לאותיות גדולות וקטנות.
+
+אין למחוק כל תו בלתי נראה באופן גורף, משום שחלק מהתווים חיוניים לשפות ולאימוג'ים תקינים.
+
+## איך מגדירים נכון מגבלת אורך?
+
+הדרישה "עד עשרה תווים" אינה מדויקת מספיק.
+
+מגבלה של בתי UTF-8 מתאימה למגבלת אחסון או פרוטוקול:
+
+```java
+boolean fits = text
+        .getBytes(StandardCharsets.UTF_8)
+        .length <= 100;
+```
+
+מגבלה של נקודות קוד:
+
+```java
+boolean fits = text.codePointCount(
+        0,
+        text.length()
+) <= 100;
+```
+
+מגבלה לפי מה שהמשתמש רואה צריכה לספור grapheme clusters.
+
+מגבלה לפי `String.length()` רלוונטית רק כאשר החוזה באמת מוגדר ביחידות UTF-16. אין להשתמש בה כאשר הדרישה העסקית מדברת על סמלים חזותיים או בתי קידוד.
+
+## סיכום
+
+כשעובדים עם Unicode, השאלה החשובה אינה רק "כמה תווים יש במחרוזת", אלא מה בדיוק מנסים למדוד.
+
+```text
+String.length()              -> יחידות UTF-16
+codePointCount()             -> נקודות קוד
+getBytes(UTF_8).length       -> בתי UTF-8
+Grapheme clusters            -> סמלים שהמשתמש רואה
+```
+
+במערכת חדשה כדאי להגדיר UTF-8 במפורש, לנרמל טקסט אנושי באופן עקבי כאשר הדבר מתאים, לחתוך תצוגה לפי grapheme clusters, ולבדוק מגבלות אחסון לפי מספר הבתים בפועל.
+
+ברגע שמפרידים בין המדדים האלה, אימוג'ים מפסיקים להיות "מקרה קצה מוזר" והופכים לעוד חלק צפוי ומנוהל של הטקסט במערכת.

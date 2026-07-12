@@ -6,6 +6,8 @@ import DeploymentIsProductEn from './deployment-is-product.en.mdx';
 import DeploymentIsProductHe from './deployment-is-product.he.mdx';
 import GoogleTranslateNameBugEn from './google-translate-name-bug.en.mdx';
 import GoogleTranslateNameBugHe from './google-translate-name-bug.he.mdx';
+import JavaUnicodeStringLengthEn from './java-unicode-string-length.en.mdx';
+import JavaUnicodeStringLengthHe from './java-unicode-string-length.he.mdx';
 import PrivacySafeProductAnalyticsEn from './privacy-safe-product-analytics.en.mdx';
 import PrivacySafeProductAnalyticsHe from './privacy-safe-product-analytics.he.mdx';
 import BinaryBitwiseJavaEn from './binary-bitwise-java.en.mdx';
@@ -27,6 +29,28 @@ import WhatTheCpuReallyDoesHe from './what-the-cpu-really-does.he.mdx';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'java-unicode-string-length',
+    language: 'he',
+    title: 'למה String.length() לא באמת סופר תווים',
+    excerpt: 'מדריך מעשי ל-Unicode ב-Java: יחידות UTF-16, נקודות קוד, בתי UTF-8, grapheme clusters, normalization וחיתוך טקסט בלי לשבור אימוג׳י.',
+    date: '2026-07-13',
+    readTime: '13 דקות קריאה',
+    tags: ['Java', 'Unicode', 'Text'],
+    featured: false,
+    Content: JavaUnicodeStringLengthHe,
+  },
+  {
+    slug: 'java-unicode-string-length',
+    language: 'en',
+    title: 'Why String.length() does not really count characters',
+    excerpt: 'A practical guide to Unicode in Java: UTF-16 code units, code points, UTF-8 bytes, grapheme clusters, normalization, and truncating text without breaking emoji.',
+    date: '2026-07-13',
+    readTime: '13 min read',
+    tags: ['Java', 'Unicode', 'Text'],
+    featured: false,
+    Content: JavaUnicodeStringLengthEn,
+  },
   {
     slug: 'binary-bitwise-java',
     language: 'he',

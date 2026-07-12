@@ -1,0 +1,568 @@
+A developer defines a nickname field as limited to ten characters and writes:
+
+```java
+if (nickname.length() > 10) {
+    throw new IllegalArgumentException("Nickname is too long");
+}
+```
+
+Everything works with regular English and Hebrew letters. Then a user enters emoji, gets rejected too early, or receives a broken emoji after truncation. In another case, two strings that look exactly like `é` are not equal according to `equals()`.
+
+The problem is not Java, and it is not emoji. The problem is that the word "character" can mean several different things.
+
+To handle text correctly, first decide what you are measuring: UTF-16 code units, Unicode code points, encoded bytes, or the visual symbols the user sees.
+
+## Computers do not store letters
+
+A computer stores numbers and bytes. Unicode is the standard that assigns each character a unique number called a code point.
+
+```text
+A  -> U+0041
+א  -> U+05D0
+😀 -> U+1F600
+```
+
+A code point is not the byte sequence stored in a file. It is an abstract number that identifies the character.
+
+To store that code point in a file, database, or network request, you need an encoding such as UTF-8, UTF-16, or UTF-32.
+
+```text
+abstract character
+    ↓
+Unicode code point
+    ↓
+encoding
+    ↓
+bytes
+```
+
+For example, the Hebrew letter `א`:
+
+```text
+character:  א
+code point: U+05D0
+encoding:   UTF-8
+bytes:      D7 90
+```
+
+Unicode defines the identity of the character. UTF-8 defines how to represent it as bytes.
+
+## UTF-8, UTF-16, and UTF-32
+
+All three encodings can represent the same code points, but they use different numbers of bytes.
+
+```text
+UTF-8  -> 1 to 4 bytes per code point
+UTF-16 -> 2 or 4 bytes per code point
+UTF-32 -> 4 bytes per code point
+```
+
+Take this string:
+
+```text
+Aא😀
+```
+
+In UTF-8:
+
+```text
+A  -> one byte
+א  -> two bytes
+😀 -> four bytes
+```
+
+Total: 7 bytes.
+
+In UTF-16:
+
+```text
+A  -> two bytes
+א  -> two bytes
+😀 -> four bytes
+```
+
+Total: 8 bytes.
+
+In UTF-32:
+
+```text
+A  -> four bytes
+א  -> four bytes
+😀 -> four bytes
+```
+
+Total: 12 bytes.
+
+UTF-8 is usually the right default for new files, JSON, and APIs. It is ASCII-compatible, does not require byte-order selection, and is especially compact for English text and source code.
+
+## What does `String.length()` measure in Java?
+
+Java string APIs use indexes based on UTF-16 code units.
+
+```java
+String emoji = "😀";
+
+System.out.println(emoji.length()); // 2
+```
+
+The user sees one emoji, but `length()` returns `2`.
+
+That happens because the code point for `😀` is outside the range that can be represented by one UTF-16 code unit. It is represented by two units called a surrogate pair.
+
+Be precise: `length()` does not return the number of bytes, bits, or visual characters. It returns the number of UTF-16 code units used by Java's `String` API.
+
+## Four different counts for one string
+
+Take:
+
+```java
+String text = "A😀ב";
+```
+
+The user sees three symbols: `A`, `😀`, and `ב`.
+
+Different measurements return different results:
+
+```java
+int utf16Units = text.length();
+
+int codePoints = text.codePointCount(
+        0,
+        text.length()
+);
+
+int utf8Bytes = text
+        .getBytes(StandardCharsets.UTF_8)
+        .length;
+```
+
+The result:
+
+```text
+UTF-16 code units: 4
+Code points:       3
+UTF-8 bytes:       7
+```
+
+Breakdown:
+
+```text
+A  -> one UTF-16 unit, one code point, one UTF-8 byte
+😀 -> two UTF-16 units, one code point, four UTF-8 bytes
+ב  -> one UTF-16 unit, one code point, two UTF-8 bytes
+```
+
+Before defining a length limit, ask whether the requirement is about storage, code points, or what the user sees.
+
+## Why `charAt()` can split an emoji
+
+`charAt()` returns one UTF-16 code unit:
+
+```java
+String emoji = "😀";
+
+char first = emoji.charAt(0);
+char second = emoji.charAt(1);
+```
+
+Neither variable contains the full emoji. Each one contains half of the surrogate pair.
+
+A regular loop can split characters too:
+
+```java
+for (int i = 0; i < text.length(); i++) {
+    char current = text.charAt(i);
+}
+```
+
+When you need to iterate over code points, use `codePoints()`:
+
+```java
+text.codePoints().forEach(codePoint -> {
+    String character =
+            new String(Character.toChars(codePoint));
+
+    System.out.printf(
+            "%s -> U+%04X%n",
+            character,
+            codePoint
+    );
+});
+```
+
+For `A😀ב`, this prints:
+
+```text
+A  -> U+0041
+😀 -> U+1F600
+ב  -> U+05D1
+```
+
+## Even a code point is not always one visible symbol
+
+It is tempting to treat `codePointCount()` as the solution to every text problem. It is not always what the user sees.
+
+The family emoji:
+
+```text
+👨‍👩‍👧‍👦
+```
+
+looks like one symbol, but it is made of several code points joined by Zero Width Joiner characters.
+
+The letter `é` can also be built from two code points:
+
+```text
+e  -> U+0065
+◌́ -> U+0301
+```
+
+The user sees one letter, but the computer holds two code points.
+
+A sequence of code points that is displayed as one user-perceived symbol is called a grapheme cluster.
+
+That gives us at least four useful measurements:
+
+```text
+UTF-16 code units
+Code points
+Encoded bytes
+Grapheme clusters
+```
+
+## Truncating without breaking emoji
+
+This code is unsafe:
+
+```java
+String text = "A😀ב";
+String result = text.substring(0, 2);
+```
+
+`substring()` cuts by UTF-16 indexes. In this example, it returns `A` plus the first half of the emoji.
+
+You can truncate by code points:
+
+```java
+public static String truncateCodePoints(
+        String text,
+        int maxCodePoints
+) {
+    int count = text.codePointCount(0, text.length());
+
+    if (count <= maxCodePoints) {
+        return text;
+    }
+
+    int endIndex = text.offsetByCodePoints(
+            0,
+            maxCodePoints
+    );
+
+    return text.substring(0, endIndex);
+}
+```
+
+This avoids cutting through a surrogate pair, but it can still split a family emoji because that emoji contains several code points.
+
+When the requirement is based on what the user sees, truncate by grapheme clusters:
+
+```java
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class UnicodeTruncation {
+
+    private static final Pattern GRAPHEME =
+            Pattern.compile("\\X");
+
+    public static String truncateGraphemes(
+            String text,
+            int maxGraphemes
+    ) {
+        if (maxGraphemes < 0) {
+            throw new IllegalArgumentException(
+                    "maxGraphemes must be non-negative"
+            );
+        }
+
+        Matcher matcher = GRAPHEME.matcher(text);
+
+        int count = 0;
+        int endIndex = 0;
+
+        while (count < maxGraphemes && matcher.find()) {
+            endIndex = matcher.end();
+            count++;
+        }
+
+        if (!matcher.find()) {
+            return text;
+        }
+
+        return text.substring(0, endIndex);
+    }
+}
+```
+
+Now:
+
+```java
+String text = "A👨‍👩‍👧‍👦ב";
+
+System.out.println(
+        truncateGraphemes(text, 2)
+);
+```
+
+returns:
+
+```text
+A👨‍👩‍👧‍👦
+```
+
+The family emoji stays intact.
+
+## Two strings that look identical but are not equal
+
+`é` can be represented in two ways:
+
+```java
+String composed = "\u00E9";
+String decomposed = "e\u0301";
+```
+
+Both look like:
+
+```text
+é
+```
+
+But:
+
+```java
+System.out.println(
+        composed.equals(decomposed)
+); // false
+```
+
+The internal sequence is different:
+
+```text
+composed:   U+00E9
+decomposed: U+0065 U+0301
+```
+
+`String.equals()` compares the internal representation, not the visual shape.
+
+To compare human text consistently, normalize both strings to NFC:
+
+```java
+import java.text.Normalizer;
+
+String first = Normalizer.normalize(
+        composed,
+        Normalizer.Form.NFC
+);
+
+String second = Normalizer.normalize(
+        decomposed,
+        Normalizer.Form.NFC
+);
+
+System.out.println(first.equals(second)); // true
+```
+
+A common approach is to normalize human input at the system boundary and apply the same rule consistently for storage, search, and comparison.
+
+Do not normalize every value blindly. Passwords, signatures, and technical identifiers need an explicit contract.
+
+## Incorrect encoding and decoding
+
+When you turn a `String` into bytes, you encode it:
+
+```java
+byte[] bytes = text.getBytes(
+        StandardCharsets.UTF_8
+);
+```
+
+When you turn bytes back into text, you decode them:
+
+```java
+String decoded = new String(
+        bytes,
+        StandardCharsets.UTF_8
+);
+```
+
+Using the same encoding both ways gives a valid round trip.
+
+But if text is written as UTF-8 and read as ISO-8859-1:
+
+```java
+byte[] bytes = "שלום".getBytes(
+        StandardCharsets.UTF_8
+);
+
+String broken = new String(
+        bytes,
+        StandardCharsets.ISO_8859_1
+);
+```
+
+you get mojibake like:
+
+```text
+×©×œ×•×ם
+```
+
+The original bytes were not necessarily damaged. They were interpreted with the wrong rules.
+
+Always specify the charset explicitly:
+
+```java
+text.getBytes(StandardCharsets.UTF_8);
+
+new String(bytes, StandardCharsets.UTF_8);
+```
+
+## What is `�`?
+
+This symbol:
+
+```text
+�
+```
+
+is the Unicode Replacement Character:
+
+```text
+U+FFFD
+```
+
+It can appear when a decoder sees a byte sequence that is invalid or incomplete for the selected encoding.
+
+For example, `א` in UTF-8 requires two bytes:
+
+```text
+D7 90
+```
+
+If only this byte arrives:
+
+```text
+D7
+```
+
+the sequence is incomplete.
+
+In systems where corrupted input must not be accepted, ask the decoder to fail instead of silently replacing data:
+
+```java
+String decoded = StandardCharsets.UTF_8
+        .newDecoder()
+        .onMalformedInput(CodingErrorAction.REPORT)
+        .onUnmappableCharacter(CodingErrorAction.REPORT)
+        .decode(ByteBuffer.wrap(bytes))
+        .toString();
+```
+
+That lets you detect a real failure instead of storing text that already lost information.
+
+## BOM and byte order
+
+In UTF-16, each code unit is made of two bytes, so the byte order matters.
+
+For `A`, whose value is `0041`:
+
+```text
+UTF-16BE -> 00 41
+UTF-16LE -> 41 00
+```
+
+A UTF-16 file may start with a BOM:
+
+```text
+FE FF -> UTF-16BE
+FF FE -> UTF-16LE
+```
+
+UTF-8 has no Little Endian or Big Endian variant, so it does not need a BOM for byte order.
+
+For new files and APIs, UTF-8 without BOM is usually the right default unless the format requires otherwise.
+
+## Unicode and security
+
+Different characters can look almost identical:
+
+```text
+A -> Latin, U+0041
+А -> Cyrillic, U+0410
+```
+
+Normalization will not merge them because they are different characters, not canonical forms of the same character.
+
+A string can also contain invisible characters. Two usernames may look identical but differ internally.
+
+When two identifiers look the same but `equals()` returns `false`, print the code points:
+
+```java
+text.codePoints().forEach(codePoint ->
+        System.out.printf(
+                "%s -> U+%04X%n",
+                new String(Character.toChars(codePoint)),
+                codePoint
+        )
+);
+```
+
+For sensitive identifiers, define a clear policy for:
+
+- normalization;
+- allowed scripts;
+- mixed-script input;
+- control and invisible characters;
+- case sensitivity.
+
+Do not remove every invisible character globally. Some are required for valid languages and emoji sequences.
+
+## Defining length limits correctly
+
+The requirement "up to ten characters" is not precise enough.
+
+A UTF-8 byte limit is suitable for storage or protocol limits:
+
+```java
+boolean fits = text
+        .getBytes(StandardCharsets.UTF_8)
+        .length <= 100;
+```
+
+A code point limit:
+
+```java
+boolean fits = text.codePointCount(
+        0,
+        text.length()
+) <= 100;
+```
+
+A user-visible limit should count grapheme clusters.
+
+A `String.length()` limit is relevant only when the contract is genuinely defined in UTF-16 code units. Do not use it when the business requirement means visual symbols or encoded bytes.
+
+## Summary
+
+When working with Unicode, the important question is not only "how many characters are in this string", but what exactly you are measuring.
+
+```text
+String.length()              -> UTF-16 code units
+codePointCount()             -> Unicode code points
+getBytes(UTF_8).length       -> UTF-8 bytes
+Grapheme clusters            -> user-visible symbols
+```
+
+For a new system, define UTF-8 explicitly, normalize human text consistently when appropriate, truncate display text by grapheme clusters, and validate storage limits by the actual number of bytes.
+
+Once you separate these measurements, emoji stop being a strange edge case and become a predictable part of text handling.
