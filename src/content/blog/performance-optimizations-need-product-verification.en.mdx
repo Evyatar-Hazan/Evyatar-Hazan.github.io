@@ -1,0 +1,125 @@
+Sometimes a performance improvement looks small and safe. You add one CSS rule, the browser does less work, and the site should feel lighter. Then the real test arrives: can the user still see everything they are supposed to see?
+
+On the Nis Boutique Catering site, I hit exactly that point. I wanted to keep the site fast and clean, but the combination of `content-visibility`, reveal animations, and dynamically appearing content created a situation where an optimization that sounded correct on paper could harm the user experience.
+
+It was not a dramatic bug. No server was down, no build was red, no console error was waving for attention. It was the more dangerous kind of bug: something that looked like performance work, but could hide content.
+
+## The problem: performance does not exist alone
+
+`content-visibility: auto` is an interesting tool. It lets the browser defer rendering areas that are not near the viewport, reducing unnecessary work. For long pages, that can be a real optimization.
+
+But a site is not only a set of metrics. It is also a sequence of experiences: hero, gallery, menu, FAQ, testimonials, footer, and calls to action.
+
+On a site with sections that reveal on scroll, the browser, CSS, and JavaScript need to agree on a simple set of facts:
+
+- What is currently in the DOM.
+- What the browser decided to render.
+- What the IntersectionObserver can see.
+- When an element receives the class that makes it visible.
+
+If one of those assumptions breaks, the user does not see a “performance metric.” They see a section that appears late, or does not appear at all.
+
+## The diagnosis: not every element exists when the hook runs
+
+The hook responsible for reveal behavior used to work in a simple way: find every element with the `.reveal` class, attach it to an IntersectionObserver, and add `is-visible` when it enters the viewport.
+
+The problem is that this model assumes every element already exists when the hook runs.
+
+On a real site, especially one with preview surfaces, managed content, hydration, or sections created after initial load, that is not always a safe assumption. Some elements can enter the DOM only after the hook already collected its first list.
+
+The result: those new elements exist on the page, but nobody observes them. They stay in their initial reveal state and never receive the class that displays them.
+
+## First fix: remove an optimization that risked trust
+
+In commit `bdf2ba3`, I removed `content-visibility: auto` and `contain-intrinsic-size` from the site sections and footer.
+
+That can look like a step backward for performance, but it was deliberate: if an optimization risks the visibility of core content, it is not a good optimization for this product.
+
+The removed code was small:
+
+```css
+content-visibility: auto;
+contain-intrinsic-size: auto 960px;
+```
+
+And in the footer:
+
+```css
+content-visibility: auto;
+contain-intrinsic-size: auto 280px;
+```
+
+The lesson is simple: not every API that promises less browser work fits every screen. On a small business site, where every section is meant to build trust and lead to a conversation, the risk of content not appearing on time is more serious than the possible performance win.
+
+## Second fix: observe elements that arrive later
+
+In commit `2d6ed14`, I strengthened `useRevealOnScroll`.
+
+Instead of collecting the elements once, the hook now uses a function that searches again whenever needed:
+
+```ts
+const revealSelector = '.reveal';
+const revealElements = () =>
+  Array.from(document.querySelectorAll<HTMLElement>(revealSelector));
+```
+
+Then it attaches only elements that have not already been observed:
+
+```ts
+if (element.dataset.revealObserved === 'true') {
+  return;
+}
+
+element.dataset.revealObserved = 'true';
+observer.observe(element);
+```
+
+The important part is the `MutationObserver`, which listens for DOM changes and reconnects pending reveal elements to the IntersectionObserver:
+
+```ts
+const mutationObserver = new MutationObserver(() => {
+  observePendingRevealElements();
+});
+
+mutationObserver.observe(document.body, {
+  childList: true,
+  subtree: true,
+});
+```
+
+Now, if a section enters the page after the initial run, it does not remain outside the reveal system.
+
+## Why this is product work, not only technical work
+
+On a business site, content is not decoration. Gallery, services, FAQ, and footer sections are part of the path that helps a visitor decide whether they trust the business.
+
+If a section does not appear, the visitor does not know there was a bug. They simply receive less information, less confidence, and less reason to reach out.
+
+Technically, we can call it an observer issue. Product-wise, it is a trust issue.
+
+That is why the fix was not only about removing a warning or polishing an animation. It was about making sure the site presents its full promise, even when content loads later, even when the browser defers work, and even when the animation looks like a small detail.
+
+## How I would test a change like this next time
+
+Optimizations like this need testing that behaves like a user, not only testing that reads the code.
+
+I would check:
+
+- First page load.
+- Scrolling to the end of the page.
+- Mobile layout.
+- Sections that appear after hydration or content updates.
+- Footer and calls to action.
+- A fallback path when IntersectionObserver is unavailable.
+
+I would also inspect the result visually. Some bugs do not fit cleanly into a unit test, but they are obvious when you scroll through the site.
+
+## What I learned
+
+Performance is part of the product, but it does not sit above the product.
+
+If a change improves a metric but risks the user's ability to see content, it needs another pass. Sometimes the correct fix is to remove an optimization. Sometimes it is to strengthen the code around it. In this case, both were needed: remove `content-visibility` from sensitive sections, and make sure reveal behavior observes elements that arrive later.
+
+The rule I am taking from it is simple:
+
+> A good optimization is not the one that makes the browser do less work. It is the one that makes the product work better.

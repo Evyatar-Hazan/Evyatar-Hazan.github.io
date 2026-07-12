@@ -8,6 +8,10 @@ import GoogleTranslateNameBugEn from './google-translate-name-bug.en.mdx';
 import GoogleTranslateNameBugHe from './google-translate-name-bug.he.mdx';
 import PrivacySafeProductAnalyticsEn from './privacy-safe-product-analytics.en.mdx';
 import PrivacySafeProductAnalyticsHe from './privacy-safe-product-analytics.he.mdx';
+import BinaryBitwiseJavaEn from './binary-bitwise-java.en.mdx';
+import BinaryBitwiseJavaHe from './binary-bitwise-java.he.mdx';
+import PerformanceOptimizationsNeedProductVerificationEn from './performance-optimizations-need-product-verification.en.mdx';
+import PerformanceOptimizationsNeedProductVerificationHe from './performance-optimizations-need-product-verification.he.mdx';
 import SeoDiscoveryIsProductWorkEn from './seo-discovery-is-product-work.en.mdx';
 import SeoDiscoveryIsProductWorkHe from './seo-discovery-is-product-work.he.mdx';
 import SmallProjectArchitectureEn from './small-project-architecture.en.mdx';
@@ -23,6 +27,50 @@ import WhatTheCpuReallyDoesHe from './what-the-cpu-really-does.he.mdx';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'binary-bitwise-java',
+    language: 'he',
+    title: 'איך מספרים חיים בתוך המחשב',
+    excerpt: 'מדריך מעשי לבינארי, המרות, הזזות ביטים, מסכות הרשאות, overflow וההבדל בין >> ל->>> ב-Java.',
+    date: '2026-07-12',
+    readTime: '12 דקות קריאה',
+    tags: ['Binary', 'Java', 'Computer Science'],
+    featured: false,
+    Content: BinaryBitwiseJavaHe,
+  },
+  {
+    slug: 'binary-bitwise-java',
+    language: 'en',
+    title: 'How numbers live inside a computer',
+    excerpt: 'A practical guide to binary, conversions, bit shifts, permission masks, overflow, and the difference between >> and >>> in Java.',
+    date: '2026-07-12',
+    readTime: '12 min read',
+    tags: ['Binary', 'Java', 'Computer Science'],
+    featured: false,
+    Content: BinaryBitwiseJavaEn,
+  },
+  {
+    slug: 'performance-optimizations-need-product-verification',
+    language: 'he',
+    title: 'כשאופטימיזציית ביצועים מסתירה תוכן',
+    excerpt: 'איך content-visibility ו-reveal-on-scroll באתר עסקי הובילו לתיקון שמזכיר: ביצועים טובים חייבים להיבדק מול חוויית המשתמש בפועל.',
+    date: '2026-07-12',
+    readTime: '6 דקות קריאה',
+    tags: ['Performance', 'Frontend', 'UX'],
+    featured: false,
+    Content: PerformanceOptimizationsNeedProductVerificationHe,
+  },
+  {
+    slug: 'performance-optimizations-need-product-verification',
+    language: 'en',
+    title: 'When a performance optimization hides content',
+    excerpt: 'How content-visibility and reveal-on-scroll on a business site led to a fix that reinforced a simple rule: performance must be verified against the real user experience.',
+    date: '2026-07-12',
+    readTime: '6 min read',
+    tags: ['Performance', 'Frontend', 'UX'],
+    featured: false,
+    Content: PerformanceOptimizationsNeedProductVerificationEn,
+  },
   {
     slug: 'what-is-inside-a-file',
     language: 'he',
