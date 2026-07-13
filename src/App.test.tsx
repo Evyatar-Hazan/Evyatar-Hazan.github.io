@@ -74,7 +74,7 @@ describe('App', () => {
 
     expect(await screen.findByText('blogPreview.eyebrow')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /blogPreview.viewAll/i })).toHaveAttribute('href', '/blog');
-    expect(screen.getByRole('heading', { name: 'Why String.length() does not really count characters' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'What really happens when you press a key?' })).toBeInTheDocument();
   });
 
   it('only renders live links for projects with a liveUrl', async () => {

@@ -1,0 +1,351 @@
+When we press a key, take a photo, or save a file, the action feels almost immediate. In reality, the data passes through a chain of hardware components, controllers, drivers, queues, buffers, and operating system mechanisms.
+
+Understanding that chain is useful even if you never write a driver. It explains why reading from a file may return only part of the data, why video software can fall behind, why `flush()` does not necessarily mean data reached the physical disk, and how software can handle a device that produces data faster than the program can process it.
+
+## What are input and output?
+
+Input is information that enters the system you are looking at. Output is information that leaves it.
+
+From an application's point of view:
+
+- A keyboard press is input.
+- An image displayed on the screen is output.
+- Data read from a file is input.
+- Data written to a file is output.
+
+The classification depends on the system boundary. An SSD is an output device when you write to it, and an input device when you read from it. A touchscreen is an output device when it displays pixels and an input device when it detects a finger.
+
+## From a physical key press to the application
+
+A key press does not go directly into your code.
+
+A simplified path looks like this:
+
+```text
+physical press
+↓
+the keyboard controller detects a change in the key matrix
+↓
+the keyboard creates a USB report
+↓
+the computer's USB controller receives the report
+↓
+the controller may interrupt the CPU
+↓
+the operating system and driver interpret the report
+↓
+the event is stored in an input queue
+↓
+the operating system routes it to the application
+↓
+the application receives a Key Press event
+```
+
+The keyboard usually does not send the letter `A` as it appears in a document. It sends a report containing a key code and additional state, such as whether Shift is pressed. The operating system, keyboard layout, and application all participate in interpreting the event.
+
+## What does a driver do?
+
+A physical device speaks in terms of registers, commands, and protocols. The application wants a simpler interface: read, write, capture, or receive an event.
+
+The driver is the software layer that understands the device or its communication standard. It translates between the interface exposed by the operating system and the operations understood by the physical controller.
+
+The application should not need to know which address holds a specific register or how a USB report is structured. It works through the abstraction provided by the operating system.
+
+## Polling versus interrupts
+
+One way to discover that a device is ready is polling: the CPU or controller repeatedly checks whether data arrived.
+
+```text
+is there data?
+no.
+is there data?
+no.
+is there data?
+yes.
+```
+
+The advantage is simplicity and control. The downside is that the system may waste CPU time on repeated checks.
+
+An interrupt lets a controller notify the CPU that something happened. Instead of checking constantly, the CPU keeps doing other work and gets notified when needed.
+
+Real systems often combine both approaches. For example, a USB host polls USB devices on a schedule, and after the USB controller receives data it can interrupt the CPU.
+
+Interrupts are not free either. If a device interrupts for every single byte, the number of interrupts can become enormous. Systems therefore use buffers, batching, and sometimes temporary polling under heavy load.
+
+## Why do we need buffers?
+
+A buffer is temporary storage between a producer of data and a consumer of data.
+
+```text
+camera → buffer → application
+```
+
+The camera can produce a frame while the application is still processing the previous one. The buffer temporarily stores data and smooths short differences in pace.
+
+It helps when the overload is temporary:
+
+```text
+for a short moment the producer is faster
+↓
+data accumulates in the buffer
+↓
+then the consumer catches up
+```
+
+But a buffer does not solve a permanent rate mismatch.
+
+Suppose a camera produces 60 frames per second and the application can process only 20. Every second, 40 frames accumulate:
+
+```text
+60 - 20 = 40
+```
+
+If the queue is unbounded, memory keeps filling. At the same time, every frame waits longer before processing, so latency increases. After a few minutes, the display may show the past instead of what is happening now.
+
+## Backpressure: when the consumer cannot keep up
+
+Backpressure is a mechanism that limits the producer or the amount of data in the queue when the consumer cannot keep up.
+
+The policy can be:
+
+- slow down the producer;
+- block writes until space is available;
+- reduce the sample rate or quality;
+- limit the queue size;
+- reject new items;
+- drop old items;
+- keep only the latest value.
+
+The correct choice depends on what the data means.
+
+For a live video preview, it is usually better to drop old frames and show the newest one. There is little value in displaying a frame from ten seconds ago.
+
+For security camera recording, losing data may be unacceptable. In that case, the storage, encoding, and processing pipeline must be able to keep up. Writing to disk is not backpressure by itself. If the disk is too slow, the delay simply moves to another queue.
+
+## DMA: moving data without the CPU copying every byte
+
+Without DMA, the CPU might have to participate directly in copying large amounts of data from a device into memory.
+
+With DMA, the process looks like this:
+
+```text
+the driver prepares a buffer in RAM
+↓
+the CPU configures the controller with an address and length
+↓
+the device transfers data directly into RAM
+↓
+when done, the controller raises an interrupt
+↓
+the operating system completes the request
+```
+
+The CPU is still involved in setup, permissions, management, and completion handling. It simply does not copy every byte itself.
+
+DMA is especially important for storage devices, network cards, audio devices, and cameras that move large amounts of data.
+
+## Connector, bus, and protocol are not the same thing
+
+It is easy to confuse three different ideas:
+
+```text
+physical connector → the shape the cable plugs into
+bus or link        → the communication path
+protocol           → the rules of the conversation
+```
+
+USB-C, for example, mostly describes a physical connector. Two cables that look identical do not necessarily support the same speeds or protocols.
+
+A protocol defines what messages look like, who may send, how errors are detected, how the device is identified, and what the data means.
+
+When you connect a USB device, the operating system performs enumeration: it detects the device, assigns it an address on the USB link, reads its descriptors, and chooses an appropriate driver.
+
+That address is not a RAM address. It is an identifier that lets the host talk to the correct device on the link.
+
+## Latency, throughput, and IOPS
+
+Three measurements describe different parts of I/O performance.
+
+Latency is the time it takes for one operation to receive a response.
+
+Throughput is the amount of data processed per unit of time.
+
+IOPS is the number of input/output operations per second.
+
+A system can transfer 5GB per second and still make every request wait two seconds. In that case, throughput is high, but latency is poor.
+
+Batching combines many small operations into one larger operation. This reduces overhead and often improves throughput, but it can increase latency because the first item waits until the batch is ready.
+
+## What does `flush()` really do?
+
+When you write through a buffered writer or stream, data may remain temporarily in a buffer.
+
+```java
+writer.write("hello");
+writer.flush();
+```
+
+`flush()` asks the current layer to pass accumulated data to the layer below. It does not close the resource, and it does not necessarily guarantee that the data reached physical storage media.
+
+The data may pass through several layers:
+
+```text
+Java buffer
+↓
+operating system
+↓
+page cache
+↓
+device queue
+↓
+drive controller
+↓
+storage media
+```
+
+After `flush()`, you can keep writing. After `close()`, the resource is closed and must not be used again.
+
+## The physical world is analog
+
+A microphone, temperature sensor, or light sensor does not start with digital numbers. It produces an electrical signal that changes continuously.
+
+An ADC, or Analog-to-Digital Converter, samples that signal and converts it into numbers.
+
+```text
+physical phenomenon
+↓
+analog electrical signal
+↓
+ADC
+↓
+digital samples
+↓
+buffer
+↓
+software
+```
+
+The sample rate controls how many times per second the signal is measured. The resolution controls how many different values can be represented per measurement.
+
+A higher sample rate produces more data and requires more storage, bandwidth, and processing.
+
+A DAC does the reverse. It converts digital samples into an analog signal that can drive a speaker.
+
+## Noise, averaging, and the cost of stability
+
+A real sensor does not always return the same value:
+
+```text
+25.01
+24.98
+25.03
+25.00
+```
+
+You can reduce noise with a moving average. The larger the window, the more stable the result, but the slower it reacts to a real change.
+
+If the sensor is sampled 100 times per second and you average 20 samples, the window represents:
+
+```text
+20 / 100 = 0.2 seconds
+```
+
+When the temperature jumps from 25 to 30 degrees, the average does not jump immediately. It approaches the new value gradually because old samples are still inside the window.
+
+This is a classic tradeoff:
+
+```text
+larger window → less noise, more delay
+smaller window → faster response, less stability
+```
+
+## One read does not guarantee everything
+
+This code does not guarantee that the entire array is filled:
+
+```java
+byte[] buffer = new byte[1024];
+int bytesRead = input.read(buffer);
+```
+
+`bytesRead` may be `240`. In that case, only:
+
+```text
+buffer[0] through buffer[239]
+```
+
+belong to the current read.
+
+The rest of the array may contain zeros or data from a previous read. A correct copy loop looks like this:
+
+```java
+byte[] buffer = new byte[8192];
+int bytesRead;
+
+while ((bytesRead = input.read(buffer)) != -1) {
+    output.write(buffer, 0, bytesRead);
+}
+```
+
+The value `-1` means EOF: the stream ended and no more data will arrive from it.
+
+Keep these cases separate:
+
+```text
+EOF          → the stream ended
+Timeout      → no result arrived within the configured time
+IOException  → the input or output operation failed
+```
+
+EOF is not necessarily an error.
+
+## Handles, file descriptors, and closing resources
+
+When a program opens a file, socket, or camera, the operating system returns a handle or file descriptor that represents the open resource.
+
+A file descriptor is not a RAM address and not a disk location. It is an index into a resource table managed by the operating system for the process.
+
+An open resource can hold:
+
+- buffers;
+- locks;
+- a network connection;
+- a slot in the file table;
+- threads and queues;
+- access to a physical device.
+
+That is why it must be closed.
+
+In Java, use try-with-resources:
+
+```java
+try (
+    InputStream input = Files.newInputStream(source);
+    OutputStream output = Files.newOutputStream(target)
+) {
+    input.transferTo(output);
+}
+```
+
+Even if an exception occurs, Java will try to close the resources.
+
+The Garbage Collector is not a replacement for `close()`. It mainly manages Java memory and does not guarantee that an external resource will be released exactly when you stop using it.
+
+## The principle behind all of it
+
+Input and output are not just reading and writing. They are the meeting point between components that run at different speeds and have different limits.
+
+A device produces data, a controller manages it, a driver translates it, the operating system schedules and buffers it, and the application reads or processes it.
+
+At every layer, the same questions appear:
+
+- What happens if the data arrives partially?
+- What happens if the producer is faster than the consumer?
+- Is data loss allowed?
+- How much latency is acceptable?
+- Did the operation finish, fail, or simply keep waiting?
+- Who is responsible for closing and releasing the resource?
+
+Once you understand those questions, failures that seemed random become predictable: delayed video, growing memory usage, partially written files, a device that remains busy, or a thread that waits forever.
+
+That is the real meaning of understanding input and output: not only knowing how to call `read()` or `write()`, but understanding the system behind those calls.

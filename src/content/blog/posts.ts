@@ -6,6 +6,8 @@ import DeploymentIsProductEn from './deployment-is-product.en.mdx';
 import DeploymentIsProductHe from './deployment-is-product.he.mdx';
 import GoogleTranslateNameBugEn from './google-translate-name-bug.en.mdx';
 import GoogleTranslateNameBugHe from './google-translate-name-bug.he.mdx';
+import HardwareInputOutputDevicesEn from './hardware-input-output-devices.en.mdx';
+import HardwareInputOutputDevicesHe from './hardware-input-output-devices.he.mdx';
 import JavaUnicodeStringLengthEn from './java-unicode-string-length.en.mdx';
 import JavaUnicodeStringLengthHe from './java-unicode-string-length.he.mdx';
 import PrivacySafeProductAnalyticsEn from './privacy-safe-product-analytics.en.mdx';
@@ -29,6 +31,28 @@ import WhatTheCpuReallyDoesHe from './what-the-cpu-really-does.he.mdx';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'hardware-input-output-devices',
+    language: 'he',
+    title: 'מה באמת קורה כשלוחצים על מקש?',
+    excerpt: 'מדריך מעשי לקלט, פלט והתקני חומרה: מקלדות, drivers, interrupts, buffers, backpressure, DMA, latency, flush, ADC וקריאות חלקיות.',
+    date: '2026-07-13',
+    readTime: '12 דקות קריאה',
+    tags: ['Hardware', 'I/O', 'Systems'],
+    featured: false,
+    Content: HardwareInputOutputDevicesHe,
+  },
+  {
+    slug: 'hardware-input-output-devices',
+    language: 'en',
+    title: 'What really happens when you press a key?',
+    excerpt: 'A practical guide to input, output, and hardware devices: keyboards, drivers, interrupts, buffers, backpressure, DMA, latency, flush, ADC, and partial reads.',
+    date: '2026-07-13',
+    readTime: '12 min read',
+    tags: ['Hardware', 'I/O', 'Systems'],
+    featured: false,
+    Content: HardwareInputOutputDevicesEn,
+  },
   {
     slug: 'java-unicode-string-length',
     language: 'he',
