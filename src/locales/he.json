@@ -62,9 +62,9 @@
     "caseStudyNotFoundDescription": "לפרויקט הזה עדיין אין עמוד קייס סטאדי מפורסם.",
     "caseStudyNotFoundSeoTitle": "קייס סטאדי לא נמצא | אביתר חזן",
     "liveDemo": "צפייה",
-    "livePreview": "תצוגה חיה",
+    "livePreview": "תצוגת פרויקט",
     "open": "פתח",
-    "openLivePreview": "פתח תצוגה חיה של",
+    "openLivePreview": "פתח את האתר החי של",
     "noLive": "אין קישור Live מאומת כרגע",
     "featuredLabel": "פרויקטים מובילים",
     "indexEyebrow": "אינדקס פרויקטים",
@@ -188,7 +188,9 @@
       "sendBtn": "שלח הודעה",
       "sending": "שולח...",
       "successMsg": "ההודעה נשלחה בהצלחה. אחזור אליך בהקדם.",
-      "errorMsg": "שליחת ההודעה נכשלה. אפשר לפנות ישירות ב-WhatsApp או באימייל."
+      "errorMsg": "שליחת ההודעה נכשלה. אפשר לפנות ישירות ב-WhatsApp או באימייל.",
+      "privacyNotice": "הטופס מעובד באמצעות FormSubmit ומועבר באימייל.",
+      "privacyLink": "למידע נוסף בעמוד הפרטיות"
     }
   },
   "blog": {

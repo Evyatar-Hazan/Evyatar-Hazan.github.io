@@ -7,6 +7,7 @@ import BlogPost from './pages/BlogPost';
 import ProjectCaseStudy from './pages/ProjectCaseStudy';
 import ContactPage from './pages/ContactPage';
 import PrivacyPage from './pages/PrivacyPage';
+import NotFoundPage from './pages/NotFoundPage';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { useTheme } from './hooks/useTheme';
@@ -85,7 +86,7 @@ const AppShell = () => {
         <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
-        <Route path="*" element={<PortfolioHome />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Footer />
     </div>

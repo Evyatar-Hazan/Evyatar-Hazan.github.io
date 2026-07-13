@@ -5,6 +5,7 @@ type PageSeo = {
   title: string;
   description: string;
   path?: string;
+  robots?: string;
 };
 
 const upsertMeta = (name: string, content: string) => {
@@ -43,13 +44,14 @@ const upsertLink = (rel: string, href: string) => {
   element.href = href;
 };
 
-export const usePageSeo = ({ title, description, path }: PageSeo) => {
+export const usePageSeo = ({ title, description, path, robots = 'index, follow' }: PageSeo) => {
   useEffect(() => {
     const routePath = normalizePath(path ?? window.location.pathname);
     const pageUrl = absoluteUrl(routePath);
 
     document.title = title;
     upsertMeta('description', description);
+    upsertMeta('robots', robots);
     upsertMeta('twitter:title', title);
     upsertMeta('twitter:description', description);
     upsertMeta('twitter:url', pageUrl);
@@ -57,5 +59,5 @@ export const usePageSeo = ({ title, description, path }: PageSeo) => {
     upsertPropertyMeta('og:description', description);
     upsertPropertyMeta('og:url', pageUrl);
     upsertLink('canonical', pageUrl);
-  }, [description, path, title]);
+  }, [description, path, robots, title]);
 };

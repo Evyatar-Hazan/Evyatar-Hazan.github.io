@@ -62,9 +62,9 @@
     "caseStudyNotFoundDescription": "This project does not have a published case study page yet.",
     "caseStudyNotFoundSeoTitle": "Case study not found | Evyatar Hazan",
     "liveDemo": "Live",
-    "livePreview": "Live preview",
+    "livePreview": "Project preview",
     "open": "Open",
-    "openLivePreview": "Open live preview for",
+    "openLivePreview": "Open live site for",
     "noLive": "No verified live link yet",
     "featuredLabel": "Featured projects",
     "indexEyebrow": "Project index",
@@ -188,7 +188,9 @@
       "sendBtn": "Send message",
       "sending": "Sending...",
       "successMsg": "Message sent successfully. I will get back to you soon.",
-      "errorMsg": "Message delivery failed. You can reach out directly on WhatsApp or email."
+      "errorMsg": "Message delivery failed. You can reach out directly on WhatsApp or email.",
+      "privacyNotice": "Form submissions are processed by FormSubmit and forwarded by email.",
+      "privacyLink": "Read the privacy notice"
     }
   },
   "blog": {

@@ -4,6 +4,7 @@ import { CheckCircle2, Linkedin, Mail, MessageCircle, Send, XCircle } from 'luci
 import Button from '../Button';
 import { useTranslation } from 'react-i18next';
 import { profileLinks } from '../../data/profile';
+import { Link } from 'react-router-dom';
 
 const Contact = () => {
   const { t } = useTranslation();
@@ -144,6 +145,12 @@ const Contact = () => {
               {isSubmitting ? t('contact.form.sending') : t('contact.form.sendBtn')}
               <Send className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 rtl:group-hover:-translate-x-1 rtl:rotate-180" />
             </Button>
+            <p className="text-sm leading-6 text-neutral-500 dark:text-neutral-400">
+              {t('contact.form.privacyNotice')}{' '}
+              <Link to="/privacy" className="font-semibold text-primary-600 hover:text-primary-500 dark:text-primary-400">
+                {t('contact.form.privacyLink')}
+              </Link>
+            </p>
             <div aria-live="polite" className="min-h-7">
               {formStatus === 'success' && (
                 <p className="flex items-center gap-2 text-sm font-medium text-emerald-600 dark:text-emerald-400">

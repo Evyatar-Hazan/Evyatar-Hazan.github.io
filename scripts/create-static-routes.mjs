@@ -19,6 +19,11 @@ const escapeHtml = (value) => value
   .replaceAll('<', '&lt;')
   .replaceAll('>', '&gt;');
 
+const removeAdSenseScript = (html) => html.replace(
+  /\s*<script async src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-6696643120887220"[\s\S]*?<\/script>/,
+  ''
+);
+
 const rootHtml = await readFile(path.join(distDir, 'index.html'), 'utf8');
 
 const blogSource = await readFile(path.join(srcDir, 'content', 'blog', 'posts.ts'), 'utf8');
@@ -94,13 +99,14 @@ const staticRoutes = [
   },
   {
     path: '/privacy/',
+    excludeAds: true,
     title: 'Privacy | Evyatar Hazan',
     description: 'Privacy information for Evyatar Hazan portfolio visitors, including contact paths, analytics boundaries, and basic data handling expectations.',
     preview: {
       heading: 'Privacy',
       body: [
         'This site presents portfolio work, technical writing, and direct contact paths without asking visitors to create accounts or upload private files.',
-        'Contact happens through direct channels chosen by the visitor, and site measurement is kept minimal and operational.'
+        'The contact form is processed by FormSubmit, while advertising technology is provided by Google AdSense. The full notice explains cookies, browser preferences, technical request data, and visitor choices.'
       ],
       links: [
         { href: '/', label: 'Home' },
@@ -110,6 +116,7 @@ const staticRoutes = [
   },
   {
     path: '/contact/',
+    excludeAds: true,
     title: 'Contact | Evyatar Hazan',
     description: 'Direct contact options for Evyatar Hazan, including WhatsApp, email, and LinkedIn for project inquiries and collaboration.',
     preview: {
@@ -196,6 +203,7 @@ const buildHtmlForRoute = (route) => {
   html = replaceHeadValue(html, /<meta name="twitter:url" content="[^"]*" \/>/, `<meta name="twitter:url" content="${pageUrl}" />`);
   html = replaceHeadValue(html, /<meta name="twitter:title" content="[^"]*" \/>/, `<meta name="twitter:title" content="${escapeHtml(route.title)}" />`);
   html = replaceHeadValue(html, /<meta name="twitter:description"[^>]*content="[^"]*"[^>]*>/, `<meta name="twitter:description" content="${escapeHtml(route.description)}" />`);
+  if (route.excludeAds) html = removeAdSenseScript(html);
   html = html.replace('<div id="root"></div>', `${renderPreview(route)}<div id="root"></div>`);
 
   return html;
@@ -227,6 +235,17 @@ const sitemapXml = [
 ].join('\n');
 
 await writeFile(path.join(distDir, 'sitemap.xml'), sitemapXml);
+
+let notFoundHtml = removeAdSenseScript(rootHtml);
+notFoundHtml = replaceHeadValue(notFoundHtml, /<title>[^<]*<\/title>/, '<title>Page not found | Evyatar Hazan</title>');
+notFoundHtml = replaceHeadValue(notFoundHtml, /<meta name="description"[^>]*content="[^"]*"[^>]*>/, '<meta name="description" content="The requested page does not exist. Return to the home page or browse the technical writing." />');
+notFoundHtml = replaceHeadValue(notFoundHtml, /<meta name="robots" content="[^"]*" \/>/, '<meta name="robots" content="noindex, follow" />');
+notFoundHtml = notFoundHtml.replace(/\s*<link rel="canonical" href="[^"]*" \/>/, '');
+notFoundHtml = notFoundHtml.replace(
+  '<div id="root"></div>',
+  '<div id="route-preview" style="max-width:760px;margin:0 auto;padding:80px 24px;font-family:Inter,Arial,sans-serif;color:#111827;background:#ffffff;text-align:center;"><p style="font-weight:700;color:#0284c7;letter-spacing:.2em;">404</p><h1 style="font-size:44px;line-height:1.1;margin:16px 0 20px;">This page could not be found</h1><p style="font-size:18px;line-height:1.8;color:#374151;">The link may have changed or the address may be incorrect. Return to the portfolio or browse the technical writing.</p><nav style="margin-top:28px;"><a href="/" style="margin:0 10px;color:#0369a1;font-weight:700;">Home</a><a href="/blog/" style="margin:0 10px;color:#0369a1;font-weight:700;">Writing</a></nav></div><div id="root"></div>'
+);
+await writeFile(path.join(distDir, '404.html'), notFoundHtml);
 
 if (!(await readdir(distDir)).includes('robots.txt')) {
   await writeFile(path.join(distDir, 'robots.txt'), 'User-agent: *\nAllow: /\n\nSitemap: https://evyatarhazan.com/sitemap.xml\n');

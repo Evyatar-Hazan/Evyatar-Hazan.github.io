@@ -82,16 +82,8 @@ const ProjectMedia = ({ project }: { project: Project }) => {
             <ExternalLink className="h-3.5 w-3.5" />
           </a>
         </div>
-        <div className="relative aspect-[16/9] bg-white md:aspect-[16/8] xl:aspect-[16/7]">
-          <iframe
-            src={project.liveUrl}
-            title={t(`projects.items.${project.id}.previewTitle`)}
-            className="h-full w-full border-0"
-            loading="lazy"
-            sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-            referrerPolicy="strict-origin-when-cross-origin"
-          />
-          <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/5 dark:ring-white/10" />
+        <div className="p-3">
+          <TechnicalPreview project={project} />
         </div>
       </div>
     );

@@ -39,7 +39,7 @@ const privacyPreview: RoutePreview = {
   heading: 'Privacy',
   body: [
     'This portfolio does not ask visitors to create accounts or upload personal documents. Contact happens through direct channels chosen by the visitor, such as email, LinkedIn, or WhatsApp.',
-    'Analytics and operational checks are kept minimal and are meant to measure site usage and stability rather than collect sensitive visitor content.'
+    'The contact form is processed by FormSubmit, while advertising technology is provided by Google AdSense. The full notice explains cookies, browser preferences, technical request data, and visitor choices.'
   ],
   links: [
     { href: '/', label: 'Home' },

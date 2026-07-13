@@ -22,12 +22,20 @@ const PrivacyPage = () => {
           body: 'האתר הזה מציג עבודות, קייס סטאדיז, כתיבה מקצועית ודרכי יצירת קשר. אין בו אזור משתמשים, אין העלאת קבצים פרטיים, ואין תהליך רכישה.'
         },
         {
-          title: 'יצירת קשר',
-          body: 'אם יוצרים קשר דרך WhatsApp, אימייל או LinkedIn, המידע שנשלח הוא המידע שבחרת לשלוח ישירות. אין באתר טופס שמסתיר לאן הפרטים הולכים.'
+          title: 'יצירת קשר וטופס הפנייה',
+          body: 'אפשר ליצור קשר דרך WhatsApp, אימייל, LinkedIn או טופס הפנייה באתר. בטופס נשלחים השם, כתובת האימייל ותוכן ההודעה שבחרת למסור. הטופס מעובד באמצעות FormSubmit ומועבר לאימייל של בעל האתר; האתר עצמו אינו מפעיל חשבון משתמש או מאגר לידים נפרד.'
         },
         {
           title: 'מדידה ותפעול',
-          body: 'המדידה באתר נועדה להבין שימוש בסיסי, תקינות וביצועים, ולא לקרוא תוכן אישי או מסמכים רגישים של מבקרים.'
+          body: 'השרת וספקי האירוח עשויים לעבד נתוני בקשה טכניים לצורכי אבטחה, תקינות וביצועים. העדפות שפה וערכת נושא נשמרות בדפדפן שלך. המדידה אינה מיועדת לקרוא תוכן אישי או מסמכים רגישים של מבקרים.'
+        },
+        {
+          title: 'פרסום ו-Google AdSense',
+          body: 'האתר כולל קוד של Google AdSense. לאחר אישור האתר, Google ושותפי פרסום עשויים להשתמש ב-cookies, מזהי מכשיר ונתוני שימוש כדי להציג, להתאים ולמדוד מודעות, בהתאם להגדרות המשתמש, להסכמה הנדרשת ולדין החל. ניתן לנהל התאמה אישית דרך הגדרות המודעות של Google והגדרות הדפדפן.'
+        },
+        {
+          title: 'בחירה ובקשות פרטיות',
+          body: 'אפשר לחסום או למחוק cookies ונתוני אתר דרך הדפדפן. לבקשה בנוגע למידע שנשלח בטופס או ישירות באימייל, אפשר לפנות ל-evyatarhazan3.14@gmail.com.'
         }
       ]
     : [
@@ -36,12 +44,20 @@ const PrivacyPage = () => {
           body: 'This site presents portfolio work, case studies, technical writing, and direct contact paths. It does not provide user accounts, private file uploads, or checkout flows.'
         },
         {
-          title: 'Direct contact',
-          body: 'If you reach out through WhatsApp, email, or LinkedIn, the information shared is whatever you choose to send directly. There is no hidden lead pipeline behind the site.'
+          title: 'Direct contact and the contact form',
+          body: 'You can contact me through WhatsApp, email, LinkedIn, or the site contact form. The form sends the name, email address, and message you choose to provide. FormSubmit processes the submission and forwards it to the site owner by email; this site does not operate user accounts or a separate lead database.'
         },
         {
           title: 'Measurement and operations',
-          body: 'Site measurement is meant for basic usage, stability, and performance understanding rather than reading personal visitor content or private project files.'
+          body: 'Hosting and infrastructure providers may process technical request data for security, reliability, and performance. Language and theme preferences are stored in your browser. Measurement is not intended to read personal visitor content or private project files.'
+        },
+        {
+          title: 'Advertising and Google AdSense',
+          body: 'This site includes Google AdSense code. After the site is approved, Google and its advertising partners may use cookies, device identifiers, and usage data to deliver, personalize, and measure ads, subject to user settings, required consent, and applicable law. You can manage personalization through Google Ads Settings and your browser controls.'
+        },
+        {
+          title: 'Your choices and privacy requests',
+          body: 'You can block or delete cookies and site data through your browser. For a request about information submitted through the form or sent directly by email, contact evyatarhazan3.14@gmail.com.'
         }
       ];
 
@@ -60,6 +76,9 @@ const PrivacyPage = () => {
             ? 'העמוד הזה נועד להסביר בפשטות איך האתר הזה פועל, אילו נתיבים יש ליצירת קשר, ואיפה עובר הגבול בין שימוש רגיל באתר לבין שיתוף מידע ביוזמתך.'
             : 'This page explains in plain language how the site works, which contact paths exist, and where the boundary sits between normal browsing and information you intentionally choose to share.'}
         </p>
+        <p className="mt-3 text-sm font-medium text-neutral-500 dark:text-neutral-400">
+          {isHebrew ? 'עודכן לאחרונה: 14 ביולי 2026' : 'Last updated: July 14, 2026'}
+        </p>
 
         <div className="mt-10 grid gap-5">
           {sections.map((section) => (
@@ -68,6 +87,38 @@ const PrivacyPage = () => {
               <p className="mt-3 text-base leading-8 text-neutral-700 dark:text-neutral-300">{section.body}</p>
             </section>
           ))}
+        </div>
+
+        <div className="mt-8 rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-950/70">
+          <h2 className="text-lg font-bold text-neutral-950 dark:text-white">
+            {isHebrew ? 'מידע נוסף על שירותי צד שלישי' : 'More about third-party services'}
+          </h2>
+          <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold">
+            <a
+              href="https://policies.google.com/technologies/partner-sites"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary-600 hover:text-primary-500 dark:text-primary-400"
+            >
+              {isHebrew ? 'איך Google משתמשת במידע מאתרים שותפים' : 'How Google uses information from partner sites'}
+            </a>
+            <a
+              href="https://adssettings.google.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary-600 hover:text-primary-500 dark:text-primary-400"
+            >
+              {isHebrew ? 'הגדרות המודעות של Google' : 'Google Ads Settings'}
+            </a>
+            <a
+              href="https://formsubmit.co/privacy.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary-600 hover:text-primary-500 dark:text-primary-400"
+            >
+              {isHebrew ? 'מדיניות הפרטיות של FormSubmit' : 'FormSubmit privacy policy'}
+            </a>
+          </div>
         </div>
 
         <div className="mt-10 flex flex-wrap gap-3">

@@ -87,25 +87,26 @@ describe('App', () => {
     expect(screen.getAllByText('projects.liveDemo')).toHaveLength(expectedLiveActions);
   });
 
-  it('uses live embeds for projects with verified live URLs', async () => {
+  it('links to live projects without embedding external sites in the portfolio page', async () => {
     render(<App />);
 
-    expect(await screen.findByTitle('projects.items.nis_boutique.previewTitle')).toHaveAttribute(
-      'src',
+    expect(await screen.findByRole('link', { name: 'projects.openLivePreview projects.items.nis_boutique.title' })).toHaveAttribute(
+      'href',
       'https://nisboutiquecatering.com/'
     );
-    expect(screen.getByTitle('projects.items.online_converter.previewTitle')).toHaveAttribute(
-      'src',
+    expect(screen.getByRole('link', { name: 'projects.openLivePreview projects.items.online_converter.title' })).toHaveAttribute(
+      'href',
       'https://online-converter.evyatarhazan.com/'
     );
-    expect(screen.getByTitle('projects.items.emergency_protocol.previewTitle')).toHaveAttribute(
-      'src',
+    expect(screen.getByRole('link', { name: 'projects.openLivePreview projects.items.emergency_protocol.title' })).toHaveAttribute(
+      'href',
       'https://bls-protocol.evyatarhazan.com/'
     );
-    expect(screen.getByTitle('projects.items.united_hatzalah.previewTitle')).toHaveAttribute(
-      'src',
+    expect(screen.getByRole('link', { name: 'projects.openLivePreview projects.items.united_hatzalah.title' })).toHaveAttribute(
+      'href',
       'https://hatzalah-shoham.evyatarhazan.com/'
     );
+    expect(document.querySelector('iframe')).not.toBeInTheDocument();
   });
 
   it('locks and unlocks body scroll when mobile menu toggles', () => {
@@ -163,11 +164,30 @@ describe('App', () => {
     expect(screen.getByRole('link', { name: 'projects.caseStudyBack' })).toHaveAttribute('href', '/#projects');
   });
 
+  it('discloses contact-form and advertising data use on the privacy page', () => {
+    renderAt('/privacy');
+
+    expect(screen.getByRole('heading', { name: 'Advertising and Google AdSense' })).toBeInTheDocument();
+    expect(screen.getByText(/FormSubmit processes the submission/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /How Google uses information from partner sites/i })).toHaveAttribute(
+      'href',
+      'https://policies.google.com/technologies/partner-sites'
+    );
+  });
+
   it('renders a not found state for an unknown blog post', async () => {
     renderAt('/blog/missing-post');
 
     expect(await screen.findByRole('heading', { name: 'blog.notFoundTitle' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /blog.backToBlog/i })).toHaveAttribute('href', '/blog');
+  });
+
+  it('renders a noindex site-level not-found page for unknown routes', () => {
+    renderAt('/missing-route');
+
+    expect(screen.getByRole('heading', { name: 'This page could not be found' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Back to the home page/i })).toHaveAttribute('href', '/');
+    expect(document.querySelector('meta[name="robots"]')).toHaveAttribute('content', 'noindex, follow');
   });
 
   it('closes the mobile menu when clicking the backdrop', () => {
