@@ -1,0 +1,559 @@
+Right now, your computer or phone is probably running several programs at once: a browser, a messaging app, a music player, background services, and maybe an IDE running a Java program.
+
+They all want to use the same limited resources: the CPU, RAM, storage, network card, screen, keyboard, and speakers.
+
+Still, the browser should not be able to read the memory of your password manager. The music player should not stop your Java program. A buggy program should not be able to overwrite every file on the machine.
+
+The layer that makes all of this work is the operating system.
+
+## What is an operating system?
+
+An operating system is the software layer between applications and hardware.
+
+```text
+applications
+↓
+operating system
+↓
+CPU, RAM, storage, and devices
+```
+
+But "between" is only the beginning. An operating system has three central jobs.
+
+### Abstraction
+
+The operating system hides complicated hardware details and exposes simpler, more uniform interfaces.
+
+Instead of knowing how to speak to a specific SSD model, a program works with files. Instead of understanding the internals of a network card, it works with sockets. Instead of managing physical RAM cells directly, it receives a virtual address space.
+
+### Resource management
+
+The operating system decides:
+
+- which thread gets CPU time;
+- how much memory each process can use;
+- how several programs share the storage device;
+- who may access a specific device;
+- how to handle a program waiting for a network response or a file.
+
+### Protection and isolation
+
+The operating system prevents one program from freely accessing the memory, files, and resources of another program.
+
+It enforces permissions, separates processes, and limits what a normal application is allowed to do. A useful mental model is an apartment building manager: it allocates shared resources, gives each tenant private space, and prevents one tenant from walking into another tenant's apartment.
+
+## The problem the operating system solves
+
+Suppose a Java program wants to read a file:
+
+```java
+String text = Files.readString(
+        Path.of("message.txt")
+);
+```
+
+Without an operating system, the program would need to know which storage device is installed, how to send commands to its controller, where the file's blocks are, how the file system is structured, what to do if another program is using the device, how to transfer the result into RAM, how to check permissions, and how to handle hardware errors.
+
+In practice, the code goes through several layers:
+
+```text
+Java code
+↓
+Java libraries
+↓
+request to the operating system
+↓
+file system
+↓
+driver
+↓
+storage controller
+↓
+SSD
+```
+
+The application works with the idea of a file. The operating system handles the messy details underneath it.
+
+## The operating system is not only what you see
+
+It is easy to think of Windows, macOS, or Linux as the desktop, windows, buttons, and menus.
+
+The graphical interface is only part of the system. A computer can run without a graphical desktop at all. Many Linux servers, for example, run through a terminal and background services.
+
+A modern operating system can be described like this:
+
+```text
+applications
+↓
+graphical interface, shell, and system services
+↓
+system libraries
+↓
+kernel
+↓
+drivers
+↓
+hardware
+```
+
+Some components run in user space. The privileged core runs in kernel space.
+
+## What is the kernel?
+
+The kernel is the central privileged core of the operating system.
+
+It is responsible for process and thread scheduling, memory management, system calls, file systems, permissions and isolation, networking, drivers, and interrupts.
+
+The kernel is not a normal user process that happens to have more permissions. It is the part of the system that runs in the CPU's privileged mode and manages the rest of the machine.
+
+The broader operating system also includes components that are not inside the kernel: shells, audio services, network services, compositors, graphical interfaces, and other system services.
+
+## User mode versus kernel mode
+
+The CPU supports different privilege modes. In a simplified model, we can talk about two:
+
+```text
+user mode
+normal applications
+limited permissions
+
+kernel mode
+operating system kernel
+privileged operations
+```
+
+An application in user mode cannot simply modify page tables, read another process's memory, write directly to any device, disable interrupts, or change internal kernel structures.
+
+When it needs such an operation, it asks the kernel for help.
+
+## System calls: the gate into the kernel
+
+A `system call` is a controlled transition through which a program asks the operating system for a service.
+
+Examples include:
+
+- opening a file;
+- reading data;
+- creating a process;
+- sending data over the network;
+- allocating memory;
+- waiting for an event.
+
+The path looks like this:
+
+```text
+the application runs in user mode
+↓
+it performs a system call
+↓
+the CPU enters kernel mode
+↓
+the kernel checks the request and permissions
+↓
+the kernel performs or rejects the operation
+↓
+the result returns to the application
+```
+
+A system call does not always involve hardware. Asking for the current process ID, changing a permission, or creating a process may happen inside the kernel without talking to a physical device.
+
+## Program, process, and thread
+
+These three ideas are related, but they are not the same thing.
+
+### Program
+
+A program is a passive file on disk:
+
+```text
+java
+chrome.exe
+MyApplication.jar
+```
+
+The file itself does not execute. It only contains code and data.
+
+### Process
+
+When the operating system runs a program, it creates a process for it.
+
+A process includes a virtual address space, permissions and user identity, open files and sockets, execution state, and at least one thread.
+
+You can run the same program several times. Each run is a separate process with its own PID, memory, and state.
+
+### Thread
+
+A thread is an execution path inside a process.
+
+Each thread has its own execution state: registers, program counter, stack, scheduling state, and thread-local data.
+
+Threads in the same process usually share the program code, heap and objects, open files, sockets, and other process resources.
+
+That sharing is efficient, but it is also where bugs like race conditions come from.
+
+## Who divides CPU time?
+
+Even when dozens or hundreds of threads are ready to run, the number of execution units is limited.
+
+On a computer with two logical CPUs, only two threads can actually execute instructions at the same instant. The rest remain `runnable` and wait for the scheduler to choose them.
+
+The scheduler decides which thread runs, on which core, for how long, when to stop it, and who gets priority.
+
+## Concurrency versus parallelism
+
+`Concurrency` means several tasks make progress during the same period.
+
+Even one CPU core can run concurrent tasks:
+
+```text
+time 1: Thread A
+time 2: Thread B
+time 3: Thread A
+time 4: Thread C
+```
+
+At any single instant only one thread runs, but they all progress over time.
+
+`Parallelism` means several tasks execute instructions at the same instant:
+
+```text
+Core 1 → Thread A
+Core 2 → Thread B
+```
+
+A compact way to remember it:
+
+```text
+Concurrency = handling several tasks during the same period
+Parallelism = executing several tasks at the same instant
+```
+
+## Context switch
+
+To stop one thread and continue another, the operating system must save the state of the first thread and load the state of the second.
+
+Simplified:
+
+```text
+save Thread A registers
+save program counter and stack pointer
+choose Thread B
+load Thread B state
+continue executing B
+```
+
+That is a `context switch`.
+
+It is not free. It consumes time and can reduce the efficiency of CPU caches. More threads do not always improve performance. Too many threads can produce too much scheduling, too many context switches, and too much competition for shared resources.
+
+## What happens when a thread waits?
+
+Suppose a thread asks for data from the network, but the data has not arrived yet.
+
+There is no reason to let it keep consuming CPU. The operating system moves it to the `blocked` state.
+
+```text
+Running
+↓
+network read request
+↓
+no data yet
+↓
+Blocked
+```
+
+Meanwhile, the scheduler runs another thread.
+
+When the data arrives, the kernel moves the blocked thread back to `runnable`. It still does not run immediately. It must wait until the scheduler selects it.
+
+## Preemption and infinite loops
+
+What happens if a program never voluntarily gives up the CPU?
+
+```java
+while (true) {
+}
+```
+
+A modern operating system does not have to wait for the program to stop.
+
+A hardware timer produces interrupts at regular intervals. When a timer interrupt arrives, the kernel gets control and can decide to pause the current thread and run another one.
+
+That is why an infinite loop in user mode may consume a CPU core, but it should not necessarily freeze the entire computer.
+
+## Race condition
+
+Threads in the same process share memory, so two of them can access the same variable.
+
+```java
+private static int counter = 0;
+
+private static void increment() {
+    counter++;
+}
+```
+
+`counter++` looks like one operation, but at a lower level it contains several steps:
+
+```text
+read the value
+add 1
+write the new value
+```
+
+If two threads read the same value before either writes back:
+
+```text
+Thread A reads 10
+Thread B reads 10
+Thread A writes 11
+Thread B writes 11
+```
+
+Two increments happened, but the value increased by only one.
+
+That is a `race condition`: the result depends on timing.
+
+The operating system provides threads, but it does not fix your program's logic. The programmer must use tools such as `synchronized`, locks, or `AtomicInteger`.
+
+## Virtual memory
+
+Each process feels as if it owns a private continuous memory space.
+
+Two processes can use the same virtual address:
+
+```text
+0x5000
+```
+
+and still read completely different data.
+
+```text
+Process A: 0x5000 → one physical location
+Process B: 0x5000 → another physical location
+```
+
+The address the program sees is a virtual address. The real location in RAM is a physical address.
+
+### Pages and frames
+
+Memory is divided into fixed-size units.
+
+On the virtual side they are called `pages`. On the physical side they are called `frames`.
+
+```text
+Virtual page 0 → Physical frame 81
+Virtual page 1 → Physical frame 12
+Virtual page 2 → Physical frame 400
+```
+
+From the program's point of view, pages can look continuous even when their physical frames are scattered across RAM.
+
+### Page tables and the MMU
+
+Each process has tables that define how its virtual addresses map to physical memory.
+
+Those tables are called `page tables`. They also contain permissions: whether the page may be read, written, executed, accessed from user mode, and whether it is currently present in RAM.
+
+The kernel creates and manages page tables. A hardware unit in the CPU, the `MMU`, uses them to translate addresses while the program runs.
+
+### Page fault
+
+When a program accesses a page that is not currently mapped, the CPU raises a `page fault`.
+
+A page fault is not always a bug.
+
+If the page is valid but has not yet received RAM, the kernel can allocate a frame, update the mapping, and restart the instruction.
+
+If the page is in swap, the process blocks while the operating system reads it from storage back into RAM.
+
+If the address does not belong to the process, or the permissions do not match, the operating system may return an error or terminate the process.
+
+```text
+not every page fault is an error
+but illegal memory access may be discovered through a page fault
+```
+
+## Sharing memory between processes
+
+Usually, each process has an isolated address space. But the kernel can map the same physical frame into two different processes.
+
+```text
+Process A: virtual page 10 ─┐
+                             ├→ Physical frame 500
+Process B: virtual page 73 ─┘
+```
+
+The virtual addresses do not have to be the same.
+
+This is how mechanisms such as shared memory, memory-mapped files, and shared libraries work.
+
+Sharing is fast, but it brings back synchronization problems, race conditions, and locks.
+
+## File systems: from blocks to names and folders
+
+The SSD does not understand concepts like `report.pdf`, `Desktop`, or "project folder". From its point of view, storage contains numbered areas of data.
+
+The file system turns raw storage into files, directories, names, paths, owners, permissions, and metadata.
+
+The file name, metadata, and content are not the same thing.
+
+The name is an entry in a directory. Metadata includes information such as size, owner, permissions, and block locations. The content is the bytes themselves.
+
+## File descriptors
+
+When a program opens a file, it usually receives a small identifier called a `file descriptor`.
+
+```text
+3 → data.txt
+4 → network connection
+5 → log file
+```
+
+The number is not a disk block and not a RAM address. It is an index into the process's table of open resources.
+
+The same idea also appears with sockets, pipes, terminals, and devices. The program receives a small handle, and the operating system knows which resource it refers to.
+
+## Page cache: why is the second read faster?
+
+When a program reads a file, the operating system may keep the data in RAM in an area called the `page cache`.
+
+On the next read of the same data, the system may not need to access the storage device again. The data is already in RAM.
+
+The same idea applies to writes. When a program writes to a file, the data may first enter the page cache and be written to physical storage later.
+
+So it is important to distinguish:
+
+```text
+write() succeeded
+↓
+the operating system accepted the data
+↓
+the data is not necessarily physically stored yet
+```
+
+When you must ensure the data reached stable storage, you use mechanisms such as `fsync` or an API that performs an equivalent operation. Even then, the details depend on the hardware, controller, and file system.
+
+## Deleting an open file
+
+On Unix-like systems, deleting a file usually removes its name from the directory. If a process still holds an open file descriptor to that file, the content can continue to exist until the last descriptor is closed.
+
+That is why a file may appear to be deleted from a directory, while disk space is released only later.
+
+The name, handle, and content are different things.
+
+## Users, permissions, and identity
+
+The operating system runs processes under a user identity and groups. When a process tries to open a file or perform a sensitive operation, the kernel checks whether that identity is allowed to do it.
+
+Basic Unix file permissions include:
+
+```text
+r = read
+w = write
+x = execute
+```
+
+But the meaning depends on context. On a file, `x` lets the file run as a program. On a directory, `x` lets a process traverse the directory and access entries inside it when it knows their names.
+
+The important principle is `least privilege`: give each process only the permissions it actually needs.
+
+## System call, exception, and interrupt
+
+These three ideas can all transfer control to operating system code, but for different reasons:
+
+```text
+System call
+an intentional request from a program to the kernel
+
+Exception
+an event caused by executing an instruction, such as divide-by-zero or page fault
+
+Interrupt
+an event external to the program's instruction flow, such as a timer or I/O device
+```
+
+The distinction helps you understand whether software requested a service, the CPU detected an execution problem, or hardware announced that something happened.
+
+## What really happens when Java reads a file?
+
+Return to this Java line:
+
+```java
+String text = Files.readString(
+        Path.of("message.txt")
+);
+```
+
+Behind the scenes, the path can look like this:
+
+```text
+Java asks to open and read a file
+↓
+the Java library performs operating system calls
+↓
+the kernel checks permissions and translates the path to a file-system object
+↓
+if the data is in the page cache, it is copied from there
+↓
+otherwise, a request is sent to the driver and storage controller
+↓
+the thread may block while waiting
+↓
+the device completes the request and raises an interrupt
+↓
+the kernel updates internal structures and wakes the thread
+↓
+the data returns to Java
+↓
+Java decodes bytes into text using a charset
+```
+
+One line of code hides a lot of work.
+
+## A practical Java example: launching a process
+
+In Java, you can ask the operating system to run another program with `ProcessBuilder`.
+
+```java
+Process process = new ProcessBuilder("java", "-version")
+        .redirectErrorStream(true)
+        .start();
+
+int exitCode = process.waitFor();
+```
+
+This code does not "create a small operating system". It asks the operating system to create a new process.
+
+The new process receives a PID, environment, input/output handles or descriptors, and permissions based on the process that started it.
+
+When you run an external process, it is important to read `stdout` and `stderr`. If the child writes a lot and the parent does not read from the pipe, the buffer can fill and the child can block.
+
+In production code, read both streams, define a timeout, check the exit code, and close resources.
+
+## Process or thread?
+
+Choosing between a process and a thread is choosing between isolation and sharing.
+
+A process gives stronger isolation: separate memory, a separate resource table, better crash boundaries, and permissions that can be separated. The cost is higher overhead and more complex communication.
+
+A thread makes it easier to share data inside the same process. The cost is that shared memory can create race conditions, deadlocks, and bugs that are hard to reproduce.
+
+As a practical rule:
+
+```text
+need isolation, security, or an external program → process
+need parallel work inside one application with shared memory → thread
+```
+
+## Summary
+
+An operating system is not just the graphical desktop. It is the software layer that allows many programs to run together on limited hardware.
+
+It provides abstractions such as files, sockets, and processes; manages resources such as CPU, RAM, and storage; and protects processes from each other through permissions, isolation, and CPU privilege modes.
+
+When a program reads a file, launches a process, waits for the network, or writes data, it does not talk directly to the hardware. It goes through system calls, the kernel, drivers, the page cache, the scheduler, and memory-management mechanisms.
+
+Once you understand these layers, strange behavior becomes predictable: why `write()` does not guarantee physical storage, why a thread can be `blocked`, why an infinite loop does not necessarily freeze the whole computer, and why a file descriptor is not an address but a handle to a resource managed by the operating system.
+
+That is the practical value of learning operating systems: not only knowing that "an operating system exists", but understanding the contract between your code and the computer it runs on.

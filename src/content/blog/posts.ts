@@ -10,6 +10,8 @@ import HardwareInputOutputDevicesEn from './hardware-input-output-devices.en.mdx
 import HardwareInputOutputDevicesHe from './hardware-input-output-devices.he.mdx';
 import JavaUnicodeStringLengthEn from './java-unicode-string-length.en.mdx';
 import JavaUnicodeStringLengthHe from './java-unicode-string-length.he.mdx';
+import OperatingSystemUnderAppsEn from './operating-system-under-apps.en.mdx';
+import OperatingSystemUnderAppsHe from './operating-system-under-apps.he.mdx';
 import PrivacySafeProductAnalyticsEn from './privacy-safe-product-analytics.en.mdx';
 import PrivacySafeProductAnalyticsHe from './privacy-safe-product-analytics.he.mdx';
 import BinaryBitwiseJavaEn from './binary-bitwise-java.en.mdx';
@@ -31,6 +33,28 @@ import WhatTheCpuReallyDoesHe from './what-the-cpu-really-does.he.mdx';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'operating-system-under-apps',
+    language: 'he',
+    title: 'מהי מערכת הפעלה?',
+    excerpt: 'מדריך מעשי למה שקורה מתחת לאפליקציות: kernel, system calls, processes, threads, scheduler, זיכרון וירטואלי, file descriptors, page cache והרצת Process ב-Java.',
+    date: '2026-07-14',
+    readTime: '14 דקות קריאה',
+    tags: ['Operating Systems', 'Java', 'Systems'],
+    featured: false,
+    Content: OperatingSystemUnderAppsHe,
+  },
+  {
+    slug: 'operating-system-under-apps',
+    language: 'en',
+    title: 'What is an operating system?',
+    excerpt: 'A practical guide to what happens under applications: kernels, system calls, processes, threads, scheduling, virtual memory, file descriptors, page cache, and Java ProcessBuilder.',
+    date: '2026-07-14',
+    readTime: '14 min read',
+    tags: ['Operating Systems', 'Java', 'Systems'],
+    featured: false,
+    Content: OperatingSystemUnderAppsEn,
+  },
   {
     slug: 'hardware-input-output-devices',
     language: 'he',
