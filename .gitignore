@@ -8,6 +8,8 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+.npm-cache
+experiments/portfolio-experience-v2/.npmrc
 dist
 dist-ssr
 *.local

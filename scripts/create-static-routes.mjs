@@ -26,7 +26,7 @@ const removeAdSenseScript = (html) => html.replace(
 
 const rootHtml = await readFile(path.join(distDir, 'index.html'), 'utf8');
 
-const blogSource = await readFile(path.join(srcDir, 'content', 'blog', 'posts.ts'), 'utf8');
+const blogSource = await readFile(path.join(srcDir, 'content', 'blog', 'metadata.ts'), 'utf8');
 const blogFiles = await readdir(path.join(srcDir, 'content', 'blog'));
 const blogSlugs = [...new Set(
   blogFiles

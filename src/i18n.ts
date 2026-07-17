@@ -19,8 +19,9 @@ i18n
       useSuspense: false
     },
     detection: {
-      order: ['localStorage', 'navigator'],
+      order: ['querystring', 'localStorage', 'navigator'],
       caches: ['localStorage'],
+      lookupQuerystring: 'lang',
       lookupLocalStorage: 'i18nextLng'
     },
     interpolation: {

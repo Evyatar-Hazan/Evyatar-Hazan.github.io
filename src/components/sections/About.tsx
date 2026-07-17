@@ -1,18 +1,14 @@
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { portfolioCapabilityGroups } from '../../data/portfolioCapabilities';
 
 const About = () => {
   const { t } = useTranslation();
   
-  const categories = [
-    { key: 'webMobile', skills: ['React Native', 'React', 'Next.js', 'Node.js', 'NestJS', 'Redux', 'REST APIs'] },
-    { key: 'languages', skills: ['TypeScript', 'JavaScript', 'Java', 'Python'] },
-    { key: 'aiCv', skills: ['YOLOv5', 'ONNX', 'TFLite', 'Image Processing & Mapping'] },
-    { key: 'devops', skills: ['AWS', 'Docker', 'Linux', 'Jenkins CI/CD', 'Git'] },
-    { key: 'databases', skills: ['PostgreSQL', 'SQL', 'PgAdmin'] },
-    { key: 'automation', skills: ['Appium', 'Selenium', 'Perfecto', 'XCUITest', 'Allure'] },
-    { key: 'methodologies', skills: ['Technical Mentoring', 'Development Leadership', 'Product/QA Collaboration', 'Jira'] }
-  ];
+  const categories = portfolioCapabilityGroups.map(({ id, skills }) => ({
+    key: id,
+    skills,
+  }));
 
   return (
     <section id="about" className="py-24 px-6 min-h-screen flex items-center justify-center relative bg-neutral-100 dark:bg-neutral-950 border-t border-b border-neutral-200/50 dark:border-neutral-900/50 transition-colors duration-500">

@@ -89,3 +89,41 @@ jobs:
           directory: dist
           branch: main
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+  experience-v2:
+    name: Validate and Deploy Experience V2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: experiments/portfolio-experience-v2/package-lock.json
+
+      - name: Install dependencies
+        working-directory: experiments/portfolio-experience-v2
+        run: npm ci
+
+      - name: Validate
+        working-directory: experiments/portfolio-experience-v2
+        run: npm run validate
+
+      - name: Deploy to Cloudflare Pages
+        if: github.event_name == 'push'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4"
+          workingDirectory: experiments/portfolio-experience-v2
+          command: >-
+            pages deploy dist
+            --project-name=evyatar-portfolio-v2
+            --branch=preview
+            --commit-hash=${{ github.sha }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}

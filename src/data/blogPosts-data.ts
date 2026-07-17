@@ -1,4 +1,4 @@
-import { blogPosts as sourcePosts } from '../content/blog/posts';
+import { blogPostMetadata as sourcePosts } from '../content/blog/metadata';
 
 export const blogPosts = sourcePosts.map((post) => ({
   slug: post.slug,
