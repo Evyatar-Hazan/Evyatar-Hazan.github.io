@@ -19,7 +19,7 @@ reference: https://lusion.co/
 | שדה | ערך |
 |---|---|
 | שלב פעיל | Phase 6 — Cinematic Spine + Full Writing Journey נפרס כ־cloud preview מבודד ועבר smoke חי; `PRO-008`, ‏`QA-003`, ‏`QA-006` ו־`QA-008` עדיין פתוחים |
-| מצב כללי | `REG-022`–`REG-044` תוקנו ו־V2 עבר `22/22` + `2/2`. ה־Home החי כולל 12 פרקים, 3+4 פרויקטים, 7 קבוצות יכולת, Blog פנימי עם 16 פוסטים בכל שפה ו־Contact מלא. לפי `DEC-041` הוגדר pipeline עצמאי שמאמת ופורס את V2 בכל push ל־`main`; אימות הריצה החיה הראשונה עדיין ממתין. לא בוצעה החלפת production וה־legacy נשאר עצמאי |
+| מצב כללי | `REG-022`–`REG-044` תוקנו ו־V2 עבר `22/22` + `2/2`. ה־Home החי כולל 12 פרקים, 3+4 פרויקטים, 7 קבוצות יכולת, Blog פנימי עם 16 פוסטים בכל שפה ו־Contact מלא. ריצת `DEC-041` הראשונה שמרה בהצלחה על פריסת ה־legacy אך חשפה את `REG-046` ב־V2 clean checkout; התיקון עבר reproduction נקי וממתין לריצת CI חוזרת. לא בוצעה החלפת production |
 | האתר הקיים | פעיל, קנוני וממשיך להתפרסם דרך ה־build, הנתיבים ושני יעדי הפריסה הקיימים ללא שינוי |
 | Experience V2 | preview מבודד ב־Cloudflare Pages מתוך `experiments/portfolio-experience-v2/`; אינו canonical ואינו מחליף את production |
 | יעד ה־V2 | חוויה מקורית ברמת הבימוי, הרציפות, האסתטיקה וה־craft של Lusion, ללא העתקת המותג או הנכסים |
@@ -2842,6 +2842,7 @@ V2 build עבר עם JavaScript `218.57 KB` / `67.79 KB gzip` ו־CSS `19.60 KB`
 | 2026-07-16 | REG-043 | P1 — נתפס ב־route audit | החלפת שפה שינתה state אך לא URL מחוץ ל־Blog; Brand/Nav/Back/Case Study השמיטו `lang` ופרמטרים נוספים; footer About ביצע hard navigation | ניווט הסתמך על localStorage ועל hrefs קשיחים במקום על destination helper משותף | נוסף `localizedInternalPath/localizedStoryPath`; החלפת שפה מבצעת replace ושומרת search/hash; כל handoff משתמש ב־SPA handler וב־href תקין גם ל־modified-click | תוקן מקומית לפני deploy |
 | 2026-07-16 | REG-044 | P1/P2 — נתפס ב־content/accessibility QA | ה־Journey HUD כיסה פרוזה וקוד במאמר; טקסטי Capabilities ו־Lab action/meta היו קטנים או בעלי ניגודיות נמוכה; מונה `01/16` נראה בטעות כהתקדמות קריאה | HUD גלובלי נותר מעל reading rail מקומי ו־dense desktop overrides כיווצו טקסט | HUD מוסתר רק במאמרים שבהם יש reading rail ייעודי; גדלי body/tags/meta/action הוגדלו, צבע action הוכהה, ומיקום הפוסט מסומן במפורש כ־Note/רשימה | תוקן מקומית לפני deploy |
 | 2026-07-16 | REG-045 | P2 — נתפס ב־cloud-preview QA | `/sitemap.xml` מוחזר כ־SPA shell עם HTTP `200` במקום `404/410` או sitemap אמיתי | כלל ה־SPA fallback חל גם על קובצי SEO שאינם קיימים | ה־preview כולו עדיין מוגן ב־meta/header noindex; יש להוסיף negative route לפני Release אם V2 יפסיק להיות noindex | פתוח ל־hardening לפני Release; אינו חוסם preview |
+| 2026-07-17 | REG-046 | P1 — נתפס בריצת GitHub Actions הראשונה של `DEC-041` | V2 עבר local validation אך build ב־checkout נקי לא הצליח לפתור `react/jsx-runtime` מתוך קובצי MDX משותפים שמחוץ ל־experiment | ה־build המקומי מצא במקרה `node_modules` נוסף ב־root; ב־job העצמאי מותקנות בכוונה רק תלויות V2 | נוסף `resolve.dedupe` ל־React/ReactDOM ב־Vite ונוסף חוזה validation; reproduction מארכיון Git נקי ללא root dependencies עבר `22/22`, build ו־`2/2` | תוקן מקומית; ממתין לאימות CI חוזר |
 
 ## 15. Change Log
 
@@ -2913,6 +2914,7 @@ V2 build עבר עם JavaScript `218.57 KB` / `67.79 KB gzip` ו־CSS `19.60 KB`
 | 2026-07-16 | תיעוד `DEC-039` ו־`REG-042`–`REG-044`: שילוב Blog/MDX מלא בתוך V2, תיקון כל יציאות ה־legacy, שימור language/query בכל ניווט, Blog reading journey, HUD/contrast/readability hardening ו־V2 `22/22` + `2/2` ללא deployment | Codex |
 | 2026-07-16 | תיעוד `DEC-040`, פריסת V2 ל־Cloudflare Pages נפרד, חיבור ואימות `experience.evyatarhazan.com`, השלמת `QA-011` ותיעוד `REG-045`; ה־legacy נשאר ללא שינוי | Codex |
 | 2026-07-17 | תיעוד ואישור `DEC-041`: שמירת V2 ב־`main` והוספת continuous preview job עצמאי; `QA-012` ממתין לאימות הריצה החיה הראשונה | Codex |
+| 2026-07-17 | תיעוד `REG-046`: clean-checkout חשף תלות סמויה ב־root React runtime; נוסף Vite dedupe וחוזה regression, ו־reproduction נקי עבר לפני rerun | Codex |
 
 ## 16. פרוטוקול עדכון המסמך
 

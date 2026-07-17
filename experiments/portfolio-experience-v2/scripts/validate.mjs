@@ -102,6 +102,10 @@ test('the complete canonical blog stays inside V2 with cinematic and fail-open c
   assert.ok(blog.includes('data-cinema-id="writing-index"'));
   assert.ok(blog.includes('data-cinema-id="writing-close"'));
   assert.ok(vite.includes('mdx()'));
+  assert.ok(
+    vite.includes('dedupe: ["react", "react-dom"]'),
+    'shared root MDX must resolve React from the isolated V2 app in a clean checkout',
+  );
   assert.ok(navigation.includes("destination.searchParams.set('lang', language)"));
   assert.ok(navigation.includes('currentParameters.forEach'));
   assert.equal(app.includes('https://evyatarhazan.com/blog'), false);

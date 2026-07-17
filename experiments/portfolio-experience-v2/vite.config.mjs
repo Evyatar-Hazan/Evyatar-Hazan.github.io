@@ -6,6 +6,12 @@ export default defineConfig({
   build: {
     manifest: true,
   },
+  resolve: {
+    // MDX lives in the shared root content tree. Always resolve its React
+    // runtime from this isolated app so a clean CI checkout does not depend on
+    // a second node_modules directory at the repository root.
+    dedupe: ["react", "react-dom"],
+  },
   optimizeDeps: {
     include: ["react", "react-dom/client"],
   },
