@@ -4,7 +4,7 @@ status: active
 phase: 6
 owner: Evyatar Hazan
 created: 2026-07-14
-updated: 2026-07-17
+updated: 2026-07-18
 reference: https://lusion.co/
 ---
 
@@ -19,11 +19,11 @@ reference: https://lusion.co/
 | שדה | ערך |
 |---|---|
 | שלב פעיל | Phase 6 — Cinematic Spine + Full Writing Journey נפרס כ־cloud preview מבודד ועבר smoke חי; `PRO-008`, ‏`QA-003`, ‏`QA-006` ו־`QA-008` עדיין פתוחים |
-| מצב כללי | `REG-022`–`REG-044` תוקנו ו־V2 עבר `22/22` + `2/2`. ה־Home החי כולל 12 פרקים, 3+4 פרויקטים, 7 קבוצות יכולת, Blog פנימי עם 16 פוסטים בכל שפה ו־Contact מלא. ריצת `DEC-041` הראשונה שמרה בהצלחה על פריסת ה־legacy אך חשפה את `REG-046` ב־V2 clean checkout; התיקון עבר reproduction נקי וממתין לריצת CI חוזרת. לא בוצעה החלפת production |
+| מצב כללי | `REG-022`–`REG-044` ו־`REG-046` תוקנו ו־V2 עבר `22/22` + `2/2` גם ב־checkout נקי. ה־Home החי כולל 12 פרקים, 3+4 פרויקטים, 7 קבוצות יכולת, Blog פנימי עם 16 פוסטים בכל שפה ו־Contact מלא. `DEC-041` ו־`QA-012` אומתו: כל push ל־`main` מאמת ופורס את V2 בנפרד, לצד שלושת מסלולי ה־legacy. לא בוצעה החלפת production |
 | האתר הקיים | פעיל, קנוני וממשיך להתפרסם דרך ה־build, הנתיבים ושני יעדי הפריסה הקיימים ללא שינוי |
 | Experience V2 | preview מבודד ב־Cloudflare Pages מתוך `experiments/portfolio-experience-v2/`; אינו canonical ואינו מחליף את production |
 | יעד ה־V2 | חוויה מקורית ברמת הבימוי, הרציפות, האסתטיקה וה־craft של Lusion, ללא העתקת המותג או הנכסים |
-| פריסת preview | project `evyatar-portfolio-v2`; branch `preview`; deployment חי אחרון `5c19c20e-1055-4b1d-bcee-aa0b70b43b50`; Direct Upload ללא Git provider, עם GitHub Actions automation שהוגדר לפי `DEC-041` וממתין לאימות חי ראשון |
+| פריסת preview | project `evyatar-portfolio-v2`; branch `preview`; first verified CI deployment `74a0c88e-b184-4673-8f0d-c4f61859a7cd` עבור commit `15f863c`; Direct Upload ללא Git provider, אוטומטי דרך GitHub Actions לפי `DEC-041` |
 | תת־דומיין preview | `https://experience.evyatarhazan.com/`; ‏DNS proxied, ‏TLS 1.3, validation ו־verification במצב `active` |
 | אישור להחלפת production | לא ניתן |
 | המשימה הבאה | אישור חזותי למסע החי ב־`experience.evyatarhazan.com`, בדיקת מכשיר mobile פיזי, Core Web Vitals ו־slow-network/failed-asset injection, בדיקת publish של פוסט חדש, proof פרטי של NIS Studio אם תינתן גישה, ואז החלטת Release מפורשת |
@@ -101,13 +101,14 @@ reference: https://lusion.co/
 
 ### DEC-041 — Continuous Isolated Preview from `main`
 
-- **סטטוס:** מאושר על ידי המשתמש; הוגדר מקומית וממתין לאימות CI חי ראשון.
+- **סטטוס:** מאושר, מיושם ומאומת חי.
 - **תאריך:** 2026-07-17
 - **החלטה:** לשמור את קוד V2 ואת adapters התוכן המשותפים ב־`main`, ולאחר כל push להריץ ל־V2 התקנה, validation, build ו־Direct Upload אוטומטי לפרויקט `evyatar-portfolio-v2`.
 - **מימוש:** job עצמאי בשם `Validate and Deploy Experience V2` בתוך `.github/workflows/ci.yml`, עם `cloudflare/wrangler-action@v3`, ‏Wrangler 4, ‏`--branch=preview` ו־commit hash של ה־push ל־`main`.
 - **סיבת `preview`:** זהו ה־production branch המוגדר בפרויקט Cloudflare המבודד. ה־workflow מופעל מ־GitHub `main`, אך שולח את artifact המאומת ל־branch זה כדי לעדכן את `experience.evyatarhazan.com`.
 - **בידוד כשל:** job ה־V2 אינו תלוי ב־job ה־legacy ולהפך. כשל באחת החוויות אינו מפרסם artifact לא מאומת ואינו חוסם את החוויה האחרת.
 - **גבול הרשאה:** האוטומציה מעדכנת preview בלבד. היא אינה הופכת אותו לקנוני, אינה מסירה `noindex`, אינה סוגרת Gate 4/6/Release ואינה משנה את שני יעדי הפריסה של ה־legacy.
+- **ראיית production:** GitHub Actions run `29580946444` הסתיים `success`; deployment `74a0c88e-b184-4673-8f0d-c4f61859a7cd` נוצר עבור commit `15f863c`; ה־custom domain וה־deployment alias הגישו את אותו bundle `index-SHYl-axs.js`; apex, ‏www ו־GitHub Pages נשארו `200`.
 
 ### DEC-008 — Flagship Project Selection
 
@@ -2625,7 +2626,7 @@ V2 build עבר עם JavaScript `218.57 KB` / `67.79 KB gzip` ו־CSS `19.60 KB`
 
 **Gate 5:** feature complete ב־preview; אין שינוי ב־production.
 
-**Gate 5 status:** feature completeness עבר מחדש לאחר `DEC-036`–`DEC-039`. V2 עבר lint, ‏`22/22` חוזי source/runtime, build ו־`2/2` חוזי build; entry ‏`132.32 KB gzip` ו־scene async ‏`172.32 KB gzip` נשארים בתוך budgets של `250/200 KB gzip`. ה־legacy עבר שוב lint, ‏`18/18` tests ויצר 24 routes. ה־preview נפרס בפרויקט `evyatar-portfolio-v2` כ־deployment `5c19c20e-1055-4b1d-bcee-aa0b70b43b50`; `experience.evyatarhazan.com` פעיל ומאומת. הפריסה אינה אישור production ואינה סוגרת את Gate 6 או Release Gate.
+**Gate 5 status:** feature completeness עבר מחדש לאחר `DEC-036`–`DEC-039`. V2 עבר lint, ‏`22/22` חוזי source/runtime, build ו־`2/2` חוזי build; entry ‏`132.32 KB gzip` ו־scene async ‏`172.32 KB gzip` נשארים בתוך budgets של `250/200 KB gzip`. ה־legacy עבר שוב lint, ‏`18/18` tests ויצר 24 routes. ה־preview נפרס תחילה ידנית בפרויקט `evyatar-portfolio-v2` כ־deployment `5c19c20e-1055-4b1d-bcee-aa0b70b43b50`; לאחר מכן `QA-012` אימת את הפריסה האוטומטית כ־deployment `74a0c88e-b184-4673-8f0d-c4f61859a7cd` עבור commit `15f863c`. ‏`experience.evyatarhazan.com` פעיל ומאומת. הפריסות אינן אישור production ואינן סוגרות את Gate 6 או Release Gate.
 
 ### Phase 6 — QA and Hardening
 
@@ -2642,7 +2643,7 @@ V2 build עבר עם JavaScript `218.57 KB` / `67.79 KB gzip` ו־CSS `19.60 KB`
 - [x] `QA-009` לבצע content proofread בעברית ובאנגלית — copy נשען על המקורות הקנוניים והריפוזיטוריז הפעילים, ללא claim רפואי או placeholder.
 - [x] `QA-010` לסגור את כל P0/P1 ולתעד P2 שנותרו — 12/12 Home tracks עברו בסדר הצפוי עם beat פעיל, 7/7 case acts עברו, cold hash/cold Back, final-frame hold, pointer gating, case reading order, real responsive captures, mobile menu, RTL, focus contrast, low-height, reduced/no-WebGL, blog/contact actions ומקורות הנתונים נבדקו מחדש; `git diff --check` עבר. חסמי evidence מתועדים ואינם מוסווים כבאגים סגורים.
 - [x] `QA-011` להשלים cloud-preview smoke — custom domain במצב `active`; Home כולל 12 sections, ‏HE/RTL, ‏canvas יחיד ו־overflow אפס; Blog מציג 16 פוסטים; מאמר ישיר מציג 127 פסקאות ו־29 בלוקי קוד; שלושת נתיבי הפרויקטים והמסלולים הישירים החזירו `200`; קישורי Contact קיימים; meta/header noindex וכותרות האבטחה אומתו; console של ה־host נקי; apex, ‏www ו־GitHub Pages נשארו `200`.
-- [ ] `QA-012` לאמת continuous preview delivery — push ל־`main` מפעיל validation נפרד ל־V2, יוצר deployment חדש בפרויקט `evyatar-portfolio-v2`, מעדכן את `experience.evyatarhazan.com` ושומר את ה־legacy פעיל וללא artifact משותף.
+- [x] `QA-012` לאמת continuous preview delivery — GitHub Actions run `29580946444` עבר; job ה־V2 השלים install, validation ו־Cloudflare deploy; deployment `74a0c88e` עבור commit `15f863c` הגיש ב־custom domain וב־alias את `index-SHYl-axs.js`; שלושת מסלולי ה־legacy עברו ו־apex/www/GitHub Pages החזירו `200`.
 
 **Gate 6:** אביתר מאשר candidate להשקה.
 
@@ -2723,7 +2724,7 @@ V2 build עבר עם JavaScript `218.57 KB` / `67.79 KB gzip` ו־CSS `19.60 KB`
 | DEC-038 | 2026-07-15 | להגדיר continuity כשלמות משולבת של motion, message, evidence ו־action — כולל beat פנימי, landing frame, מסגרת סיום ו־route handoff | מיושם מקומית בעקבות האודיט החוזר | controller מנהל גם beats סמנטיים בתוך כל track; פרקי דגל נוחתים עם intro ו־capture קריאים; Home Contact ו־case Close מחזיקים את הפריים האחרון; Back קר ממתין ל־geometry של הנתיב החדש; תוכן וקישורים שומרים שפה ומקור קנוני |
 | DEC-039 | 2026-07-16 | ה־Blog הקנוני הוא חלק מלא מחוויית V2 ואינו רשאי להוציא את המשתמש לעיצוב הישן | מיושם מקומית בעקבות זיהוי קישורי legacy | נוספו `/blog` ו־`/blog/:slug`, טעינת MDX עצלה מתוך המקור הקנוני, 3 cinematic tracks, reduced-motion/mobile/RTL ו־fail-open; Home וכל שלושת ה־case routes משתמשים בנתיבים פנימיים בלבד |
 | DEC-040 | 2026-07-16 | לפרסם את V2 כ־preview חיצוני מבודד בפרויקט `evyatar-portfolio-v2` ועל `experience.evyatarhazan.com` | מאושר, מיושם ומאומת חי | preview בלבד; deployment `5c19c20e-1055-4b1d-bcee-aa0b70b43b50`, branch `preview`; legacy, canonical ו־Release Gate ללא שינוי |
-| DEC-041 | 2026-07-17 | לשמור את V2 ב־`main` ולפרוס אותו אוטומטית כ־preview מבודד לאחר validation נפרד | מאושר; ממתין לאימות CI חי ראשון | job עצמאי משתמש ב־`wrangler-action@v3` ו־branch `preview`; jobs/artifacts/targets של ה־legacy נשארים ללא שינוי |
+| DEC-041 | 2026-07-17 | לשמור את V2 ב־`main` ולפרוס אותו אוטומטית כ־preview מבודד לאחר validation נפרד | מאושר, מיושם ומאומת חי | run `29580946444` ו־deployment `74a0c88e` עברו; job עצמאי משתמש ב־`wrangler-action@v3` ו־branch `preview`; jobs/artifacts/targets של ה־legacy נשארים ללא שינוי |
 
 ## 13. Success Log
 
@@ -2792,6 +2793,7 @@ V2 build עבר עם JavaScript `218.57 KB` / `67.79 KB gzip` ו־CSS `19.60 KB`
 | 2026-07-15 | הושלם סבב QA ותיקון שלישי לכל המסע מול ה־bundle העדכני | 12/12 Home tracks הפעילו את ה־track וה־beat הצפויים ללא overflow; cold project Back חזר לפרויקט הנכון עם capture קריא; Contact ו־case Close נשארו גלויים ופעילים בקצה; desktop `1280×720`, low-height `1280×520`, mobile `390×844`, RTL, reduced-motion ו־no-WebGL עברו. V2 `21/21` + `1/1`, legacy `18/18` + 24 routes ו־`git diff --check` עברו | Phase 6 / DEC-038, REG-035–REG-041 |
 | 2026-07-16 | הושלם סבב QA ותיקון רביעי לכל המסע ולכל נתיבי הכתיבה | 12/12 Home tracks, ‏33/33 content windows/beats, ‏21/21 case acts בדסקטופ ובמובייל ו־reduced motion עברו; Blog מציג 16 פוסטים בכל שפה, מאמר מלא של 123 פסקאות ו־29 בלוקי קוד עבר פתיחה→קריאה→שיחה, וכל 6 הנתיבים שנדגמו החזירו `legacyBlog=[]`, ‏overflow `0` ו־console נקי. V2 `22/22` + `2/2`, legacy `18/18` + 24 routes עברו | Phase 6 / DEC-039, REG-042–REG-044 |
 | 2026-07-16 | נוצר ואומת cloud preview מבודד ל־Experience V2 | project `evyatar-portfolio-v2`, branch `preview`, deployment `5c19c20e`; ‏`experience.evyatarhazan.com` active עם TLS 1.3; Home/Blog/מאמר/3 Projects, noindex, assets ו־Contact עברו smoke; apex/www/GitHub Pages נשארו `200` | Phase 6 / DEC-040 / QA-011 |
+| 2026-07-17 | הופעלה ואומתה פריסת preview אוטומטית מכל push ל־`main` | run `29580946444` עבר בכל ארבעת ה־jobs; V2 deployment `74a0c88e` עבור `15f863c` הגיש את bundle `index-SHYl-axs.js` ב־alias וב־custom domain; שלושת יעדי ה־legacy נשארו `200` | Phase 6 / DEC-041 / QA-012 |
 
 ## 14. Regression Log
 
@@ -2842,7 +2844,7 @@ V2 build עבר עם JavaScript `218.57 KB` / `67.79 KB gzip` ו־CSS `19.60 KB`
 | 2026-07-16 | REG-043 | P1 — נתפס ב־route audit | החלפת שפה שינתה state אך לא URL מחוץ ל־Blog; Brand/Nav/Back/Case Study השמיטו `lang` ופרמטרים נוספים; footer About ביצע hard navigation | ניווט הסתמך על localStorage ועל hrefs קשיחים במקום על destination helper משותף | נוסף `localizedInternalPath/localizedStoryPath`; החלפת שפה מבצעת replace ושומרת search/hash; כל handoff משתמש ב־SPA handler וב־href תקין גם ל־modified-click | תוקן מקומית לפני deploy |
 | 2026-07-16 | REG-044 | P1/P2 — נתפס ב־content/accessibility QA | ה־Journey HUD כיסה פרוזה וקוד במאמר; טקסטי Capabilities ו־Lab action/meta היו קטנים או בעלי ניגודיות נמוכה; מונה `01/16` נראה בטעות כהתקדמות קריאה | HUD גלובלי נותר מעל reading rail מקומי ו־dense desktop overrides כיווצו טקסט | HUD מוסתר רק במאמרים שבהם יש reading rail ייעודי; גדלי body/tags/meta/action הוגדלו, צבע action הוכהה, ומיקום הפוסט מסומן במפורש כ־Note/רשימה | תוקן מקומית לפני deploy |
 | 2026-07-16 | REG-045 | P2 — נתפס ב־cloud-preview QA | `/sitemap.xml` מוחזר כ־SPA shell עם HTTP `200` במקום `404/410` או sitemap אמיתי | כלל ה־SPA fallback חל גם על קובצי SEO שאינם קיימים | ה־preview כולו עדיין מוגן ב־meta/header noindex; יש להוסיף negative route לפני Release אם V2 יפסיק להיות noindex | פתוח ל־hardening לפני Release; אינו חוסם preview |
-| 2026-07-17 | REG-046 | P1 — נתפס בריצת GitHub Actions הראשונה של `DEC-041` | V2 עבר local validation אך build ב־checkout נקי לא הצליח לפתור `react/jsx-runtime` מתוך קובצי MDX משותפים שמחוץ ל־experiment | ה־build המקומי מצא במקרה `node_modules` נוסף ב־root; ב־job העצמאי מותקנות בכוונה רק תלויות V2 | נוסף `resolve.dedupe` ל־React/ReactDOM ב־Vite ונוסף חוזה validation; reproduction מארכיון Git נקי ללא root dependencies עבר `22/22`, build ו־`2/2` | תוקן מקומית; ממתין לאימות CI חוזר |
+| 2026-07-17 | REG-046 | P1 — נתפס בריצת GitHub Actions הראשונה של `DEC-041` | V2 עבר local validation אך build ב־checkout נקי לא הצליח לפתור `react/jsx-runtime` מתוך קובצי MDX משותפים שמחוץ ל־experiment | ה־build המקומי מצא במקרה `node_modules` נוסף ב־root; ב־job העצמאי מותקנות בכוונה רק תלויות V2 | נוסף `resolve.dedupe` ל־React/ReactDOM ב־Vite ונוסף חוזה validation; reproduction מארכיון Git נקי ללא root dependencies עבר `22/22`, build ו־`2/2` | תוקן ואומת ב־CI run `29580946444` וב־deployment `74a0c88e` |
 
 ## 15. Change Log
 
@@ -2915,6 +2917,7 @@ V2 build עבר עם JavaScript `218.57 KB` / `67.79 KB gzip` ו־CSS `19.60 KB`
 | 2026-07-16 | תיעוד `DEC-040`, פריסת V2 ל־Cloudflare Pages נפרד, חיבור ואימות `experience.evyatarhazan.com`, השלמת `QA-011` ותיעוד `REG-045`; ה־legacy נשאר ללא שינוי | Codex |
 | 2026-07-17 | תיעוד ואישור `DEC-041`: שמירת V2 ב־`main` והוספת continuous preview job עצמאי; `QA-012` ממתין לאימות הריצה החיה הראשונה | Codex |
 | 2026-07-17 | תיעוד `REG-046`: clean-checkout חשף תלות סמויה ב־root React runtime; נוסף Vite dedupe וחוזה regression, ו־reproduction נקי עבר לפני rerun | Codex |
+| 2026-07-17 | אימות וסגירת `DEC-041`, ‏`QA-012` ו־`REG-046`: ריצת CI מלאה, deployment V2 חדש, התאמת bundle בין alias ל־custom domain ו־200 בכל יעדי ה־legacy | Codex |
 
 ## 16. פרוטוקול עדכון המסמך
 
@@ -2931,7 +2934,7 @@ V2 build עבר עם JavaScript `218.57 KB` / `67.79 KB gzip` ו־CSS `19.60 KB`
 
 ## 17. נקודת העצירה הנוכחית
 
-Gate 0 עד Gate 3 סגורים. לפי `DEC-035` הושלם Cinematic Spine, ולפי `DEC-036`–`DEC-039` המסע כולל 12 Home tracks עם חוזה תוכן מלא והקשחת interaction/accessibility: Signal Core אחד, renderer אחד ו־MotionDirector אחד מלווים את המסר ואת ה־beats הפנימיים; 3+4 פרויקטים, 7 קבוצות יכולת, Blog פנימי מלא עם 16 פוסטים בכל שפה ו־3 tracks קולנועיים, ו־Contact מלא. פרקי הדגל נוחתים עם proof אמיתי שכבר קריא; חדרי הראיות שומרים media stage persistent לצד DOM קריא; Blog נשאר בתוך V2 מהכרטיס ועד CTA הסיום; מובייל content-first עם menu modal. `REG-017`–`REG-044` תוקנו. V2 עבר `22/22` + `2/2`, ה־legacy עבר `18/18` + 24 routes. לפי `DEC-040` קיים כעת preview מבודד בפרויקט `evyatar-portfolio-v2`, branch `preview`, deployment `5c19c20e`, ב־`experience.evyatarhazan.com`; `QA-011` עבר. אין שינוי ב־production הקנוני.
+Gate 0 עד Gate 3 סגורים. לפי `DEC-035` הושלם Cinematic Spine, ולפי `DEC-036`–`DEC-039` המסע כולל 12 Home tracks עם חוזה תוכן מלא והקשחת interaction/accessibility: Signal Core אחד, renderer אחד ו־MotionDirector אחד מלווים את המסר ואת ה־beats הפנימיים; 3+4 פרויקטים, 7 קבוצות יכולת, Blog פנימי מלא עם 16 פוסטים בכל שפה ו־3 tracks קולנועיים, ו־Contact מלא. פרקי הדגל נוחתים עם proof אמיתי שכבר קריא; חדרי הראיות שומרים media stage persistent לצד DOM קריא; Blog נשאר בתוך V2 מהכרטיס ועד CTA הסיום; מובייל content-first עם menu modal. `REG-017`–`REG-044` ו־`REG-046` תוקנו. V2 עבר `22/22` + `2/2` גם ב־checkout נקי, וה־legacy עבר `18/18` + 24 routes. לפי `DEC-040` קיים preview מבודד ב־`experience.evyatarhazan.com`; לפי `DEC-041` כל push ל־`main` מעדכן אותו אוטומטית לאחר validation נפרד. `QA-011` ו־`QA-012` עברו. אין שינוי ב־production הקנוני.
 
 נדרש כעת:
 
@@ -2941,5 +2944,5 @@ Gate 0 עד Gate 3 סגורים. לפי `DEC-035` הושלם Cinematic Spine, ו
 4. להשלים slow-network ו־failed-asset injection תחת `QA-006`.
 5. לפרסם פוסט בדיקה אמיתי ולסגור את `QA-008`.
 6. אם נדרש proof חזותי של owner workflow, לספק גישה בטוחה ל־NIS Studio או צילום מאושר.
-7. לאמת את הריצה החיה הראשונה של `DEC-041` ולסגור `QA-012`; לאחר מכן שינויי תוכן חדשים ב־`main` אמורים לעדכן את ה־preview אוטומטית. `REG-045` עדיין דורש hardening לפני Release.
+7. לפני Release לתקן את `REG-045`; פריסת ה־preview האוטומטית כבר פעילה ומאומתת לפי `DEC-041` ו־`QA-012`.
 8. לאחר סגירת הראיות, לקבל החלטת Release מפורשת. עד אז אין release, feature flag, החלפת production או שינוי ב־legacy; ה־preview המבודד נשאר מותר לפי `DEC-040`.
