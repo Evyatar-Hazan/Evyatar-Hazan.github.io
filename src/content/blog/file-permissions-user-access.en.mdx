@@ -1,0 +1,274 @@
+When we try to open, edit, delete, or execute a file and receive `Permission denied`, it is easy to think the computer simply refuses to cooperate.
+
+In reality, that message comes from an orderly system trying to answer one question:
+
+> Is the identity performing this operation allowed to perform it on the requested resource?
+
+Permissions are one of the operating system's most important protection mechanisms. They separate users, protect system files, and limit the damage that buggy or malicious software can cause.
+
+## The three parts of an authorization check
+
+Every access attempt has three parts:
+
+```text
+Who? → wants to perform which operation? → on which resource?
+```
+
+For example:
+
+```text
+dina → wants to write → /home/evyatar/report.txt
+```
+
+The operating system identifies the user or process, checks the permissions on the file and the directories along its path, and decides whether to allow or deny the operation.
+
+Software does not usually act under an identity of its own. It runs under the identity of the user or service that started it. If a text editor cannot save a file, the user running it usually lacks the required write access.
+
+## Read, write, and execute
+
+On Linux and macOS, the basic permissions are represented as:
+
+```text
+r = read
+w = write
+x = execute
+```
+
+Read permission, `r`, allows a process to read file contents: display text, load a configuration file, or open an image.
+
+Write permission, `w`, allows it to change the contents: edit, truncate, or append data.
+
+Execute permission, `x`, allows the system to attempt to run the file as a program or script. It does not turn arbitrary contents into a valid program. The executable format, interpreter directive, and other conditions still have to be valid, and a filesystem mounted with `noexec` can impose another restriction.
+
+## Owner, group, and others
+
+The basic Unix permission model divides users into three categories:
+
+```text
+user   = the file owner
+group  = the file group
+others = everyone else
+```
+
+For example:
+
+```text
+-rwxr-x---
+```
+
+After the first character, the permissions form three groups:
+
+```text
+rwx   for the owner
+r-x   for the group
+---   for others
+```
+
+The owner can read, write, and execute; members of the group can read and execute; and everyone else has no access.
+
+The first character identifies the object type:
+
+```text
+- = regular file
+d = directory
+l = symbolic link
+```
+
+So `drwxr-x---` describes a directory.
+
+## Which permission class is checked?
+
+Suppose a file belongs to user `evyatar` and group `developers`.
+
+When someone tries to access it, the system generally proceeds like this:
+
+1. If the user is the owner, check the owner permissions.
+2. Otherwise, if one of the user's groups matches the file group, check the group permissions.
+3. Otherwise, check the permissions for others.
+
+The system does not combine all three classes or choose the most favorable result. If the owner lacks write permission in the `user` class, write permission in the `group` class is not a fallback for that owner.
+
+ACLs, additional security systems, and special permission bits can add rules beyond this basic model.
+
+## Numeric notation
+
+Permissions can also be written as numbers:
+
+```text
+r = 4
+w = 2
+x = 1
+```
+
+Add the values together:
+
+```text
+rwx = 7
+rw- = 6
+r-x = 5
+r-- = 4
+--- = 0
+```
+
+That makes `rwxr-xr--` equivalent to `754`:
+
+```text
+7 = rwx for the owner
+5 = r-x for the group
+4 = r-- for others
+```
+
+Similarly, `640` means `rw-r-----`: the owner can read and write, the group can read, and others have no access.
+
+## Changing permissions with `chmod`
+
+The `chmod` command changes permissions:
+
+```bash
+chmod 750 deploy.sh
+```
+
+This sets `rwxr-x---`.
+
+We can also make a targeted change:
+
+```bash
+chmod u+x script.sh
+chmod g-w config.txt
+```
+
+The first command adds execute permission for the owner. The second removes group write permission without changing the other bits.
+
+The common symbols are:
+
+```text
+u = owner
+g = group
+o = others
+a = everyone
+```
+
+## Changing ownership with `chown`
+
+`chmod` changes permissions, but it does not change who owns the file. That is the job of `chown`:
+
+```bash
+chown dina report.txt
+chown evyatar:developers app.log
+```
+
+The second command sets `evyatar` as the owner and `developers` as the group. Changing ownership usually requires administrative privileges.
+
+## Directory permissions mean something different
+
+The same letters have different meanings on a directory:
+
+```text
+r = list the names in the directory
+w = create, remove, or rename directory entries
+x = traverse the directory and access entries inside it
+```
+
+Read permission allows names to be listed. Execute permission, often called search or traversal in this context, allows a process to pass through the directory and access a known entry. Write permission allows the directory's list of entries to be changed.
+
+To open a path such as `/home/evyatar/report.txt`, a process generally needs `x` on every directory along the path, plus the appropriate permission on the file itself.
+
+## Why can a read-only file sometimes be deleted?
+
+Suppose a file has:
+
+```text
+-r--r--r--
+```
+
+No one can modify its contents. But a user with `w` and `x` on the parent directory may still be able to delete it.
+
+Deleting a file is not necessarily a write to its contents. It removes the file's name from the directory. That is why deletion and renaming are governed mainly by permissions on the parent directory.
+
+There is an important exception: in shared directories with the sticky bit, such as `/tmp`, directory write access is not enough. Normally only the file owner, directory owner, or `root` may remove or rename the entry.
+
+## A process runs under an identity
+
+When software runs, the operating system tracks its identity and privileges:
+
+```text
+text editor → runs as evyatar → tries to save a file
+```
+
+If `evyatar` has write access, the save can succeed. If not, it fails.
+
+The risk therefore depends not only on what software is programmed to do, but also on the permissions under which it runs. A compromised service can generally do anything its service identity is allowed to do.
+
+## What does `sudo` really do?
+
+`sudo` does not erase permissions or disable the security model. It requests that a command run as another identity, usually `root`, according to configured policy.
+
+```bash
+sudo chown evyatar:developers app.log
+```
+
+The command can succeed because the identity performing it changed. The permission system is still active; it is now evaluating a more powerful identity.
+
+That is why running entire applications with `sudo` is risky. A bug or malicious component receives the same broad privileges. It is better to elevate only the specific operation that requires it.
+
+## The principle of least privilege
+
+One of the central principles of security is the Principle of Least Privilege: every user, program, and service should receive only the permissions it genuinely needs.
+
+A web server serving files from `/var/www/site`, for example, may need to read the site files. It probably does not need to read private home directories, edit system files, install software, or run as `root`.
+
+If the server is compromised, restricted permissions reduce the possible damage.
+
+## Why is `777` usually a warning sign?
+
+```text
+777 = rwxrwxrwx
+```
+
+Every user can read, write, and execute. Developers sometimes use `777` to make a permission error disappear quickly. The immediate error may vanish, but so does a meaningful layer of protection.
+
+Instead, ask:
+
+- Who owns the file?
+- Which group owns it?
+- Which process needs access?
+- Does it need read, write, or execute access?
+- Is the missing permission on the file or on a directory?
+
+## Windows permissions and ACLs
+
+Windows generally uses ACLs, or Access Control Lists. Instead of relying only on owner, group, and others, it can define a detailed list:
+
+```text
+Evyatar     → read and write
+Dina        → read only
+Developers  → read and execute
+Guests      → no access
+```
+
+Permissions can cover reading, writing, modifying, deleting, changing permissions, taking ownership, and full control. Linux and macOS also support ACLs beyond the basic `rwx` model.
+
+## Permissions are not encryption
+
+It is important to separate two mechanisms.
+
+Permissions ask the operating system to allow or deny access. Encryption stores the content in a form that is unreadable without the right key.
+
+If an attacker bypasses the operating system, attaches the drive to another computer, or gains direct access to the data, permissions alone may not be enough. Sensitive systems often use permissions and encryption together.
+
+## Summary
+
+The permission system answers one question: who may do what to which resource?
+
+- `r`, `w`, and `x` represent reading, writing, and execution or traversal.
+- Basic permissions are divided among owner, group, and others.
+- `chmod` changes permissions, while `chown` changes ownership.
+- Directory permissions have different meanings from file permissions.
+- Deletion and renaming depend largely on the parent directory.
+- Software runs under the identity and privileges of a process.
+- `sudo` changes the execution identity; it does not disable permissions.
+- `777` is usually a dangerous workaround, not a real fix.
+- Least privilege limits the damage caused by bugs or compromise.
+- Permissions and encryption solve different problems and complement each other.
+
+Once this model is clear, permission errors stop being mysterious. They become a question we can investigate: which user, which operation, which file or directory, and which permission is missing?

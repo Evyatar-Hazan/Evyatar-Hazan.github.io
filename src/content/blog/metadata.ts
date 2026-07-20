@@ -6,6 +6,26 @@ import type { BlogLanguage, BlogPostMeta } from './types';
  * not pull the article bodies into their bundle.
  */
 const metadata = {
+  'file-permissions-user-access:he': {
+      slug: 'file-permissions-user-access',
+      language: 'he',
+      title: 'הרשאות משתמשים וקבצים',
+      excerpt: 'מי באמת רשאי לעשות מה: read, write ו-execute, בעלים וקבוצות, chmod, chown, הרשאות תיקייה, sudo, ACL ועקרון ההרשאה המינימלית.',
+      date: '2026-07-20',
+      readTime: '10 דקות קריאה',
+      tags: ['Operating Systems', 'File Systems', 'Security'],
+      featured: false,
+    },
+  'file-permissions-user-access:en': {
+      slug: 'file-permissions-user-access',
+      language: 'en',
+      title: 'Users and file permissions',
+      excerpt: 'Who can actually do what: read, write, and execute, owners and groups, chmod, chown, directory permissions, sudo, ACLs, and least privilege.',
+      date: '2026-07-20',
+      readTime: '10 min read',
+      tags: ['Operating Systems', 'File Systems', 'Security'],
+      featured: false,
+    },
   'files-folders-paths:he': {
       slug: 'files-folders-paths',
       language: 'he',

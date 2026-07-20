@@ -6,6 +6,8 @@ import CrediblePortfolioEn from './credible-portfolio.en.mdx';
 import CrediblePortfolioHe from './credible-portfolio.he.mdx';
 import DeploymentIsProductEn from './deployment-is-product.en.mdx';
 import DeploymentIsProductHe from './deployment-is-product.he.mdx';
+import FilePermissionsUserAccessEn from './file-permissions-user-access.en.mdx';
+import FilePermissionsUserAccessHe from './file-permissions-user-access.he.mdx';
 import FilesFoldersPathsEn from './files-folders-paths.en.mdx';
 import FilesFoldersPathsHe from './files-folders-paths.he.mdx';
 import GoogleTranslateNameBugEn from './google-translate-name-bug.en.mdx';
@@ -38,6 +40,14 @@ import { blogPostMetadataByKey } from './metadata';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    ...blogPostMetadataByKey['file-permissions-user-access:he'],
+    Content: FilePermissionsUserAccessHe,
+  },
+  {
+    ...blogPostMetadataByKey['file-permissions-user-access:en'],
+    Content: FilePermissionsUserAccessEn,
+  },
   {
     ...blogPostMetadataByKey['files-folders-paths:he'],
     Content: FilesFoldersPathsHe,
