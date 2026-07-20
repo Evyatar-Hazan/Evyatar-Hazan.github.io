@@ -20,6 +20,8 @@ import OperatingSystemUnderAppsEn from './operating-system-under-apps.en.mdx';
 import OperatingSystemUnderAppsHe from './operating-system-under-apps.he.mdx';
 import PrivacySafeProductAnalyticsEn from './privacy-safe-product-analytics.en.mdx';
 import PrivacySafeProductAnalyticsHe from './privacy-safe-product-analytics.he.mdx';
+import ProcessesThreadsConcurrencyEn from './processes-threads-concurrency.en.mdx';
+import ProcessesThreadsConcurrencyHe from './processes-threads-concurrency.he.mdx';
 import BinaryBitwiseJavaEn from './binary-bitwise-java.en.mdx';
 import BinaryBitwiseJavaHe from './binary-bitwise-java.he.mdx';
 import PerformanceOptimizationsNeedProductVerificationEn from './performance-optimizations-need-product-verification.en.mdx';
@@ -40,6 +42,14 @@ import { blogPostMetadataByKey } from './metadata';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    ...blogPostMetadataByKey['processes-threads-concurrency:he'],
+    Content: ProcessesThreadsConcurrencyHe,
+  },
+  {
+    ...blogPostMetadataByKey['processes-threads-concurrency:en'],
+    Content: ProcessesThreadsConcurrencyEn,
+  },
   {
     ...blogPostMetadataByKey['file-permissions-user-access:he'],
     Content: FilePermissionsUserAccessHe,

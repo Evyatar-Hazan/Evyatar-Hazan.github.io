@@ -6,6 +6,26 @@ import type { BlogLanguage, BlogPostMeta } from './types';
  * not pull the article bodies into their bundle.
  */
 const metadata = {
+  'processes-threads-concurrency:he': {
+      slug: 'processes-threads-concurrency',
+      language: 'he',
+      title: 'תהליכים ותהליכונים',
+      excerpt: 'איך המחשב מריץ כמה דברים במקביל: Process ו-Thread, PID, תזמון, Context Switch, Race Conditions, Deadlocks, IPC, Signals ו-Thread Pools.',
+      date: '2026-07-21',
+      readTime: '13 דקות קריאה',
+      tags: ['Operating Systems', 'Concurrency', 'Performance'],
+      featured: false,
+    },
+  'processes-threads-concurrency:en': {
+      slug: 'processes-threads-concurrency',
+      language: 'en',
+      title: 'Processes and threads',
+      excerpt: 'How a computer runs many things at once: processes, threads, PIDs, scheduling, context switches, race conditions, deadlocks, IPC, signals, and thread pools.',
+      date: '2026-07-21',
+      readTime: '13 min read',
+      tags: ['Operating Systems', 'Concurrency', 'Performance'],
+      featured: false,
+    },
   'file-permissions-user-access:he': {
       slug: 'file-permissions-user-access',
       language: 'he',

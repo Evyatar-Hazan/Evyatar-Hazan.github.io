@@ -1,0 +1,313 @@
+At any given moment, a computer may be running dozens or even hundreds of programs and tasks.
+
+A browser is open, music is playing, a file is downloading, the operating system is checking for updates, and the code editor is running tests in the background.
+
+Understanding how all of this happens starts with two concepts:
+
+- Process.
+- Thread.
+
+They are closely related, but they are not the same thing.
+
+## A program is not a process
+
+Until software such as Chrome, VS Code, or Spotify is running, it is simply code and data stored on disk.
+
+```text
+Program = software stored on disk
+Process = a running instance of that software
+```
+
+A program is like a recipe; a process is one actual preparation of the dish. The same recipe can be used several times, just as the same program can have several active processes.
+
+## What does the operating system track for a process?
+
+A process is more than executing code. The operating system manages information and resources for it, including:
+
+- A process identifier.
+- A virtual address space.
+- Open files and network connections.
+- Permissions and environment variables.
+- Execution state.
+- The threads that belong to it.
+
+For example:
+
+```text
+Process: chrome
+PID: 8421
+User: evyatar
+State: Running
+Memory: 350 MB
+```
+
+This state allows the operating system to manage each process separately.
+
+## What is a PID?
+
+Each process receives a PID, or Process ID:
+
+```text
+Chrome    PID 4210
+VS Code   PID 8351
+Spotify   PID 9012
+```
+
+The PID lets the system inspect the process, track its resource use, send it a signal, or terminate it.
+
+Two active processes do not share a PID at the same moment. After a process exits, the operating system may reuse that number. A PID is therefore a temporary identifier for a running instance, not a permanent identifier for a program.
+
+## Why does one application appear many times?
+
+Chrome may use separate processes for the browser core, tabs, extensions, graphics, networking, and sandboxed components.
+
+The benefit is isolation. If one tab crashes, the rest of the browser may continue running. A separate process can also help contain untrusted content and prevent direct access to another component's memory.
+
+The cost is higher memory use and more complex communication between processes.
+
+## Parent and child processes
+
+A process can create another process. The creator is the parent and the new process is the child:
+
+```text
+Terminal
+└── Python
+    └── Worker Process
+```
+
+Each has its own PID. A child usually also has a PPID, or Parent Process ID:
+
+```text
+Terminal PID: 1200
+Python PID:   1350
+Python PPID:  1200
+```
+
+This tells us that process `1350` was created by process `1200`.
+
+## What is a thread?
+
+A process is the container that owns resources. Threads perform the work inside it.
+
+One useful analogy is a process as an office and threads as workers who share that office. They use the same resources but can handle different tasks:
+
+```text
+Thread 1 → renders the user interface
+Thread 2 → downloads network data
+Thread 3 → saves a file
+Thread 4 → performs a background calculation
+```
+
+An active process contains at least one thread.
+
+## What do threads share?
+
+Threads in the same process generally share:
+
+- The address space and heap.
+- Open files and network connections.
+- Permissions and other process resources.
+
+Each thread also has private execution state:
+
+- A call stack.
+- CPU registers.
+- A program counter.
+- A scheduling state.
+- Thread-local storage when used.
+
+Sharing makes communication fast, but it also allows one thread to damage data another thread is using.
+
+## Race conditions
+
+Suppose two threads increment the same variable:
+
+```text
+counter = 10
+```
+
+Each reads the value, adds one, and writes the result. If both read `10` before either writes, both calculate `11` and both write `11`.
+
+The final result is `11`, even though two increments occurred and we expected `12`.
+
+This is a race condition: the result depends on exact timing, so the bug may appear only occasionally.
+
+## Coordinating shared access
+
+Common coordination mechanisms include:
+
+- Locks or mutexes.
+- Semaphores.
+- Atomic operations.
+- Monitors.
+- Message queues.
+
+The goal is to ensure that only the appropriate thread changes shared state at a given moment, or to avoid direct sharing through message passing.
+
+Coordination also has a cost: waiting, complexity, reduced parallelism, and the risk of deadlock. Creating threads is only the start; we must also design who owns the data and how it changes.
+
+## What is a context switch?
+
+A computer may have hundreds of runnable threads but only a limited number of CPU cores. The operating system divides CPU time among them.
+
+When it stops one thread and starts another, it saves the current state, selects another thread, restores its state, and continues execution. This is a context switch.
+
+The switches happen quickly, creating the impression that everything runs together, but they are not free. They consume CPU time and may reduce cache efficiency. Switching between processes may also require changing address-space context.
+
+More threads do not guarantee more performance.
+
+## Execution states
+
+A process or thread can be in several broad states:
+
+- Running — executing on a CPU now.
+- Ready or Runnable — able to run but waiting for CPU time.
+- Waiting or Blocked — waiting for an event or resource.
+- Terminated — finished.
+
+A thread waiting for the network, disk, a lock, or user input does not need to consume CPU while it waits. The operating system can run another task instead.
+
+## Concurrency versus parallelism
+
+Concurrency means several tasks make progress during the same period. On one core it may look like this:
+
+```text
+Thread A runs briefly
+Thread B runs briefly
+Thread C runs briefly
+Thread A continues
+```
+
+Parallelism means several tasks execute at the same instant:
+
+```text
+Core 1 → Thread A
+Core 2 → Thread B
+Core 3 → Thread C
+```
+
+Concurrency does not require parallelism. A system can manage overlapping work even when only one task executes at any instant.
+
+## When should we choose a process?
+
+A separate process is useful when isolation matters:
+
+- A component should be able to crash independently.
+- Code is untrusted.
+- A service needs different permissions.
+- Work needs a separate address space.
+- A task should be managed independently.
+
+The benefits are memory isolation, stronger security boundaries, separate permissions, and more localized failures. The costs are additional memory, heavier creation, and communication through IPC.
+
+## When should we choose a thread?
+
+Threads work well when tasks belong to the same application and need fast access to shared information, such as a UI plus background work, downloads, image processing, or request handling.
+
+They offer fast sharing and relatively low creation cost, but introduce race conditions, deadlocks, and difficult debugging. A severe native memory fault in one thread can terminate the whole process; an ordinary language-level exception may terminate only that thread, depending on the runtime and application policy.
+
+## How do processes communicate?
+
+Processes normally have separate address spaces, so one cannot simply read a variable from another. They communicate through IPC, or Inter-Process Communication:
+
+- Pipes.
+- Sockets.
+- Shared memory.
+- Message queues.
+- Signals.
+- Files.
+- RPC.
+
+Each mechanism offers a different balance of speed, isolation, reliability, complexity, and security.
+
+## Inspecting and terminating processes
+
+On Linux and macOS, common commands include:
+
+```bash
+ps -ef
+top
+```
+
+Systems with `htop` installed can use it as well. Windows provides Task Manager and the `tasklist` command.
+
+To request an orderly shutdown:
+
+```bash
+kill <PID>
+```
+
+The default signal is normally `SIGTERM`. The process can catch it, save data, close files and connections, and perform cleanup.
+
+If the process does not respond, we can escalate to:
+
+```bash
+kill -9 <PID>
+```
+
+This sends `SIGKILL`. The process cannot catch or ignore it and receives no opportunity to clean up. It should therefore be a last resort.
+
+## Zombie and orphan processes
+
+When a child process exits, the operating system retains a small record containing its termination status. The parent is expected to collect it using an operation such as `wait`.
+
+If the child has exited but the parent has not collected the result, it temporarily remains a zombie. It executes no code and normally holds no regular working memory, but it still occupies an entry in the process table.
+
+An orphan is the opposite situation: the parent exits while the child continues running. On Unix systems, a system process or subreaper normally adopts the orphan and later collects its exit status. An orphan is not necessarily an error; some programs intentionally continue after their launcher exits.
+
+```text
+Zombie = child exited, parent has not collected it
+Orphan = parent exited, child is still running
+```
+
+## What is a thread pool?
+
+Repeatedly creating and destroying threads can be expensive. A thread pool keeps a set of workers and feeds them tasks from a queue:
+
+1. Create a fixed or managed set of threads.
+2. Put tasks into a queue.
+3. Each worker takes an available task.
+4. When finished, it takes another task.
+
+This limits thread count, reduces creation overhead, and helps control load.
+
+A pool that is too small creates a long wait. A pool that is too large creates context switches and contention. Even a well-sized pool is not enough if its queue is unbounded: under sustained load, tasks can accumulate in memory. Bounded queues, backpressure, or rejection policies may also be necessary.
+
+## CPU-bound versus I/O-bound work
+
+CPU-bound work spends most of its time calculating, such as video processing, encryption, or numerical computation. Effective parallelism is usually related to the number of cores and the workload's behavior.
+
+I/O-bound work spends significant time waiting for networks, disks, databases, or users. It can often support more concurrent tasks because many of them are not using the CPU at a given moment.
+
+There is no universal correct thread count. We need to measure throughput, latency, CPU use, wait time, memory, and the limits of downstream services.
+
+## Deadlock in brief
+
+A deadlock occurs when threads wait for each other and none can proceed:
+
+```text
+Thread A holds Lock 1 and waits for Lock 2
+Thread B holds Lock 2 and waits for Lock 1
+```
+
+The system does not necessarily crash, but the work stops.
+
+We can reduce the risk through a consistent lock order, fewer locks, shorter lock hold times, timeouts where appropriate, and designs that minimize shared mutable state.
+
+## Summary
+
+A program is code stored on disk. A process is a running instance managed by the operating system. A thread is an execution unit inside that process.
+
+- Each process has a PID and its own resources.
+- A process can create child processes.
+- Threads in one process share memory and resources but keep separate stacks and CPU state.
+- Sharing is fast but can create race conditions and deadlocks.
+- Context switches let the system divide CPU time among tasks.
+- Concurrency is not necessarily parallelism.
+- Processes offer isolation; threads offer fast sharing.
+- IPC lets separate processes communicate.
+- `SIGTERM` supports orderly shutdown; `SIGKILL` forces termination.
+- A zombie has exited but has not been collected; an orphan continues after its parent exits.
+- A thread pool limits workers, but its task queue also needs a load policy.
+
+The right choice is not "as many processes or threads as possible." It is a balance among performance, isolation, security, memory use, and complexity.
