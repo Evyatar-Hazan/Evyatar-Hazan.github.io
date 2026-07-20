@@ -6,6 +6,26 @@ import type { BlogLanguage, BlogPostMeta } from './types';
  * not pull the article bodies into their bundle.
  */
 const metadata = {
+  'files-folders-paths:he': {
+      slug: 'files-folders-paths',
+      language: 'he',
+      title: 'קבצים, תיקיות ונתיבים',
+      excerpt: 'מה באמת קורה מאחורי מערכת הקבצים: שמות, תיקיות, נתיבים מוחלטים ויחסיים, ".", "..", נרמול נתיבים, inode, hard links וקבצים מוסתרים.',
+      date: '2026-07-20',
+      readTime: '8 דקות קריאה',
+      tags: ['File Systems', 'Operating Systems', 'Data'],
+      featured: false,
+    },
+  'files-folders-paths:en': {
+      slug: 'files-folders-paths',
+      language: 'en',
+      title: 'Files, folders, and paths',
+      excerpt: 'What really happens behind the file system: names, directories, absolute and relative paths, ".", "..", path normalization, inodes, hard links, and hidden files.',
+      date: '2026-07-20',
+      readTime: '8 min read',
+      tags: ['File Systems', 'Operating Systems', 'Data'],
+      featured: false,
+    },
   'boot-process-power-button:he': {
       slug: 'boot-process-power-button',
       language: 'he',

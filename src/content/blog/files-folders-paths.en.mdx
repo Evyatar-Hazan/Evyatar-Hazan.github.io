@@ -1,0 +1,270 @@
+We use files and folders every day, but we usually think about them visually: a folder is a kind of box, a file sits inside it, and a path is its address.
+
+That is a useful picture, but behind the scenes the file system works a little differently, and much more interestingly.
+
+## A file is not its name
+
+Suppose we have a file named:
+
+```text
+report.pdf
+```
+
+It is easy to think the name is an inseparable part of the file. In practice, the name is usually just the way one directory points to that file.
+
+When we rename it from:
+
+```text
+report.pdf
+```
+
+to:
+
+```text
+final-report.pdf
+```
+
+the file contents do not necessarily change at all. In many cases, the file system only updates the directory entry that connects the name to the file.
+
+Changing the extension does not convert the file either. If we rename:
+
+```text
+photo.png
+```
+
+to:
+
+```text
+photo.pdf
+```
+
+the internal content may still be a PNG image. The extension is part of the name, not a conversion mechanism.
+
+Programs may identify file type by extension, but they can also inspect the file signature, content structure, or MIME type.
+
+## What is a folder?
+
+A folder is not necessarily a physical box that contains files.
+
+A better model is a table that maps names to file-system objects:
+
+```text
+report.pdf  → one file
+photo.jpg   → another file
+Projects    → another directory
+```
+
+When we open a folder, the operating system shows us the names registered there and the objects they point to.
+
+## What is a path?
+
+A path is a navigation instruction that tells the system how to reach a file or directory.
+
+For example:
+
+```text
+/Users/evyatar/Documents/report.pdf
+```
+
+The system reads the path step by step:
+
+```text
+/
+└── Users
+    └── evyatar
+        └── Documents
+            └── report.pdf
+```
+
+The path is not the file itself. It is the route to the file.
+
+If we move the file from:
+
+```text
+/Users/evyatar/Documents/report.pdf
+```
+
+to:
+
+```text
+/Users/evyatar/Desktop/report.pdf
+```
+
+the only thing that definitely changed is the path.
+
+The physical location of the data on disk did not necessarily change. When the move happens inside the same file system, updating directory records may be enough. That is why moving a very large file can sometimes be almost instant.
+
+When moving between different drives or file systems, the system usually has to copy the content and then remove the original.
+
+## Absolute and relative paths
+
+An absolute path starts from the file system root.
+
+On Linux and macOS:
+
+```text
+/Users/evyatar/Documents/report.pdf
+```
+
+On Windows:
+
+```text
+C:\Users\Evyatar\Documents\report.pdf
+```
+
+A relative path is interpreted relative to the directory we are currently in.
+
+If the current directory is:
+
+```text
+/Users/evyatar
+```
+
+then the relative path:
+
+```text
+Documents/report.pdf
+```
+
+leads to the same file.
+
+## What `.` and `..` mean
+
+Relative paths use two important markers.
+
+`.` means the current directory.
+
+`..` means the parent directory, one level up.
+
+If we are here:
+
+```text
+/Users/evyatar/Documents
+```
+
+the path:
+
+```text
+./report.pdf
+```
+
+points to:
+
+```text
+/Users/evyatar/Documents/report.pdf
+```
+
+and the path:
+
+```text
+../Desktop/photo.jpg
+```
+
+goes up from `Documents` to `evyatar`, enters `Desktop`, and reaches:
+
+```text
+/Users/evyatar/Desktop/photo.jpg
+```
+
+## Path normalization
+
+Sometimes a path contains unnecessary parts:
+
+```text
+/Users/evyatar/Documents/Projects/../report.pdf
+```
+
+Entering `Projects` and then leaving it with `..` cancel each other out, so the normalized path is:
+
+```text
+/Users/evyatar/Documents/report.pdf
+```
+
+Similarly:
+
+```text
+/Users/evyatar/./Documents/report.pdf
+```
+
+is equivalent to:
+
+```text
+/Users/evyatar/Documents/report.pdf
+```
+
+It is important to follow the path in order. For example:
+
+```text
+../docs/../images
+```
+
+is not the same as:
+
+```text
+../../images
+```
+
+In the first case, we go up one directory, enter `docs`, and then leave it. The enter-and-leave pair cancels out.
+
+In the second case, we actually go up two directories.
+
+## inode and hard links
+
+On Unix-like systems such as Linux and macOS, a file is represented by an internal structure usually called an `inode`.
+
+The inode stores information such as:
+
+- file size;
+- permissions;
+- owner;
+- modification times;
+- locations of the data on disk.
+
+The file name is usually not stored inside the inode. Instead, a directory maps a name to an inode:
+
+```text
+report.txt → inode 48291
+```
+
+It is possible to create two different names that point to the same inode:
+
+```text
+report.txt → inode 48291
+backup.txt → inode 48291
+```
+
+This is called a `Hard Link`.
+
+These are not two independent copies. Both names point to the same content. If you modify the file through `report.txt`, the change is visible when opening `backup.txt`.
+
+If you delete `report.txt`, the content is not removed as long as `backup.txt` still points to it.
+
+Only when no links remain and no process still holds the file open can the operating system free the storage used by the content.
+
+## Hidden files
+
+On Linux and macOS, a file whose name starts with a dot is usually displayed as hidden:
+
+```text
+.env
+.gitignore
+.profile
+```
+
+The dot is simply part of the file name. It does not necessarily mean the file is a system file or that it must not be deleted.
+
+Many tools simply choose not to show such files by default.
+
+## Summary
+
+The distinction between a file, a name, a folder, and a path explains many operations that otherwise feel mysterious:
+
+- Renaming a file does not necessarily change its content.
+- Changing an extension does not convert the file type.
+- Moving a file is not always a physical copy.
+- A path is a navigation instruction, not the file itself.
+- `.` means the current directory and `..` means the parent directory.
+- Two names can point to the same content through a hard link.
+- A hidden file is often just a file whose name starts with a dot.
+
+Once this model clicks, the file system stops looking like a graphical collection of folders and becomes a structured system of names, links, and data.

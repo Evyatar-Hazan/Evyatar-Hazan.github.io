@@ -6,6 +6,8 @@ import CrediblePortfolioEn from './credible-portfolio.en.mdx';
 import CrediblePortfolioHe from './credible-portfolio.he.mdx';
 import DeploymentIsProductEn from './deployment-is-product.en.mdx';
 import DeploymentIsProductHe from './deployment-is-product.he.mdx';
+import FilesFoldersPathsEn from './files-folders-paths.en.mdx';
+import FilesFoldersPathsHe from './files-folders-paths.he.mdx';
 import GoogleTranslateNameBugEn from './google-translate-name-bug.en.mdx';
 import GoogleTranslateNameBugHe from './google-translate-name-bug.he.mdx';
 import HardwareInputOutputDevicesEn from './hardware-input-output-devices.en.mdx';
@@ -36,6 +38,14 @@ import { blogPostMetadataByKey } from './metadata';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    ...blogPostMetadataByKey['files-folders-paths:he'],
+    Content: FilesFoldersPathsHe,
+  },
+  {
+    ...blogPostMetadataByKey['files-folders-paths:en'],
+    Content: FilesFoldersPathsEn,
+  },
   {
     ...blogPostMetadataByKey['boot-process-power-button:he'],
     Content: BootProcessPowerButtonHe,
