@@ -6,6 +6,26 @@ import type { BlogLanguage, BlogPostMeta } from './types';
  * not pull the article bodies into their bundle.
  */
 const metadata = {
+  'boot-process-power-button:he': {
+      slug: 'boot-process-power-button',
+      language: 'he',
+      title: 'מה באמת קורה מהרגע שלוחצים על כפתור ההפעלה?',
+      excerpt: 'מדריך מעשי לשרשרת האתחול: Power Button, Reset Vector, Firmware, POST, UEFI, Bootloader, Kernel, initramfs, root filesystem, PID 1, Secure Boot, PXE, VMs וכיבוי בטוח.',
+      date: '2026-07-20',
+      readTime: '14 דקות קריאה',
+      tags: ['Operating Systems', 'Boot', 'Security'],
+      featured: false,
+    },
+  'boot-process-power-button:en': {
+      slug: 'boot-process-power-button',
+      language: 'en',
+      title: 'What really happens when you press the power button?',
+      excerpt: 'A practical guide to the boot chain: Power Button, Reset Vector, Firmware, POST, UEFI, Bootloader, Kernel, initramfs, root filesystem, PID 1, Secure Boot, PXE, VMs, and safe shutdown.',
+      date: '2026-07-20',
+      readTime: '14 min read',
+      tags: ['Operating Systems', 'Boot', 'Security'],
+      featured: false,
+    },
   'operating-system-under-apps:he': {
       slug: 'operating-system-under-apps',
       language: 'he',

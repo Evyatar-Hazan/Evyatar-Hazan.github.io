@@ -1,0 +1,602 @@
+We press the power button, see a logo, wait a few seconds, and the computer "boots".
+
+Behind that simple action is a long and precise chain of stages. Each stage prepares the next one. If one stage fails, the computer may freeze, show an error, or fail to find the operating system at all.
+
+This post follows the path from the moment power reaches the machine to the moment the login screen appears.
+
+## The full chain
+
+At a high level, the boot process looks like this:
+
+```text
+Power Button
+↓
+Reset Vector
+↓
+Firmware
+↓
+POST
+↓
+Bootloader
+↓
+Kernel
+↓
+Root filesystem
+↓
+PID 1
+↓
+System services
+↓
+Login
+```
+
+Now let us break it down.
+
+## 1. Pressing the power button
+
+The power button does not "run Windows" or "open Linux".
+
+It tells the machine's power system to start supplying voltage to the components: the CPU, memory, motherboard, graphics card, storage devices, controllers, and other hardware.
+
+After the voltages stabilize, the CPU is released from reset and starts executing code.
+
+But from where?
+
+## 2. Reset Vector
+
+When the CPU starts running, there is still no operating system, no drivers, and no applications.
+
+The CPU needs a known starting address from which it can begin reading instructions. That address is called the `Reset Vector`.
+
+The Reset Vector is not a full program. It is the starting point that directs the CPU to the first firmware code.
+
+```text
+the CPU starts
+↓
+reads from the Reset Vector
+↓
+reaches the firmware code
+```
+
+## 3. Firmware: BIOS or UEFI
+
+Firmware is the early code that lets the computer begin understanding its own hardware.
+
+Older PCs mostly used BIOS. Modern PCs usually use UEFI.
+
+Firmware is responsible for tasks such as:
+
+- initial CPU setup;
+- detecting RAM;
+- initializing storage controllers;
+- enabling basic graphics output;
+- detecting keyboards and devices;
+- deciding the boot order;
+- choosing the device the system will boot from.
+
+The firmware is stored in flash memory on the motherboard, so it exists even when the disk is empty and no operating system is installed.
+
+## 4. POST
+
+One of the firmware stages is `POST`, short for `Power-On Self-Test`.
+
+POST is an early hardware check. It asks questions such as: is RAM present, is the CPU working, is there a critical hardware fault, can the graphics card display output, and are the storage controllers visible?
+
+If a serious problem exists, the computer may beep, show an error code, turn on a diagnostic light, or stop before the operating system ever starts loading.
+
+The important point:
+
+```text
+POST happens before the Bootloader and before the Kernel.
+```
+
+## 5. Choosing a boot device
+
+After the basic hardware is ready, the firmware searches for a place to start the operating system.
+
+It may check an SSD, hard drive, USB drive, external drive, network, or another device.
+
+The order is controlled by the `Boot Order`.
+
+In UEFI systems, there are usually also `Boot Entries`. Each Boot Entry can point to a specific EFI file.
+
+For example:
+
+```text
+\EFI\Microsoft\Boot\bootmgfw.efi
+\EFI\ubuntu\shimx64.efi
+```
+
+## 6. Legacy BIOS versus UEFI
+
+The difference is not only that BIOS is old and UEFI is newer.
+
+They find boot code in different ways.
+
+### Legacy BIOS
+
+Classic BIOS reads a fixed area at the beginning of the disk: the `MBR`.
+
+The MBR contains a very small piece of code that continues the boot process.
+
+```text
+BIOS
+↓
+reads a fixed sector
+↓
+runs code from the MBR
+```
+
+### UEFI
+
+UEFI can read a file system from a special partition called the `EFI System Partition`, or `ESP`.
+
+It loads a normal EFI file from that partition.
+
+```text
+UEFI
+↓
+reads a Boot Entry
+↓
+opens the ESP
+↓
+loads an EFI file
+↓
+runs it
+```
+
+This makes UEFI more flexible and allows several bootloaders to coexist.
+
+## 7. Bootloader
+
+The bootloader is the bridge between the firmware and the kernel.
+
+Examples include:
+
+- Windows Boot Manager;
+- GRUB;
+- systemd-boot;
+- Android bootloaders;
+- the macOS bootloader.
+
+Its responsibilities can include showing an operating system menu, choosing a kernel, loading the kernel into RAM, loading an initramfs, passing kernel parameters, handing over memory and hardware information, and jumping to the kernel entry point.
+
+Its last stage is essentially:
+
+```text
+load the Kernel into RAM
+↓
+prepare boot data
+↓
+jump to the Kernel entry point
+```
+
+From that moment, control belongs to the kernel.
+
+## 8. Why is the kernel loaded into RAM?
+
+The kernel is stored as a file on disk, but the CPU needs to execute its instructions from memory.
+
+The bootloader therefore copies the kernel into a suitable RAM region. Then the CPU begins executing kernel code.
+
+At this point there is still no Chrome, no desktop, and no login screen. There is only a kernel beginning to build the operating system.
+
+## 9. What does the kernel do first?
+
+The kernel initializes fundamental infrastructure:
+
+- memory management;
+- page tables;
+- interrupts;
+- timers;
+- scheduler;
+- drivers;
+- file systems;
+- processes;
+- threads;
+- security and permissions;
+- communication with hardware.
+
+It also receives a memory map from the firmware or bootloader. That map describes which memory regions are free, reserved, used by hardware, occupied by the kernel, or occupied by initramfs.
+
+Without that map, the kernel could overwrite a critical memory region.
+
+## 10. initramfs
+
+One easy concept to confuse is `initramfs`.
+
+initramfs is not another kernel. It is a temporary file system stored in RAM.
+
+The kernel uses it early in boot so it can reach the real root file system. It may contain storage drivers, file system drivers, disk encryption tools, LVM support, RAID support, disk discovery tools, and early boot scripts.
+
+For example:
+
+```text
+Kernel starts
+↓
+uses initramfs
+↓
+loads a driver
+↓
+unlocks an encrypted disk
+↓
+finds the root partition
+↓
+mounts the real root file system
+```
+
+## 11. Root filesystem
+
+After the kernel reaches the correct storage device, it mounts the main file system.
+
+On Linux, it is usually called `/`.
+
+It contains system files, services, libraries, programs, configuration, users, and operating system files.
+
+If the kernel cannot find the root file system, you may see errors such as:
+
+```text
+Unable to mount root filesystem
+```
+
+Possible causes include:
+
+- wrong UUID;
+- deleted partition;
+- missing driver;
+- broken initramfs;
+- encrypted disk that was not unlocked;
+- corrupted file system;
+- storage device not detected.
+
+## 12. PID 1
+
+After the kernel is ready and the root file system is available, it creates the first process in user space.
+
+That process receives `PID 1`.
+
+On modern Linux systems, it is usually `systemd`.
+
+PID 1 is not part of the kernel. The kernel provides the foundation, and PID 1 starts building the user-space environment.
+
+Its work can include starting system services, managing dependencies, bringing up the network, starting storage services, starting databases, starting the login screen, handling failed services, and collecting orphaned or zombie processes.
+
+## 13. System services
+
+Services do not start in a random order.
+
+For example:
+
+```text
+application service
+depends on database
+
+database
+depends on file system
+```
+
+So the order is:
+
+```text
+file system ready
+↓
+database
+↓
+application service
+```
+
+Modern systems also start independent services in parallel to reduce boot time.
+
+## 14. Login
+
+After the essential services are ready, the system starts a graphical login screen, text login, shell, or desktop environment.
+
+After the user authenticates:
+
+```text
+user authentication
+↓
+session creation
+↓
+permission loading
+↓
+desktop loading
+↓
+startup programs
+```
+
+Only now is the computer truly available to the user.
+
+## Secure Boot
+
+One of the most dangerous problems is malicious code that runs before the operating system.
+
+That is why `Secure Boot` exists.
+
+UEFI checks digital signatures on boot components.
+
+```text
+UEFI
+↓ verifies
+Bootloader
+↓ verifies
+Kernel
+```
+
+This creates a `Chain of Trust`: each stage verifies the next stage.
+
+But an important caveat remains: a signed file is not necessarily free of bugs or vulnerabilities.
+
+The signature mainly proves who signed it, that it has not changed since it was signed, and that the system trusts the signing key.
+
+## Verified Boot
+
+Verified Boot extends the idea by checking the integrity of system partitions and files.
+
+It is especially common on devices such as Android phones.
+
+Hashes can detect whether a block in the system partition has changed.
+
+```text
+read block
+↓
+compute hash
+↓
+compare with the verification tree
+↓
+if different, block or report
+```
+
+Secure Boot usually focuses on executable boot components. Verified Boot also checks system content across the boot chain, and sometimes when data is read.
+
+## Android and Boot ROM
+
+Phones usually have an early stage called `Boot ROM`.
+
+This is small code burned into the chip and not normally changeable. It acts as the root of trust.
+
+```text
+Boot ROM
+↓ verifies
+Bootloader
+↓ verifies
+Kernel and system partitions
+```
+
+Unlocking a phone bootloader often wipes data to prevent an attacker from opening the boot chain and then accessing the user's information.
+
+## A/B updates
+
+Many devices use two sets of partitions:
+
+```text
+Slot A
+Slot B
+```
+
+If the device is currently running from A, the update is written to B.
+
+```text
+running from A
+↓
+install update into B
+↓
+verify B
+↓
+boot from B
+```
+
+If B fails, the device can fall back to A.
+
+This makes a power failure during an update less dangerous.
+
+## PXE: booting from the network
+
+A computer does not have to boot from a local drive.
+
+With PXE, the machine can receive boot files from a server:
+
+```text
+Firmware
+↓
+network card
+↓
+DHCP
+↓
+boot server details
+↓
+download Bootloader
+↓
+download Kernel or installer
+```
+
+Organizations use this for installing many computers, system recovery, diskless machines, thin clients, and data centers.
+
+## Dual Boot
+
+In Dual Boot, several operating systems are installed, but only one runs at a time.
+
+For example:
+
+```text
+GRUB
+├── Linux
+└── Windows Boot Manager
+```
+
+When you choose Windows, GRUB can start the Windows bootloader. This is called `Chain Loading`.
+
+Deleting a Boot Entry does not necessarily delete the operating system. The files may still exist, but UEFI no longer knows which EFI file to start.
+
+## Booting a virtual machine
+
+A VM goes through a similar boot process:
+
+```text
+virtual firmware
+↓
+Bootloader
+↓
+Kernel
+↓
+Guest OS
+```
+
+But the hardware it sees is provided by a hypervisor.
+
+For example, a virtual disk may actually be a file:
+
+```text
+machine.qcow2
+```
+
+From the guest operating system's point of view, it still looks like a block device with sectors, partitions, an ESP, a bootloader, and file systems.
+
+```text
+Type 1 Hypervisor
+
+Hardware
+↓
+Hypervisor
+↓
+VMs
+
+Type 2 Hypervisor
+
+Hardware
+↓
+Host OS
+↓
+Hypervisor
+↓
+VMs
+```
+
+## How do you diagnose a boot failure?
+
+The point where the process stops gives a strong clue.
+
+### No display
+
+Look at:
+
+- power supply;
+- RAM;
+- motherboard;
+- CPU;
+- GPU;
+- POST.
+
+### No bootable device
+
+The kernel has not started yet.
+
+Look at:
+
+- Boot Order;
+- Boot Entry;
+- ESP;
+- Bootloader;
+- storage device detection.
+
+### GRUB appears but Linux does not boot
+
+These already worked:
+
+- Firmware;
+- boot device;
+- Bootloader.
+
+Look at:
+
+- Kernel;
+- initramfs;
+- kernel parameters;
+- root file system;
+- drivers;
+- disk encryption.
+
+### The kernel boots but there is no login screen
+
+Look at:
+
+- PID 1;
+- systemd;
+- services;
+- graphics driver;
+- login manager;
+- file system.
+
+## What happens during shutdown?
+
+Shutdown is not just cutting power.
+
+The operating system needs to:
+
+```text
+stop accepting new work
+↓
+close applications
+↓
+stop services
+↓
+finish transactions
+↓
+write buffers
+↓
+write page cache
+↓
+close files
+↓
+unmount file systems
+↓
+finish kernel work
+↓
+ask the hardware to power off
+```
+
+Holding the power button bypasses this process and may cause data loss or file system corruption.
+
+## write, fsync, and journaling
+
+`write()` does not always mean the data has physically reached the disk.
+
+Sometimes it only reached the page cache.
+
+`fsync()` asks the system to push changes to storage and wait for completion.
+
+Journaling helps keep the file system structurally consistent after a crash. But it does not guarantee that the latest file contents were saved.
+
+This can happen:
+
+```text
+the file system structure is consistent
+but
+the latest changes are missing
+```
+
+## Summary
+
+Booting is not one action. It is a chain of responsibility:
+
+```text
+the CPU starts
+↓
+Firmware prepares hardware
+↓
+POST checks components
+↓
+Bootloader loads the Kernel
+↓
+Kernel builds the operating system
+↓
+initramfs helps reach root
+↓
+PID 1 starts services
+↓
+the system reaches login
+```
+
+Understanding this chain is not only theory. It helps diagnose failures, understand why a system does not boot, work with Linux, reason about VMs, understand Secure Boot, understand Android, understand Dual Boot, understand safe shutdown, and see what happens before the first application ever opens.
+
+The next time you press the power button and see a logo, you will know that hundreds of operations have already happened behind it, before the operating system showed you anything at all.

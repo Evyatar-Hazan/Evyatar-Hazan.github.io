@@ -1,3 +1,5 @@
+import BootProcessPowerButtonEn from './boot-process-power-button.en.mdx';
+import BootProcessPowerButtonHe from './boot-process-power-button.he.mdx';
 import CateringWhatsappEn from './catering-whatsapp.en.mdx';
 import CateringWhatsappHe from './catering-whatsapp.he.mdx';
 import CrediblePortfolioEn from './credible-portfolio.en.mdx';
@@ -34,6 +36,14 @@ import { blogPostMetadataByKey } from './metadata';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    ...blogPostMetadataByKey['boot-process-power-button:he'],
+    Content: BootProcessPowerButtonHe,
+  },
+  {
+    ...blogPostMetadataByKey['boot-process-power-button:en'],
+    Content: BootProcessPowerButtonEn,
+  },
   {
     ...blogPostMetadataByKey['operating-system-under-apps:he'],
     Content: OperatingSystemUnderAppsHe,
