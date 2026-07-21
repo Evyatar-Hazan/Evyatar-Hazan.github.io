@@ -1,0 +1,334 @@
+בעולם המחשוב המודרני, כמעט כל שירות ענן, סביבת פיתוח, מעבדת בדיקות ותשתית ארגונית נשענים בצורה כלשהי על וירטואליזציה.
+
+כאשר אנחנו מפעילים מכונה וירטואלית, מריצים שרת בענן או משתמשים ב-Docker Desktop, שכבה נוספת מפרידה בין החומרה הפיזית לבין סביבת המחשוב שרצה עליה.
+
+כדי להבין את השכבה הזאת צריך להכיר כמה מושגים: virtualization, ‏virtual machine, ‏host, ‏guest, ‏hypervisor, ‏snapshot, ‏image ו-container.
+
+## מהי וירטואליזציה?
+
+וירטואליזציה מאפשרת ליצור כמה סביבות מחשוב נפרדות על מחשב פיזי אחד. במקום שמחשב יריץ מערכת הפעלה אחת בלבד, הוא יכול להריץ כמה מערכות במקביל:
+
+```text
+Physical Server
+├── Windows Server VM
+├── Ubuntu VM
+├── Kali Linux VM
+└── Test VM
+```
+
+כל סביבה פועלת כאילו קיבלה מחשב משלה, אף שהמעבד, הזיכרון, האחסון והרשת מגיעים מאותו host.
+
+## למה צריך וירטואליזציה?
+
+בעבר היה מקובל להקדיש שרת פיזי לכל מערכת:
+
+```text
+Server 1 → Website
+Server 2 → Database
+Server 3 → Mail
+Server 4 → Testing
+```
+
+שרת עם 16 ליבות ו-64GB RAM יכול היה להשתמש רק בחלק קטן מהיכולת שלו. וירטואליזציה מאפשרת לחלק שרת חזק לכמה VMs, לנצל טוב יותר את החומרה, להקים סביבות במהירות ולהפריד בין workloads.
+
+החיסכון אינו חינם: כל ה-VMs עדיין מתחרות על משאבים פיזיים ותלויות ב-host וב-hypervisor.
+
+## מהי Virtual Machine?
+
+VM היא מחשב שנוצר באמצעות תוכנה. מנקודת המבט של מערכת ההפעלה שבתוכה יש לה:
+
+- מעבד וירטואלי.
+- RAM.
+- דיסק.
+- כרטיס רשת.
+- BIOS או UEFI.
+- התקנים וירטואליים.
+- מערכת הפעלה ו-kernel משלה.
+
+Ubuntu בתוך VM יכולה לראות ארבעה vCPUs, ‏8GB RAM ודיסק של 60GB. בפועל, ה-hypervisor ממפה את המשאבים האלה לחומרה או למשאבים שמספק ה-host.
+
+## Host, Guest ו-Hypervisor
+
+ה-host הוא המחשב הפיזי או סביבת האירוח. ה-guest הוא מערכת ההפעלה שרצה בתוך ה-VM. ה-hypervisor הוא הרכיב שיוצר ומנהל את המכונות:
+
+```text
+Host: macOS
+Hypervisor: Parallels Desktop
+Guest: Windows 11
+```
+
+ה-hypervisor מקצה CPU וזיכרון, מציג התקנים וירטואליים, מתזמן עבודה, מנהל דיסקים ורשתות ומבודד בין guests.
+
+מעבדים מודרניים מספקים תמיכה כמו Intel VT-x ו-AMD-V, שמאפשרת ל-hypervisor להריץ guest code ביעילות תוך שמירה על שליטה במעברים רגישים ובהפרדת זיכרון.
+
+## Type 1 ו-Type 2
+
+Type 1, או bare-metal hypervisor, יושב בשכבת החומרה ומארח VMs ישירות:
+
+```text
+Physical Hardware
+└── Hypervisor
+    ├── VM 1
+    ├── VM 2
+    └── VM 3
+```
+
+דוגמאות כוללות VMware ESXi, ‏Xen, ‏Microsoft Hyper-V ו-KVM בתצורות תשתית. Hyper-V ו-KVM מעט מבלבלים בסיווג: סביבת הניהול יכולה להיראות כמו מערכת הפעלה רגילה, אבל מנגנון הווירטואליזציה עצמו נמצא בשכבת מערכת עמוקה ומתזמן את ה-guests.
+
+Type 2 רץ כאפליקציה מעל host OS:
+
+```text
+Physical Hardware
+└── Host OS
+    └── Hypervisor Application
+        └── VM
+```
+
+VirtualBox, ‏VMware Workstation ו-Parallels Desktop הם דוגמאות נפוצות. הם נוחים לפיתוח ולימוד, אך מוסיפים שכבת host OS מלאה לנתיב.
+
+## כיצד VM מקבלת CPU?
+
+כאשר מגדירים VM עם ארבעה vCPUs, לא נוצרים ארבעה מעבדים חדשים. ה-hypervisor מתזמן את ה-vCPUs על הליבות או ה-hardware threads הפיזיים.
+
+```text
+Host: 8 physical cores
+Ubuntu VM: 4 vCPU
+Windows VM: 2 vCPU
+Kali VM: 2 vCPU
+```
+
+vCPU אינו בהכרח ליבה ייעודית. כמה VMs יכולות להשתמש באותן ליבות בזמנים שונים.
+
+### CPU Overcommit
+
+אפשר להגדיר יחד יותר vCPUs ממספר הליבות הפיזיות:
+
+```text
+8 physical cores
+VM 1: 4 vCPU
+VM 2: 4 vCPU
+VM 3: 4 vCPU
+```
+
+12 vCPUs יכולות לעבוד היטב כאשר המכונות אינן עמוסות בו-זמנית. אם כולן דורשות CPU יחד, נוצרים תורים, זמני המתנה, context switches ו-latency גבוה יותר. Overcommit הוא הימור מנוהל על דפוסי שימוש, לא יצירת כוח עיבוד חדש.
+
+## כיצד VM מקבלת זיכרון?
+
+ה-guest רואה כמות RAM שהוגדרה לו, אך ה-hypervisor מנהל את המיפוי לזיכרון הפיזי.
+
+```text
+Host RAM: 16GB
+Ubuntu VM: 8GB
+Windows VM: 4GB
+Host and hypervisor: remaining memory
+```
+
+אם משאירים מעט מדי RAM ל-host, הוא עלול להיכנס ל-swap או ל-thrashing ולפגוע בכל ה-VMs.
+
+### Memory Overcommit
+
+מערכות מסוימות מאפשרות לסכום ההקצאות לעבור את ה-RAM הפיזי. הן מסתמכות על כך שלא כל guests ישתמשו בכל הזיכרון יחד, ויכולות להשתמש ב-ballooning, compression, page sharing או swapping.
+
+אף מנגנון כזה אינו יוצר RAM חדש. כאשר הדרישה המשותפת גבוהה מדי, הביצועים יורדים, allocations עלולים להיכשל ו-VMs עשויות להיעצר.
+
+## דיסקים וירטואליים
+
+במחשב אישי, דיסק VM הוא בדרך כלל קובץ כמו `.vdi`, ‏`.vmdk`, ‏`.vhdx` או `.qcow2`. בתשתיות ארגוניות וענן הוא יכול להיות גם volume או block device שמסופק ממערכת אחסון.
+
+מבחינת guest זהו דיסק רגיל עם sectors, partitions ומערכת קבצים. מבחינת host הוא משאב שממופה לאחסון אמיתי.
+
+### Thin Provisioning
+
+בדיסק דינמי הקובץ או ה-volume גדלים לפי השימוש:
+
+```text
+Maximum virtual size: 100GB
+Guest data in use: 15GB
+Physical allocation: roughly 15GB plus metadata
+```
+
+היתרון הוא חיסכון במקום והקמה מהירה. הסיכון הוא שה-host ייגמר לפני שה-guest מגיע לגודל שהובטח לו. מחיקת קבצים בתוך ה-guest אינה תמיד מקטינה מיד את ההקצאה הפיזית; לעיתים נדרשים discard/TRIM ו-compaction.
+
+### Thick Provisioning
+
+בדיסק קבוע המקום מוקצה מראש. הוא צורך שטח מיד, אך מספק תכנון קיבולת וביצועים צפויים יותר.
+
+## רשת וירטואלית
+
+ה-hypervisor מציג ל-VM כרטיס רשת וירטואלי ומחבר אותו ל-switch, ‏NAT או bridge וירטואלי.
+
+### NAT
+
+```text
+VM → Host/NAT → Router → Internet
+```
+
+ה-VM יכולה לצאת לרשת, אבל בדרך כלל אינה נגישה ישירות מבחוץ. Port forwarding יכול למפות, למשל, את `Host:8080` אל `VM:80`. זהו מצב פשוט ומתאים לרוב סביבות הפיתוח.
+
+### Bridged
+
+ב-bridged mode ה-VM מופיעה ברשת המקומית כמחשב נפרד עם כתובת IP משלה. הדבר שימושי לשרת או למעבדת רשת, אך מגדיל את החשיפה ודורש הגנה כמו לכל מחשב אחר ברשת.
+
+### Host-Only
+
+Host-only יוצר רשת פנימית בין ה-host ל-VMs, ללא גישה ישירה לאינטרנט כברירת מחדל. אפשר לשלב adapter של NAT עם adapter של host-only כדי לקבל גם אינטרנט וגם רשת מעבדה מבודדת.
+
+## Snapshot אינו גיבוי
+
+Snapshot שומר נקודת מצב של דיסק והגדרות, ולעיתים גם RAM. הוא שימושי לפני עדכון, התקנת driver או ניסוי מסוכן.
+
+אבל snapshot הוא לעיתים קרובות שכבת delta שתלויה בדיסק הבסיס וב-snapshots קודמים. שרשרת ארוכה יכולה לפגוע בביצועים ולהקשות על שחזור.
+
+בנוסף, snapshot שנלקח בזמן שאפליקציה כותבת יכול להיות crash-consistent בלבד, לא בהכרח application-consistent. מסד נתונים עשוי לדרוש quiescing או מנגנון גיבוי ייעודי.
+
+גיבוי אמיתי צריך להיות עצמאי, נשמר מחוץ ל-failure domain של ה-host ונבדק בשחזור.
+
+## Clone ו-Image
+
+Clone הוא עותק של VM. Full clone הוא עצמאי אך צורך יותר מקום. Linked clone נוצר במהירות וחוסך אחסון, אך תלוי בדיסק בסיס.
+
+Image היא תבנית שממנה יוצרים מכונות חדשות. היא יכולה להכיל OS, עדכונים, חבילות, הגדרות וכלי ניטור. בענן משתמשים ב-images כדי להקים instances עקביים; ב-AWS אחת הצורות הנפוצות היא AMI.
+
+## וירטואליזציה בענן ו-Multi-Tenancy
+
+ספק ענן מחלק שרתים פיזיים חזקים בין לקוחות:
+
+```text
+Physical Server
+├── Customer A VM
+├── Customer B VM
+├── Customer C VM
+└── Customer D VM
+```
+
+כל לקוח מקבל סביבה לוגית נפרדת, אך החומרה משותפת. זהו multi-tenancy.
+
+האתגר המרכזי הוא בידוד: לקוח אחד לא אמור להגיע לזיכרון, לדיסק או לרשת של לקוח אחר. גם כאשר הבידוד תקין, עומס של tenant אחד על משאב משותף יכול להשפיע על אחרים. זו תופעת noisy neighbor.
+
+ספקים משתמשים ב-quotas, reservations, scheduling, I/O throttling ו-dedicated hosts כדי לנהל את הסיכון.
+
+## VM לעומת Container
+
+VM כוללת guest OS ו-kernel משלה:
+
+```text
+Hardware
+└── Hypervisor
+    ├── Guest OS → Application
+    └── Guest OS → Application
+```
+
+Containers חולקים בדרך כלל את kernel של סביבת האירוח ומבודדים processes, filesystem, network ומשאבים באמצעות מנגנוני kernel:
+
+```text
+Hardware
+└── Host OS
+    └── Container Runtime
+        ├── Container A
+        ├── Container B
+        └── Container C
+```
+
+Containers עולים מהר יותר וצורכים פחות זיכרון ודיסק. VMs מאפשרות kernel או OS שונים ומספקות גבול בידוד רחב יותר.
+
+Container אינו "VM קטנה". הוא גבול בידוד אחר עם trade-offs אחרים.
+
+## למה Docker Desktop משתמש ב-VM?
+
+Linux containers צריכים Linux kernel. ב-macOS אין Linux kernel מקומי, ולכן Docker Desktop מפעיל Linux VM. ב-Windows הוא משתמש בדרך כלל ב-WSL 2 או Hyper-V כדי לספק סביבת Linux מתאימה.
+
+```text
+macOS / Windows
+└── Linux virtualization layer
+    └── Docker Engine
+        ├── Container 1
+        └── Container 2
+```
+
+הממשק מסתיר את השכבה, אבל היא עדיין צורכת CPU, זיכרון ואחסון.
+
+## בידוד, VM Escape ו-Blast Radius
+
+לכל VM יש kernel, processes, זיכרון ודיסק לוגיים משלה. תקלה ב-guest אחד לא אמורה להפיל guest אחר.
+
+הבידוד אינו מוחלט. VM escape הוא מצב נדיר וחמור שבו קוד ב-guest מנצל חולשה ומגיע ל-hypervisor או ל-host. לכן צריך לעדכן hypervisors, להגביל הרשאות, לבודד רשתות ולהימנע מהפעלת קוד לא מהימן ללא הגנות.
+
+Blast radius הוא היקף הנזק האפשרי. פיצול Jenkins, production ו-database לגבולות שונים יכול לצמצם אותו, אבל כל VM נוספת מוסיפה OS, patches, secrets, firewall rules ושטח תקיפה. יותר מכונות אינן אוטומטית יותר אבטחה.
+
+## כשל Host ו-High Availability
+
+כל ה-VMs על host עדיין חולקות נקודת כשל:
+
+```text
+Host failure
+├── VM 1 down
+├── VM 2 down
+└── VM 3 down
+```
+
+כדי לצמצם את התלות משתמשים ב-clustering, replication, backups, failover, multi-zone deployment ו-high availability.
+
+Live migration מאפשרת להעביר VM מ-host אחד לאחר עם השבתה קטנה, ולעיתים כמעט ללא השבתה מורגשת. היא עוזרת בתחזוקה ואיזון עומסים, אך אינה מחליפה גיבוי או תכנון failure domains.
+
+## תכנון סביבת פיתוח
+
+ב-host עם 16GB RAM, שמונה ליבות ו-250GB פנויים, VM לפיתוח Ubuntu יכולה להתחיל למשל עם:
+
+```text
+RAM: 8GB
+vCPU: 4
+Disk: 60GB thin provisioned
+Network: NAT
+Snapshot: after clean setup
+```
+
+זו אינה נוסחה אוניברסלית. העיקרון הוא להשאיר מרווח ל-host, למדוד את העבודה בפועל ולשנות הקצאות לפי CPU pressure, memory pressure, latency ושטח אחסון.
+
+## מתי לבחור VM, Container או שילוב?
+
+VM מתאימה כאשר נדרשים מערכת הפעלה או kernel שונים, בדיקות מערכת מלאות, תוכנה ישנה, בדיקות drivers או גבול בידוד ברמת OS.
+
+Container מתאים להרצת אפליקציות, microservices, ‏CI/CD, פריסה תכופה, שכפול מהיר ו-Infrastructure as Code.
+
+בענן נפוץ לשלב ביניהם:
+
+```text
+Physical Host
+└── Virtual Machine
+    └── Container Runtime
+        ├── Web
+        ├── API
+        ├── Redis
+        └── Worker
+```
+
+ה-VM מספקת גבול תשתיתי. ה-containers מספקים אריזה ופריסה נוחות.
+
+## טעויות נפוצות
+
+- להקצות ל-VM את כל ה-RAM של ה-host.
+- להניח שיותר vCPUs תמיד משפרים ביצועים.
+- להשתמש ב-bridged כאשר NAT מספיק.
+- לא לנטר דיסק thin-provisioned.
+- להחזיק שרשרת snapshots ארוכה.
+- להחליף גיבוי ב-snapshot.
+- להריץ הכול על host אחד בלי לקבל במודע את ה-blast radius.
+- להניח שבידוד לוגי מבטל noisy neighbors או failure משותף.
+
+## סיכום
+
+וירטואליזציה מאפשרת להריץ כמה סביבות מחשוב מעל חומרה משותפת.
+
+- VM כוללת guest OS ו-kernel משלה.
+- Hypervisor מנהל CPU, זיכרון, דיסק, רשת ובידוד.
+- vCPU אינו בהכרח ליבה פיזית ייעודית.
+- Overcommit אינו יוצר משאבים חדשים.
+- דיסק וירטואלי יכול להיות קובץ או block volume.
+- NAT מתאים לרוב סביבות הפיתוח; bridged חושף את ה-VM לרשת; host-only יוצר רשת פנימית.
+- Snapshot מאפשר חזרה מהירה אך אינו בהכרח גיבוי.
+- Image היא תבנית ו-clone הוא עותק של VM.
+- Containers חולקים בדרך כלל kernel; VMs מריצות guest kernel.
+- בידוד מצמצם blast radius אך אינו מוחלט.
+- כשל host יכול להשפיע על כל ה-VMs שעליו.
+
+וירטואליזציה אינה רק דרך להריץ Ubuntu בתוך Windows. היא אחת מאבני היסוד של ענן, DevOps, בדיקות, אבטחה ותשתיות מודרניות.

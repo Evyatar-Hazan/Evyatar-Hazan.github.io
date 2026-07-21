@@ -1,0 +1,334 @@
+Modern cloud services, development environments, test labs, and enterprise infrastructure all rely on virtualization in some form.
+
+When we start a virtual machine, launch a cloud server, or use Docker Desktop, another layer separates the physical hardware from the computing environment running on it.
+
+Understanding that layer starts with a few concepts: virtualization, virtual machine, host, guest, hypervisor, snapshot, image, and container.
+
+## What is virtualization?
+
+Virtualization creates several separate computing environments on one physical machine. Instead of running only one operating system, a server can run several at once:
+
+```text
+Physical Server
+├── Windows Server VM
+├── Ubuntu VM
+├── Kali Linux VM
+└── Test VM
+```
+
+Each environment behaves as if it has a computer of its own, even though CPU, memory, storage, and networking come from the same host.
+
+## Why do we need virtualization?
+
+Organizations once commonly dedicated one physical server to each system:
+
+```text
+Server 1 → Website
+Server 2 → Database
+Server 3 → Mail
+Server 4 → Testing
+```
+
+A server with 16 cores and 64GB of RAM might use only a fraction of its capacity. Virtualization divides a powerful server among several VMs, improving utilization, making environments quick to create, and separating workloads.
+
+The efficiency is not free: every VM still competes for physical resources and depends on the host and hypervisor.
+
+## What is a virtual machine?
+
+A VM is a computer created through software. From the operating system's point of view, it has:
+
+- Virtual processors.
+- RAM.
+- A disk.
+- A network adapter.
+- BIOS or UEFI firmware.
+- Virtual devices.
+- Its own operating system and kernel.
+
+Ubuntu inside a VM may see four vCPUs, 8GB of RAM, and a 60GB disk. The hypervisor maps those resources to hardware or services supplied by the host.
+
+## Host, guest, and hypervisor
+
+The host is the physical machine or hosting environment. The guest is the operating system inside the VM. The hypervisor creates and manages the virtual machines:
+
+```text
+Host: macOS
+Hypervisor: Parallels Desktop
+Guest: Windows 11
+```
+
+The hypervisor allocates CPU and memory, presents virtual devices, schedules execution, manages disks and networks, and isolates guests.
+
+Modern CPUs provide features such as Intel VT-x and AMD-V. They let a hypervisor run guest code efficiently while retaining control over sensitive operations and memory separation.
+
+## Type 1 and Type 2 hypervisors
+
+A Type 1, or bare-metal, hypervisor operates at the hardware layer and hosts VMs directly:
+
+```text
+Physical Hardware
+└── Hypervisor
+    ├── VM 1
+    ├── VM 2
+    └── VM 3
+```
+
+Examples include VMware ESXi, Xen, Microsoft Hyper-V, and KVM in infrastructure deployments. Hyper-V and KVM make the classification look less tidy: the management environment can resemble a normal OS, while the virtualization mechanism itself lives deep in the system layer and schedules the guests.
+
+A Type 2 hypervisor runs as software above an existing host OS:
+
+```text
+Physical Hardware
+└── Host OS
+    └── Hypervisor Application
+        └── VM
+```
+
+VirtualBox, VMware Workstation, and Parallels Desktop are common examples. They are convenient for development and learning, but add a full host OS to the path.
+
+## How does a VM get CPU time?
+
+Assigning four vCPUs does not create four processors. The hypervisor schedules those vCPUs on physical cores or hardware threads.
+
+```text
+Host: 8 physical cores
+Ubuntu VM: 4 vCPU
+Windows VM: 2 vCPU
+Kali VM: 2 vCPU
+```
+
+A vCPU is not necessarily a dedicated core. Several VMs can use the same cores at different times.
+
+### CPU overcommit
+
+The total vCPU allocation can exceed the number of physical cores:
+
+```text
+8 physical cores
+VM 1: 4 vCPU
+VM 2: 4 vCPU
+VM 3: 4 vCPU
+```
+
+Twelve vCPUs can work well while the machines are not busy together. If all demand CPU at once, queues, scheduling delay, context switches, and higher latency appear. Overcommit is a managed bet on usage patterns, not new processing power.
+
+## How does a VM get memory?
+
+The guest sees its configured amount of RAM, while the hypervisor manages the mapping to physical memory.
+
+```text
+Host RAM: 16GB
+Ubuntu VM: 8GB
+Windows VM: 4GB
+Host and hypervisor: remaining memory
+```
+
+Leaving too little RAM for the host can push it into swapping or thrashing, harming every VM.
+
+### Memory overcommit
+
+Some platforms allow configured memory to exceed physical RAM. They depend on guests not using their full allocations simultaneously and may use ballooning, compression, page sharing, or swapping.
+
+None of these mechanisms creates RAM. When combined demand becomes too high, performance falls, allocations may fail, and VMs may be paused or terminated.
+
+## Virtual disks
+
+On a personal computer, a VM disk is usually a file such as `.vdi`, `.vmdk`, `.vhdx`, or `.qcow2`. In enterprise and cloud environments it may instead be a volume or block device supplied by a storage system.
+
+The guest sees an ordinary disk with sectors, partitions, and a filesystem. The host sees a resource backed by real storage.
+
+### Thin provisioning
+
+A dynamic disk grows with use:
+
+```text
+Maximum virtual size: 100GB
+Guest data in use: 15GB
+Physical allocation: roughly 15GB plus metadata
+```
+
+The benefit is fast creation and efficient use of space. The risk is that the host runs out of storage before the guest reaches its promised capacity. Deleting files in the guest does not always shrink physical allocation immediately; discard/TRIM and compaction may be required.
+
+### Thick provisioning
+
+A fixed or thick-provisioned disk reserves capacity in advance. It consumes space immediately, but offers more predictable capacity planning and often more consistent performance.
+
+## Virtual networking
+
+The hypervisor presents a virtual network adapter and attaches it to a virtual switch, NAT service, or bridge.
+
+### NAT
+
+```text
+VM → Host/NAT → Router → Internet
+```
+
+The VM can reach the network but is not normally reachable directly from outside. Port forwarding can map `Host:8080` to `VM:80`. This simple model fits most development environments.
+
+### Bridged networking
+
+In bridged mode, the VM appears on the local network as a separate computer with its own IP address. That is useful for servers and network labs, but increases exposure and requires the same protection as any other networked machine.
+
+### Host-only networking
+
+Host-only mode creates an internal network between the host and its VMs, without direct internet access by default. A NAT adapter and a host-only adapter can be combined to provide both internet access and an isolated lab network.
+
+## A snapshot is not a backup
+
+A snapshot records a disk and configuration state, and sometimes memory as well. It is useful before an update, driver installation, or risky experiment.
+
+But a snapshot is often a delta layer that depends on the base disk and earlier snapshots. Long chains can reduce performance and complicate recovery.
+
+A snapshot taken while applications are writing may also be only crash-consistent, not application-consistent. A database may require quiescing or its own backup mechanism.
+
+A real backup should be independent, stored outside the host's failure domain, and tested through restoration.
+
+## Clones and images
+
+A clone is a copy of a VM. A full clone is independent but uses more storage. A linked clone is quick and space-efficient, but depends on a base disk.
+
+An image is a template used to create new machines. It can include the OS, updates, packages, configuration, and monitoring tools. Cloud providers use images to launch consistent instances; one common AWS form is an AMI.
+
+## Cloud virtualization and multi-tenancy
+
+A cloud provider divides powerful physical servers among customers:
+
+```text
+Physical Server
+├── Customer A VM
+├── Customer B VM
+├── Customer C VM
+└── Customer D VM
+```
+
+Each customer receives a separate logical environment while the hardware is shared. This is multi-tenancy.
+
+Isolation is the central challenge: one customer must not reach another customer's memory, storage, or network. Even with correct isolation, one tenant's heavy use of a shared resource can affect others. This is the noisy-neighbor problem.
+
+Providers use quotas, reservations, scheduling, I/O throttling, and dedicated hosts to manage the risk.
+
+## VM versus container
+
+A VM includes its own guest OS and kernel:
+
+```text
+Hardware
+└── Hypervisor
+    ├── Guest OS → Application
+    └── Guest OS → Application
+```
+
+Containers normally share the hosting environment's kernel and isolate processes, filesystems, networks, and resources using kernel mechanisms:
+
+```text
+Hardware
+└── Host OS
+    └── Container Runtime
+        ├── Container A
+        ├── Container B
+        └── Container C
+```
+
+Containers start faster and use less memory and storage. VMs can run a different kernel or OS and provide a broader isolation boundary.
+
+A container is not a "small VM." It is a different boundary with different tradeoffs.
+
+## Why does Docker Desktop use a VM?
+
+Linux containers require a Linux kernel. macOS does not provide one natively, so Docker Desktop runs a Linux VM. On Windows, it commonly uses WSL 2 or Hyper-V to provide a suitable Linux environment.
+
+```text
+macOS / Windows
+└── Linux virtualization layer
+    └── Docker Engine
+        ├── Container 1
+        └── Container 2
+```
+
+The interface hides the layer, but it still consumes CPU, memory, and storage.
+
+## Isolation, VM escape, and blast radius
+
+Each VM has its own logical kernel, processes, memory, and disk. A failure in one guest should not directly bring down another.
+
+Isolation is not absolute. VM escape is a rare and severe vulnerability in which guest code exploits a flaw to reach the hypervisor or host. Hypervisors need patches, privileges should be restricted, networks should be segmented, and untrusted code still needs careful controls.
+
+Blast radius describes the possible scope of damage. Separating Jenkins, production, and databases can reduce it, but each extra VM adds an OS, patches, secrets, firewall rules, and attack surface. More machines do not automatically mean more security.
+
+## Host failure and high availability
+
+All VMs on one host share a failure point:
+
+```text
+Host failure
+├── VM 1 down
+├── VM 2 down
+└── VM 3 down
+```
+
+Clustering, replication, backups, failover, multi-zone deployment, and high availability reduce that dependency.
+
+Live migration moves a VM from one host to another with little, and sometimes nearly unnoticeable, downtime. It helps with maintenance and load balancing, but does not replace backups or failure-domain planning.
+
+## Planning a development VM
+
+On a host with 16GB of RAM, eight cores, and 250GB free, an Ubuntu development VM might start with:
+
+```text
+RAM: 8GB
+vCPU: 4
+Disk: 60GB thin provisioned
+Network: NAT
+Snapshot: after clean setup
+```
+
+This is not a universal formula. The principle is to preserve headroom for the host, measure the real workload, and adjust based on CPU pressure, memory pressure, latency, and storage use.
+
+## When should we use a VM, a container, or both?
+
+A VM fits work that needs another operating system or kernel, complete system testing, legacy software, driver testing, or an OS-level isolation boundary.
+
+A container fits application delivery, microservices, CI/CD, frequent deployments, rapid scaling, and Infrastructure as Code.
+
+Cloud systems commonly combine them:
+
+```text
+Physical Host
+└── Virtual Machine
+    └── Container Runtime
+        ├── Web
+        ├── API
+        ├── Redis
+        └── Worker
+```
+
+The VM provides an infrastructure boundary. Containers provide convenient application packaging and deployment.
+
+## Common mistakes
+
+- Assigning all host RAM to a VM.
+- Assuming more vCPUs always improve performance.
+- Using bridged networking when NAT is enough.
+- Failing to monitor thin-provisioned storage.
+- Keeping a long snapshot chain.
+- Treating snapshots as backups.
+- Running everything on one host without consciously accepting the blast radius.
+- Assuming logical isolation removes noisy neighbors or shared failure.
+
+## Summary
+
+Virtualization runs several computing environments on shared hardware.
+
+- A VM includes its own guest OS and kernel.
+- A hypervisor manages CPU, memory, disk, network, and isolation.
+- A vCPU is not necessarily a dedicated physical core.
+- Overcommit does not create resources.
+- A virtual disk may be a file or a block volume.
+- NAT fits most development environments; bridged exposes the VM to the network; host-only creates an internal network.
+- A snapshot supports quick rollback but is not necessarily a backup.
+- An image is a template, while a clone is a copy of a VM.
+- Containers normally share a kernel; VMs run a guest kernel.
+- Isolation reduces blast radius but is not absolute.
+- A host failure can affect every VM running on it.
+
+Virtualization is more than a way to run Ubuntu inside Windows. It is a foundation of cloud computing, DevOps, testing, security, and modern infrastructure.

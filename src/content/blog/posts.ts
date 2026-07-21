@@ -38,10 +38,20 @@ import WhatIsInsideAFileEn from './what-is-inside-a-file.en.mdx';
 import WhatIsInsideAFileHe from './what-is-inside-a-file.he.mdx';
 import WhatTheCpuReallyDoesEn from './what-the-cpu-really-does.en.mdx';
 import WhatTheCpuReallyDoesHe from './what-the-cpu-really-does.he.mdx';
+import VirtualizationVirtualMachinesEn from './virtualization-virtual-machines.en.mdx';
+import VirtualizationVirtualMachinesHe from './virtualization-virtual-machines.he.mdx';
 import { blogPostMetadataByKey } from './metadata';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    ...blogPostMetadataByKey['virtualization-virtual-machines:he'],
+    Content: VirtualizationVirtualMachinesHe,
+  },
+  {
+    ...blogPostMetadataByKey['virtualization-virtual-machines:en'],
+    Content: VirtualizationVirtualMachinesEn,
+  },
   {
     ...blogPostMetadataByKey['processes-threads-concurrency:he'],
     Content: ProcessesThreadsConcurrencyHe,

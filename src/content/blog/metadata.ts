@@ -6,6 +6,26 @@ import type { BlogLanguage, BlogPostMeta } from './types';
  * not pull the article bodies into their bundle.
  */
 const metadata = {
+  'virtualization-virtual-machines:he': {
+      slug: 'virtualization-virtual-machines',
+      language: 'he',
+      title: 'וירטואליזציה ומכונות וירטואליות',
+      excerpt: 'איך מריצים כמה מחשבים על מחשב אחד: Host ו-Guest, Hypervisors, vCPU, זיכרון, דיסקים ורשתות וירטואליות, Snapshots, Containers וענן.',
+      date: '2026-07-22',
+      readTime: '15 דקות קריאה',
+      tags: ['Virtualization', 'Cloud', 'Infrastructure'],
+      featured: false,
+    },
+  'virtualization-virtual-machines:en': {
+      slug: 'virtualization-virtual-machines',
+      language: 'en',
+      title: 'Virtualization and virtual machines',
+      excerpt: 'How several computers run on one machine: hosts and guests, hypervisors, vCPUs, virtual memory, disks and networks, snapshots, containers, and cloud infrastructure.',
+      date: '2026-07-22',
+      readTime: '15 min read',
+      tags: ['Virtualization', 'Cloud', 'Infrastructure'],
+      featured: false,
+    },
   'processes-threads-concurrency:he': {
       slug: 'processes-threads-concurrency',
       language: 'he',
