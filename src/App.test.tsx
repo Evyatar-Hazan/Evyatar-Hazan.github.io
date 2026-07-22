@@ -39,6 +39,14 @@ describe('App', () => {
     });
   });
 
+  it('renders the operating system chapter and canonical capability map', async () => {
+    render(<App />);
+
+    expect(await screen.findByRole('heading', { name: 'about.systemTitle' })).toBeInTheDocument();
+    expect(screen.getByText('Web & mobile products')).toBeInTheDocument();
+    expect(document.querySelectorAll('.about-capability-module')).toHaveLength(7);
+  });
+
   it('renders the Nis Boutique Catering project with its live link', async () => {
     render(<App />);
 

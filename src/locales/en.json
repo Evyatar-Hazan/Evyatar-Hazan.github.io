@@ -48,8 +48,23 @@
   "about": {
     "title1": "About",
     "title2": "Me",
-    "p1": "I focus on web and full-stack products that remain maintainable after launch: clear code structure, accessible user experiences, validation scripts, and deployment flows that teams can rely on.",
-    "p2": "My work ranges from live business websites and public monorepos to client-side tools, nonprofit and team systems, mobile apps, and backend-driven products. Across projects, I focus on the right connection between business need, user experience, and technical execution.",
+    "eyebrow": "02 / Operating system",
+    "systemTitle": "Need. System. Proof.",
+    "loop": {
+      "frame": {
+        "title": "Need",
+        "description": "Clarify the problem and the outcome."
+      },
+      "build": {
+        "title": "System",
+        "description": "Connect experience, code, and infrastructure."
+      },
+      "prove": {
+        "title": "Proof",
+        "description": "Validate, deploy, and verify the live result."
+      }
+    },
+    "summary": "A good product does not end with code. It should be clear to users, maintainable for teams, and proven in the live version.",
     "techStack": "Technical Stack",
     "categories": {
       "webMobile": "Web & Mobile",

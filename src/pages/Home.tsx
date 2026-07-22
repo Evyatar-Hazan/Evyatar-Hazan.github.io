@@ -70,15 +70,15 @@ const Home = () => {
   };
 
   return (
-    <section ref={sectionRef} id="home" className="product-compiler-hero relative h-[132svh] overflow-clip md:h-[150svh]">
+    <section ref={sectionRef} id="home" className="product-compiler-hero relative h-[118svh] overflow-clip md:h-[150svh]">
       <div className="product-compiler-sticky sticky top-0 flex min-h-svh items-start overflow-hidden px-5 pb-6 pt-[7.25rem] sm:items-center sm:px-8 sm:pb-10 sm:pt-28 lg:px-12">
         <div className="product-compiler-grid pointer-events-none absolute inset-0" aria-hidden="true" />
         <div className="product-compiler-aura pointer-events-none absolute inset-0" aria-hidden="true" />
 
-        <div className="relative mx-auto grid w-full max-w-[1480px] items-center gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:gap-4">
+        <div className="product-compiler-layout relative mx-auto grid w-full max-w-[1480px] items-center gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:gap-4">
           <motion.div
             style={{ y: shouldReduceMotion ? 0 : copyY }}
-            className="relative z-20 max-w-4xl lg:py-10"
+            className="product-compiler-copy relative z-20 max-w-4xl lg:py-10"
           >
             <div className="mb-5 flex items-center gap-2.5 text-[0.66rem] font-bold uppercase leading-[1.35] tracking-[0.14em] text-neutral-600 dark:text-neutral-300 sm:mb-6 sm:gap-3 sm:text-sm sm:tracking-[0.18em]">
               <span className="available-status-indicator h-2 w-2 shrink-0 rounded-full bg-success-500" />
@@ -119,7 +119,7 @@ const Home = () => {
               </button>
             </div>
 
-            <div className="mt-4 flex items-center gap-2.5 font-mono text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-neutral-500 dark:text-neutral-500 sm:mt-8 sm:gap-3 sm:text-xs sm:tracking-[0.14em]" translate="no">
+            <div className="product-compiler-signature mt-4 flex items-center gap-2.5 font-mono text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-neutral-500 dark:text-neutral-500 sm:mt-8 sm:gap-3 sm:text-xs sm:tracking-[0.14em]" translate="no">
               <span className="h-px w-8 bg-primary-500" />
               <span>EVYATAR HAZAN / PRODUCT ENGINEER</span>
             </div>
