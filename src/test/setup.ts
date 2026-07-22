@@ -25,6 +25,10 @@ if (typeof window !== 'undefined') {
     value: localStorageMock,
     configurable: true,
   });
+  Object.defineProperty(window, 'scrollTo', {
+    value: () => {},
+    configurable: true,
+  });
 }
 
 if (typeof Element !== 'undefined' && !Element.prototype.scrollIntoView) {

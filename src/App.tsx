@@ -73,6 +73,17 @@ const AppShell = () => {
 
     return () => window.clearTimeout(timeoutId);
   }, [location.hash, location.pathname]);
+
+  useEffect(() => {
+    if (location.hash) return;
+
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    const focusId = window.setTimeout(() => {
+      document.querySelector<HTMLElement>('main h1')?.focus({ preventScroll: true });
+    }, 0);
+
+    return () => window.clearTimeout(focusId);
+  }, [location.pathname, location.hash]);
   
   return (
     <div className={`min-h-screen font-sans ${dir === 'rtl' ? '[&_*]:font-sans-hebrew' : ''}`}>

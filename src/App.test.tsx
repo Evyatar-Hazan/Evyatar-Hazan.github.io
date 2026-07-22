@@ -24,7 +24,7 @@ describe('App', () => {
 
     expect(screen.getByRole('navigation')).toBeInTheDocument();
     expect(document.querySelector('#home')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'nav.Blog' })).toHaveAttribute('href', '/blog');
+    expect(screen.getAllByRole('link', { name: 'nav.Blog' })[0]).toHaveAttribute('href', '/blog');
   });
 
   it('renders the primary contact and profile links', () => {
@@ -178,6 +178,9 @@ describe('App', () => {
     expect(await screen.findByRole('heading', { name: 'blog.title' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'How I built a business site around WhatsApp' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'What I learned from building a credible portfolio' })).toBeInTheDocument();
+    expect(document.querySelectorAll('.blog-archive-feature')).toHaveLength(1);
+    expect(document.querySelectorAll('.blog-archive-entry')).toHaveLength(20);
+    expect(screen.getByText('WRITING / Archive')).toBeInTheDocument();
   });
 
   it('renders a single blog post by slug', async () => {
@@ -186,6 +189,19 @@ describe('App', () => {
     expect(await screen.findByRole('heading', { name: 'How I built a business site around WhatsApp' })).toBeInTheDocument();
     expect(screen.getByText(/The solution was almost funny in its simplicity/i)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /blog.backToBlog/i })).toHaveAttribute('href', '/blog');
+    expect(document.querySelector('.blog-article-masthead')).toBeInTheDocument();
+    expect(document.querySelector('.blog-reading-rail')).toBeInTheDocument();
+    expect(document.querySelectorAll('.blog-article-next-grid a').length).toBeGreaterThan(0);
+  });
+
+  it('renders the closing dock as the shared site footer', () => {
+    render(<App />);
+
+    expect(document.querySelector('.closing-dock-shell')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'footer.cta' })).toHaveAttribute(
+      'href',
+      expect.stringContaining('https://wa.me/972587127547')
+    );
   });
 
   it('renders a featured project case study page', async () => {

@@ -1,10 +1,13 @@
-import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowLeft, ArrowRight, CalendarDays, Clock } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getBlogPost } from '../content/blog/posts';
+import { getBlogPost, getBlogPosts } from '../content/blog/posts';
 import type { BlogLanguage } from '../content/blog/types';
 import { usePageSeo } from '../hooks/usePageSeo';
+
+type ArticleHeading = { id: string; label: string; level: number };
 
 const languageFromI18n = (language: string): BlogLanguage => (language === 'he' ? 'he' : 'en');
 
@@ -20,7 +23,19 @@ const BlogPost = () => {
   const { t, i18n } = useTranslation();
   const language = languageFromI18n(i18n.language);
   const post = getBlogPost(slug, language);
+  const posts = getBlogPosts(language);
+  const postIndex = post ? posts.findIndex((candidate) => candidate.slug === post.slug) : -1;
+  const newerPost = postIndex > 0 ? posts[postIndex - 1] : null;
+  const olderPost = postIndex >= 0 && postIndex < posts.length - 1 ? posts[postIndex + 1] : null;
   const BackIcon = language === 'he' ? ArrowRight : ArrowLeft;
+  const ForwardIcon = language === 'he' ? ArrowLeft : ArrowRight;
+  const articleRef = useRef<HTMLElement>(null);
+  const proseRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+  const [headings, setHeadings] = useState<ArticleHeading[]>([]);
+  const [activeHeading, setActiveHeading] = useState<string>('');
+  const { scrollYProgress } = useScroll();
+  const progressScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   usePageSeo({
     title: post ? `${post.title} | ${t('blog.title')}` : t('blog.notFoundSeoTitle'),
@@ -28,81 +43,132 @@ const BlogPost = () => {
     path: post ? `/blog/${post.slug}/` : '/blog/'
   });
 
+  useEffect(() => {
+    const prose = proseRef.current;
+    if (!prose || !post) return;
+
+    const elements = Array.from(prose.querySelectorAll<HTMLElement>('h2, h3'));
+    const outline = elements.map((heading, index) => {
+      const fallback = `section-${index + 1}`;
+      const normalized = heading.textContent
+        ?.toLocaleLowerCase(language === 'he' ? 'he-IL' : 'en-US')
+        .trim()
+        .replace(/[^\p{L}\p{N}]+/gu, '-')
+        .replace(/^-|-$/g, '') || fallback;
+      const id = `${normalized}-${index + 1}`;
+      heading.id = id;
+      return { id, label: heading.textContent?.trim() || fallback, level: Number(heading.tagName.slice(1)) };
+    });
+
+    setHeadings(outline);
+    setActiveHeading(outline[0]?.id ?? '');
+
+    if (!('IntersectionObserver' in window)) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        if (visible?.target.id) setActiveHeading(visible.target.id);
+      },
+      { rootMargin: '-18% 0px -68% 0px', threshold: 0 }
+    );
+    elements.forEach((heading) => observer.observe(heading));
+    return () => observer.disconnect();
+  }, [language, post]);
+
   if (!post) {
     return (
-      <main className="min-h-screen px-6 pb-20 pt-32">
-        <section className="mx-auto max-w-3xl rounded-3xl border border-neutral-200 bg-white/75 p-8 text-center shadow-sm backdrop-blur-xl dark:border-neutral-800 dark:bg-neutral-900/70">
-          <h1 className="text-3xl font-bold text-neutral-950 dark:text-white">{t('blog.notFoundTitle')}</h1>
-          <p className="mx-auto mt-4 max-w-xl text-neutral-600 dark:text-neutral-400">{t('blog.notFoundDescription')}</p>
-          <Link
-            to="/blog"
-            className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-neutral-50 dark:focus:ring-offset-black"
-          >
-            <BackIcon className="h-4 w-4" />
-            {t('blog.backToBlog')}
-          </Link>
+      <main className="blog-article blog-article-not-found">
+        <section>
+          <span>WRITING / 404</span>
+          <h1 tabIndex={-1}>{t('blog.notFoundTitle')}</h1>
+          <p>{t('blog.notFoundDescription')}</p>
+          <Link to="/blog"><BackIcon aria-hidden="true" />{t('blog.backToBlog')}</Link>
         </section>
       </main>
     );
   }
 
   const Content = post.Content;
+  const articleNumber = String(postIndex + 1).padStart(2, '0');
 
   return (
-    <main className="min-h-screen px-6 pb-20 pt-32">
-      <article className="mx-auto max-w-4xl">
-        <Link
-          to="/blog"
-          className="mb-10 inline-flex items-center gap-2 text-sm font-bold text-neutral-500 transition hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-300"
-        >
-          <BackIcon className="h-4 w-4" />
-          {t('blog.backToBlog')}
+    <main className="blog-article">
+      <div className="blog-article-grid" aria-hidden="true" />
+      <article ref={articleRef} className="blog-article-shell">
+        <Link to="/blog" className="blog-article-back">
+          <BackIcon aria-hidden="true" />{t('blog.backToBlog')}
         </Link>
 
-        <motion.header
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55 }}
-          className="relative overflow-hidden rounded-[2rem] border border-neutral-200 bg-white/80 p-7 shadow-sm backdrop-blur-xl dark:border-neutral-800 dark:bg-neutral-900/70 md:p-10"
-        >
-          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary-500 via-info-300 to-success-400" />
-          <div className="mb-6 flex flex-wrap items-center gap-3 text-sm font-semibold text-neutral-500 dark:text-neutral-400">
-            <span className="inline-flex items-center gap-2">
-              <CalendarDays className="h-4 w-4 text-primary-500" />
-              {formatDate(post.date, language)}
-            </span>
-            <span className="h-1 w-1 rounded-full bg-neutral-300 dark:bg-neutral-700" />
-            <span className="inline-flex items-center gap-2">
-              <Clock className="h-4 w-4 text-primary-500" />
-              {post.readTime}
-            </span>
+        <header className="blog-article-masthead">
+          <div className="blog-article-number" aria-hidden="true">
+            <strong>{articleNumber}</strong>
+            <span>ENTRY / {String(posts.length).padStart(2, '0')}</span>
           </div>
-
-          <h1 className="text-4xl font-bold leading-tight tracking-tight text-neutral-950 dark:text-white md:text-6xl">
-            {post.title}
-          </h1>
-          <p className="mt-6 text-lg leading-8 text-neutral-600 dark:text-neutral-400">{post.excerpt}</p>
-
-          <div className="mt-7 flex flex-wrap gap-2">
-            {post.tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1 text-xs font-semibold text-neutral-600 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-300"
-              >
-                {tag}
-              </span>
-            ))}
+          <div className="blog-article-heading">
+            <div className="blog-article-meta">
+              <span><CalendarDays aria-hidden="true" />{formatDate(post.date, language)}</span>
+              <i aria-hidden="true" />
+              <span><Clock aria-hidden="true" />{post.readTime}</span>
+            </div>
+            <p>WRITING SYSTEM / ENTRY {articleNumber}</p>
+            <h1 tabIndex={-1}>{post.title}</h1>
+            <div className="blog-article-deck">
+              <p>{post.excerpt}</p>
+              <ul aria-label={t('blog.articleTopics')}>
+                {post.tags.map((tag) => <li key={tag}>{tag}</li>)}
+              </ul>
+            </div>
           </div>
-        </motion.header>
+          <div className="blog-article-mark" aria-hidden="true"><i /><i /><i /></div>
+        </header>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.1 }}
-          className="blog-prose mx-auto mt-12 max-w-3xl"
-        >
-          <Content />
-        </motion.div>
+        <div className="blog-reading-layout">
+          <aside className="blog-reading-rail" aria-label={t('blog.articleOutline')}>
+            <div className="blog-reading-progress" aria-hidden="true">
+              <span>READING / {articleNumber}</span>
+              <div><motion.i style={{ scaleY: reduceMotion ? 1 : progressScale }} /></div>
+            </div>
+            {headings.length > 0 && (
+              <nav>
+                <span>{t('blog.articleOutline')}</span>
+                <ol>
+                  {headings.map((heading) => (
+                    <li key={heading.id} data-level={heading.level}>
+                      <a href={`#${heading.id}`} aria-current={activeHeading === heading.id ? 'location' : undefined}>
+                        {heading.label}
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            )}
+          </aside>
+
+          <div ref={proseRef} className="blog-prose">
+            <Content />
+          </div>
+        </div>
+
+        <nav className="blog-article-next" aria-label={t('blog.moreWriting')}>
+          <div className="blog-article-next-heading">
+            <span>CONTINUE READING / 02</span>
+            <h2>{t('blog.moreWriting')}</h2>
+          </div>
+          <div className="blog-article-next-grid">
+            {newerPost && (
+              <Link to={`/blog/${newerPost.slug}`}>
+                <span>{t('blog.newerPost')}</span><strong>{newerPost.title}</strong><BackIcon aria-hidden="true" />
+              </Link>
+            )}
+            {olderPost && (
+              <Link to={`/blog/${olderPost.slug}`}>
+                <span>{t('blog.olderPost')}</span><strong>{olderPost.title}</strong><ForwardIcon aria-hidden="true" />
+              </Link>
+            )}
+          </div>
+        </nav>
       </article>
     </main>
   );

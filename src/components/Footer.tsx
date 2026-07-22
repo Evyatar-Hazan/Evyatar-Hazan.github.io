@@ -1,4 +1,4 @@
-import { Github, Linkedin, Mail, MessageCircle } from 'lucide-react';
+import { ArrowUpLeft, ArrowUpRight, Github, Linkedin, Mail, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { profileLinks } from '../data/profile';
@@ -8,6 +8,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
   const appVersion = import.meta.env.VITE_APP_VERSION;
   const isHebrew = i18n.language === 'he';
+  const ArrowIcon = isHebrew ? ArrowUpLeft : ArrowUpRight;
   
   const socialLinks = [
     { name: 'Github', icon: Github, href: profileLinks.github },
@@ -17,34 +18,59 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="mt-0 w-full border-t border-neutral-200 bg-neutral-100 px-6 py-12 transition-colors duration-500 dark:border-neutral-900 dark:bg-black">
-      <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="text-center md:text-left">
-          <div className="text-neutral-500 dark:text-neutral-400 text-sm transition-colors duration-500">
-            {t('footer.copyright', { year: currentYear })}
+    <footer className="closing-dock">
+      <div className="closing-dock-grid" aria-hidden="true" />
+      <div className="closing-dock-shell">
+        <div className="closing-dock-lead">
+          <div className="closing-dock-signature" translate="no">
+            <span>EH</span><i>.</i>
           </div>
-          <div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-sm text-neutral-500 dark:text-neutral-400 md:justify-start">
-            <Link to="/privacy" className="transition hover:text-neutral-900 dark:hover:text-white">{isHebrew ? 'פרטיות' : 'Privacy'}</Link>
-            <Link to="/contact" className="transition hover:text-neutral-900 dark:hover:text-white">{isHebrew ? 'יצירת קשר' : 'Contact'}</Link>
-            <Link to="/blog" className="transition hover:text-neutral-900 dark:hover:text-white">{isHebrew ? 'כתיבה' : 'Writing'}</Link>
+          <div>
+            <p className="closing-dock-kicker"><span />{t('footer.status')}</p>
+            <h2>{t('footer.title')}</h2>
           </div>
-          <div className="mt-2 inline-flex items-center rounded-full border border-neutral-200 dark:border-neutral-800 bg-white/70 dark:bg-neutral-900/70 px-3 py-1 text-xs font-medium tracking-wide text-neutral-600 dark:text-neutral-300 transition-colors duration-500">
-            Version {appVersion}
+          <a
+            href={`${profileLinks.whatsapp}?text=${encodeURIComponent(t('contact.whatsappText'))}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="closing-dock-cta"
+          >
+            <span>{t('footer.cta')}</span>
+            <ArrowIcon aria-hidden="true" />
+          </a>
+        </div>
+
+        <div className="closing-dock-map">
+          <div className="closing-dock-links">
+            <span>SITE MAP / 01</span>
+            <Link to="/">{t('nav.Home')}</Link>
+            <Link to="/blog">{t('nav.Blog')}</Link>
+            <Link to="/contact">{t('nav.Contact')}</Link>
+            <Link to="/privacy">{t('footer.privacy')}</Link>
+          </div>
+
+          <div className="closing-dock-socials">
+            <span>DIRECT CHANNELS / 02</span>
+            <div>
+              {socialLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  target={link.href.startsWith('http') ? '_blank' : undefined}
+                  rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  aria-label={link.name}
+                >
+                  <link.icon aria-hidden="true" />
+                  <span>{link.name}</span>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          {socialLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              target={link.href.startsWith('http') ? '_blank' : undefined}
-              rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-              className="p-3 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-all flex items-center justify-center group"
-              aria-label={link.name}
-            >
-              <link.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-            </a>
-          ))}
+
+        <div className="closing-dock-system">
+          <p>{t('footer.copyright', { year: currentYear })}</p>
+          <div><span>PORTFOLIO SYSTEM</span><i /> <span>VERSION {appVersion}</span></div>
         </div>
       </div>
     </footer>

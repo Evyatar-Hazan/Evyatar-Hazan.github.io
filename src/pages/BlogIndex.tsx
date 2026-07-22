@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import { ArrowLeft, ArrowRight, BookOpen, Clock, Sparkles } from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { ArrowLeft, ArrowRight, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getBlogPosts } from '../content/blog/posts';
@@ -15,56 +15,76 @@ const formatDate = (date: string, language: BlogLanguage) =>
     day: 'numeric',
   }).format(new Date(date));
 
-const BlogCard = ({ post, index, language }: { post: BlogPost; index: number; language: BlogLanguage }) => {
+const EntryMeta = ({ post, language }: { post: BlogPost; language: BlogLanguage }) => (
+  <div className="blog-archive-meta">
+    <time dateTime={post.date}>{formatDate(post.date, language)}</time>
+    <span aria-hidden="true" />
+    <span><Clock aria-hidden="true" />{post.readTime}</span>
+  </div>
+);
+
+const ArchiveFeature = ({ post, language }: { post: BlogPost; language: BlogLanguage }) => {
   const { t } = useTranslation();
   const ArrowIcon = language === 'he' ? ArrowLeft : ArrowRight;
 
   return (
+    <article className="blog-archive-feature">
+      <div className="blog-archive-index" aria-hidden="true">
+        <strong>01</strong>
+        <span>LEAD ENTRY</span>
+      </div>
+      <div className="blog-archive-feature-copy">
+        <EntryMeta post={post} language={language} />
+        <p className="blog-archive-label">{t('blog.latestEntry')}</p>
+        <h2><Link to={`/blog/${post.slug}`}>{post.title}</Link></h2>
+        <p>{post.excerpt}</p>
+        <div className="blog-archive-feature-footer">
+          <ul aria-label={t('blog.articleTopics')}>
+            {post.tags.map((tag) => <li key={tag}>{tag}</li>)}
+          </ul>
+          <Link to={`/blog/${post.slug}`} className="blog-archive-read">
+            {t('blog.readPost')}<ArrowIcon aria-hidden="true" />
+          </Link>
+        </div>
+      </div>
+      <div className="blog-archive-signal" aria-hidden="true">
+        <span>LIVE NOTE / 01</span>
+        <div><i /><i /><i /></div>
+        <strong>{post.tags[0]}</strong>
+      </div>
+    </article>
+  );
+};
+
+const ArchiveEntry = ({ post, index, language }: { post: BlogPost; index: number; language: BlogLanguage }) => {
+  const { t } = useTranslation();
+  const reduceMotion = useReducedMotion();
+  const ArrowIcon = language === 'he' ? ArrowLeft : ArrowRight;
+  const number = String(index + 2).padStart(2, '0');
+
+  return (
     <motion.article
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, delay: index * 0.08 }}
-      className="group relative overflow-hidden rounded-3xl border border-neutral-200 bg-white/75 p-6 shadow-sm backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary-300 hover:shadow-2xl hover:shadow-primary-500/10 dark:border-neutral-800 dark:bg-neutral-900/70 dark:hover:border-primary-700"
+      className="blog-archive-entry"
+      initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-8% 0px -8% 0px' }}
+      transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary-500 via-info-300 to-success-400 opacity-70" />
-      <div className="mb-6 flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
-        {post.featured && (
-          <span className="inline-flex items-center gap-1 rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-primary-700 dark:border-primary-900/70 dark:bg-primary-950/40 dark:text-primary-300">
-            <Sparkles className="h-3.5 w-3.5" />
-            {t('blog.featured')}
-          </span>
-        )}
-        <span>{formatDate(post.date, language)}</span>
-        <span className="h-1 w-1 rounded-full bg-neutral-300 dark:bg-neutral-700" />
-        <span className="inline-flex items-center gap-1">
-          <Clock className="h-3.5 w-3.5" />
-          {post.readTime}
-        </span>
+      <div className="blog-archive-entry-index" aria-hidden="true">
+        <strong>{number}</strong><span>ENTRY / {number}</span>
       </div>
-
-      <h2 className="text-2xl font-bold leading-tight text-neutral-950 dark:text-white">
-        <Link to={`/blog/${post.slug}`} className="outline-none focus-visible:text-primary-500">
-          <span className="absolute inset-0" aria-hidden="true" />
-          {post.title}
-        </Link>
-      </h2>
-
-      <p className="mt-4 text-base leading-8 text-neutral-600 dark:text-neutral-400">{post.excerpt}</p>
-
-      <div className="mt-6 flex flex-wrap gap-2">
-        {post.tags.map((tag) => (
-          <span
-            key={tag}
-            className="rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1 text-xs font-medium text-neutral-600 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-300"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
-
-      <div className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-primary-600 dark:text-primary-300">
-        {t('blog.readPost')}
-        <ArrowIcon className="h-4 w-4 transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1" />
+      <div className="blog-archive-entry-copy">
+        <EntryMeta post={post} language={language} />
+        <h2><Link to={`/blog/${post.slug}`}>{post.title}</Link></h2>
+        <p>{post.excerpt}</p>
+        <div className="blog-archive-entry-footer">
+          <ul aria-label={t('blog.articleTopics')}>
+            {post.tags.slice(0, 3).map((tag) => <li key={tag}>{tag}</li>)}
+          </ul>
+          <Link to={`/blog/${post.slug}`} aria-label={`${t('blog.readPost')}: ${post.title}`}>
+            {t('blog.readPost')}<ArrowIcon aria-hidden="true" />
+          </Link>
+        </div>
       </div>
     </motion.article>
   );
@@ -74,6 +94,7 @@ const BlogIndex = () => {
   const { t, i18n } = useTranslation();
   const language = languageFromI18n(i18n.language);
   const posts = getBlogPosts(language);
+  const [featuredPost, ...archivePosts] = posts;
 
   usePageSeo({
     title: t('blog.seo.indexTitle'),
@@ -82,30 +103,32 @@ const BlogIndex = () => {
   });
 
   return (
-    <main className="min-h-screen px-6 pb-20 pt-32">
-      <section className="mx-auto max-w-6xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55 }}
-          className="max-w-3xl"
-        >
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white/70 px-4 py-1.5 text-sm font-semibold text-neutral-600 shadow-sm backdrop-blur-sm dark:border-neutral-800 dark:bg-neutral-900/60 dark:text-neutral-300">
-            <BookOpen className="h-4 w-4 text-primary-500" />
-            {t('blog.eyebrow')}
+    <main className="blog-archive">
+      <div className="blog-archive-grid" aria-hidden="true" />
+      <section className="blog-archive-shell" aria-labelledby="blog-archive-title">
+        <header className="blog-archive-header">
+          <div>
+            <p className="blog-archive-kicker"><span />WRITING ARCHIVE / {String(posts.length).padStart(2, '0')}</p>
+            <h1 id="blog-archive-title" tabIndex={-1}>{t('blog.title')}</h1>
           </div>
-          <h1 className="text-4xl font-bold tracking-tight text-neutral-950 dark:text-white md:text-7xl">
-            {t('blog.title')}
-          </h1>
-          <p className="mt-6 text-lg leading-8 text-neutral-600 dark:text-neutral-400 md:text-xl">
-            {t('blog.subtitle')}
-          </p>
-        </motion.div>
+          <div className="blog-archive-intro">
+            <span>{t('blog.eyebrow')}</span>
+            <p>{t('blog.subtitle')}</p>
+          </div>
+        </header>
 
-        <div className="mt-14 grid gap-6 lg:grid-cols-2">
-          {posts.map((post, index) => (
-            <BlogCard key={`${post.language}-${post.slug}`} post={post} index={index} language={language} />
-          ))}
+        {featuredPost && <ArchiveFeature post={featuredPost} language={language} />}
+
+        <div className="blog-archive-ledger">
+          <div className="blog-archive-ledger-heading">
+            <span>FIELD NOTES / {String(archivePosts.length).padStart(2, '0')}</span>
+            <i aria-hidden="true" />
+          </div>
+          <div className="blog-archive-entry-grid">
+            {archivePosts.map((post, index) => (
+              <ArchiveEntry key={`${post.language}-${post.slug}`} post={post} index={index} language={language} />
+            ))}
+          </div>
         </div>
       </section>
     </main>

@@ -236,6 +236,12 @@
     "title": "Blog",
     "subtitle": "Short notes about building products, frontend systems, live websites, validation, deployment, and decisions that keep working after launch.",
     "featured": "Featured",
+    "latestEntry": "Latest entry",
+    "articleTopics": "Article topics",
+    "articleOutline": "Article map",
+    "moreWriting": "Continue reading",
+    "newerPost": "Newer entry",
+    "olderPost": "Next entry",
     "readPost": "Read post",
     "backToBlog": "Back to blog",
     "notFoundTitle": "Post not found",
@@ -259,6 +265,10 @@
     "signal": "Think. Build. Verify."
   },
   "footer": {
-    "copyright": "© {{year}} Evyatar Hazan. All rights reserved."
+    "copyright": "© {{year}} Evyatar Hazan. All rights reserved.",
+    "status": "Channel open for new projects",
+    "title": "Have a need, an idea, or a system that needs to move?",
+    "cta": "Start a conversation",
+    "privacy": "Privacy"
   }
 }
