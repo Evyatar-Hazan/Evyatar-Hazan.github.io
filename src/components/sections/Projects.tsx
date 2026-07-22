@@ -32,13 +32,13 @@ const TechnicalPreview = ({ project }: { project: Project }) => {
 
   return (
     <div className="relative aspect-[16/10] overflow-hidden rounded-lg border border-neutral-800 bg-neutral-950 p-4 text-white">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(14,165,233,0.35),transparent_32%),radial-gradient(circle_at_82%_36%,rgba(16,185,129,0.18),transparent_28%)]" />
+      <div className="technical-preview-backdrop absolute inset-0" />
       <div className="relative flex h-full flex-col justify-between">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
-            <span className="h-2.5 w-2.5 rounded-full bg-amber-300" />
-            <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+            <span className="h-2.5 w-2.5 rounded-full bg-danger-400" />
+            <span className="h-2.5 w-2.5 rounded-full bg-warning-300" />
+            <span className="h-2.5 w-2.5 rounded-full bg-success-400" />
           </div>
           <Icon className="h-5 w-5 text-primary-300" />
         </div>
@@ -152,7 +152,7 @@ const FeaturedProjectCard = ({ project, index }: { project: Project; index: numb
           <span className="rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-xs font-bold text-primary-700 dark:border-primary-900 dark:bg-primary-950/40 dark:text-primary-300">
             {t(`projects.categories.${project.category}`)}
           </span>
-          <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 dark:border-emerald-900/70 dark:bg-emerald-950/30 dark:text-emerald-300">
+          <span className="rounded-full border border-success-200 bg-success-50 px-3 py-1 text-xs font-bold text-success-700 dark:border-success-900/70 dark:bg-success-950/30 dark:text-success-300">
             {t(`projects.statuses.${project.status}`)}
           </span>
         </div>

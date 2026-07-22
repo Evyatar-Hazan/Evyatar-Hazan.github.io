@@ -52,7 +52,7 @@ const Card = ({ children, className = '' }: CardProps) => {
           background: useMotionTemplate`
             radial-gradient(
               650px circle at ${mouseX}px ${mouseY}px,
-              rgba(14, 165, 233, 0.12),
+              var(--effect-primary-card-glow),
               transparent 80%
             )
           `,

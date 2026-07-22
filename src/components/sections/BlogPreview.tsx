@@ -26,7 +26,7 @@ const BlogPreviewCard = ({ post, index, language }: { post: BlogPost; index: num
       transition={{ duration: 0.45, delay: index * 0.08 }}
       className="group relative overflow-hidden rounded-lg border border-neutral-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary-300 hover:shadow-xl hover:shadow-primary-500/10 dark:border-neutral-800 dark:bg-neutral-950/70 dark:hover:border-primary-800 md:p-6"
     >
-      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary-500 via-cyan-300 to-emerald-400 opacity-80" />
+      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary-500 via-info-300 to-success-400 opacity-80" />
       <div className="mb-5 flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
         <span>{formatDate(post.date, language)}</span>
         <span className="h-1 w-1 rounded-full bg-neutral-300 dark:bg-neutral-700" />

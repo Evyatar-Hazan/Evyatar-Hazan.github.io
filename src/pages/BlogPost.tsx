@@ -65,7 +65,7 @@ const BlogPost = () => {
           transition={{ duration: 0.55 }}
           className="relative overflow-hidden rounded-[2rem] border border-neutral-200 bg-white/80 p-7 shadow-sm backdrop-blur-xl dark:border-neutral-800 dark:bg-neutral-900/70 md:p-10"
         >
-          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary-500 via-cyan-300 to-emerald-400" />
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary-500 via-info-300 to-success-400" />
           <div className="mb-6 flex flex-wrap items-center gap-3 text-sm font-semibold text-neutral-500 dark:text-neutral-400">
             <span className="inline-flex items-center gap-2">
               <CalendarDays className="h-4 w-4 text-primary-500" />

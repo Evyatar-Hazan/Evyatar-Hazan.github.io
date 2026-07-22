@@ -153,13 +153,13 @@ const Contact = () => {
             </p>
             <div aria-live="polite" className="min-h-7">
               {formStatus === 'success' && (
-                <p className="flex items-center gap-2 text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                <p className="flex items-center gap-2 text-sm font-medium text-success-600 dark:text-success-400">
                   <CheckCircle2 className="h-4 w-4" />
                   {t('contact.form.successMsg')}
                 </p>
               )}
               {formStatus === 'error' && (
-                <p className="flex items-center gap-2 text-sm font-medium text-red-600 dark:text-red-400">
+                <p className="flex items-center gap-2 text-sm font-medium text-danger-600 dark:text-danger-400">
                   <XCircle className="h-4 w-4" />
                   {t('contact.form.errorMsg')}
                 </p>

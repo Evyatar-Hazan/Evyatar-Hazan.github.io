@@ -81,7 +81,7 @@ const CustomCursor = () => {
         }}
         animate={{
           scale: isHovering ? 1.5 : 1,
-          backgroundColor: isHovering ? "rgba(14, 165, 233, 0.1)" : "transparent",
+          backgroundColor: isHovering ? "var(--effect-primary-hover)" : "transparent",
         }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
       />

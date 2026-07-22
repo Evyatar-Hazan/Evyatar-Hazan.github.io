@@ -26,7 +26,7 @@ const BlogCard = ({ post, index, language }: { post: BlogPost; index: number; la
       transition={{ duration: 0.45, delay: index * 0.08 }}
       className="group relative overflow-hidden rounded-3xl border border-neutral-200 bg-white/75 p-6 shadow-sm backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary-300 hover:shadow-2xl hover:shadow-primary-500/10 dark:border-neutral-800 dark:bg-neutral-900/70 dark:hover:border-primary-700"
     >
-      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary-500 via-cyan-300 to-emerald-400 opacity-70" />
+      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary-500 via-info-300 to-success-400 opacity-70" />
       <div className="mb-6 flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
         {post.featured && (
           <span className="inline-flex items-center gap-1 rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-primary-700 dark:border-primary-900/70 dark:bg-primary-950/40 dark:text-primary-300">

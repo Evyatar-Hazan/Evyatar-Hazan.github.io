@@ -5,6 +5,22 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+  /* Foundation shared by the light and dark themes */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-400: #a3a3a3;
+  --color-neutral-500: #737373;
+  --color-neutral-600: #525252;
+  --color-neutral-700: #404040;
+  --color-neutral-800: #262626;
+  --color-neutral-900: #171717;
+  --color-neutral-950: #0a0a0a;
+
+  /* Brand */
   --color-primary-50: #f0f9ff;
   --color-primary-100: #e0f2fe;
   --color-primary-200: #bae6fd;
@@ -16,14 +32,45 @@
   --color-primary-800: #075985;
   --color-primary-900: #0c4a6e;
   --color-primary-950: #082f49;
+
+  /* Supporting accent */
+  --color-accent-600: #9333ea;
+
+  /* Semantic UI colors */
+  --color-info-300: #67e8f9;
+  --color-success-50: #ecfdf5;
+  --color-success-200: #a7f3d0;
+  --color-success-300: #6ee7b7;
+  --color-success-400: #34d399;
+  --color-success-500: #10b981;
+  --color-success-600: #059669;
+  --color-success-700: #047857;
+  --color-success-900: #064e3b;
+  --color-success-950: #022c22;
+  --color-warning-300: #fcd34d;
+  --color-danger-400: #f87171;
+  --color-danger-600: #dc2626;
 }
 
 :root {
   color-scheme: light;
+  --effect-primary-hover: color-mix(in srgb, var(--color-primary-500) 10%, transparent);
+  --effect-primary-card-glow: color-mix(in srgb, var(--color-primary-500) 12%, transparent);
+  --effect-primary-glow-soft: color-mix(in srgb, var(--color-primary-500) 20%, transparent);
+  --effect-primary-glow-medium: color-mix(in srgb, var(--color-primary-500) 60%, transparent);
+  --effect-primary-border-soft: color-mix(in srgb, var(--color-primary-500) 30%, transparent);
+  --effect-primary-border-strong: color-mix(in srgb, var(--color-primary-500) 80%, transparent);
+  --effect-success-glow: 0 0 20px color-mix(in srgb, var(--color-success-500) 80%, transparent);
+  --effect-project-preview:
+    radial-gradient(circle at 18% 22%, color-mix(in srgb, var(--color-primary-500) 35%, transparent), transparent 32%),
+    radial-gradient(circle at 82% 36%, color-mix(in srgb, var(--color-success-500) 18%, transparent), transparent 28%);
 }
 
 .dark {
   color-scheme: dark;
+  --effect-primary-hover: color-mix(in srgb, var(--color-primary-400) 14%, transparent);
+  --effect-primary-card-glow: color-mix(in srgb, var(--color-primary-400) 16%, transparent);
+  --effect-success-glow: 0 0 20px color-mix(in srgb, var(--color-success-400) 72%, transparent);
 }
 
 body {
@@ -46,23 +93,31 @@ body {
 /* Glowing Border Animation */
 @keyframes glow {
   0% {
-    box-shadow: 0 0 5px rgba(14, 165, 233, 0.2), inset 0 0 5px rgba(14, 165, 233, 0.1);
-    border-color: rgba(14, 165, 233, 0.3);
+    box-shadow: 0 0 5px var(--effect-primary-glow-soft), inset 0 0 5px var(--effect-primary-hover);
+    border-color: var(--effect-primary-border-soft);
   }
 
   50% {
-    box-shadow: 0 0 20px rgba(14, 165, 233, 0.6), inset 0 0 10px rgba(14, 165, 233, 0.2);
-    border-color: rgba(14, 165, 233, 0.8);
+    box-shadow: 0 0 20px var(--effect-primary-glow-medium), inset 0 0 10px var(--effect-primary-glow-soft);
+    border-color: var(--effect-primary-border-strong);
   }
 
   100% {
-    box-shadow: 0 0 5px rgba(14, 165, 233, 0.2), inset 0 0 5px rgba(14, 165, 233, 0.1);
-    border-color: rgba(14, 165, 233, 0.3);
+    box-shadow: 0 0 5px var(--effect-primary-glow-soft), inset 0 0 5px var(--effect-primary-hover);
+    border-color: var(--effect-primary-border-soft);
   }
 }
 
 .glow-border {
   animation: glow 3s infinite alternate ease-in-out;
+}
+
+.available-status-indicator {
+  box-shadow: var(--effect-success-glow);
+}
+
+.technical-preview-backdrop {
+  background: var(--effect-project-preview);
 }
 
 .blog-prose {

@@ -72,7 +72,7 @@ const ProjectCaseStudy = () => {
             <span className="rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-xs font-bold text-primary-700 dark:border-primary-900 dark:bg-primary-950/40 dark:text-primary-300">
               {t(`projects.categories.${project.category}`)}
             </span>
-            <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 dark:border-emerald-900/70 dark:bg-emerald-950/30 dark:text-emerald-300">
+            <span className="rounded-full border border-success-200 bg-success-50 px-3 py-1 text-xs font-bold text-success-700 dark:border-success-900/70 dark:bg-success-950/30 dark:text-success-300">
               {t(`projects.statuses.${project.status}`)}
             </span>
             {project.tags.map((tag) => (

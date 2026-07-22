@@ -41,7 +41,7 @@ const Home = () => {
       <motion.div 
         animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
         transition={{ duration: 10, delay: 2, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-1/4 right-1/4 w-[30rem] h-[30rem] bg-purple-600/15 dark:bg-purple-600/15 blur-[120px] rounded-full -z-10 transition-colors duration-500" 
+        className="absolute bottom-1/4 right-1/4 w-[30rem] h-[30rem] bg-accent-600/15 dark:bg-accent-600/15 blur-[120px] rounded-full -z-10 transition-colors duration-500"
       />
 
       <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary-500/40 to-transparent" />
@@ -53,7 +53,7 @@ const Home = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="mx-auto mb-8 flex w-fit items-center gap-2 rounded-full border border-neutral-200 bg-white/70 px-4 py-1.5 text-sm font-medium text-neutral-600 shadow-sm backdrop-blur-sm transition-colors duration-500 dark:border-neutral-800 dark:bg-neutral-900/50 dark:text-neutral-400"
         >
-          <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.8)]" />
+          <span className="available-status-indicator h-2 w-2 rounded-full bg-success-500" />
           {t('home.available')}
         </motion.div>
 
