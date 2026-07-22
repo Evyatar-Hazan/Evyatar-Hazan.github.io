@@ -1,32 +1,40 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { CheckCircle2, Linkedin, Mail, MessageCircle, Send, XCircle } from 'lucide-react';
-import Button from '../Button';
+import { useRef, useState } from 'react';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import { ArrowUpLeft, ArrowUpRight, CheckCircle2, Linkedin, Mail, MessageCircle, Send, XCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { profileLinks } from '../../data/profile';
 import { Link } from 'react-router-dom';
+import { profileLinks } from '../../data/profile';
 
 const Contact = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const sectionRef = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
+  const isHebrew = i18n.language === 'he';
+  const ArrowIcon = isHebrew ? ArrowUpLeft : ArrowUpRight;
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start 86%', 'end 18%'] });
+  const targetScale = useTransform(scrollYProgress, [0, 0.58, 1], [0.72, 1, 1.08]);
+  const targetRotate = useTransform(scrollYProgress, [0, 1], [-22, 18]);
+  const targetOpacity = useTransform(scrollYProgress, [0, 0.18, 0.82, 1], [0, 0.62, 0.62, 0.18]);
+  const channelX = useTransform(scrollYProgress, [0, 0.42, 1], [isHebrew ? 90 : -90, 0, 0]);
+  const formX = useTransform(scrollYProgress, [0, 0.42, 1], [isHebrew ? -90 : 90, 0, 0]);
+  const bridgeScale = useTransform(scrollYProgress, [0.08, 0.62], [0, 1]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const form = e.target as HTMLFormElement;
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const form = event.target as HTMLFormElement;
     const formData = new FormData(form);
-    
+
     setIsSubmitting(true);
     setFormStatus('idle');
     try {
-      const response = await fetch("https://formsubmit.co/ajax/evyatarhazan3.14@gmail.com", {
-        method: "POST",
-        headers: {
-          'Accept': 'application/json'
-        },
-        body: formData
+      const response = await fetch('https://formsubmit.co/ajax/evyatarhazan3.14@gmail.com', {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: formData,
       });
-      
+
       if (response.ok) {
         setFormStatus('success');
         form.reset();
@@ -41,131 +49,109 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-24 px-4 md:px-6 min-h-[80vh] flex items-center justify-center relative bg-neutral-100 dark:bg-neutral-950 border-t border-neutral-200/50 dark:border-neutral-900/50 transition-colors duration-500">
-      <div className="max-w-4xl w-full">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-neutral-900 dark:text-white transition-colors duration-500">
-            {t('contact.title1')} <span className="text-primary-500">{t('contact.title2')}</span>
-          </h2>
-          <p className="text-neutral-600 dark:text-neutral-400 text-lg max-w-2xl mx-auto transition-colors duration-500">
-            {t('contact.subtitle')}
-          </p>
-        </motion.div>
+    <section ref={sectionRef} id="contact" className="contact-handoff">
+      <div className="contact-handoff-grid" aria-hidden="true" />
+      <motion.div
+        className="contact-handoff-target"
+        aria-hidden="true"
+        style={{
+          scale: reduceMotion ? 1 : targetScale,
+          rotate: reduceMotion ? 0 : targetRotate,
+          opacity: reduceMotion ? 0.26 : targetOpacity,
+        }}
+      >
+        <i />
+        <i />
+        <i />
+      </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-10 md:gap-12 bg-white/80 dark:bg-neutral-900/40 p-5 sm:p-8 md:p-12 rounded-lg border border-neutral-200 dark:border-neutral-800 backdrop-blur-xl shadow-2xl dark:shadow-none transition-colors duration-500">
-          <div className="flex flex-col justify-center">
-            <div className="mb-10">
-              <h3 className="text-2xl font-bold text-neutral-900 dark:text-white mb-2 transition-colors duration-500">{t('contact.getInTouch')}</h3>
-              <p className="text-neutral-600 dark:text-neutral-400 transition-colors duration-500">{t('contact.getInTouchDesc')}</p>
-            </div>
-            
-            <div className="space-y-6">
-              <a
-                href={`${profileLinks.whatsapp}?text=${encodeURIComponent(t('contact.whatsappText'))}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center gap-4 rounded-lg border border-primary-200 bg-primary-50 p-4 text-primary-800 transition-colors hover:border-primary-300 hover:bg-primary-100 dark:border-primary-900/70 dark:bg-primary-950/30 dark:text-primary-200 dark:hover:bg-primary-950/50"
-              >
-                <div className="p-3 sm:p-4 bg-white dark:bg-neutral-900 rounded-full text-primary-600 dark:text-primary-400 shrink-0">
-                  <MessageCircle className="w-6 h-6" />
-                </div>
-                <div>
-                  <p className="text-sm font-bold">{t('contact.whatsappLbl')}</p>
-                  <p className="text-base text-primary-700 dark:text-primary-300">{t('contact.whatsappDesc')}</p>
-                </div>
-              </a>
-
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-neutral-700 dark:text-neutral-300 transition-colors duration-500">
-                <div className="p-3 sm:p-4 bg-primary-50 dark:bg-neutral-800/50 rounded-full text-primary-600 dark:text-primary-400 shrink-0">
-                  <Mail className="w-6 h-6" />
-                </div>
-                <div>
-                  <p className="text-sm text-neutral-500 font-medium transition-colors duration-500">{t('contact.emailLbl')}</p>
-                  <a href="mailto:evyatarhazan3.14@gmail.com" className="text-base sm:text-lg hover:text-primary-600 dark:hover:text-primary-400 transition-colors break-all">
-                    evyatarhazan3.14@gmail.com
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-neutral-700 dark:text-neutral-300 transition-colors duration-500">
-                <div className="p-3 sm:p-4 bg-primary-50 dark:bg-neutral-800/50 rounded-full text-primary-600 dark:text-primary-400 shrink-0">
-                  <Linkedin className="w-6 h-6" />
-                </div>
-                <div>
-                  <p className="text-sm text-neutral-500 font-medium transition-colors duration-500">{t('contact.linkedinLbl')}</p>
-                  <a href={profileLinks.linkedin} target="_blank" rel="noopener noreferrer" className="text-base sm:text-lg hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                    Evyatar Hazan
-                  </a>
-                </div>
-              </div>
-            </div>
+      <div className="contact-handoff-shell">
+        <header className="contact-handoff-header">
+          <p className="contact-handoff-kicker"><span />{t('contact.eyebrow')}</p>
+          <div>
+            <h2>{t('contact.title1')} <em>{t('contact.title2')}</em></h2>
+            <p>{t('contact.subtitle')}</p>
           </div>
+        </header>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-2 transition-colors duration-500">{t('contact.form.nameLbl')}</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                className="w-full bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl px-4 py-3 text-base text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all placeholder:text-neutral-400 dark:placeholder:text-neutral-600"
-                placeholder={t('contact.form.namePh')}
-              />
+        <div className="contact-handoff-stage">
+          <motion.i className="contact-handoff-bridge" aria-hidden="true" style={{ scaleX: reduceMotion ? 1 : bridgeScale }} />
+
+          <motion.aside
+            className="contact-channel-panel"
+            style={{ x: reduceMotion ? 0 : channelX }}
+            aria-labelledby="contact-channel-title"
+          >
+            <div className="contact-status">
+              <span aria-hidden="true" />
+              <div><strong>{t('contact.status')}</strong><p>{t('contact.statusDesc')}</p></div>
             </div>
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-2 transition-colors duration-500">{t('contact.form.emailLbl')}</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                className="w-full bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl px-4 py-3 text-base text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all placeholder:text-neutral-400 dark:placeholder:text-neutral-600"
-                placeholder={t('contact.form.emailPh')}
-              />
+
+            <div className="contact-channel-copy">
+              <span>DIRECT CHANNEL / 01</span>
+              <h3 id="contact-channel-title">{t('contact.getInTouch')}</h3>
+              <p>{t('contact.getInTouchDesc')}</p>
             </div>
-            <div>
-              <label htmlFor="message" className="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-2 transition-colors duration-500">{t('contact.form.msgLbl')}</label>
-              <textarea
-                id="message"
-                name="message"
-                required
-                rows={4}
-                className="w-full bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl px-4 py-3 text-base text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all placeholder:text-neutral-400 dark:placeholder:text-neutral-600 resize-none"
-                placeholder={t('contact.form.msgPh')}
-              />
+
+            <a
+              href={`${profileLinks.whatsapp}?text=${encodeURIComponent(t('contact.whatsappText'))}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="contact-primary-channel"
+            >
+              <MessageCircle aria-hidden="true" className="h-6 w-6" />
+              <span><small>{t('contact.whatsappLbl')}</small><strong>{t('contact.whatsappDesc')}</strong></span>
+              <ArrowIcon aria-hidden="true" className="h-5 w-5" />
+            </a>
+
+            <div className="contact-channel-list">
+              <a href="mailto:evyatarhazan3.14@gmail.com">
+                <Mail aria-hidden="true" className="h-4 w-4" />
+                <span><small>{t('contact.emailLbl')}</small><strong>evyatarhazan3.14@gmail.com</strong></span>
+                <ArrowIcon aria-hidden="true" className="h-4 w-4" />
+              </a>
+              <a href={profileLinks.linkedin} target="_blank" rel="noopener noreferrer">
+                <Linkedin aria-hidden="true" className="h-4 w-4" />
+                <span><small>{t('contact.linkedinLbl')}</small><strong>Evyatar Hazan</strong></span>
+                <ArrowIcon aria-hidden="true" className="h-4 w-4" />
+              </a>
             </div>
-            <Button type="submit" className="w-full group" disabled={isSubmitting}>
-              {isSubmitting ? t('contact.form.sending') : t('contact.form.sendBtn')}
-              <Send className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 rtl:group-hover:-translate-x-1 rtl:rotate-180" />
-            </Button>
-            <p className="text-sm leading-6 text-neutral-500 dark:text-neutral-400">
-              {t('contact.form.privacyNotice')}{' '}
-              <Link to="/privacy" className="font-semibold text-primary-600 hover:text-primary-500 dark:text-primary-400">
-                {t('contact.form.privacyLink')}
-              </Link>
-            </p>
-            <div aria-live="polite" className="min-h-7">
-              {formStatus === 'success' && (
-                <p className="flex items-center gap-2 text-sm font-medium text-success-600 dark:text-success-400">
-                  <CheckCircle2 className="h-4 w-4" />
-                  {t('contact.form.successMsg')}
-                </p>
-              )}
-              {formStatus === 'error' && (
-                <p className="flex items-center gap-2 text-sm font-medium text-danger-600 dark:text-danger-400">
-                  <XCircle className="h-4 w-4" />
-                  {t('contact.form.errorMsg')}
-                </p>
-              )}
+          </motion.aside>
+
+          <motion.div className="contact-brief-panel" style={{ x: reduceMotion ? 0 : formX }}>
+            <div className="contact-brief-heading">
+              <div><span>PROJECT BRIEF / 02</span><h3>{t('contact.formTitle')}</h3></div>
+              <b aria-hidden="true">02</b>
             </div>
-          </form>
+
+            <form onSubmit={handleSubmit} className="contact-brief-form">
+              <div className="contact-field" data-field-index="01">
+                <label htmlFor="name">{t('contact.form.nameLbl')}</label>
+                <input type="text" id="name" name="name" required placeholder={t('contact.form.namePh')} />
+              </div>
+              <div className="contact-field" data-field-index="02">
+                <label htmlFor="email">{t('contact.form.emailLbl')}</label>
+                <input type="email" id="email" name="email" required placeholder={t('contact.form.emailPh')} />
+              </div>
+              <div className="contact-field contact-field-message" data-field-index="03">
+                <label htmlFor="message">{t('contact.form.msgLbl')}</label>
+                <textarea id="message" name="message" required rows={3} placeholder={t('contact.form.msgPh')} />
+              </div>
+
+              <button type="submit" className="contact-submit" disabled={isSubmitting}>
+                <span>{isSubmitting ? t('contact.form.sending') : t('contact.form.sendBtn')}</span>
+                <Send aria-hidden="true" className="h-4 w-4" />
+              </button>
+
+              <div className="contact-form-meta">
+                <p>{t('contact.form.privacyNotice')} <Link to="/privacy">{t('contact.form.privacyLink')}</Link></p>
+                <div aria-live="polite" className="contact-form-status">
+                  {formStatus === 'success' && <p data-status="success"><CheckCircle2 aria-hidden="true" className="h-4 w-4" />{t('contact.form.successMsg')}</p>}
+                  {formStatus === 'error' && <p data-status="error"><XCircle aria-hidden="true" className="h-4 w-4" />{t('contact.form.errorMsg')}</p>}
+                </div>
+              </div>
+            </form>
+          </motion.div>
         </div>
       </div>
     </section>

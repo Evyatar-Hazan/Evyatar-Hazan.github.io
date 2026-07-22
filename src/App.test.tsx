@@ -98,6 +98,17 @@ describe('App', () => {
     expect(document.querySelectorAll('#writing .writing-entry')).toHaveLength(2);
   });
 
+  it('renders the project handoff contact flow without removing direct channels', async () => {
+    render(<App />);
+
+    expect(await screen.findByText('contact.eyebrow')).toBeInTheDocument();
+    expect(screen.getByLabelText('contact.form.nameLbl')).toBeRequired();
+    expect(screen.getByLabelText('contact.form.emailLbl')).toBeRequired();
+    expect(screen.getByLabelText('contact.form.msgLbl')).toBeRequired();
+    expect(document.querySelectorAll('#contact .contact-channel-list a')).toHaveLength(2);
+    expect(document.querySelector('#contact .contact-primary-channel')).toHaveAttribute('target', '_blank');
+  });
+
   it('only renders live links for projects with a liveUrl', async () => {
     render(<App />);
 

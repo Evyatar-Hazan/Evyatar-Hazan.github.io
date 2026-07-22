@@ -202,9 +202,13 @@
     }
   },
   "contact": {
-    "title1": "Have a product",
-    "title2": "that needs building?",
-    "subtitle": "I can help with business websites, full-stack systems, automation, development workflow improvements, or sharpening an existing product.",
+    "eyebrow": "PROJECT HANDOFF / 01",
+    "title1": "The next step.",
+    "title2": "Starts with a conversation.",
+    "subtitle": "A need, an idea, or a system that is stuck? Send the context. We will work out what is worth building — and whether it should be built.",
+    "status": "Channel open",
+    "statusDesc": "For projects, collaborations, and technical thinking",
+    "formTitle": "Three lines are enough to begin.",
     "getInTouch": "Start with a short conversation",
     "getInTouchDesc": "Send a few lines about the need, the current state, and what should happen next. If it fits, we can move into a short scope and work plan.",
     "whatsappLbl": "WhatsApp",

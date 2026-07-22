@@ -88,6 +88,11 @@
   --effect-writing-paper-muted: color-mix(in srgb, var(--color-neutral-100) 74%, transparent);
   --effect-writing-ink-soft: color-mix(in srgb, var(--color-neutral-950) 7%, transparent);
   --effect-writing-shadow: 0 30px 80px color-mix(in srgb, var(--color-neutral-950) 8%, transparent);
+  --effect-contact-surface: color-mix(in srgb, var(--color-neutral-50) 94%, var(--color-primary-50));
+  --effect-contact-grid: color-mix(in srgb, var(--color-neutral-900) 7%, transparent);
+  --effect-contact-panel: color-mix(in srgb, var(--color-white) 76%, transparent);
+  --effect-contact-panel-muted: color-mix(in srgb, var(--color-neutral-100) 78%, transparent);
+  --effect-contact-shadow: 0 28px 78px color-mix(in srgb, var(--color-neutral-950) 9%, transparent);
 }
 
 .dark {
@@ -118,6 +123,11 @@
   --effect-writing-paper-muted: color-mix(in srgb, var(--color-black) 68%, transparent);
   --effect-writing-ink-soft: color-mix(in srgb, var(--color-white) 6%, transparent);
   --effect-writing-shadow: 0 34px 90px color-mix(in srgb, var(--color-black) 50%, transparent);
+  --effect-contact-surface: color-mix(in srgb, var(--color-black) 95%, var(--color-primary-950));
+  --effect-contact-grid: color-mix(in srgb, var(--color-white) 7%, transparent);
+  --effect-contact-panel: color-mix(in srgb, var(--color-neutral-950) 82%, transparent);
+  --effect-contact-panel-muted: color-mix(in srgb, var(--color-black) 68%, transparent);
+  --effect-contact-shadow: 0 32px 88px color-mix(in srgb, var(--color-black) 54%, transparent);
 }
 
 body {
@@ -2181,6 +2191,671 @@ body {
   .writing-all-link,
   .writing-read-link {
     transition-duration: 0.01ms !important;
+  }
+}
+
+.contact-handoff {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  border-top: 1px solid color-mix(in srgb, var(--color-neutral-500) 28%, transparent);
+  background: var(--effect-contact-surface);
+}
+
+.contact-handoff-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(var(--effect-contact-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--effect-contact-grid) 1px, transparent 1px);
+  background-position: center;
+  background-size: 24px 24px;
+  mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+  opacity: 0.78;
+}
+
+.contact-handoff-target {
+  position: absolute;
+  z-index: -1;
+  inset-inline-end: -11rem;
+  top: 8rem;
+  display: grid;
+  width: min(48vw, 43rem);
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--color-primary-500) 32%, transparent);
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.contact-handoff-target::before,
+.contact-handoff-target::after {
+  position: absolute;
+  border: 1px solid color-mix(in srgb, var(--color-primary-500) 24%, transparent);
+  border-radius: inherit;
+  content: '';
+}
+
+.contact-handoff-target::before {
+  inset: 18%;
+}
+
+.contact-handoff-target::after {
+  inset: 36%;
+  background: color-mix(in srgb, var(--color-primary-500) 8%, transparent);
+}
+
+.contact-handoff-target i {
+  position: absolute;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--color-primary-500);
+  box-shadow: 0 0 1.25rem var(--effect-primary-glow-medium);
+}
+
+.contact-handoff-target i:nth-child(1) {
+  inset-inline-start: 9%;
+  top: 31%;
+}
+
+.contact-handoff-target i:nth-child(2) {
+  inset-inline-end: 15%;
+  bottom: 24%;
+}
+
+.contact-handoff-target i:nth-child(3) {
+  inset-inline-start: 49%;
+  top: -0.28rem;
+}
+
+.contact-handoff-shell {
+  width: min(100%, 1480px);
+  margin-inline: auto;
+  padding: clamp(4.5rem, 8vw, 7.5rem) clamp(1.25rem, 3.5vw, 3rem) clamp(4rem, 7vw, 6rem);
+}
+
+.contact-handoff-header {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.35fr) minmax(0, 1.65fr);
+  gap: clamp(2rem, 7vw, 7rem);
+  border-block: 1px solid color-mix(in srgb, var(--color-neutral-500) 30%, transparent);
+  padding-block: clamp(2rem, 4.5vw, 4rem);
+}
+
+.contact-handoff-kicker {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+  color: var(--color-primary-700);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+}
+
+.dark .contact-handoff-kicker {
+  color: var(--color-primary-400);
+}
+
+.contact-handoff-kicker span {
+  width: 2rem;
+  height: 1px;
+  margin-top: 0.35rem;
+  background: var(--color-primary-500);
+}
+
+.contact-handoff-header > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(18rem, 0.7fr);
+  align-items: end;
+  gap: clamp(2rem, 6vw, 6rem);
+}
+
+.contact-handoff-header h2 {
+  max-width: 12ch;
+  color: var(--color-neutral-950);
+  font-size: clamp(3.3rem, 7.2vw, 7.2rem);
+  font-weight: 950;
+  letter-spacing: -0.07em;
+  line-height: 0.86;
+}
+
+.dark .contact-handoff-header h2 {
+  color: var(--color-white);
+}
+
+.contact-handoff-header h2 em {
+  display: block;
+  color: var(--color-primary-600);
+  font-style: normal;
+}
+
+.dark .contact-handoff-header h2 em {
+  color: var(--color-primary-400);
+}
+
+.contact-handoff-header > div > p {
+  max-width: 34rem;
+  color: var(--color-neutral-600);
+  font-size: clamp(0.98rem, 1.35vw, 1.18rem);
+  font-weight: 550;
+  line-height: 1.75;
+}
+
+.dark .contact-handoff-header > div > p {
+  color: var(--color-neutral-300);
+}
+
+.contact-handoff-stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2.8vw, 2.5rem);
+  padding-top: clamp(2rem, 4vw, 3.5rem);
+}
+
+.contact-handoff-bridge {
+  position: absolute;
+  z-index: 3;
+  inset-inline-start: calc(50% - clamp(1rem, 2.8vw, 2.5rem) / 2);
+  top: 50%;
+  width: clamp(1rem, 2.8vw, 2.5rem);
+  height: 1px;
+  background: var(--color-primary-500);
+  box-shadow: 0 0 1.2rem var(--effect-primary-glow-soft);
+  transform-origin: center;
+}
+
+.contact-channel-panel,
+.contact-brief-panel {
+  position: relative;
+  min-width: 0;
+  min-height: 39rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-neutral-500) 29%, transparent);
+  background: var(--effect-contact-panel);
+  box-shadow: var(--effect-contact-shadow);
+  backdrop-filter: blur(14px);
+}
+
+.contact-channel-panel {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.4rem, 3vw, 2.75rem);
+}
+
+.contact-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-neutral-500) 24%, transparent);
+  padding-bottom: 1.3rem;
+}
+
+.contact-status > span {
+  width: 0.58rem;
+  height: 0.58rem;
+  margin-top: 0.22rem;
+  border-radius: 999px;
+  background: var(--color-success-500);
+  box-shadow: var(--effect-success-glow);
+}
+
+.contact-status strong,
+.contact-status p,
+.contact-channel-copy > span,
+.contact-brief-heading span {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  text-transform: uppercase;
+}
+
+.contact-status strong {
+  display: block;
+  color: var(--color-neutral-800);
+  font-size: 0.62rem;
+  letter-spacing: 0.13em;
+}
+
+.dark .contact-status strong {
+  color: var(--color-neutral-200);
+}
+
+.contact-status p {
+  margin-top: 0.25rem;
+  color: var(--color-neutral-500);
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+}
+
+.contact-channel-copy {
+  margin-block: auto;
+  padding-block: 2.5rem;
+}
+
+.contact-channel-copy > span,
+.contact-brief-heading span {
+  color: var(--color-primary-700);
+  font-size: 0.55rem;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+}
+
+.dark .contact-channel-copy > span,
+.dark .contact-brief-heading span {
+  color: var(--color-primary-400);
+}
+
+.contact-channel-copy h3,
+.contact-brief-heading h3 {
+  margin-top: 0.85rem;
+  color: var(--color-neutral-950);
+  font-size: clamp(2rem, 3.8vw, 3.75rem);
+  font-weight: 950;
+  letter-spacing: -0.055em;
+  line-height: 0.95;
+}
+
+.dark .contact-channel-copy h3,
+.dark .contact-brief-heading h3 {
+  color: var(--color-white);
+}
+
+.contact-channel-copy > p {
+  max-width: 48ch;
+  margin-top: 1.25rem;
+  color: var(--color-neutral-600);
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.dark .contact-channel-copy > p {
+  color: var(--color-neutral-300);
+}
+
+.contact-primary-channel,
+.contact-channel-list a {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+}
+
+.contact-primary-channel {
+  border: 1px solid color-mix(in srgb, var(--color-primary-500) 56%, transparent);
+  padding: 1rem 1.1rem;
+  background: color-mix(in srgb, var(--color-primary-500) 10%, transparent);
+  color: var(--color-primary-700);
+  transition: background-color 200ms ease, border-color 200ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dark .contact-primary-channel {
+  color: var(--color-primary-300);
+}
+
+.contact-primary-channel small,
+.contact-channel-list small {
+  display: block;
+  color: var(--color-neutral-500);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.52rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.contact-primary-channel strong,
+.contact-channel-list strong {
+  display: block;
+  margin-top: 0.2rem;
+  color: inherit;
+  font-size: 0.84rem;
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+
+.contact-channel-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-top: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--color-neutral-500) 24%, transparent);
+}
+
+.contact-channel-list a {
+  padding: 0.9rem;
+  color: var(--color-neutral-700);
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.dark .contact-channel-list a {
+  color: var(--color-neutral-300);
+}
+
+.contact-channel-list a + a {
+  border-top: 1px solid color-mix(in srgb, var(--color-neutral-500) 24%, transparent);
+}
+
+.contact-brief-panel {
+  display: flex;
+  flex-direction: column;
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--color-primary-500) 6%, transparent), transparent 44%),
+    var(--effect-contact-panel-muted);
+}
+
+.contact-brief-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-neutral-500) 27%, transparent);
+  padding: clamp(1.4rem, 3vw, 2.5rem);
+}
+
+.contact-brief-heading h3 {
+  max-width: 15ch;
+  font-size: clamp(1.8rem, 3vw, 3rem);
+}
+
+.contact-brief-heading b {
+  color: var(--color-primary-600);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: clamp(2.4rem, 4vw, 4rem);
+  font-weight: 950;
+  letter-spacing: -0.08em;
+  line-height: 0.8;
+}
+
+.dark .contact-brief-heading b {
+  color: var(--color-primary-400);
+}
+
+.contact-brief-form {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  padding: clamp(1rem, 2.5vw, 2rem);
+}
+
+.contact-field {
+  position: relative;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-neutral-500) 27%, transparent);
+  padding: 1rem 0.85rem 1rem 2.75rem;
+}
+
+[dir='rtl'] .contact-field {
+  padding: 1rem 2.75rem 1rem 0.85rem;
+}
+
+.contact-field:nth-child(2) {
+  border-inline-start: 1px solid color-mix(in srgb, var(--color-neutral-500) 27%, transparent);
+}
+
+.contact-field::before {
+  position: absolute;
+  inset-inline-start: 0.85rem;
+  top: 1.15rem;
+  content: attr(data-field-index);
+  color: var(--color-primary-600);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.55rem;
+  font-weight: 900;
+}
+
+.dark .contact-field::before {
+  color: var(--color-primary-400);
+}
+
+.contact-field-message {
+  grid-column: 1 / -1;
+}
+
+.contact-field label {
+  display: block;
+  color: var(--color-neutral-500);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.54rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.contact-field input,
+.contact-field textarea {
+  width: 100%;
+  margin-top: 0.5rem;
+  resize: none;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-neutral-950);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.dark .contact-field input,
+.dark .contact-field textarea {
+  color: var(--color-white);
+}
+
+.contact-field input::placeholder,
+.contact-field textarea::placeholder {
+  color: var(--color-neutral-500);
+  opacity: 0.75;
+}
+
+.contact-field:focus-within {
+  background: color-mix(in srgb, var(--color-primary-500) 7%, transparent);
+  box-shadow: inset 3px 0 0 var(--color-primary-500);
+}
+
+[dir='rtl'] .contact-field:focus-within {
+  box-shadow: inset -3px 0 0 var(--color-primary-500);
+}
+
+.contact-submit {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--color-primary-600);
+  background: var(--color-primary-600);
+  color: var(--color-white);
+  font-size: 0.82rem;
+  font-weight: 900;
+  transition: background-color 200ms ease, transform 140ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.contact-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.contact-form-meta {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem;
+  margin-top: 0.8rem;
+  color: var(--color-neutral-500);
+  font-size: 0.65rem;
+  line-height: 1.55;
+}
+
+.contact-form-meta a {
+  color: var(--color-primary-700);
+  font-weight: 800;
+}
+
+.dark .contact-form-meta a {
+  color: var(--color-primary-400);
+}
+
+.contact-form-status {
+  min-height: 2rem;
+}
+
+.contact-form-status p {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  font-weight: 750;
+}
+
+.contact-form-status p[data-status='success'] {
+  color: var(--color-success-600);
+}
+
+.contact-form-status p[data-status='error'] {
+  color: var(--color-danger-600);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .contact-primary-channel:hover {
+    border-color: var(--color-primary-500);
+    background: color-mix(in srgb, var(--color-primary-500) 16%, transparent);
+    transform: translateY(-2px);
+  }
+
+  .contact-channel-list a:hover {
+    background: color-mix(in srgb, var(--color-primary-500) 7%, transparent);
+    color: var(--color-primary-700);
+  }
+
+  .contact-submit:hover {
+    background: var(--color-primary-500);
+  }
+}
+
+.contact-submit:active {
+  transform: scale(0.985);
+}
+
+@media (max-width: 1023px) {
+  .contact-handoff-header,
+  .contact-handoff-header > div {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .contact-handoff-kicker {
+    padding-top: 0;
+  }
+
+  .contact-handoff-stage {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-handoff-bridge {
+    inset-inline-start: 50%;
+    top: calc(50% - clamp(1rem, 2.8vw, 2.5rem) / 2);
+    width: 1px;
+    height: clamp(1rem, 2.8vw, 2.5rem);
+    transform: scaleY(1) !important;
+  }
+
+  .contact-channel-panel,
+  .contact-brief-panel {
+    min-height: 0;
+    transform: none !important;
+  }
+}
+
+@media (max-width: 639px) {
+  .contact-handoff-shell {
+    padding: 4rem 1.25rem 4.5rem;
+  }
+
+  .contact-handoff-header {
+    padding-block: 1.75rem;
+  }
+
+  .contact-handoff-header h2 {
+    max-width: 11ch;
+    font-size: clamp(2.8rem, 13vw, 4.2rem);
+  }
+
+  .contact-handoff-header > div > p {
+    font-size: 0.93rem;
+    line-height: 1.65;
+  }
+
+  .contact-handoff-target {
+    inset-inline-end: -10rem;
+    top: 11rem;
+    width: 24rem;
+  }
+
+  .contact-handoff-stage {
+    padding-top: 1rem;
+  }
+
+  .contact-channel-panel {
+    padding: 1.1rem;
+  }
+
+  .contact-channel-copy {
+    padding-block: 2rem;
+  }
+
+  .contact-channel-copy h3,
+  .contact-brief-heading h3 {
+    font-size: 1.85rem;
+  }
+
+  .contact-channel-list a + a {
+    border-top: 1px solid color-mix(in srgb, var(--color-neutral-500) 24%, transparent);
+  }
+
+  .contact-brief-heading {
+    padding: 1.2rem;
+  }
+
+  .contact-brief-form {
+    grid-template-columns: 1fr;
+    padding: 0.8rem;
+  }
+
+  .contact-field,
+  [dir='rtl'] .contact-field {
+    grid-column: 1;
+    border-inline-start: 0;
+    padding: 0.9rem 2.4rem 0.9rem 0.7rem;
+  }
+
+  [dir='rtl'] .contact-field {
+    padding: 0.9rem 2.4rem 0.9rem 0.7rem;
+  }
+
+  [dir='ltr'] .contact-field {
+    padding: 0.9rem 0.7rem 0.9rem 2.4rem;
+  }
+
+  .contact-field::before {
+    inset-inline-start: 0.7rem;
+    top: 1rem;
+  }
+
+  .contact-form-meta {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-primary-channel,
+  .contact-submit,
+  .contact-channel-panel,
+  .contact-brief-panel,
+  .contact-handoff-target {
+    transition-duration: 0.01ms !important;
+    transform: none !important;
   }
 }
 

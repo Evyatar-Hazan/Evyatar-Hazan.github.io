@@ -17,7 +17,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="w-full py-12 px-6 border-t border-neutral-200 dark:border-neutral-900 bg-neutral-100 dark:bg-black mt-20 transition-colors duration-500">
+    <footer className="mt-0 w-full border-t border-neutral-200 bg-neutral-100 px-6 py-12 transition-colors duration-500 dark:border-neutral-900 dark:bg-black">
       <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="text-center md:text-left">
           <div className="text-neutral-500 dark:text-neutral-400 text-sm transition-colors duration-500">
