@@ -16,6 +16,20 @@
     "contactMe": "צור קשר",
     "whatsappCta": "דברו איתי ב-WhatsApp",
     "whatsappText": "היי אביתר, ראיתי את האתר שלך ורוצה לדבר על פרויקט.",
+    "compiler": {
+      "prelude": "רעיון הוא רק ההתחלה.",
+      "headline": "אני הופך מורכבות למוצר שעובד.",
+      "description": "צורך עסקי, חוויית משתמש והנדסה — מחוברים למוצר ברור שאפשר להמשיך לפתח.",
+      "buildCta": "בואו נבנה משהו",
+      "workCta": "ראו מה בניתי",
+      "ready": "COMPILED / READY",
+      "scroll": "גללו כדי לחבר",
+      "layers": {
+        "business": "צורך עסקי",
+        "experience": "חוויית משתמש",
+        "engineering": "הנדסה"
+      }
+    },
     "proof": {
       "repos": {
         "title": "7 פרויקטים נבחרים",

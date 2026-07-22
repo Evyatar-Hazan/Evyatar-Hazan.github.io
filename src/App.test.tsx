@@ -30,7 +30,7 @@ describe('App', () => {
   it('renders the primary contact and profile links', () => {
     render(<App />);
 
-    expect(screen.getByRole('link', { name: 'home.whatsappCta' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'home.compiler.buildCta' })).toHaveAttribute(
       'href',
       expect.stringContaining('https://wa.me/972587127547')
     );

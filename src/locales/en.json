@@ -16,6 +16,20 @@
     "contactMe": "Contact me",
     "whatsappCta": "Talk on WhatsApp",
     "whatsappText": "Hi Evyatar, I saw your website and would like to talk about a project.",
+    "compiler": {
+      "prelude": "An idea is only the beginning.",
+      "headline": "I turn complexity into a product that works.",
+      "description": "Business need, user experience, and engineering — connected into one clear, maintainable product.",
+      "buildCta": "Let's build something",
+      "workCta": "See what I built",
+      "ready": "COMPILED / READY",
+      "scroll": "Scroll to connect",
+      "layers": {
+        "business": "Business need",
+        "experience": "User experience",
+        "engineering": "Engineering"
+      }
+    },
     "proof": {
       "repos": {
         "title": "7 selected projects",
