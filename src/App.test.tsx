@@ -75,6 +75,16 @@ describe('App', () => {
 
     expect(screen.getByText('projects.indexTitle')).toBeInTheDocument();
     expect(screen.getAllByText('projects.caseStudy').length).toBeGreaterThan(0);
+    expect(document.querySelectorAll('.project-scroll-chapter')).toHaveLength(featuredIds.length);
+    expect(document.querySelectorAll('.project-scroll-frame')).toHaveLength(featuredIds.length * 3);
+    expect(document.querySelectorAll('.project-live-capture')).toHaveLength(featuredIds.length);
+    const liveCaptureLinks = document.querySelectorAll<HTMLAnchorElement>('.project-story-preview');
+    expect(liveCaptureLinks).toHaveLength(featuredIds.length);
+    liveCaptureLinks.forEach((link) => expect(link).not.toHaveAttribute('target'));
+    expect(document.querySelectorAll('.project-scroll-stage-static')).toHaveLength(0);
+    expect(document.querySelectorAll('#projects .project-secondary-index > li')).toHaveLength(
+      projects.filter((project) => !project.featured).length
+    );
   });
 
   it('surfaces recent writing on the home page', async () => {
@@ -90,9 +100,9 @@ describe('App', () => {
 
     await screen.findByText('projects.indexTitle');
 
-    const expectedLiveActions = projects.filter((project) => project.liveUrl).length
-      + projects.filter((project) => project.featured && project.liveUrl).length;
-    expect(screen.getAllByText('projects.liveDemo')).toHaveLength(expectedLiveActions);
+    const expectedLiveActions = projects.filter((project) => project.liveUrl).length;
+    const featuredCoverActions = projects.filter((project) => project.featured && project.liveUrl).length;
+    expect(screen.getAllByText('projects.liveDemo')).toHaveLength(expectedLiveActions + featuredCoverActions);
   });
 
   it('links to live projects without embedding external sites in the portfolio page', async () => {

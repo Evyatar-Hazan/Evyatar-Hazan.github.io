@@ -16,6 +16,21 @@ const About = () => {
   const operatingLoop = ['frame', 'build', 'prove'] as const;
   const direction = language === 'he' ? 1 : -1;
 
+  const getPagedCapabilityProgress = (progress: number) => {
+    const lastIndex = Math.max(1, capabilityGroups.length - 1);
+    const scaledProgress = Math.min(lastIndex, Math.max(0, progress * lastIndex));
+    const currentIndex = Math.floor(scaledProgress);
+
+    if (currentIndex >= lastIndex) return 1;
+
+    const localProgress = scaledProgress - currentIndex;
+    if (localProgress <= 0.42) return currentIndex / lastIndex;
+    if (localProgress >= 0.58) return (currentIndex + 1) / lastIndex;
+
+    const transitionProgress = (localProgress - 0.42) / 0.16;
+    return (currentIndex + transitionProgress) / lastIndex;
+  };
+
   useLayoutEffect(() => {
     const stage = capabilityStageRef.current;
     const rail = capabilityRailRef.current;
@@ -75,8 +90,9 @@ const About = () => {
   const proveRotate = useTransform(scrollYProgress, [0.14, 0.34], [direction * -3, 0]);
   const nodeOpacity = useTransform(scrollYProgress, [0.02, 0.24], [0.15, 1]);
   const connectorScale = useTransform(scrollYProgress, [0.16, 0.42], [0, 1]);
+  const pagedCapabilityProgress = useTransform(capabilityProgress, getPagedCapabilityProgress);
   const capabilityX = useTransform(
-    [capabilityProgress, capabilityDistance],
+    [pagedCapabilityProgress, capabilityDistance],
     ([progress, distance]) => Number(progress) * direction * Number(distance),
   );
 
@@ -201,17 +217,25 @@ const About = () => {
                 {capabilityGroups.map((group, index) => (
                   <motion.article
                     key={group.id}
+                    data-module-index={String(index + 1).padStart(2, '0')}
+                    data-module-total={String(capabilityGroups.length).padStart(2, '0')}
+                    data-skill-count={group.skills.length}
                     variants={reveal}
                     transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
                     className={`about-capability-module relative flex w-[82vw] max-w-[20rem] shrink-0 snap-start flex-col justify-center border border-neutral-300/80 px-4 py-5 dark:border-neutral-800 sm:grid sm:w-[62vw] sm:grid-cols-[minmax(10rem,0.72fr)_1.28fr] sm:items-start sm:gap-3 sm:px-5 md:w-auto md:max-w-none md:border-x-0 md:border-b-0 md:border-t ${index % 2 === 1 ? 'md:border-s' : ''}`}
                   >
                     <div>
-                      <span className="font-mono text-[0.56rem] font-black tracking-[0.15em] text-primary-700 dark:text-primary-400">
-                        MODULE / {String(index + 1).padStart(2, '0')}
+                      <div>
+                        <span className="font-mono text-[0.56rem] font-black tracking-[0.15em] text-primary-700 dark:text-primary-400">
+                          MODULE / {String(index + 1).padStart(2, '0')}
+                        </span>
+                        <h4 className="mt-1 text-base font-black tracking-tight text-neutral-950 dark:text-white">
+                          {group.label}
+                        </h4>
+                      </div>
+                      <span className="about-capability-count" aria-hidden="true">
+                        {String(index + 1).padStart(2, '0')} / {String(capabilityGroups.length).padStart(2, '0')}
                       </span>
-                      <h4 className="mt-1 text-base font-black tracking-tight text-neutral-950 dark:text-white">
-                        {group.label}
-                      </h4>
                     </div>
 
                     <div className="mt-5 flex flex-wrap gap-x-3 gap-y-1.5 sm:mt-0 sm:pt-1">
