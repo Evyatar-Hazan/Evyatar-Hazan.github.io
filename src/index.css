@@ -82,6 +82,12 @@
   --effect-project-preview:
     radial-gradient(circle at 18% 22%, color-mix(in srgb, var(--color-primary-500) 35%, transparent), transparent 32%),
     radial-gradient(circle at 82% 36%, color-mix(in srgb, var(--color-success-500) 18%, transparent), transparent 28%);
+  --effect-writing-surface: color-mix(in srgb, var(--color-neutral-50) 96%, var(--color-primary-50));
+  --effect-writing-grid: color-mix(in srgb, var(--color-neutral-900) 6%, transparent);
+  --effect-writing-paper: color-mix(in srgb, var(--color-white) 78%, transparent);
+  --effect-writing-paper-muted: color-mix(in srgb, var(--color-neutral-100) 74%, transparent);
+  --effect-writing-ink-soft: color-mix(in srgb, var(--color-neutral-950) 7%, transparent);
+  --effect-writing-shadow: 0 30px 80px color-mix(in srgb, var(--color-neutral-950) 8%, transparent);
 }
 
 .dark {
@@ -106,6 +112,12 @@
   --effect-project-panel: color-mix(in srgb, var(--color-neutral-950) 82%, transparent);
   --effect-project-panel-muted: color-mix(in srgb, var(--color-black) 72%, transparent);
   --effect-project-shadow: 0 28px 80px color-mix(in srgb, var(--color-black) 48%, transparent);
+  --effect-writing-surface: color-mix(in srgb, var(--color-black) 96%, var(--color-primary-950));
+  --effect-writing-grid: color-mix(in srgb, var(--color-white) 6%, transparent);
+  --effect-writing-paper: color-mix(in srgb, var(--color-neutral-950) 82%, transparent);
+  --effect-writing-paper-muted: color-mix(in srgb, var(--color-black) 68%, transparent);
+  --effect-writing-ink-soft: color-mix(in srgb, var(--color-white) 6%, transparent);
+  --effect-writing-shadow: 0 34px 90px color-mix(in srgb, var(--color-black) 50%, transparent);
 }
 
 body {
@@ -1528,6 +1540,646 @@ body {
   .product-compiler-hero button,
   .product-compiler-hero svg,
   .product-compiler-hero svg * {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.writing-lab {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-neutral-500) 28%, transparent);
+  background: var(--effect-writing-surface);
+}
+
+.writing-lab-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(var(--effect-writing-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--effect-writing-grid) 1px, transparent 1px);
+  background-position: center;
+  background-size: 24px 24px;
+  mask-image: linear-gradient(to bottom, black, black 94%, transparent);
+  opacity: 0.76;
+}
+
+.writing-lab-orbit {
+  position: absolute;
+  z-index: -1;
+  inset-inline-start: -15rem;
+  top: 14rem;
+  width: 34rem;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--color-primary-500) 17%, transparent);
+  border-radius: 999px;
+  box-shadow:
+    0 0 0 4rem color-mix(in srgb, var(--color-primary-500) 3%, transparent),
+    0 0 0 9rem color-mix(in srgb, var(--color-primary-500) 2%, transparent);
+}
+
+.writing-shell {
+  width: min(100%, 1480px);
+  margin-inline: auto;
+  padding: clamp(3.5rem, 6vw, 6rem) clamp(1.25rem, 3.5vw, 3rem) clamp(4.5rem, 7vw, 6.5rem);
+}
+
+.writing-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
+  align-items: end;
+  gap: clamp(2rem, 7vw, 7rem);
+  border-block: 1px solid color-mix(in srgb, var(--color-neutral-500) 32%, transparent);
+  padding-block: clamp(1.5rem, 3.5vw, 3rem);
+}
+
+.writing-kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+  color: var(--color-primary-700);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.64rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.dark .writing-kicker {
+  color: var(--color-primary-400);
+}
+
+.writing-kicker span {
+  width: 2rem;
+  height: 1px;
+  background: var(--color-primary-500);
+}
+
+.writing-header h2 {
+  max-width: 15ch;
+  color: var(--color-neutral-950);
+  font-size: clamp(2.75rem, 5.4vw, 5.4rem);
+  font-weight: 950;
+  letter-spacing: -0.065em;
+  line-height: 0.88;
+}
+
+.dark .writing-header h2 {
+  color: var(--color-white);
+}
+
+.writing-header h2 em {
+  display: block;
+  color: var(--color-primary-600);
+  font-style: normal;
+}
+
+.dark .writing-header h2 em {
+  color: var(--color-primary-400);
+}
+
+.writing-header-note {
+  display: flex;
+  max-width: 38rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.writing-header-note p {
+  color: var(--color-neutral-600);
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  font-weight: 550;
+  line-height: 1.75;
+}
+
+.dark .writing-header-note p {
+  color: var(--color-neutral-300);
+}
+
+.writing-all-link,
+.writing-read-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--color-neutral-800);
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.dark .writing-all-link,
+.dark .writing-read-link {
+  color: var(--color-neutral-200);
+}
+
+.writing-all-link {
+  border-bottom: 1px solid var(--color-primary-500);
+  padding-block: 0.55rem;
+  transition: color 200ms ease, gap 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.writing-log {
+  display: grid;
+  grid-template-columns: 5.75rem minmax(0, 1fr);
+  gap: clamp(1rem, 3vw, 3rem);
+  padding-top: clamp(2rem, 4vw, 3.5rem);
+}
+
+.writing-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  min-height: 100%;
+}
+
+.writing-progress > span {
+  color: var(--color-neutral-500);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.54rem;
+  font-weight: 850;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+}
+
+.writing-progress > div {
+  position: relative;
+  flex: 1;
+  width: 1px;
+  min-height: 32rem;
+  background: color-mix(in srgb, var(--color-neutral-500) 25%, transparent);
+}
+
+.writing-progress i {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background: var(--color-primary-500);
+  transform-origin: top;
+}
+
+.writing-progress b {
+  position: absolute;
+  inset-inline-start: -0.34rem;
+  top: 0;
+  display: block;
+  width: 0.72rem;
+  height: 0.72rem;
+  border: 2px solid var(--effect-writing-surface);
+  border-radius: 999px;
+  background: var(--color-primary-500);
+  box-shadow: 0 0 0 1px var(--color-primary-500), 0 0 1.5rem var(--effect-primary-glow-soft);
+}
+
+.writing-articles {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.writing-feature,
+.writing-entry {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-neutral-500) 28%, transparent);
+  background: var(--effect-writing-paper);
+  box-shadow: var(--effect-writing-shadow);
+  backdrop-filter: blur(14px);
+}
+
+.writing-feature {
+  display: grid;
+  grid-template-columns: 0.22fr minmax(0, 1.35fr) minmax(15rem, 0.65fr);
+  min-height: clamp(25rem, 43vw, 34rem);
+}
+
+.writing-feature-scan {
+  position: absolute;
+  z-index: 3;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-primary-500) 18%, var(--color-primary-500) 82%, transparent);
+  box-shadow: 0 0 1.4rem var(--effect-primary-glow-medium);
+  pointer-events: none;
+}
+
+.writing-article-index {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  border-inline-end: 1px solid color-mix(in srgb, var(--color-neutral-500) 24%, transparent);
+  padding: clamp(1.2rem, 2.5vw, 2.25rem);
+}
+
+.writing-article-index span:first-child {
+  color: var(--color-primary-600);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: clamp(2rem, 4vw, 4.5rem);
+  font-weight: 950;
+  letter-spacing: -0.08em;
+  line-height: 0.8;
+}
+
+.dark .writing-article-index span:first-child {
+  color: var(--color-primary-400);
+}
+
+.writing-article-index span:last-child {
+  color: var(--color-neutral-500);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.55rem;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+}
+
+.writing-article-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(1.75rem, 3.5vw, 3.4rem);
+}
+
+.writing-article-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--color-neutral-500);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.writing-article-copy h3 {
+  margin-top: 1.4rem;
+  color: var(--color-neutral-950);
+  font-size: clamp(2rem, 4.1vw, 4.2rem);
+  font-weight: 950;
+  letter-spacing: -0.055em;
+  line-height: 0.95;
+}
+
+.dark .writing-article-copy h3 {
+  color: var(--color-white);
+}
+
+.writing-article-copy > p {
+  max-width: 60ch;
+  margin-top: 1.5rem;
+  color: var(--color-neutral-600);
+  font-size: clamp(0.95rem, 1.25vw, 1.12rem);
+  line-height: 1.75;
+}
+
+.dark .writing-article-copy > p {
+  color: var(--color-neutral-300);
+}
+
+.writing-article-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem;
+  margin-top: 2.25rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-neutral-500) 25%, transparent);
+  padding-top: 1.15rem;
+}
+
+.writing-article-footer ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.writing-article-footer li {
+  border: 1px solid color-mix(in srgb, var(--color-neutral-500) 23%, transparent);
+  padding: 0.38rem 0.55rem;
+  color: var(--color-neutral-600);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.52rem;
+  font-weight: 780;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.dark .writing-article-footer li {
+  color: var(--color-neutral-300);
+}
+
+.writing-read-link {
+  color: var(--color-primary-700);
+  transition: color 200ms ease, gap 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dark .writing-read-link {
+  color: var(--color-primary-300);
+}
+
+.writing-signal {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  border-inline-start: 1px solid color-mix(in srgb, var(--color-neutral-500) 24%, transparent);
+  padding: clamp(1.5rem, 3vw, 3rem) 1.25rem;
+  background:
+    radial-gradient(circle at center, color-mix(in srgb, var(--color-primary-500) 12%, transparent), transparent 42%),
+    var(--effect-writing-paper-muted);
+}
+
+.writing-signal > span {
+  color: var(--color-neutral-500);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.5rem;
+  font-weight: 850;
+  letter-spacing: 0.2em;
+}
+
+.writing-signal > div {
+  position: relative;
+  display: grid;
+  width: min(100%, 12rem);
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--color-primary-500) 35%, transparent);
+  border-radius: 999px;
+}
+
+.writing-signal > div::before,
+.writing-signal > div::after {
+  position: absolute;
+  border: 1px solid color-mix(in srgb, var(--color-primary-500) 24%, transparent);
+  border-radius: inherit;
+  content: '';
+}
+
+.writing-signal > div::before {
+  inset: 17%;
+}
+
+.writing-signal > div::after {
+  inset: 34%;
+  background: var(--color-primary-500);
+  box-shadow: 0 0 2rem var(--effect-primary-glow-medium);
+}
+
+.writing-signal i {
+  position: absolute;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 999px;
+  background: var(--color-primary-500);
+}
+
+.writing-signal i:nth-child(1) {
+  inset-inline-start: 11%;
+  top: 30%;
+}
+
+.writing-signal i:nth-child(2) {
+  inset-inline-end: 6%;
+  bottom: 37%;
+}
+
+.writing-signal i:nth-child(3) {
+  inset-inline-start: 46%;
+  top: -0.18rem;
+}
+
+.writing-signal strong {
+  max-width: 12ch;
+  color: var(--color-neutral-700);
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  font-weight: 950;
+  line-height: 1.05;
+  text-align: center;
+}
+
+.dark .writing-signal strong {
+  color: var(--color-neutral-200);
+}
+
+.writing-entry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.writing-entry {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  min-height: 21rem;
+  box-shadow: none;
+}
+
+.writing-entry .writing-article-index {
+  padding: 1.4rem;
+}
+
+.writing-entry .writing-article-index span:first-child {
+  font-size: 2.5rem;
+}
+
+.writing-entry .writing-article-copy {
+  justify-content: flex-start;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.writing-entry .writing-article-copy h3 {
+  font-size: clamp(1.55rem, 2.35vw, 2.35rem);
+  line-height: 1;
+}
+
+.writing-entry .writing-article-copy > p {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.writing-entry .writing-article-footer {
+  margin-top: auto;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .writing-feature:hover,
+  .writing-entry:hover {
+    border-color: color-mix(in srgb, var(--color-primary-500) 58%, transparent);
+  }
+
+  .writing-feature:hover .writing-read-link,
+  .writing-entry:hover .writing-read-link,
+  .writing-all-link:hover {
+    gap: 0.95rem;
+    color: var(--color-primary-600);
+  }
+}
+
+@media (max-width: 1023px) {
+  .writing-header {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+
+  .writing-feature {
+    grid-template-columns: 5rem minmax(0, 1fr);
+    min-height: 29rem;
+  }
+
+  .writing-signal {
+    display: none;
+  }
+
+  .writing-entry-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .writing-entry {
+    min-height: 18rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .writing-shell {
+    padding: 4rem 1.25rem 4.5rem;
+  }
+
+  .writing-lab-orbit {
+    inset-inline-start: -12rem;
+    top: 10rem;
+    width: 23rem;
+  }
+
+  .writing-header {
+    gap: 1.35rem;
+    padding-block: 1.75rem;
+  }
+
+  .writing-header h2 {
+    max-width: 13ch;
+    font-size: clamp(2.65rem, 13vw, 4rem);
+  }
+
+  .writing-header-note {
+    gap: 1rem;
+  }
+
+  .writing-header-note p {
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .writing-log {
+    grid-template-columns: 1fr;
+    padding-top: 1rem;
+  }
+
+  .writing-progress {
+    display: none;
+  }
+
+  .writing-articles {
+    gap: 0.75rem;
+  }
+
+  .writing-feature,
+  .writing-entry {
+    display: block;
+    min-height: 0;
+    transform: none !important;
+  }
+
+  .writing-feature-scan {
+    display: none;
+  }
+
+  .writing-feature .writing-article-copy,
+  .writing-article-index span:first-child {
+    transform: none !important;
+  }
+
+  .writing-article-index,
+  .writing-entry .writing-article-index {
+    flex-direction: row;
+    align-items: center;
+    border-inline-end: 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-neutral-500) 24%, transparent);
+    padding: 1rem;
+  }
+
+  .writing-article-index span:first-child,
+  .writing-entry .writing-article-index span:first-child {
+    font-size: 1.75rem;
+  }
+
+  .writing-article-index span:last-child {
+    font-size: 0.5rem;
+    writing-mode: horizontal-tb;
+  }
+
+  .writing-article-copy,
+  .writing-entry .writing-article-copy {
+    padding: 1.35rem 1.1rem 1.2rem;
+  }
+
+  .writing-article-copy h3,
+  .writing-entry .writing-article-copy h3 {
+    margin-top: 1rem;
+    font-size: clamp(1.7rem, 8vw, 2.35rem);
+    line-height: 0.98;
+  }
+
+  .writing-article-copy > p,
+  .writing-entry .writing-article-copy > p {
+    display: -webkit-box;
+    margin-top: 1rem;
+    overflow: hidden;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .writing-article-footer,
+  .writing-entry .writing-article-footer {
+    align-items: center;
+    margin-top: 1.25rem;
+    padding-top: 0.9rem;
+  }
+
+  .writing-article-footer ul {
+    gap: 0.35rem;
+  }
+
+  .writing-article-footer li {
+    padding: 0.3rem 0.4rem;
+    font-size: 0.46rem;
+  }
+
+  .writing-read-link {
+    font-size: 0.7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .writing-feature,
+  .writing-entry,
+  .writing-all-link,
+  .writing-read-link {
     transition-duration: 0.01ms !important;
   }
 }

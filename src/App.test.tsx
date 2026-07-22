@@ -93,6 +93,9 @@ describe('App', () => {
     expect(await screen.findByText('blogPreview.eyebrow')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /blogPreview.viewAll/i })).toHaveAttribute('href', '/blog');
     expect(screen.getByRole('heading', { name: 'Virtualization and virtual machines' })).toBeInTheDocument();
+    expect(document.querySelectorAll('#writing article')).toHaveLength(3);
+    expect(document.querySelectorAll('#writing .writing-feature')).toHaveLength(1);
+    expect(document.querySelectorAll('#writing .writing-entry')).toHaveLength(2);
   });
 
   it('only renders live links for projects with a liveUrl', async () => {

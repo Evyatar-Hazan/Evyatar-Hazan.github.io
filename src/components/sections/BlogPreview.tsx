@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import { ArrowLeft, ArrowRight, BookOpen, Clock } from 'lucide-react';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import { ArrowLeft, ArrowRight, Clock } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -10,58 +10,108 @@ const languageFromI18n = (language: string): BlogLanguage => (language === 'he' 
 
 const formatDate = (date: string, language: BlogLanguage) =>
   new Intl.DateTimeFormat(language === 'he' ? 'he-IL' : 'en-US', {
-    month: 'long',
-    day: 'numeric',
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric',
   }).format(new Date(date));
 
-const BlogPreviewCard = ({ post, index, language }: { post: BlogPost; index: number; language: BlogLanguage }) => {
+type ArticleMetaProps = {
+  post: BlogPost;
+  language: BlogLanguage;
+};
+
+const ArticleMeta = ({ post, language }: ArticleMetaProps) => (
+  <div className="writing-article-meta">
+    <time dateTime={post.date}>{formatDate(post.date, language)}</time>
+    <span aria-hidden="true">/</span>
+    <span className="inline-flex items-center gap-1.5">
+      <Clock aria-hidden="true" className="h-3.5 w-3.5" />
+      {post.readTime}
+    </span>
+  </div>
+);
+
+type ArticleLinkProps = {
+  post: BlogPost;
+  language: BlogLanguage;
+  featured?: boolean;
+  index: number;
+};
+
+const ArticleLink = ({ post, language, featured = false, index }: ArticleLinkProps) => {
   const { t } = useTranslation();
   const ArrowIcon = language === 'he' ? ArrowLeft : ArrowRight;
+  const issue = String(index + 1).padStart(2, '0');
+  const articleRef = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: articleRef,
+    offset: ['start 92%', 'end 8%'],
+  });
+  const entryX = useTransform(scrollYProgress, [0, 0.32, 1], [index % 2 === 0 ? -42 : 42, 0, 0]);
+  const numberY = useTransform(scrollYProgress, [0, 0.55, 1], [24, -4, -16]);
+  const copyY = useTransform(scrollYProgress, [0, 0.55, 1], [28, 0, -18]);
+  const scanY = useTransform(scrollYProgress, [0, 1], [-80, 560]);
+  const scanOpacity = useTransform(scrollYProgress, [0, 0.12, 0.88, 1], [0, 0.75, 0.75, 0]);
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 24 }}
+      ref={articleRef}
+      className={featured ? 'writing-feature' : 'writing-entry'}
+      initial={{ opacity: 0, y: 36 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.45, delay: index * 0.08 }}
-      className="group relative overflow-hidden rounded-lg border border-neutral-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary-300 hover:shadow-xl hover:shadow-primary-500/10 dark:border-neutral-800 dark:bg-neutral-950/70 dark:hover:border-primary-800 md:p-6"
+      viewport={{ once: true, margin: '-12% 0px -12%' }}
+      transition={{ duration: 0.65, delay: featured ? 0 : index * 0.05, ease: [0.22, 1, 0.36, 1] }}
+      style={{ x: featured || reduceMotion ? 0 : entryX }}
+      data-writing-index={issue}
     >
-      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary-500 via-info-300 to-success-400 opacity-80" />
-      <div className="mb-5 flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
-        <span>{formatDate(post.date, language)}</span>
-        <span className="h-1 w-1 rounded-full bg-neutral-300 dark:bg-neutral-700" />
-        <span className="inline-flex items-center gap-1">
-          <Clock className="h-3.5 w-3.5" />
-          {post.readTime}
-        </span>
+      <div className="writing-article-index" aria-hidden="true">
+        <motion.span style={{ y: reduceMotion ? 0 : numberY }}>{issue}</motion.span>
+        <span>{featured ? t('blogPreview.latest') : t('blogPreview.note')}</span>
       </div>
 
-      <h3 className="text-xl font-bold leading-tight text-neutral-950 dark:text-white md:text-2xl">
-        <Link to={`/blog/${post.slug}`} className="outline-none focus-visible:text-primary-500">
-          <span className="absolute inset-0" aria-hidden="true" />
-          {post.title}
-        </Link>
-      </h3>
+      <motion.div className="writing-article-copy" style={{ y: featured && !reduceMotion ? copyY : 0 }}>
+        <ArticleMeta post={post} language={language} />
+        <h3>
+          <Link to={`/blog/${post.slug}`}>
+            <span className="absolute inset-0" aria-hidden="true" />
+            {post.title}
+          </Link>
+        </h3>
+        <p>{post.excerpt}</p>
 
-      <p className="mt-4 text-sm leading-7 text-neutral-600 dark:text-neutral-400 md:text-base">
-        {post.excerpt}
-      </p>
-
-      <div className="mt-6 flex flex-wrap gap-2">
-        {post.tags.slice(0, 3).map((tag) => (
-          <span
-            key={tag}
-            className="rounded-md bg-neutral-100 px-2.5 py-1 text-xs font-medium text-neutral-600 dark:bg-neutral-900 dark:text-neutral-300"
-          >
-            {tag}
+        <div className="writing-article-footer">
+          <ul aria-label={t('blogPreview.topics')}>
+            {post.tags.slice(0, 3).map((tag) => (
+              <li key={tag}>{tag}</li>
+            ))}
+          </ul>
+          <span className="writing-read-link">
+            {t('blogPreview.read')}
+            <ArrowIcon aria-hidden="true" className="h-4 w-4" />
           </span>
-        ))}
-      </div>
+        </div>
+      </motion.div>
 
-      <div className="mt-7 inline-flex items-center gap-2 text-sm font-bold text-primary-600 dark:text-primary-300">
-        {t('blogPreview.read')}
-        <ArrowIcon className="h-4 w-4 transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1" />
-      </div>
+      {featured && (
+        <>
+          <motion.span
+            className="writing-feature-scan"
+            aria-hidden="true"
+            style={{ y: reduceMotion ? 0 : scanY, opacity: reduceMotion ? 0 : scanOpacity }}
+          />
+          <div className="writing-signal" aria-hidden="true">
+            <span>INPUT</span>
+            <div>
+              <i />
+              <i />
+              <i />
+            </div>
+            <strong>{t('blogPreview.signal')}</strong>
+            <span>OUTPUT</span>
+          </div>
+        </>
+      )}
     </motion.article>
   );
 };
@@ -70,8 +120,17 @@ const BlogPreview = () => {
   const { t, i18n } = useTranslation();
   const sectionRef = useRef<HTMLElement>(null);
   const language = languageFromI18n(i18n.language);
-  const posts = getBlogPosts(language).slice(0, 2);
+  const posts = getBlogPosts(language).slice(0, 3);
   const ArrowIcon = language === 'he' ? ArrowLeft : ArrowRight;
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start 72%', 'end 62%'],
+  });
+  const railScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const markerY = useTransform(scrollYProgress, [0, 1], ['0%', '96%']);
+  const orbitY = useTransform(scrollYProgress, [0, 1], [-70, 180]);
+  const orbitRotate = useTransform(scrollYProgress, [0, 1], [-8, 34]);
 
   useEffect(() => {
     if (window.location.hash !== '#writing') return;
@@ -84,39 +143,52 @@ const BlogPreview = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} id="writing" className="relative overflow-hidden bg-neutral-50 px-6 py-24 transition-colors duration-500 dark:bg-neutral-950/70">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary-500/30 to-transparent" />
-      <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.45 }}
-          className="lg:sticky lg:top-28"
-        >
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white/80 px-4 py-1.5 text-sm font-bold text-neutral-600 shadow-sm backdrop-blur-sm dark:border-neutral-800 dark:bg-neutral-900/70 dark:text-neutral-300">
-            <BookOpen className="h-4 w-4 text-primary-500" />
-            {t('blogPreview.eyebrow')}
-          </div>
-          <h2 className="text-4xl font-bold tracking-tight text-neutral-950 dark:text-white md:text-5xl">
-            {t('blogPreview.title1')} <span className="text-primary-500">{t('blogPreview.title2')}</span>
-          </h2>
-          <p className="mt-5 max-w-xl text-lg leading-8 text-neutral-600 dark:text-neutral-400">
-            {t('blogPreview.subtitle')}
-          </p>
-          <Link
-            to="/blog"
-            className="mt-8 inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-5 py-3 text-sm font-bold text-neutral-700 shadow-sm transition hover:border-primary-300 hover:text-primary-600 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:border-primary-800 dark:hover:text-primary-300"
-          >
-            {t('blogPreview.viewAll')}
-            <ArrowIcon className="h-4 w-4" />
-          </Link>
-        </motion.div>
+    <section ref={sectionRef} id="writing" className="writing-lab">
+      <div className="writing-lab-grid" aria-hidden="true" />
+      <motion.div
+        className="writing-lab-orbit"
+        aria-hidden="true"
+        style={{ y: reduceMotion ? 0 : orbitY, rotate: reduceMotion ? 0 : orbitRotate }}
+      />
 
-        <div className="grid gap-5">
-          {posts.map((post, index) => (
-            <BlogPreviewCard key={`${post.language}-${post.slug}`} post={post} index={index} language={language} />
-          ))}
+      <div className="writing-shell">
+        <header className="writing-header">
+          <div>
+            <p className="writing-kicker">
+              <span />
+              {t('blogPreview.eyebrow')}
+            </p>
+            <h2>
+              {t('blogPreview.title1')} <em>{t('blogPreview.title2')}</em>
+            </h2>
+          </div>
+
+          <div className="writing-header-note">
+            <p>{t('blogPreview.subtitle')}</p>
+            <Link to="/blog" className="writing-all-link">
+              <span>{t('blogPreview.viewAll')}</span>
+              <ArrowIcon aria-hidden="true" className="h-4 w-4" />
+            </Link>
+          </div>
+        </header>
+
+        <div className="writing-log">
+          <div className="writing-progress" aria-hidden="true">
+            <span>READING LOG / {String(posts.length).padStart(2, '0')}</span>
+            <div>
+              <motion.i style={{ scaleY: reduceMotion ? 1 : railScale }} />
+              <motion.b style={{ y: reduceMotion ? '96%' : markerY }} />
+            </div>
+          </div>
+
+          <div className="writing-articles">
+            {posts[0] && <ArticleLink post={posts[0]} language={language} index={0} featured />}
+            <div className="writing-entry-grid">
+              {posts.slice(1).map((post, index) => (
+                <ArticleLink key={`${post.language}-${post.slug}`} post={post} language={language} index={index + 1} />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>

@@ -244,11 +244,15 @@
   },
   "blogPreview": {
     "eyebrow": "Behind the decisions",
-    "title1": "Writing about",
-    "title2": "real work",
-    "subtitle": "A few short notes about product decisions, development, and deployment for people who want to see how I think while building, not only what shipped.",
-    "read": "Read the article",
-    "viewAll": "All articles"
+    "title1": "Not only what I built.",
+    "title2": "How I think.",
+    "subtitle": "An open working log about the systems, decisions, and lessons behind the finished product.",
+    "read": "Open the entry",
+    "viewAll": "Explore the full log",
+    "latest": "Latest entry",
+    "note": "Field note",
+    "topics": "Article topics",
+    "signal": "Think. Build. Verify."
   },
   "footer": {
     "copyright": "© {{year}} Evyatar Hazan. All rights reserved."
