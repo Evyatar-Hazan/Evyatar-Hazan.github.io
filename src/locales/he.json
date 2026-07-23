@@ -231,6 +231,11 @@
       "privacyLink": "למידע נוסף בעמוד הפרטיות"
     }
   },
+  "contactNode": {
+    "regionLabel": "ערוץ קשר מהיר",
+    "label": "בואו נדבר",
+    "ariaLabel": "פתיחת שיחה עם אביתר ב-WhatsApp"
+  },
   "blog": {
     "eyebrow": "יומן מוצר ופיתוח",
     "title": "בלוג",

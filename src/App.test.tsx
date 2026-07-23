@@ -198,10 +198,35 @@ describe('App', () => {
     render(<App />);
 
     expect(document.querySelector('.closing-dock-shell')).toBeInTheDocument();
+    expect(document.querySelectorAll('.brand-mark')).toHaveLength(2);
+    expect(document.querySelector('.system-rail-brand .brand-mark')).toBeInTheDocument();
+    expect(document.querySelector('.closing-dock-signature .brand-mark')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'footer.cta' })).toHaveAttribute(
       'href',
       expect.stringContaining('https://wa.me/972587127547')
     );
+  });
+
+  it('shows the contextual WhatsApp node after scrolling and omits it on contact routes', async () => {
+    Object.defineProperty(window, 'scrollY', { value: 0, configurable: true });
+    const blogView = renderAt('/blog');
+
+    expect(screen.queryByRole('link', { name: 'contactNode.ariaLabel' })).not.toBeInTheDocument();
+
+    Object.defineProperty(window, 'scrollY', { value: 500, configurable: true });
+    fireEvent.scroll(window);
+
+    expect(await screen.findByRole('link', { name: 'contactNode.ariaLabel' })).toHaveAttribute(
+      'href',
+      expect.stringContaining('https://wa.me/972587127547')
+    );
+
+    blogView.unmount();
+    renderAt('/contact');
+    fireEvent.scroll(window);
+
+    expect(screen.queryByRole('link', { name: 'contactNode.ariaLabel' })).not.toBeInTheDocument();
+    Object.defineProperty(window, 'scrollY', { value: 0, configurable: true });
   });
 
   it('renders a featured project case study page', async () => {

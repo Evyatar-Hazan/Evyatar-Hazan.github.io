@@ -231,6 +231,11 @@
       "privacyLink": "Read the privacy notice"
     }
   },
+  "contactNode": {
+    "regionLabel": "Quick contact channel",
+    "label": "Let's talk",
+    "ariaLabel": "Open a WhatsApp conversation with Evyatar"
+  },
   "blog": {
     "eyebrow": "Product and engineering notes",
     "title": "Blog",

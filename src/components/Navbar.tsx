@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Moon, Sun, Menu, X } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
+import BrandMark from './BrandMark';
 
 const navItems = [
   { name: 'Home', href: '#home' },
@@ -103,7 +104,7 @@ const Navbar = () => {
           aria-label="Go to home section"
           translate="no"
         >
-          EH<span className="text-primary-500">.</span>
+          <BrandMark className="system-rail-brand-mark" />
         </a>
 
         {/* Desktop Nav */}

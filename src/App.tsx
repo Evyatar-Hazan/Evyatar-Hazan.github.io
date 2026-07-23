@@ -13,6 +13,7 @@ import Footer from './components/Footer';
 import { useTheme } from './hooks/useTheme';
 import CustomCursor from './components/animations/CustomCursor';
 import ScrollProgress from './components/animations/ScrollProgress';
+import ContactNode from './components/ContactNode';
 
 const About = lazy(() => import('./components/sections/About'));
 const Projects = lazy(() => import('./components/sections/Projects'));
@@ -90,6 +91,7 @@ const AppShell = () => {
       <CustomCursor />
       <ScrollProgress />
       <Navbar />
+      <ContactNode />
       <Routes>
         <Route path="/" element={<PortfolioHome />} />
         <Route path="/projects/:projectId" element={<ProjectCaseStudy />} />

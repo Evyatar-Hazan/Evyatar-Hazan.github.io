@@ -2,6 +2,7 @@ import { ArrowUpLeft, ArrowUpRight, Github, Linkedin, Mail, MessageCircle } from
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { profileLinks } from '../data/profile';
+import BrandMark from './BrandMark';
 
 const Footer = () => {
   const { t, i18n } = useTranslation();
@@ -22,8 +23,8 @@ const Footer = () => {
       <div className="closing-dock-grid" aria-hidden="true" />
       <div className="closing-dock-shell">
         <div className="closing-dock-lead">
-          <div className="closing-dock-signature" translate="no">
-            <span>EH</span><i>.</i>
+          <div className="closing-dock-signature">
+            <BrandMark className="closing-dock-brand-mark" />
           </div>
           <div>
             <p className="closing-dock-kicker"><span />{t('footer.status')}</p>
