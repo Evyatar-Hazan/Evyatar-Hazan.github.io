@@ -16,6 +16,8 @@ import HardwareInputOutputDevicesEn from './hardware-input-output-devices.en.mdx
 import HardwareInputOutputDevicesHe from './hardware-input-output-devices.he.mdx';
 import JavaUnicodeStringLengthEn from './java-unicode-string-length.en.mdx';
 import JavaUnicodeStringLengthHe from './java-unicode-string-length.he.mdx';
+import JavaProgramExecutionEn from './java-program-execution.en.mdx';
+import JavaProgramExecutionHe from './java-program-execution.he.mdx';
 import OperatingSystemUnderAppsEn from './operating-system-under-apps.en.mdx';
 import OperatingSystemUnderAppsHe from './operating-system-under-apps.he.mdx';
 import PrivacySafeProductAnalyticsEn from './privacy-safe-product-analytics.en.mdx';
@@ -44,6 +46,14 @@ import { blogPostMetadataByKey } from './metadata';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    ...blogPostMetadataByKey['java-program-execution:he'],
+    Content: JavaProgramExecutionHe,
+  },
+  {
+    ...blogPostMetadataByKey['java-program-execution:en'],
+    Content: JavaProgramExecutionEn,
+  },
   {
     ...blogPostMetadataByKey['virtualization-virtual-machines:he'],
     Content: VirtualizationVirtualMachinesHe,

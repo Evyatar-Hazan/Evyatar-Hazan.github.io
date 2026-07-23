@@ -1,0 +1,391 @@
+Most Java developers begin with a simple routine: create a file, write a `main` method, press Run in IntelliJ, and watch text appear on the screen.
+
+That button hides an entire execution chain:
+
+```text
+Main.java
+↓
+javac
+↓
+Main.class
+↓
+JVM
+↓
+Interpreter / JIT
+↓
+OS Scheduler
+↓
+CPU
+```
+
+In this exercise, I followed that chain directly. I inspected the Java environment, compiled a source file by hand, ran a class, packaged an executable JAR, and separated the responsibilities of the JDK, JVM, operating system, and processor.
+
+## The development environment
+
+I used Temurin OpenJDK 26. The runtime and compiler can be checked independently:
+
+```bash
+java -version
+javac -version
+```
+
+Both commands reported the same release:
+
+```text
+openjdk version "26" 2026-03-17
+OpenJDK Runtime Environment Temurin-26+35
+OpenJDK 64-Bit Server VM Temurin-26+35
+
+javac 26
+```
+
+I also checked which commands the shell would execute:
+
+```bash
+which java
+which javac
+```
+
+On this machine, both resolved through `/usr/bin`. `JAVA_HOME` was empty, but Java still worked because the shell finds executable commands through `PATH`. It does not need `JAVA_HOME` to launch a command that is already available.
+
+One subtle point matters here: `which java` shows the command selected by the shell. It does not necessarily reveal the real home directory of the JDK installation.
+
+## The source code
+
+I created `Main.java`:
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello from Java");
+        System.out.println(
+            "Java version: " + System.getProperty("java.version")
+        );
+        System.out.println(
+            "Working directory: " + System.getProperty("user.dir")
+        );
+        System.out.println(
+            "First argument: " + (args.length > 0 ? args[0] : "none")
+        );
+    }
+}
+```
+
+This is source code: text intended for developers and development tools. A CPU cannot directly execute Java classes, methods, or expressions.
+
+## From `Main.java` to `Main.class`
+
+I compiled the file with:
+
+```bash
+javac Main.java
+```
+
+The `javac` compiler parses the syntax, checks types, resolves references to classes and methods, and produces:
+
+```text
+Main.class
+```
+
+A `.class` file is not the original source code, but it is not native machine code for one processor either. It contains Java bytecode, an intermediate instruction format that a JVM can load and execute.
+
+This separation is central to Java portability. The same bytecode can run on different operating systems and processors as long as a compatible JVM is available.
+
+## JDK, JRE, and JVM
+
+These terms describe related but distinct layers.
+
+### JDK
+
+The Java Development Kit is the development toolkit. It includes tools such as:
+
+- `javac` for compilation.
+- `java` for launching programs.
+- `jar` for creating and inspecting JAR archives.
+- Documentation, analysis, and debugging tools.
+
+Writing and compiling Java code requires a JDK.
+
+### JRE
+
+Java Runtime Environment is the conceptual runtime package: the JVM, Java libraries, and supporting files required to run an application.
+
+Modern Java distributions do not always provide a separate download called a JRE, but the distinction still helps. Development tools and runtime components have different jobs.
+
+### JVM
+
+The Java Virtual Machine is the execution engine. Its responsibilities include:
+
+- Loading classes.
+- Verifying bytecode.
+- Linking and initializing classes.
+- Managing the heap and garbage collection.
+- Running the interpreter.
+- Compiling code with the JIT.
+- Maintaining the program's runtime environment.
+
+The relationship can be summarized as:
+
+```text
+JDK
+├── Development tools
+└── Runtime
+    └── JVM
+```
+
+## What happens during `java Main`?
+
+After compilation, I ran:
+
+```bash
+java Main Evyatar
+```
+
+The output was:
+
+```text
+Hello from Java
+Java version: 26
+Working directory: /path/to/the/lab
+First argument: Evyatar
+```
+
+The command does not include the `.class` suffix. It asks Java to find a class named `Main` on the classpath. In this small example, the current directory was part of that search path.
+
+Several steps follow:
+
+1. The operating system launches the native `java` executable.
+2. A new process is created.
+3. The JVM starts inside that process.
+4. A class loader locates and loads `Main.class`.
+5. The JVM verifies, links, and initializes the class.
+6. It finds `public static void main(String[] args)`.
+7. The main thread begins executing the method.
+
+The word `Evyatar` after the class name becomes `args[0]`.
+
+## Loading, linking, and initialization
+
+"Loading a class" is useful shorthand for several operations.
+
+During loading, a class loader finds the class representation and creates its runtime structure. During linking, the JVM may:
+
+- Verify that the bytecode is structurally valid.
+- Prepare storage for static fields.
+- Resolve symbolic references to classes, fields, and methods.
+
+Initialization then runs static initializers and static assignments according to Java's rules. Once the class is ready, execution can enter `main`.
+
+The JVM does not need to load every possible application class at startup. Many classes are loaded on demand, reducing startup work and avoiding classes that are never used.
+
+## Interpreter, JIT, and the code cache
+
+The CPU does not execute Java bytecode directly. Early in execution, an interpreter can walk through bytecode instructions and perform their operations.
+
+At the same time, the JVM profiles the running application. Methods and loops executed repeatedly become hot code. The Just-In-Time compiler can translate that code into machine instructions optimized for the current processor and observed runtime conditions.
+
+The generated code is stored in the code cache:
+
+```text
+Bytecode
+↓
+Interpreter
+↓
+Profiling identifies hot code
+↓
+JIT compilation
+↓
+Machine code in the Code Cache
+```
+
+The JIT can make optimizations based on runtime evidence and later deoptimize code if its assumptions stop being true. This is one reason the performance of a long-running Java application may change after warm-up.
+
+## Where does the operating system fit?
+
+The operating system does not receive each machine instruction and forward it to the processor. It manages the execution context:
+
+- The process and its PID.
+- Threads.
+- Virtual memory.
+- Permissions.
+- File descriptors.
+- Input and output.
+- CPU scheduling.
+
+When a Java thread is scheduled, the CPU directly executes machine instructions belonging to the JVM or to code produced by the JIT.
+
+A more precise chain is:
+
+```text
+JVM produces or selects executable machine code
+↓
+OS scheduler gives the thread CPU time
+↓
+CPU executes the instructions
+```
+
+## What is the process in this model?
+
+Every launch of `java` creates a separate active instance. Its process context includes:
+
+- A PID.
+- An address space and memory.
+- Environment variables.
+- A working directory.
+- stdin, stdout, and stderr streams.
+- Threads.
+- Permissions and resource limits.
+
+Three concepts should stay separate:
+
+- A JAR is a passive artifact stored on disk.
+- The JVM is the execution environment.
+- A process is the active instance managed by the operating system.
+
+The same JAR can be launched several times. Each run receives its own process, memory, and PID.
+
+## Creating an executable JAR
+
+After the class worked, I packaged it:
+
+```bash
+jar --create --file app.jar --main-class Main Main.class
+```
+
+A JAR is an archive that can contain classes, resources, metadata, and a manifest. Listing it:
+
+```bash
+jar --list --file app.jar
+```
+
+produced:
+
+```text
+META-INF/
+META-INF/MANIFEST.MF
+Main.class
+```
+
+The manifest contains:
+
+```text
+Main-Class: Main
+```
+
+That entry defines the archive's starting class.
+
+## Running the JAR
+
+I launched the archive with:
+
+```bash
+java -jar app.jar Evyatar
+```
+
+Java opened the archive, read `META-INF/MANIFEST.MF`, found `Main-Class`, and invoked the same `main` method. The command-line argument again became `args[0]`.
+
+The main difference between the two launch forms is how the entry point is found:
+
+```text
+java Main
+└── Find Main on the classpath
+
+java -jar app.jar
+└── Read Main-Class from the manifest
+```
+
+Both forms create a process and JVM, load classes, and eventually execute machine code.
+
+## Build time versus runtime
+
+Build time creates the deliverable:
+
+- Source code is compiled.
+- Syntax and types are checked.
+- Dependencies are collected.
+- `.class` files are produced.
+- A JAR or another artifact is packaged.
+
+At runtime, the artifact already exists:
+
+- A process is created.
+- Classes are loaded.
+- Memory is allocated.
+- Threads begin running.
+- Bytecode is interpreted or compiled.
+- The application uses files, networks, and operating-system services.
+
+This separation explains why code can compile successfully and fail when launched. A dependency may have been available to the compiler but missing from the runtime classpath.
+
+## `PATH` versus `JAVA_HOME`
+
+`PATH` is the list of directories the shell searches for executable commands. That is why `java` can work even when `JAVA_HOME` is empty.
+
+`JAVA_HOME` should point to the home directory of a particular JDK. Maven, Gradle, application servers, build tools, and scripts often use it to select an installation.
+
+They answer different questions:
+
+```text
+PATH      → Which executable runs when I type java?
+JAVA_HOME → Which JDK installation should a tool use?
+```
+
+On macOS, detected JDK homes can be inspected with:
+
+```bash
+/usr/libexec/java_home -V
+```
+
+## Why can IntelliJ work when the terminal fails?
+
+IntelliJ does not have to use the same Java environment as the shell. The IDE may have:
+
+- A project SDK.
+- A separate JDK for Gradle.
+- Its own internal runtime.
+- A run configuration with a dedicated classpath and environment.
+
+That makes it possible for the Run button to work while `javac` is missing in the terminal, or for the two environments to use different Java versions.
+
+When this happens, compare:
+
+- The Java version configured for the project.
+- The value of `JAVA_HOME`.
+- The output of `which java` and `which javac`.
+- The classpath used by each launch environment.
+
+## Files created by the exercise
+
+The exercise ended with three files:
+
+```text
+Main.java
+Main.class
+app.jar
+```
+
+`Main.java` is the source, `Main.class` contains bytecode, and `app.jar` is the packaged artifact with a manifest and entry point.
+
+The launch commands did not create another artifact. They executed what had already been built.
+
+## Summary
+
+The Run button is not one operation. It hides a precise engineering pipeline:
+
+```text
+Source code
+↓ javac
+Bytecode
+↓ class loading and verification
+JVM runtime
+↓ interpreter and JIT
+Machine code
+↓ OS scheduling
+CPU execution
+```
+
+The JDK provides the development tools. The JVM loads and executes the application. The operating system manages its process and threads. The processor ultimately executes machine instructions.
+
+Understanding these boundaries makes real failures easier to diagnose: different Java versions in the IDE and terminal, a missing classpath dependency, a library available only at build time, a manifest without `Main-Class`, or performance that changes after JIT warm-up.
+
+Once the whole chain is visible, `java Main` stops looking like magic and becomes a system that can be inspected one stage at a time.

@@ -1,0 +1,391 @@
+רוב המפתחים מתחילים לעבוד עם Java בצורה פשוטה: יוצרים קובץ, כותבים מתודת `main`, לוחצים על Run ב-IntelliJ ורואים טקסט על המסך.
+
+אבל כפתור אחד מסתיר שרשרת שלמה:
+
+```text
+Main.java
+↓
+javac
+↓
+Main.class
+↓
+JVM
+↓
+Interpreter / JIT
+↓
+OS Scheduler
+↓
+CPU
+```
+
+בתרגול הזה עקבתי אחרי השרשרת בפועל: בדקתי את סביבת Java, קימפלתי קובץ ידנית, הרצתי מחלקה, ארזתי JAR בר-הרצה ובדקתי מה תפקידם של ה-JDK, ה-JVM, מערכת ההפעלה והמעבד.
+
+## סביבת הפיתוח
+
+התרגול בוצע עם Temurin OpenJDK 26. את סביבת ההרצה והקומפיילר בדקתי בנפרד:
+
+```bash
+java -version
+javac -version
+```
+
+הפלט הצביע על אותה גרסה:
+
+```text
+openjdk version "26" 2026-03-17
+OpenJDK Runtime Environment Temurin-26+35
+OpenJDK 64-Bit Server VM Temurin-26+35
+
+javac 26
+```
+
+בדקתי גם איזו פקודה ה-shell מפעיל:
+
+```bash
+which java
+which javac
+```
+
+במחשב הזה שתיהן נמצאו דרך `/usr/bin`. המשתנה `JAVA_HOME` היה ריק, אך Java עדיין עבדה. זה אפשרי משום שה-shell מוצא פקודות דרך `PATH`; הוא אינו זקוק ל-`JAVA_HOME` כדי להפעיל פקודה שכבר זמינה.
+
+חשוב לדייק: `which java` מציג איזו פקודה נמצאה, לא בהכרח את תיקיית הבית האמיתית של ה-JDK.
+
+## קוד המקור
+
+יצרתי קובץ בשם `Main.java`:
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello from Java");
+        System.out.println(
+            "Java version: " + System.getProperty("java.version")
+        );
+        System.out.println(
+            "Working directory: " + System.getProperty("user.dir")
+        );
+        System.out.println(
+            "First argument: " + (args.length > 0 ? args[0] : "none")
+        );
+    }
+}
+```
+
+זהו source code: קובץ טקסט שמיועד לבני אדם ולכלי הפיתוח. המעבד אינו יודע לבצע ישירות מחלקות, מתודות או ביטויים בשפת Java.
+
+## מ-`Main.java` ל-`Main.class`
+
+הקומפילציה בוצעה באמצעות:
+
+```bash
+javac Main.java
+```
+
+הקומפיילר `javac` מנתח את התחביר, בודק טיפוסים, פותר הפניות למחלקות ולמתודות ומפיק:
+
+```text
+Main.class
+```
+
+קובץ `.class` אינו קוד המקור המקורי, אך הוא גם אינו קוד מכונה שמותאם ישירות למעבד מסוים. הוא מכיל Java bytecode, שפת ביניים שה-JVM יודעת לטעון ולבצע.
+
+ההפרדה הזאת עומדת מאחורי רעיון הניידות של Java: אותו bytecode יכול לרוץ על מערכות שונות, כל עוד מותקנת בהן JVM תואמת.
+
+## JDK, JRE ו-JVM
+
+שלושת המושגים קשורים, אך כל אחד מתאר שכבה אחרת.
+
+### JDK
+
+ה-Java Development Kit הוא ערכת הפיתוח. הוא כולל כלים כמו:
+
+- `javac` לקומפילציה.
+- `java` להפעלת תוכניות.
+- `jar` ליצירת ארכיוני JAR.
+- כלי תיעוד, ניתוח ודיבוג.
+
+כדי לכתוב ולקמפל Java צריך JDK.
+
+### JRE
+
+Java Runtime Environment הוא המושג שמתאר את סביבת ההרצה: JVM, ספריות ורכיבים שנדרשים להפעלת תוכנית.
+
+בהפצות Java מודרניות לא תמיד מתקינים חבילה נפרדת בשם JRE, אך ההבחנה עדיין מועילה: כלי פיתוח אינם אותו דבר כמו רכיבי runtime.
+
+### JVM
+
+Java Virtual Machine היא מנוע ההרצה. היא אחראית בין היתר על:
+
+- טעינת מחלקות.
+- אימות bytecode.
+- קישור ואתחול מחלקות.
+- ניהול heap ו-garbage collection.
+- הפעלת interpreter.
+- קומפילציה באמצעות JIT.
+- ניהול סביבת הריצה של התוכנית.
+
+אפשר לסכם:
+
+```text
+JDK
+├── Development tools
+└── Runtime
+    └── JVM
+```
+
+## מה קורה ב-`java Main`?
+
+לאחר הקומפילציה הרצתי:
+
+```bash
+java Main Evyatar
+```
+
+הפלט היה:
+
+```text
+Hello from Java
+Java version: 26
+Working directory: /path/to/the/lab
+First argument: Evyatar
+```
+
+לא כותבים כאן את הסיומת `.class`. הפקודה מבקשת למצוא מחלקה בשם `Main` ב-classpath. במקרה הפשוט, התיקייה הנוכחית נכללת בו.
+
+מאחורי הפקודה מתרחשים כמה שלבים:
+
+1. מערכת ההפעלה מפעילה את קובץ ההרצה native בשם `java`.
+2. נוצר process חדש.
+3. ה-JVM מתחילה לפעול בתוך ה-process.
+4. class loader מאתר וטוען את `Main.class`.
+5. ה-JVM מאמתת, מקשרת ומאתחלת את המחלקה.
+6. היא מאתרת את `public static void main(String[] args)`.
+7. נוצר ה-thread הראשי והקוד מתחיל לרוץ.
+
+המילה `Evyatar` שהופיעה אחרי שם המחלקה נכנסה אל `args[0]`.
+
+## טעינה, קישור ואתחול
+
+"טעינת מחלקה" היא למעשה שם קצר לכמה פעולות.
+
+בטעינה, ה-class loader מאתר את ייצוג המחלקה ויוצר עבורה מבנה runtime. בשלב הקישור ה-JVM עשויה:
+
+- לאמת שה-bytecode תקין ובטוח מבחינה מבנית.
+- להכין storage לשדות סטטיים.
+- לפתור symbolic references למחלקות, שדות ומתודות.
+
+באתחול מופעלים static initializers והצבות סטטיות לפי כללי Java. רק לאחר שהמחלקה מוכנה אפשר להתחיל מה-`main`.
+
+לא כל מחלקה אפשרית נטענת מראש. רבות מהן נטענות לפי הצורך, דבר שמקצר את זמן ההפעלה ומונע עבודה שאינה נחוצה.
+
+## Interpreter, JIT ו-Code Cache
+
+המעבד אינו מבצע Java bytecode ישירות. בתחילת הריצה interpreter יכול לעבור על הוראות bytecode ולבצע את המשמעות שלהן.
+
+במקביל, ה-JVM אוספת מידע על התנהגות התוכנית. מתודות ולולאות שרצות פעמים רבות הופכות ל-hot code. ה-JIT, או Just-In-Time Compiler, יכול לקמפל קוד חם לקוד מכונה שמותאם למעבד ולתנאי הריצה הנוכחיים.
+
+הקוד שנוצר נשמר באזור שנקרא code cache:
+
+```text
+Bytecode
+↓
+Interpreter
+↓
+Profiling identifies hot code
+↓
+JIT compilation
+↓
+Machine code in the Code Cache
+```
+
+ה-JIT גם יכול לבצע אופטימיזציות שמבוססות על מידע runtime, ולעיתים לבטל אותן אם ההנחות שעליהן הסתמך כבר אינן נכונות. לכן ביצועי תוכנית Java ארוכה יכולים להשתנות לאחר שלב ה-warm-up.
+
+## איפה מערכת ההפעלה נכנסת לתמונה?
+
+מערכת ההפעלה אינה מקבלת כל הוראת מכונה ושולחת אותה למעבד. היא מנהלת את מסגרת ההרצה:
+
+- process ו-PID.
+- threads.
+- זיכרון וירטואלי.
+- הרשאות.
+- file descriptors.
+- קלט ופלט.
+- תזמון זמן CPU.
+
+כאשר ה-thread של Java נבחר לרוץ, המעבד מבצע ישירות את הוראות המכונה של ה-JVM או של הקוד שקימפל ה-JIT.
+
+לכן השרשרת המדויקת יותר היא:
+
+```text
+JVM produces or selects executable machine code
+↓
+OS scheduler gives the thread CPU time
+↓
+CPU executes the instructions
+```
+
+## מהו process במקרה הזה?
+
+כל הפעלה של `java` יוצרת מופע פעיל נפרד. ה-process כולל:
+
+- PID.
+- מרחב כתובות וזיכרון.
+- משתני סביבה.
+- תיקיית עבודה.
+- streams של stdin, stdout ו-stderr.
+- threads.
+- הרשאות ומגבלות משאבים.
+
+חשוב להפריד בין שלושה דברים:
+
+- JAR הוא artifact פסיבי בדיסק.
+- JVM היא סביבת ההרצה.
+- process הוא מופע פעיל שמערכת ההפעלה מנהלת.
+
+אפשר להריץ אותו JAR כמה פעמים. כל הרצה תקבל process, זיכרון ו-PID משלה.
+
+## יצירת JAR בר-הרצה
+
+לאחר שהמחלקה עבדה, ארזתי אותה:
+
+```bash
+jar --create --file app.jar --main-class Main Main.class
+```
+
+JAR הוא ארכיון שיכול להכיל מחלקות, resources, metadata וקובץ manifest. בדיקת התוכן:
+
+```bash
+jar --list --file app.jar
+```
+
+הציגה:
+
+```text
+META-INF/
+META-INF/MANIFEST.MF
+Main.class
+```
+
+ה-manifest כולל במקרה הזה:
+
+```text
+Main-Class: Main
+```
+
+הערך הזה מגדיר את נקודת הכניסה של הארכיון.
+
+## הרצת ה-JAR
+
+את הארכיון הרצתי כך:
+
+```bash
+java -jar app.jar Evyatar
+```
+
+Java פתחה את הארכיון, קראה את `META-INF/MANIFEST.MF`, מצאה את `Main-Class` והפעילה את אותה מתודת `main`. גם כאן הארגומנט הועבר אל `args[0]`.
+
+ההבדל בין שתי צורות ההרצה הוא בעיקר גילוי נקודת הכניסה:
+
+```text
+java Main
+└── Find Main on the classpath
+
+java -jar app.jar
+└── Read Main-Class from the manifest
+```
+
+בשני המקרים נוצרים process ו-JVM, נטענות מחלקות ובסוף מתבצע קוד מכונה.
+
+## Build Time לעומת Runtime
+
+ב-build time נוצרים התוצרים:
+
+- קוד המקור עובר קומפילציה.
+- נבדקים תחביר וטיפוסים.
+- נאספות dependencies.
+- נוצרים קובצי `.class`.
+- נוצר JAR או artifact אחר.
+
+ב-runtime התוצר כבר קיים:
+
+- נוצר process.
+- נטענות מחלקות.
+- מוקצה זיכרון.
+- מופעלים threads.
+- bytecode מפורש או מקומפל.
+- התוכנית ניגשת לקבצים, לרשת ולשירותי מערכת.
+
+ההפרדה מסבירה מדוע קוד יכול לעבור קומפילציה ולהיכשל בהרצה. לדוגמה, dependency הייתה זמינה לקומפיילר אך אינה קיימת ב-runtime classpath.
+
+## `PATH` לעומת `JAVA_HOME`
+
+`PATH` הוא רשימת תיקיות שבהן ה-shell מחפש פקודות. לכן `java` יכולה לעבוד גם אם `JAVA_HOME` ריק.
+
+`JAVA_HOME` אמור להצביע על תיקיית הבית של JDK מסוים. כלים כמו Maven, Gradle, שרתי אפליקציה וסקריפטים משתמשים בו כדי לבחור התקנת Java.
+
+אלה שאלות שונות:
+
+```text
+PATH      → Which executable runs when I type java?
+JAVA_HOME → Which JDK installation should a tool use?
+```
+
+ב-macOS אפשר לבדוק את תיקיות הבית שזוהו באמצעות:
+
+```bash
+/usr/libexec/java_home -V
+```
+
+## למה IntelliJ עובד כשה-terminal נכשל?
+
+IntelliJ אינו חייב להשתמש באותה סביבת Java של ה-shell. ל-IDE יכולים להיות:
+
+- Project SDK.
+- JDK נפרד ל-Gradle.
+- runtime פנימי של ה-IDE.
+- Run Configuration עם classpath ומשתני סביבה משלה.
+
+לכן ייתכן שכפתור Run יצליח בזמן ש-`javac` אינו נמצא ב-terminal, או ששתי הסביבות ישתמשו בגרסאות שונות.
+
+כשזה קורה כדאי להשוות:
+
+- איזו גרסת Java מוגדרת בפרויקט.
+- מהו `JAVA_HOME`.
+- מה מחזירות `which java` ו-`which javac`.
+- מהו ה-classpath בכל סביבת הרצה.
+
+## הקבצים שנוצרו
+
+בסיום התרגול היו שלושה קבצים:
+
+```text
+Main.java
+Main.class
+app.jar
+```
+
+`Main.java` הוא המקור, `Main.class` הוא bytecode, ו-`app.jar` הוא artifact ארוז עם manifest ונקודת כניסה.
+
+פקודות ההרצה לא יצרו artifact חדש. הן הפעילו את מה שכבר נבנה.
+
+## סיכום
+
+כפתור Run אינו פעולה אחת. הוא מסתיר תהליך הנדסי מסודר:
+
+```text
+Source code
+↓ javac
+Bytecode
+↓ class loading and verification
+JVM runtime
+↓ interpreter and JIT
+Machine code
+↓ OS scheduling
+CPU execution
+```
+
+ה-JDK מספק את כלי הפיתוח. ה-JVM טוענת ומבצעת את התוכנית. מערכת ההפעלה מנהלת את ה-process וה-threads. המעבד מבצע לבסוף הוראות מכונה.
+
+הבנת הגבולות האלה עוזרת לאבחן בעיות אמיתיות: גרסת Java שונה ב-IDE וב-terminal, classpath חסר, dependency שקיימת רק בזמן build, manifest ללא `Main-Class`, או תוכנית שמתנהגת אחרת לפני ואחרי JIT warm-up.
+
+ברגע שרואים את השרשרת כולה, `java Main` מפסיקה להיראות כמו קסם והופכת למערכת שאפשר לבדוק שלב אחר שלב.

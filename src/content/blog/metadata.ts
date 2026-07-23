@@ -6,6 +6,26 @@ import type { BlogLanguage, BlogPostMeta } from './types';
  * not pull the article bodies into their bundle.
  */
 const metadata = {
+  'java-program-execution:he': {
+      slug: 'java-program-execution',
+      language: 'he',
+      title: 'מה באמת קורה כשמריצים תוכנית Java?',
+      excerpt: 'מדריך מעשי למסלול מ-Main.java אל ה-CPU: קומפילציה, bytecode, JDK ו-JVM, טעינת מחלקות, interpreter, JIT, processes, JAR, PATH ו-JAVA_HOME.',
+      date: '2026-07-23',
+      readTime: '12 דקות קריאה',
+      tags: ['Java', 'JVM', 'Systems'],
+      featured: false,
+    },
+  'java-program-execution:en': {
+      slug: 'java-program-execution',
+      language: 'en',
+      title: 'What really happens when you run a Java program?',
+      excerpt: 'A practical path from Main.java to the CPU: compilation, bytecode, the JDK and JVM, class loading, interpretation, JIT, processes, JAR files, PATH, and JAVA_HOME.',
+      date: '2026-07-23',
+      readTime: '12 min read',
+      tags: ['Java', 'JVM', 'Systems'],
+      featured: false,
+    },
   'virtualization-virtual-machines:he': {
       slug: 'virtualization-virtual-machines',
       language: 'he',
