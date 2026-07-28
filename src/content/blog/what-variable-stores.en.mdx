@@ -1,0 +1,421 @@
+When people first learn programming, a variable is often described as a box that stores a value. That is a useful starting point, but it becomes vague as soon as arrays, objects, `null`, copied variables, and `final` enter the picture.
+
+A more precise question is:
+
+> What does the variable actually hold?
+
+A variable holds a value. Sometimes that value is a number, character, or boolean. Sometimes it is a reference that lets the program reach an object.
+
+That distinction explains why an array mutation can be seen through two variables, why `final` does not make an object immutable, and what is really copied when an argument is passed to a method.
+
+## Declaration, initialization, and assignment
+
+Several similar operations are easy to mix up.
+
+### Declaration
+
+A declaration introduces a name and type:
+
+```java
+int age;
+```
+
+The local variable `age` now exists, but Java does not allow it to be read until the compiler can prove that it received a value.
+
+### Initialization
+
+Initialization gives the variable its first value:
+
+```java
+int age = 30;
+```
+
+### Assignment and reassignment
+
+Assignment places a value in a variable:
+
+```java
+age = 30;
+```
+
+If the variable already held a value, the operation is a reassignment:
+
+```java
+age = 31;
+```
+
+The variable does not preserve a history of previous values. After the assignment, it holds the new value.
+
+## Primitive values and reference values
+
+Java has a clear distinction between primitive types and reference types.
+
+### Primitive values
+
+A primitive variable holds the value itself:
+
+```java
+int number = 10;
+boolean active = true;
+char letter = 'A';
+```
+
+The values `10`, `true`, and `'A'` are stored in those variables.
+
+### Reference values
+
+A reference variable holds a value that identifies an object:
+
+```java
+int[] numbers = {10, 20, 30};
+```
+
+`numbers` is not the array itself. It holds a reference to the array object.
+
+It is better not to treat a reference as a visible physical memory address. The runtime manages memory, the garbage collector may move objects, and the JVM hides representation details. At the language level, a reference is a value that identifies an object and permits access to it.
+
+## What gets copied during assignment?
+
+Assignment from one variable to another copies the value held by the source variable.
+
+With a primitive, the result is straightforward:
+
+```java
+int first = 10;
+int second = first;
+
+second = 20;
+
+System.out.println(first);  // 10
+System.out.println(second); // 20
+```
+
+`second` received a copy of `10`. Each variable now has an independent value.
+
+With references, the reference value is copied:
+
+```java
+int[] first = {1};
+int[] second = first;
+```
+
+No second array was created:
+
+```text
+first  ─┐
+        ├──> {1}
+second ─┘
+```
+
+Both variables refer to the same object. This situation is often called aliasing.
+
+Mutating the array through `second` is visible through `first`:
+
+```java
+second[0] = 2;
+
+System.out.println(first[0]);  // 2
+System.out.println(second[0]); // 2
+```
+
+The variable `first` was not changed. The shared object was changed.
+
+## Mutating an object versus replacing a reference
+
+This operation changes the existing object:
+
+```java
+second[0] = 2;
+```
+
+This operation changes the value stored in `second`:
+
+```java
+second = new int[]{3};
+```
+
+The variables now refer to different arrays:
+
+```text
+first  ───> {2}
+second ───> {3}
+```
+
+A later mutation through `first` does not affect the new array:
+
+```java
+first[0] = 4;
+
+System.out.println(first[0]);  // 4
+System.out.println(second[0]); // 3
+```
+
+This is the central distinction: changing an object's state is not the same as reassigning a variable.
+
+## Java always passes values
+
+Method arguments follow the same copy-the-value rule.
+
+With a primitive, the method receives a copy of the number:
+
+```java
+static void change(int value) {
+    value = 99;
+}
+
+int number = 10;
+change(number);
+
+System.out.println(number); // 10
+```
+
+With an object, the method receives a copy of the reference value:
+
+```java
+static void changeFirst(int[] values) {
+    values[0] = 99;
+}
+
+int[] numbers = {10};
+changeFirst(numbers);
+
+System.out.println(numbers[0]); // 99
+```
+
+The method can mutate the shared object, but reassigning its parameter does not replace the caller's variable:
+
+```java
+static void replace(int[] values) {
+    values = new int[]{99};
+}
+
+int[] numbers = {10};
+replace(numbers);
+
+System.out.println(numbers[0]); // 10
+```
+
+Java does not pass an object "by reference." Java always passes a value; for an object, the copied value is a reference.
+
+## Fields and local variables
+
+A local variable is declared inside a method or block:
+
+```java
+void printAge() {
+    int age = 30;
+}
+```
+
+`age` is accessible only within its declared scope.
+
+A field belongs to a class:
+
+```java
+class Person {
+    int age;
+    boolean active;
+    String name;
+}
+```
+
+Instance fields receive default values:
+
+```text
+int     → 0
+boolean → false
+String  → null
+```
+
+Elements in a newly created array also receive default values. Local variables are different: Java requires definite assignment before reading them.
+
+```java
+void test() {
+    int number;
+    System.out.println(number); // compile-time error
+}
+```
+
+The compiler prevents the program from observing an unspecified local value.
+
+## `null`, `undefined`, and `None`
+
+All three concepts can represent an absence of value, but they belong to different languages and follow different rules.
+
+### `null` in Java
+
+A reference variable can hold `null`, meaning that it currently refers to no object:
+
+```java
+String text = null;
+System.out.println(text); // null
+```
+
+Trying to dereference it fails at runtime:
+
+```java
+System.out.println(text.length()); // NullPointerException
+```
+
+The code is syntactically and type-correct, but there is no object on which to invoke the method.
+
+### `undefined` and `null` in JavaScript and TypeScript
+
+In JavaScript, a `let` variable without an initializer receives `undefined`:
+
+```typescript
+let value;
+console.log(value); // undefined
+```
+
+`null` is usually assigned explicitly:
+
+```typescript
+let value: string | null = null;
+```
+
+TypeScript in `strict` mode can prevent many unsafe uses, but the runtime values still follow JavaScript's rules.
+
+### `None` in Python
+
+Python represents an intentional absence with `None`:
+
+```python
+value = None
+```
+
+A name that was never defined does not automatically contain `None`. Reading it raises `NameError`, while reading a missing object attribute may raise `AttributeError`.
+
+## Scope
+
+Scope is the region where a name is accessible:
+
+```java
+if (true) {
+    int inner = 5;
+    System.out.println(inner); // valid
+}
+
+System.out.println(inner); // compile-time error
+```
+
+The distinction between variables and objects matters here too. A local variable can leave scope while its object remains alive because another reachable reference still points to it.
+
+If no reachable reference remains, the object may become eligible for garbage collection. That does not guarantee immediate removal.
+
+## Shadowing
+
+Shadowing occurs when an inner name hides an outer one:
+
+```java
+class Account {
+    int amount = 10;
+
+    void update(int amount) {
+        System.out.println(amount);      // parameter
+        System.out.println(this.amount); // field
+    }
+}
+```
+
+The parameter `amount` shadows the field. `this.amount` explicitly selects the field on the current object:
+
+```java
+this.amount = amount;
+```
+
+The right side reads the parameter, and its value is copied into the field on the left.
+
+Python commonly expresses the equivalent operation with `self`:
+
+```python
+def update(self, amount: int) -> None:
+    self.amount = amount
+```
+
+## `final`, `const`, and `Final`
+
+These tools restrict reassignment, but they do not necessarily make an object immutable.
+
+### `final` in Java
+
+```java
+final int[] numbers = {1};
+```
+
+A new reference cannot be assigned:
+
+```java
+numbers = new int[]{2}; // compile-time error
+```
+
+The existing object can still be mutated:
+
+```java
+numbers[0] = 2; // valid
+```
+
+`final` requires the variable to receive its value once. It does not freeze the array.
+
+### `const` in JavaScript and TypeScript
+
+```typescript
+const numbers: number[] = [1];
+
+numbers[0] = 2; // valid
+numbers = [3];  // error
+```
+
+`const` prevents a new binding for the name, not mutation of the object. Deep immutability requires an additional model, such as readonly types, immutable data structures, or creating copies.
+
+### `Final` in Python
+
+```python
+from typing import Final
+
+numbers: Final[list[int]] = [1]
+```
+
+A type checker should report reassignment, but `Final` is an annotation and is not enforced by Python's assignment mechanism at runtime. It also does not prevent mutations inside the list.
+
+## Compile time versus runtime
+
+A compile-time error is detected before execution:
+
+```java
+final int number = 10;
+number = 20; // compile-time error
+```
+
+A runtime error happens after bytecode was created and the program started:
+
+```java
+String text = null;
+System.out.println(text.length()); // NullPointerException
+```
+
+Code that compiles is not guaranteed to finish successfully. The compiler can prove some rules, while other conditions depend on values that exist only at runtime.
+
+## A practical mental model
+
+For every line that changes state, ask:
+
+1. What value does the variable hold?
+2. Is it a primitive value or a reference value?
+3. Does the operation change the variable or the object?
+4. Do other variables refer to the same object?
+5. Is the name accessible in the current scope?
+6. Does the restriction concern reassignment or mutability?
+7. Will a failure be detected at compile time or only at runtime?
+
+This turns complicated-looking code into a sequence of copied values, object mutations, and changed relationships.
+
+## Summary
+
+A variable always holds a value. For a primitive variable, that value is the data itself. For a reference variable, it is a value that permits access to an object.
+
+Copying a reference does not copy the object. It creates another reference to the same object. A mutation can be observed through every alias, while reassignment changes only the variable that receives the new value.
+
+`final`, `const`, and `Final` mainly restrict reassignment. They do not guarantee that an object is immutable.
+
+This model connects arrays, objects, argument passing, `null`, scope, garbage collection, and many of the most common bugs in everyday code.

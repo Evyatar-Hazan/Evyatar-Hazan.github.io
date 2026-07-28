@@ -6,6 +6,26 @@ import type { BlogLanguage, BlogPostMeta } from './types';
  * not pull the article bodies into their bundle.
  */
 const metadata = {
+  'what-variable-stores:he': {
+      slug: 'what-variable-stores',
+      language: 'he',
+      title: 'מה באמת נשמר במשתנה?',
+      excerpt: 'מדריך מעשי לערכים ו-references: העתקת משתנים, aliasing, mutation מול reassignment, העברת פרמטרים, null, scope, shadowing ו-final.',
+      date: '2026-07-28',
+      readTime: '11 דקות קריאה',
+      tags: ['Java', 'Programming Fundamentals', 'References'],
+      featured: false,
+    },
+  'what-variable-stores:en': {
+      slug: 'what-variable-stores',
+      language: 'en',
+      title: 'What does a variable really store?',
+      excerpt: 'A practical guide to values and references: copying variables, aliasing, mutation versus reassignment, argument passing, null, scope, shadowing, and final.',
+      date: '2026-07-28',
+      readTime: '11 min read',
+      tags: ['Java', 'Programming Fundamentals', 'References'],
+      featured: false,
+    },
   'java-program-execution:he': {
       slug: 'java-program-execution',
       language: 'he',

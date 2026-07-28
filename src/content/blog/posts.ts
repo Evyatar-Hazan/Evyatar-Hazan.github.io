@@ -42,10 +42,20 @@ import WhatTheCpuReallyDoesEn from './what-the-cpu-really-does.en.mdx';
 import WhatTheCpuReallyDoesHe from './what-the-cpu-really-does.he.mdx';
 import VirtualizationVirtualMachinesEn from './virtualization-virtual-machines.en.mdx';
 import VirtualizationVirtualMachinesHe from './virtualization-virtual-machines.he.mdx';
+import WhatVariableStoresEn from './what-variable-stores.en.mdx';
+import WhatVariableStoresHe from './what-variable-stores.he.mdx';
 import { blogPostMetadataByKey } from './metadata';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    ...blogPostMetadataByKey['what-variable-stores:he'],
+    Content: WhatVariableStoresHe,
+  },
+  {
+    ...blogPostMetadataByKey['what-variable-stores:en'],
+    Content: WhatVariableStoresEn,
+  },
   {
     ...blogPostMetadataByKey['java-program-execution:he'],
     Content: JavaProgramExecutionHe,

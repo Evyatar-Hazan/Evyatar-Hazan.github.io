@@ -1,0 +1,421 @@
+כשמתחילים ללמוד תכנות, נהוג להסביר שמשתנה הוא קופסה ששומרים בתוכה ערך. זהו מודל שימושי להתחלה, אבל הוא נעשה מעורפל ברגע שמופיעים מערכים, אובייקטים, `null`, העתקת משתנים ו-`final`.
+
+השאלה המדויקת יותר היא:
+
+> מה המשתנה באמת מחזיק?
+
+משתנה מחזיק ערך. לפעמים הערך הוא מספר, תו או ערך בוליאני, ולפעמים הערך הוא reference שמאפשר להגיע לאובייקט.
+
+ההבדל הזה מסביר מדוע שינוי במערך נראה דרך שני משתנים, מדוע `final` אינו הופך אובייקט לבלתי ניתן לשינוי, ומה בדיוק מועתק כאשר מעבירים פרמטר למתודה.
+
+## הכרזה, אתחול והשמה
+
+יש כמה פעולות דומות שקל לערבב ביניהן.
+
+### הכרזה
+
+הכרזה מגדירה שם וטיפוס:
+
+```java
+int age;
+```
+
+קיים כעת משתנה מקומי בשם `age`, אבל עדיין אסור לקרוא ממנו עד שהקומפיילר יכול להוכיח שקיבל ערך.
+
+### אתחול
+
+אתחול הוא הערך הראשון שמקבל המשתנה:
+
+```java
+int age = 30;
+```
+
+### השמה והשמה מחדש
+
+השמה מכניסה ערך למשתנה:
+
+```java
+age = 30;
+```
+
+אם המשתנה כבר החזיק ערך, זו השמה מחדש:
+
+```java
+age = 31;
+```
+
+המשתנה לא שומר היסטוריה של כל הערכים. לאחר ההשמה הוא מחזיק את הערך החדש.
+
+## Primitive מול Reference
+
+ב-Java קיימת הבחנה ברורה בין primitive types לבין reference types.
+
+### ערך primitive
+
+משתנה primitive מחזיק את הערך עצמו:
+
+```java
+int number = 10;
+boolean active = true;
+char letter = 'A';
+```
+
+הערכים `10`,‏ `true` ו-`'A'` הם הערכים השמורים במשתנים.
+
+### ערך reference
+
+משתנה reference מחזיק ערך שמאפשר להגיע לאובייקט:
+
+```java
+int[] numbers = {10, 20, 30};
+```
+
+`numbers` אינו המערך עצמו. הוא מחזיק reference למערך שנוצר.
+
+לא כדאי לחשוב על reference כעל כתובת זיכרון פיזית גלויה. סביבת הריצה מנהלת את הזיכרון, garbage collector עשוי להזיז אובייקטים, וה-JVM מסתירה את פרטי הייצוג. מבחינת הקוד, reference הוא ערך שמזהה אובייקט ומאפשר לגשת אליו.
+
+## מה מועתק בהשמה?
+
+השמה ממשתנה למשתנה מעתיקה את הערך שהמשתנה מחזיק.
+
+ב-primitive זה פשוט:
+
+```java
+int first = 10;
+int second = first;
+
+second = 20;
+
+System.out.println(first);  // 10
+System.out.println(second); // 20
+```
+
+`second` קיבל עותק של `10`. לכל משתנה יש ערך עצמאי.
+
+ב-reference מועתק ערך ההפניה:
+
+```java
+int[] first = {1};
+int[] second = first;
+```
+
+לא נוצר מערך נוסף:
+
+```text
+first  ─┐
+        ├──> {1}
+second ─┘
+```
+
+שני המשתנים מחזיקים references לאותו אובייקט. למצב הזה קוראים לעיתים aliasing.
+
+אם משנים את המערך דרך `second`:
+
+```java
+second[0] = 2;
+
+System.out.println(first[0]);  // 2
+System.out.println(second[0]); // 2
+```
+
+לא שינינו את המשתנה `first`. שינינו את האובייקט שאליו שני המשתנים מפנים.
+
+## שינוי אובייקט מול החלפת reference
+
+הפעולה הבאה משנה את האובייקט הקיים:
+
+```java
+second[0] = 2;
+```
+
+הפעולה הבאה משנה את הערך ששמור במשתנה `second`:
+
+```java
+second = new int[]{3};
+```
+
+כעת כל משתנה מפנה למערך אחר:
+
+```text
+first  ───> {2}
+second ───> {3}
+```
+
+שינוי נוסף דרך `first` אינו משפיע על המערך החדש:
+
+```java
+first[0] = 4;
+
+System.out.println(first[0]);  // 4
+System.out.println(second[0]); // 3
+```
+
+זו הבחנה מרכזית: שינוי מצב האובייקט אינו זהה להשמה מחדש של המשתנה.
+
+## Java תמיד מעבירה ערכים
+
+גם העברת פרמטרים פועלת באמצעות העתקת ערך.
+
+עם primitive, המתודה מקבלת עותק של המספר:
+
+```java
+static void change(int value) {
+    value = 99;
+}
+
+int number = 10;
+change(number);
+
+System.out.println(number); // 10
+```
+
+עם אובייקט, המתודה מקבלת עותק של ערך ה-reference:
+
+```java
+static void changeFirst(int[] values) {
+    values[0] = 99;
+}
+
+int[] numbers = {10};
+changeFirst(numbers);
+
+System.out.println(numbers[0]); // 99
+```
+
+המתודה יכולה לשנות את האובייקט המשותף, אבל השמה מחדש של הפרמטר אינה מחליפה את המשתנה של הקוד הקורא:
+
+```java
+static void replace(int[] values) {
+    values = new int[]{99};
+}
+
+int[] numbers = {10};
+replace(numbers);
+
+System.out.println(numbers[0]); // 10
+```
+
+Java אינה "מעבירה אובייקט לפי reference". היא מעבירה תמיד ערך; במקרה של אובייקט, הערך המועתק הוא reference.
+
+## שדה מול משתנה מקומי
+
+משתנה מקומי מוגדר בתוך מתודה או בלוק:
+
+```java
+void printAge() {
+    int age = 30;
+}
+```
+
+`age` נגיש רק בתחום שבו הוגדר.
+
+שדה הוא חלק ממחלקה:
+
+```java
+class Person {
+    int age;
+    boolean active;
+    String name;
+}
+```
+
+שדות instance מקבלים ערכי ברירת מחדל:
+
+```text
+int     → 0
+boolean → false
+String  → null
+```
+
+גם איברים במערך חדש מקבלים ערכי ברירת מחדל. לעומת זאת, משתנה מקומי חייב לעבור definite assignment לפני קריאה:
+
+```java
+void test() {
+    int number;
+    System.out.println(number); // compile-time error
+}
+```
+
+הקומפיילר אינו מאפשר להשתמש בערך שלא הוגדר.
+
+## `null`,‏ `undefined` ו-`None`
+
+שלושת המושגים קשורים להיעדר ערך, אבל הם שייכים לשפות ולכללים שונים.
+
+### `null` ב-Java
+
+משתנה reference יכול להחזיק `null`, כלומר אינו מפנה כרגע לאובייקט:
+
+```java
+String text = null;
+System.out.println(text); // null
+```
+
+ניסיון לבצע dereference נכשל בזמן הריצה:
+
+```java
+System.out.println(text.length()); // NullPointerException
+```
+
+הקוד חוקי מבחינה תחבירית וטיפוסית, אך אין אובייקט שעליו אפשר להפעיל את המתודה.
+
+### `undefined` ו-`null` ב-JavaScript וב-TypeScript
+
+ב-JavaScript, משתנה `let` ללא initializer מקבל `undefined`:
+
+```typescript
+let value;
+console.log(value); // undefined
+```
+
+`null` בדרך כלל מוצב במפורש:
+
+```typescript
+let value: string | null = null;
+```
+
+TypeScript במצב `strict` יכולה למנוע שימושים לא בטוחים רבים, אך בזמן הריצה הערכים עדיין פועלים לפי כללי JavaScript.
+
+### `None` ב-Python
+
+ב-Python מייצגים היעדר ערך באמצעות `None`:
+
+```python
+value = None
+```
+
+אבל שם שלא הוגדר אינו מקבל `None` אוטומטית. קריאה ממנו גורמת ל-`NameError`, וגישה לתכונה שלא קיימת עלולה לגרום ל-`AttributeError`.
+
+## Scope
+
+Scope הוא התחום שבו שם מסוים נגיש:
+
+```java
+if (true) {
+    int inner = 5;
+    System.out.println(inner); // valid
+}
+
+System.out.println(inner); // compile-time error
+```
+
+האובייקט והמשתנה אינם אותו דבר גם בהקשר הזה. משתנה מקומי יכול לצאת מ-scope, בעוד האובייקט שאליו הפנה ימשיך לחיות אם reference אחר עדיין מגיע אליו.
+
+אם לא נשאר reference נגיש לאובייקט, הוא עשוי להפוך ל-eligible for garbage collection. אין הבטחה שהוא יימחק מיד.
+
+## Shadowing
+
+Shadowing מתרחש כאשר שם פנימי מסתיר שם חיצוני:
+
+```java
+class Account {
+    int amount = 10;
+
+    void update(int amount) {
+        System.out.println(amount);      // parameter
+        System.out.println(this.amount); // field
+    }
+}
+```
+
+הפרמטר `amount` מסתיר את השדה. `this.amount` פונה במפורש לשדה של האובייקט:
+
+```java
+this.amount = amount;
+```
+
+הצד הימני נקרא מהפרמטר, והערך מועתק לשדה בצד השמאלי.
+
+ב-Python מקובל לכתוב פעולה מקבילה באמצעות `self`:
+
+```python
+def update(self, amount: int) -> None:
+    self.amount = amount
+```
+
+## `final`,‏ `const` ו-`Final`
+
+שלושת הכלים מגבילים השמה מחדש, אבל אינם בהכרח הופכים את האובייקט ל-immutable.
+
+### `final` ב-Java
+
+```java
+final int[] numbers = {1};
+```
+
+אסור להציב reference חדש:
+
+```java
+numbers = new int[]{2}; // compile-time error
+```
+
+מותר לשנות את האובייקט:
+
+```java
+numbers[0] = 2; // valid
+```
+
+`final` מחייב שהמשתנה יקבל ערך פעם אחת בלבד. הוא אינו מקפיא את המערך.
+
+### `const` ב-JavaScript וב-TypeScript
+
+```typescript
+const numbers: number[] = [1];
+
+numbers[0] = 2; // valid
+numbers = [3];  // error
+```
+
+`const` מונע binding חדש לשם, לא mutation של האובייקט. עבור immutability עמוקה נדרש מודל נוסף, כגון readonly types, מבני נתונים immutable או יצירת עותקים.
+
+### `Final` ב-Python
+
+```python
+from typing import Final
+
+numbers: Final[list[int]] = [1]
+```
+
+בודק טיפוסים אמור להתריע על השמה מחדש, אבל `Final` הוא annotation ואינו נאכף על ידי מנגנון ההשמה של Python בזמן הריצה. גם הוא אינו מונע שינוי בתוכן הרשימה.
+
+## Compile Time מול Runtime
+
+שגיאת קומפילציה מתגלה לפני שהתוכנית רצה:
+
+```java
+final int number = 10;
+number = 20; // compile-time error
+```
+
+שגיאת runtime מתרחשת לאחר שנוצר bytecode והתוכנית התחילה:
+
+```java
+String text = null;
+System.out.println(text.length()); // NullPointerException
+```
+
+קוד שמתקמפל אינו בהכרח קוד שיסיים בהצלחה. הקומפיילר יכול להוכיח כללים מסוימים, אך מצבים אחרים תלויים בערכים שקיימים רק בזמן הריצה.
+
+## המודל שכדאי להפעיל
+
+בכל שורה שמשנה state, כדאי לשאול:
+
+1. איזה ערך המשתנה מחזיק?
+2. האם זה primitive או reference?
+3. האם הפעולה משנה את המשתנה או את האובייקט?
+4. האם משתנים נוספים מפנים לאותו אובייקט?
+5. האם השם נגיש ב-scope הנוכחי?
+6. האם ההגבלה עוסקת ב-reassignment או ב-mutability?
+7. האם תקלה תתגלה בקומפילציה או רק בזמן הריצה?
+
+מעקב כזה הופך קוד שנראה מסובך לרצף של העתקות ערכים, שינויים באובייקטים ושינויים בקשרים ביניהם.
+
+## סיכום
+
+משתנה תמיד מחזיק ערך. ב-primitive זהו הנתון עצמו; במשתנה reference זהו ערך שמאפשר להגיע לאובייקט.
+
+העתקת reference אינה מעתיקה את האובייקט. היא יוצרת reference נוסף לאותו אובייקט. mutation יכול להיראות דרך כל alias, בעוד reassignment משנה רק את המשתנה שבו בוצעה ההשמה.
+
+`final`,‏ `const` ו-`Final` מגבילים בעיקר השמה מחדש. הם אינם מבטיחים שהאובייקט immutable.
+
+זהו המודל שמחבר בין מערכים, אובייקטים, העברת פרמטרים, `null`,‏ scope, garbage collection וחלק גדול מהבאגים הנפוצים ביותר בקוד.
