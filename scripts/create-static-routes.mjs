@@ -106,7 +106,7 @@ const staticRoutes = [
       heading: 'Privacy',
       body: [
         'This site presents portfolio work, technical writing, and direct contact paths without asking visitors to create accounts or upload private files.',
-        'The contact form is processed by FormSubmit, while advertising technology is provided by Google AdSense. The full notice explains cookies, browser preferences, technical request data, and visitor choices.'
+        'The contact form is processed by FormSubmit. The portfolio does not load ads; Google AdSense is used on the Online Converter product. The full notice explains cookies, browser preferences, technical request data, and visitor choices.'
       ],
       links: [
         { href: '/', label: 'Home' },

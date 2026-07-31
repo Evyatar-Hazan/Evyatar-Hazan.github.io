@@ -31,7 +31,7 @@ const PrivacyPage = () => {
         },
         {
           title: 'פרסום ו-Google AdSense',
-          body: 'האתר כולל קוד של Google AdSense. לאחר אישור האתר, Google ושותפי פרסום עשויים להשתמש ב-cookies, מזהי מכשיר ונתוני שימוש כדי להציג, להתאים ולמדוד מודעות, בהתאם להגדרות המשתמש, להסכמה הנדרשת ולדין החל. ניתן לנהל התאמה אישית דרך הגדרות המודעות של Google והגדרות הדפדפן.'
+          body: 'אתר הפורטפוליו אינו טוען מודעות. מוצר Online Converter שפועל ב-online-converter.evyatarhazan.com משתמש ב-Google AdSense, ושם Google ושותפי פרסום עשויים להשתמש ב-cookies, מזהי מכשיר ונתוני שימוש כדי להציג, להתאים ולמדוד מודעות בהתאם להגדרות המשתמש, להסכמה הנדרשת ולדין החל.'
         },
         {
           title: 'בחירה ובקשות פרטיות',
@@ -53,7 +53,7 @@ const PrivacyPage = () => {
         },
         {
           title: 'Advertising and Google AdSense',
-          body: 'This site includes Google AdSense code. After the site is approved, Google and its advertising partners may use cookies, device identifiers, and usage data to deliver, personalize, and measure ads, subject to user settings, required consent, and applicable law. You can manage personalization through Google Ads Settings and your browser controls.'
+          body: 'The portfolio site does not load ads. The Online Converter product at online-converter.evyatarhazan.com uses Google AdSense, where Google and its advertising partners may use cookies, device identifiers, and usage data to deliver, personalize, and measure ads, subject to user settings, required consent, and applicable law.'
         },
         {
           title: 'Your choices and privacy requests',
