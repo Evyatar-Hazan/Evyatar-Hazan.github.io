@@ -30,4 +30,12 @@ describe('color system', () => {
       expect(source, path).not.toMatch(hardcodedColorPattern);
     }
   });
+
+  it('keeps light-theme primary actions and channel labels on accessible color tokens', () => {
+    expect(stylesheet).toMatch(/\.contact-primary-channel small\s*{\s*color: var\(--color-neutral-600\);/);
+    expect(stylesheet).toMatch(/\.contact-submit\s*{[\s\S]*?background: var\(--color-primary-700\);/);
+    expect(stylesheet).toMatch(/\.closing-dock-cta\s*{[\s\S]*?background: var\(--color-primary-700\);/);
+    expect(stylesheet).toMatch(/\.dark \.contact-status p,[\s\S]*?color: var\(--color-neutral-400\);/);
+    expect(stylesheet).toMatch(/\.dark \.closing-dock-kicker,[\s\S]*?color: var\(--color-neutral-400\);/);
+  });
 });

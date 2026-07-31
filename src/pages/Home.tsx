@@ -99,7 +99,7 @@ const Home = () => {
                 href={`${profileLinks.whatsapp}?text=${encodeURIComponent(t('home.whatsappText'))}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="product-compiler-primary group inline-flex min-h-12 max-w-full items-center justify-between gap-3 rounded-2xl bg-primary-600 py-1.5 pe-1.5 ps-4 text-sm font-bold text-white shadow-lg shadow-primary-600/20 transition-[transform,background-color,box-shadow] duration-200 hover:bg-primary-500 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 active:scale-[0.99] dark:focus-visible:ring-offset-black sm:justify-center sm:rounded-full sm:px-6 sm:py-3 sm:text-base sm:hover:-translate-y-0.5 sm:active:translate-y-0 sm:active:scale-100"
+                className="product-compiler-primary group inline-flex min-h-12 max-w-full items-center justify-between gap-3 rounded-2xl bg-primary-700 py-1.5 pe-1.5 ps-4 text-sm font-bold text-white shadow-lg shadow-primary-700/20 transition-[transform,background-color,box-shadow] duration-200 hover:bg-primary-800 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 active:scale-[0.99] dark:focus-visible:ring-offset-black sm:justify-center sm:rounded-full sm:px-6 sm:py-3 sm:text-base sm:hover:-translate-y-0.5 sm:active:translate-y-0 sm:active:scale-100"
               >
                 <span>{t('home.compiler.buildCta')}</span>
                 <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white/15 sm:contents">

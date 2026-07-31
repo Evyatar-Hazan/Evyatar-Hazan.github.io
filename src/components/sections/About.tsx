@@ -88,7 +88,6 @@ const About = () => {
   const buildScale = useTransform(scrollYProgress, [0.08, 0.28], [0.92, 1]);
   const proveX = useTransform(scrollYProgress, [0.14, 0.34], [direction * -92, 0]);
   const proveRotate = useTransform(scrollYProgress, [0.14, 0.34], [direction * -3, 0]);
-  const nodeOpacity = useTransform(scrollYProgress, [0.02, 0.24], [0.15, 1]);
   const connectorScale = useTransform(scrollYProgress, [0.16, 0.42], [0, 1]);
   const pagedCapabilityProgress = useTransform(capabilityProgress, getPagedCapabilityProgress);
   const capabilityX = useTransform(
@@ -99,9 +98,9 @@ const About = () => {
   const stepStyles = shouldReduceMotion
     ? [{}, {}, {}]
     : [
-        { x: frameX, rotate: frameRotate, opacity: nodeOpacity },
-        { y: buildY, scale: buildScale, opacity: nodeOpacity },
-        { x: proveX, rotate: proveRotate, opacity: nodeOpacity },
+        { x: frameX, rotate: frameRotate },
+        { y: buildY, scale: buildScale },
+        { x: proveX, rotate: proveRotate },
       ];
 
   const reveal = {

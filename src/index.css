@@ -2451,6 +2451,11 @@ body {
   letter-spacing: 0.08em;
 }
 
+.dark .contact-status p,
+.dark .contact-channel-list small {
+  color: var(--color-neutral-400);
+}
+
 .contact-channel-copy {
   margin-block: auto;
   padding-block: 2.5rem;
@@ -2525,6 +2530,14 @@ body {
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+.contact-primary-channel small {
+  color: var(--color-neutral-600);
+}
+
+.dark .contact-primary-channel small {
+  color: var(--color-neutral-400);
 }
 
 .contact-primary-channel strong,
@@ -2685,8 +2698,8 @@ body {
   gap: 1rem;
   margin-top: 1rem;
   padding: 1rem 1.1rem;
-  border: 1px solid var(--color-primary-600);
-  background: var(--color-primary-600);
+  border: 1px solid var(--color-primary-700);
+  background: var(--color-primary-700);
   color: var(--color-white);
   font-size: 0.82rem;
   font-weight: 900;
@@ -2750,7 +2763,7 @@ body {
   }
 
   .contact-submit:hover {
-    background: var(--color-primary-500);
+    background: var(--color-primary-800);
   }
 }
 
@@ -3311,9 +3324,9 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.85rem;
-  border: 1px solid var(--color-primary-500);
+  border: 1px solid var(--color-primary-700);
   padding: 0.95rem 1.2rem;
-  background: var(--color-primary-600);
+  background: var(--color-primary-700);
   color: var(--color-white);
   font-size: 0.82rem;
   font-weight: 900;
@@ -3353,6 +3366,13 @@ body {
   font-weight: 820;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+.dark .closing-dock-kicker,
+.dark .closing-dock-links > span,
+.dark .closing-dock-socials > span,
+.dark .closing-dock-system {
+  color: var(--color-neutral-400);
 }
 
 .closing-dock-links a {
@@ -4243,7 +4263,7 @@ body {
   }
 
   .closing-dock-cta:hover {
-    background: var(--color-primary-500);
+    background: var(--color-primary-800);
     transform: translateY(-2px);
   }
 
