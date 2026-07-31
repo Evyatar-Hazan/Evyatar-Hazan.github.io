@@ -6,6 +6,8 @@ import CrediblePortfolioEn from './credible-portfolio.en.mdx';
 import CrediblePortfolioHe from './credible-portfolio.he.mdx';
 import DeploymentIsProductEn from './deployment-is-product.en.mdx';
 import DeploymentIsProductHe from './deployment-is-product.he.mdx';
+import DataTypesJavaTypescriptPythonEn from './data-types-java-typescript-python.en.mdx';
+import DataTypesJavaTypescriptPythonHe from './data-types-java-typescript-python.he.mdx';
 import FilePermissionsUserAccessEn from './file-permissions-user-access.en.mdx';
 import FilePermissionsUserAccessHe from './file-permissions-user-access.he.mdx';
 import FilesFoldersPathsEn from './files-folders-paths.en.mdx';
@@ -48,6 +50,14 @@ import { blogPostMetadataByKey } from './metadata';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    ...blogPostMetadataByKey['data-types-java-typescript-python:he'],
+    Content: DataTypesJavaTypescriptPythonHe,
+  },
+  {
+    ...blogPostMetadataByKey['data-types-java-typescript-python:en'],
+    Content: DataTypesJavaTypescriptPythonEn,
+  },
   {
     ...blogPostMetadataByKey['what-variable-stores:he'],
     Content: WhatVariableStoresHe,

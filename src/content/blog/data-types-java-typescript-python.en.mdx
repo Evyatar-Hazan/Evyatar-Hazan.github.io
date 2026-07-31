@@ -1,0 +1,303 @@
+A data type determines which values a variable can hold and which operations can be performed on them. That sounds elementary, but the same-looking expressions can behave very differently in Java, TypeScript, and Python.
+
+For example, `+` adds numbers:
+
+```text
+5 + 4 = 9
+```
+
+With strings, it concatenates text:
+
+```text
+"ab" + "c" = "abc"
+```
+
+It is not enough to know what a variable appears to contain. We also need to know its type, when the language checks that type, and which rules apply at runtime.
+
+## The basic types
+
+Common types include integers, floating-point numbers, booleans, and strings.
+
+In Java:
+
+```java
+int age = 31;
+double height = 1.82;
+boolean isDeveloper = true;
+String name = "Evyatar";
+```
+
+In TypeScript:
+
+```ts
+const age: number = 31;
+const height: number = 1.82;
+const isDeveloper: boolean = true;
+const name: string = "Evyatar";
+```
+
+In Python:
+
+```python
+age: int = 31
+height: float = 1.82
+is_developer: bool = True
+name: str = "Evyatar"
+```
+
+The syntax looks similar, but the type systems differ:
+
+- Java is statically typed. Types are enforced during compilation and remain part of the runtime model.
+- TypeScript checks types before execution, but the generated program runs as JavaScript. Most TypeScript type information is erased during compilation.
+- Python is dynamically typed. Type hints help editors and static checkers, but Python does not enforce them automatically at runtime.
+
+## Primitive and reference types in Java
+
+Java makes an important distinction between primitive types and reference types.
+
+A primitive variable holds the value itself:
+
+```java
+int age = 31;
+boolean active = true;
+char grade = 'A';
+```
+
+A reference variable holds a reference to an object:
+
+```java
+String name = new String("Evyatar");
+```
+
+In this example:
+
+- The type of `name` is `String`.
+- The variable holds a reference value.
+- That reference provides access to the object representing `"Evyatar"`.
+
+It is better not to assume that a reference is a visible physical RAM address. The JVM manages memory details and may move objects. At the Java language level, a reference is a value that identifies an object and provides access to it.
+
+This distinction affects copying, equality, and whether a variable may contain `null`.
+
+## `null`, `undefined`, and `None`
+
+The three languages represent missing values differently.
+
+### `null` in Java
+
+Only reference variables can contain `null`:
+
+```java
+String nickname = null;
+Integer score = null;
+```
+
+Primitive types cannot:
+
+```java
+int age = null; // compilation error
+```
+
+There is also a difference between fields and local variables. An uninitialized reference field receives `null` by default, while a local variable must be definitely assigned before it can be read.
+
+### `undefined` and `null` in TypeScript
+
+JavaScript, and therefore TypeScript code at runtime, has two common missing-value primitives:
+
+```ts
+let city: string | undefined = undefined;
+let nickname: string | null = null;
+```
+
+By convention:
+
+- `undefined` often means that a value was not provided or does not exist.
+- `null` often means that the programmer explicitly chose to represent no value.
+
+One surprising historical JavaScript behavior is:
+
+```ts
+typeof null // "object"
+```
+
+This does not mean that `null` is a useful object. It is a long-standing compatibility quirk.
+
+### `None` in Python
+
+Python uses `None`:
+
+```python
+nickname = None
+```
+
+Its type is `NoneType`, and the conventional check uses identity:
+
+```python
+if nickname is None:
+    print("No nickname")
+```
+
+## Integer division
+
+Integer division is one of the easiest traps to encounter.
+
+In Java, dividing two `int` operands performs integer division:
+
+```java
+int result = 7 / 2; // 3
+```
+
+The result is truncated toward zero:
+
+```java
+7 / 2   // 3
+-7 / 2  // -3
+```
+
+Storing the result in a `double` does not change how the expression was evaluated:
+
+```java
+double result = 7 / 2; // 3.0
+```
+
+Java first evaluates `7 / 2` using the operand types. Only then is the integer value `3` converted to `3.0`.
+
+At least one operand must be floating point to get a fractional result:
+
+```java
+double result = 7 / 2.0; // 3.5
+```
+
+In TypeScript, `number` normally represents a double-precision floating-point number:
+
+```ts
+console.log(7 / 2); // 3.5
+```
+
+`bigint` is a separate type and cannot be mixed directly with `number`.
+
+Python has two operators:
+
+```python
+print(7 / 2)   # 3.5
+print(7 // 2)  # 3
+print(-7 // 2) # -4
+```
+
+`/` performs true division. `//` performs floor division, rounding downward. That is why `-3.5` becomes `-4`, not `-3`.
+
+## Equality in JavaScript and TypeScript
+
+JavaScript has two common equality operators:
+
+```js
+"31" == 31  // true
+"31" === 31 // false
+```
+
+`==` may coerce values before comparing them. `===` compares without that coercion, so it is usually preferred in JavaScript and TypeScript code.
+
+TypeScript may even warn that a comparison is unintentional when the operand types do not overlap. The behavior at runtime, however, is still governed by JavaScript.
+
+## `==` and `.equals()` in Java
+
+In Java, the meaning of `==` depends on what is being compared.
+
+For primitives, it compares values:
+
+```java
+int first = 5;
+int second = 5;
+
+System.out.println(first == second); // true
+```
+
+For references, it tests whether both variables refer to the same object:
+
+```java
+String first = new String("Hello");
+String second = new String("Hello");
+
+System.out.println(first == second);       // false
+System.out.println(first.equals(second));  // true
+```
+
+The objects contain the same text, but they are not the same object. `==` therefore returns `false`, while `String.equals()` compares their content.
+
+## Why is `0.1 + 0.2` not exactly `0.3`?
+
+Java `double`, JavaScript `number`, and Python `float` normally use IEEE 754 binary floating-point arithmetic.
+
+Decimal fractions such as `0.1` and `0.2` do not have a finite exact binary representation. Their stored values are approximations, which can expose a result like this:
+
+```text
+0.1 + 0.2 = 0.30000000000000004
+```
+
+An exact equality check may therefore fail:
+
+```text
+0.1 + 0.2 == 0.3
+```
+
+For approximate measurements, compare using a tolerance.
+
+In Java:
+
+```java
+double a = 0.1 + 0.2;
+double b = 0.3;
+
+boolean equal = Math.abs(a - b) < 0.000001;
+```
+
+In TypeScript:
+
+```ts
+const a = 0.1 + 0.2;
+const b = 0.3;
+
+const equal = Math.abs(a - b) < 0.000001;
+```
+
+In Python:
+
+```python
+import math
+
+a = 0.1 + 0.2
+b = 0.3
+
+equal = math.isclose(a, b)
+```
+
+The tolerance should match the scale and requirements of the domain. For money and other contracts that require exact decimal behavior, use decimal-oriented types such as Java's `BigDecimal` or Python's `Decimal`.
+
+## What surprised me most?
+
+This Java statement is the clearest example:
+
+```java
+double result = 7 / 2;
+```
+
+It is easy to expect `3.5` because the destination is a `double`, but the result is `3.0`. The destination type cannot retroactively change how an expression was evaluated.
+
+It is equally surprising that `0.1 + 0.2` is not exactly equal to `0.3`, and that object identity in Java is not the same as content equality.
+
+These details may look small, but they affect conditions, calculations, input validation, and data comparison.
+
+## Summary
+
+A data type is more than a label. It affects:
+
+- which values can be stored;
+- which operations are valid;
+- how division and equality work;
+- how missing values are represented;
+- when errors are detected;
+- and whether numbers are represented exactly or approximately.
+
+Java, TypeScript, and Python can present code that looks similar while applying different type systems and runtime rules.
+
+When a result is surprising, check four things: the operand types, any conversions being applied, whether the check happens statically or at runtime, and whether the value is represented exactly or approximately.

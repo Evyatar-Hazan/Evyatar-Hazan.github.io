@@ -6,6 +6,26 @@ import type { BlogLanguage, BlogPostMeta } from './types';
  * not pull the article bodies into their bundle.
  */
 const metadata = {
+  'data-types-java-typescript-python:he': {
+      slug: 'data-types-java-typescript-python',
+      language: 'he',
+      title: 'סוגי נתונים ב-Java, TypeScript ו-Python',
+      excerpt: 'ההבדלים המפתיעים בין מודלי הטיפוסים: primitives ו-references, null ו-undefined, חלוקת מספרים שלמים, שוויון ונקודה צפה.',
+      date: '2026-07-31',
+      readTime: '10 דקות קריאה',
+      tags: ['Java', 'TypeScript', 'Python'],
+      featured: false,
+    },
+  'data-types-java-typescript-python:en': {
+      slug: 'data-types-java-typescript-python',
+      language: 'en',
+      title: 'Data types in Java, TypeScript, and Python',
+      excerpt: 'The surprising differences between their type models: primitives and references, null and undefined, integer division, equality, and floating-point numbers.',
+      date: '2026-07-31',
+      readTime: '10 min read',
+      tags: ['Java', 'TypeScript', 'Python'],
+      featured: false,
+    },
   'what-variable-stores:he': {
       slug: 'what-variable-stores',
       language: 'he',
