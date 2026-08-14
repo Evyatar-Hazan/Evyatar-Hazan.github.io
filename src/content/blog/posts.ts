@@ -6,6 +6,8 @@ import CrediblePortfolioEn from './credible-portfolio.en.mdx';
 import CrediblePortfolioHe from './credible-portfolio.he.mdx';
 import DeploymentIsProductEn from './deployment-is-product.en.mdx';
 import DeploymentIsProductHe from './deployment-is-product.he.mdx';
+import AccessibilityContrastIsProductQualityEn from './accessibility-contrast-is-product-quality.en.mdx';
+import AccessibilityContrastIsProductQualityHe from './accessibility-contrast-is-product-quality.he.mdx';
 import DataTypesJavaTypescriptPythonEn from './data-types-java-typescript-python.en.mdx';
 import DataTypesJavaTypescriptPythonHe from './data-types-java-typescript-python.he.mdx';
 import FilePermissionsUserAccessEn from './file-permissions-user-access.en.mdx';
@@ -50,6 +52,14 @@ import { blogPostMetadataByKey } from './metadata';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    ...blogPostMetadataByKey['accessibility-contrast-is-product-quality:he'],
+    Content: AccessibilityContrastIsProductQualityHe,
+  },
+  {
+    ...blogPostMetadataByKey['accessibility-contrast-is-product-quality:en'],
+    Content: AccessibilityContrastIsProductQualityEn,
+  },
   {
     ...blogPostMetadataByKey['data-types-java-typescript-python:he'],
     Content: DataTypesJavaTypescriptPythonHe,

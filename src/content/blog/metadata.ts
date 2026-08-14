@@ -6,6 +6,26 @@ import type { BlogLanguage, BlogPostMeta } from './types';
  * not pull the article bodies into their bundle.
  */
 const metadata = {
+  'accessibility-contrast-is-product-quality:he': {
+      slug: 'accessibility-contrast-is-product-quality',
+      language: 'he',
+      title: 'כשנגישות צבע היא איכות מוצר',
+      excerpt: 'איך תיקון contrast בפורטפוליו הפך משינוי קטן בצבע להחלטת מוצר: tokens נכונים, CTA קריאים, dark mode ובדיקת רגרסיה שמגנה על הקריאות.',
+      date: '2026-08-14',
+      readTime: '5 דקות קריאה',
+      tags: ['Accessibility', 'Frontend', 'Product'],
+      featured: false,
+    },
+  'accessibility-contrast-is-product-quality:en': {
+      slug: 'accessibility-contrast-is-product-quality',
+      language: 'en',
+      title: 'When color accessibility is product quality',
+      excerpt: 'How a portfolio contrast fix turned a small color adjustment into a product-quality decision: better tokens, readable CTAs, dark mode, and a regression test.',
+      date: '2026-08-14',
+      readTime: '5 min read',
+      tags: ['Accessibility', 'Frontend', 'Product'],
+      featured: false,
+    },
   'data-types-java-typescript-python:he': {
       slug: 'data-types-java-typescript-python',
       language: 'he',

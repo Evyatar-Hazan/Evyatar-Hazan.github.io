@@ -1,0 +1,80 @@
+Sometimes an accessibility fix looks like a small color change. Replace `primary-600` with `primary-700`, make the hover state darker, adjust one muted label, and the page still looks almost the same.
+
+But that kind of change is not cosmetic. It is product quality.
+
+In my portfolio, some pieces of the interface were technically working, but not readable enough in every context: action buttons that were a bit too light, labels that were too subtle, and dark-mode secondary text that looked polished but did not carry enough contrast.
+
+That is a useful example of the gap between "the screen looks good" and "the screen works for the user."
+
+## The Problem
+
+On a personal portfolio, it is easy to treat color as an aesthetic decision. In practice, color is part of the product behavior.
+
+If a button is not prominent enough, the user may miss the primary action. If a label is too faint, it becomes noise instead of information. If dark mode looks elegant but requires effort to read, the experience is not refined. It is asking the user to work harder.
+
+In this case, the issue appeared around action and contact surfaces:
+
+- The primary WhatsApp action in the hero.
+- The contact form submit button.
+- The CTA in the closing dock.
+- Small labels in contact channels.
+- Secondary text in dark mode.
+
+Those are not decorative areas. They are places where a visitor needs to understand, choose, and act.
+
+## The Diagnosis
+
+The problem was not the absence of a color system. The portfolio already had a structured token system.
+
+The problem was that some components used brand-consistent colors that were still borderline for real contrast. A color can be "on palette" and still be the wrong choice for text or an action.
+
+The practical distinction is between three different uses of color:
+
+- Decorative color.
+- Color that creates hierarchy.
+- Color that carries readable information or action.
+
+The third category needs a stricter bar. A CTA, label, status message, or link should be evaluated as a reading and interaction surface, not as decoration.
+
+## The Fix
+
+In commit `6a77c7f`, `fix portfolio contrast accessibility`, the change was intentionally narrow:
+
+- Primary action buttons moved from `primary-600` to `primary-700`.
+- Hover states became darker instead of lighter.
+- Small labels moved to more readable tokens.
+- Dark-mode secondary text moved to `neutral-400`.
+- Opacity animation was removed from the About step content so text would not remain faded while the user was expected to read it.
+
+The last point matters. Accessibility is not only static color. Motion can also hurt readability when it leaves content too transparent at the moment it should already be legible.
+
+The fix did not redesign the site. It preserved the visual language, but moved action and information surfaces onto tokens that better matched their role.
+
+## Why I Added a Test
+
+This kind of fix is easy to regress.
+
+Someone can later choose a lighter color because it "looks nicer", or adjust a CTA without realizing contrast has dropped. That is why I added a regression check in `src/color-system.test.ts`.
+
+The test does not try to perform a full WCAG audit inside the browser. It does something more targeted: it makes sure the critical components keep using the intended accessible tokens.
+
+That does not replace a full accessibility review, but it closes the door on a specific class of regression that was already found.
+
+The approach is pragmatic:
+
+- Identify a real failure.
+- Fix it where it occurs.
+- Add a guardrail against the same kind of mistake.
+
+## The Lesson
+
+Accessibility should not enter a project only as a final audit step. It should be built into the design system, shared components, and tests.
+
+When color is only a visual choice, it remains fragile. When color becomes a contract between design, content, and action, it can be tested.
+
+The lesson from this fix is simple:
+
+If an element is supposed to help a user understand or act, its readability is part of the feature.
+
+Not a nice-to-have. Not polishing. Part of the feature.
+
