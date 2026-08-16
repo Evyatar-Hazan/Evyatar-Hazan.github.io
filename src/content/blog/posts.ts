@@ -6,6 +6,8 @@ import CrediblePortfolioEn from './credible-portfolio.en.mdx';
 import CrediblePortfolioHe from './credible-portfolio.he.mdx';
 import DeploymentIsProductEn from './deployment-is-product.en.mdx';
 import DeploymentIsProductHe from './deployment-is-product.he.mdx';
+import TestsNeedHonestEnvironmentsEn from './tests-need-honest-environments.en.mdx';
+import TestsNeedHonestEnvironmentsHe from './tests-need-honest-environments.he.mdx';
 import AccessibilityContrastIsProductQualityEn from './accessibility-contrast-is-product-quality.en.mdx';
 import AccessibilityContrastIsProductQualityHe from './accessibility-contrast-is-product-quality.he.mdx';
 import DataTypesJavaTypescriptPythonEn from './data-types-java-typescript-python.en.mdx';
@@ -52,6 +54,14 @@ import { blogPostMetadataByKey } from './metadata';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    ...blogPostMetadataByKey['tests-need-honest-environments:he'],
+    Content: TestsNeedHonestEnvironmentsHe,
+  },
+  {
+    ...blogPostMetadataByKey['tests-need-honest-environments:en'],
+    Content: TestsNeedHonestEnvironmentsEn,
+  },
   {
     ...blogPostMetadataByKey['accessibility-contrast-is-product-quality:he'],
     Content: AccessibilityContrastIsProductQualityHe,

@@ -1,0 +1,94 @@
+A green test can create confidence. It can also create false confidence.
+
+A multi-tenant product I worked on had a convenient development behavior: when the authentication service was not configured locally, the application created a mock admin user and signed in automatically. That made UI development faster, but it introduced a deeper problem. Reaching the dashboard no longer proved that authentication had actually worked.
+
+When a test environment silently bypasses the thing we think we are testing, the result can be green and misleading.
+
+## The problem: convenience became a hidden assumption
+
+The old behavior was straightforward: if authentication configuration was missing, create a `mockUser`, log in, and continue into the application.
+
+That is useful for isolated UI work. A developer can build screens without starting a backend or cloud services. But it blurred two very different kinds of testing:
+
+- Testing an interface with synthetic data.
+- Testing login and authorization behavior.
+
+Because the mock login happened automatically, both developers and browser automation could reach the dashboard without an explicit action showing that they were in Sandbox mode. A passing journey could look like an authentication test even though authentication had been bypassed.
+
+The problem was not the existence of a mock. The problem was an invisible bypass.
+
+## First fix: Sandbox must be an explicit choice
+
+The first fix was to stop creating a mock user inside the authentication listener when authentication configuration was unavailable.
+
+Instead of signing in automatically, it now ends the loading state and makes the dedicated Sandbox action on the login screen the explicit route into synthetic data.
+
+The code change was small, but the product contract changed significantly:
+
+- Missing authentication configuration does not mean an authenticated user.
+- Sandbox is not a hidden state.
+- A browser test that needs mock data must explicitly choose Sandbox login.
+- A test intended to verify real authentication cannot accidentally pass through a mock path.
+
+This is a local fail-closed behavior: when authentication is not configured, the application does not invent success.
+
+## Second fix: integration without credentials or Production
+
+To test authentication and persistence more meaningfully, the project introduced an isolated integration lane using local authentication and database emulators.
+
+The lane has explicit safety boundaries:
+
+- The test environment ID starts with `demo-`, so it cannot address a live environment.
+- The emulators bind only to `127.0.0.1`.
+- The mock-authentication bypass is explicitly disabled.
+- Tests obtain real tokens from the authentication emulator.
+- Every mutable fixture receives a unique run ID.
+- Cleanup deletes only data created by the current run.
+
+The test creates two synthetic users belonging to different organizations. It creates a record through the API, reads it back from both the API and the database, updates and deletes it, and verifies that the user from the other organization receives `403`.
+
+It also sends a different organization identifier in the client payload and confirms that the server derives ownership from the authenticated identity rather than trusting a client-controlled field.
+
+This is no longer a mock test. It is a real integration check of the local contract, but it is still not evidence about Production.
+
+## Third fix: do not let one failure hide the whole picture
+
+The next step separated the CI workflow into independent lanes and made each lane's environment dependencies explicit.
+
+Instead of one job mixing every quality check, the workflow now exposes separate results for:
+
+- Build, type-check, and lint.
+- API smoke contracts.
+- P0 browser smoke.
+- Local Integration.
+
+An external runtime required by the emulators was added to the integration job. That dependency is not application code, but without declaring it, the test environment is not reproducible in CI.
+
+The separation also improves diagnosis. If the browser test fails, the API smoke and integration results are still visible. If an emulator cannot start, that infrastructure problem does not collapse every quality signal into one opaque failure.
+
+## What does each test actually prove?
+
+The most important step is defining the truth boundary of every lane:
+
+- Sandbox browser tests prove that a basic UI journey works with synthetic data.
+- API smoke tests prove a small set of HTTP contracts.
+- Local Integration proves authentication, CRUD, and two-tenant isolation in an isolated environment.
+- None of them alone proves that Production works.
+
+When names and documentation state those boundaries, a green result becomes more useful. It no longer claims that "everything works." It says exactly which contract was exercised and in which environment.
+
+## The lesson
+
+Test infrastructure is not just a collection of scripts. It is a system that produces claims about product quality.
+
+If the environment silently signs in as an admin, can accidentally reach a live service, or mixes unrelated layers inside one job, it becomes difficult to know what a pass actually means.
+
+A trustworthy environment should be explicit, isolated, and allowed to fail:
+
+- Bypasses require a visible choice.
+- Local services are protected by guardrails.
+- Emulator credentials replace mocks when authentication is under test.
+- Independent lanes are named after the evidence they produce.
+- Missing coverage is stated rather than implied away.
+
+A good test does not only pass. It passes honestly.

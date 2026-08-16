@@ -6,6 +6,26 @@ import type { BlogLanguage, BlogPostMeta } from './types';
  * not pull the article bodies into their bundle.
  */
 const metadata = {
+  'tests-need-honest-environments:he': {
+      slug: 'tests-need-honest-environments',
+      language: 'he',
+      title: 'בדיקה ירוקה צריכה לעבור בכנות',
+      excerpt: 'איך mock login אוטומטי הפך ל-Sandbox מפורש, ולמה emulators מקומיים ו-CI lanes מבודדים הופכים תוצאה ירוקה להוכחה שאפשר להבין.',
+      date: '2026-08-16',
+      readTime: '7 דקות קריאה',
+      tags: ['Testing', 'CI/CD', 'Authentication'],
+      featured: false,
+    },
+  'tests-need-honest-environments:en': {
+      slug: 'tests-need-honest-environments',
+      language: 'en',
+      title: 'A green test should pass honestly',
+      excerpt: 'How an automatic mock login became an explicit Sandbox path, and why local emulators and isolated CI lanes make green results easier to trust.',
+      date: '2026-08-16',
+      readTime: '7 min read',
+      tags: ['Testing', 'CI/CD', 'Authentication'],
+      featured: false,
+    },
   'accessibility-contrast-is-product-quality:he': {
       slug: 'accessibility-contrast-is-product-quality',
       language: 'he',
