@@ -1,0 +1,76 @@
+Adding ads to a website can look like a simple integration task: load a script, place a few slots, and wait for the network to fill them. But once advertising enters a product, it affects content hierarchy, user trust, performance, and even the question of which pages deserve to be public.
+
+While working on Online Converter, I found that the important question was not only, "Does AdSense load?" It was, "Under which conditions is it allowed to load?" The answer led me to turn a product policy into a contract enforced during the build and in browser tests.
+
+## The problem: valid ad code can still create the wrong product
+
+An earlier version of the site included ad placements across several page types: tool pages, category pages, and navigation surfaces. Technically, it worked. The script loaded, slots received their identifiers, and the generated HTML contained the expected markup.
+
+But a home or category page does not serve the same purpose as a tool page. It helps a visitor understand the available choices and decide where to go next. An ad placed near search, filters, or navigation links can compete with the primary action, resemble part of the interface, or simply make a short page feel overloaded.
+
+The problem was not "too much JavaScript." It was a mismatch between the placement and the purpose of the page.
+
+## The diagnosis: not every public page should be monetized
+
+The project has several page families:
+
+- Tool pages where people perform a conversion and receive explanations, examples, and FAQs.
+- Home and category pages built for discovery and navigation.
+- About, editorial, privacy, and contact pages that establish ownership and responsibility.
+- Error and internal pages that should not be indexed.
+
+Treating all of them alike encourages a crude policy: if a client ID exists, load ads everywhere. That policy is easy to implement and difficult to defend.
+
+Instead, I defined an explicit rule: only editorially reviewed tool pages may show ads, and even there only two clearly separated placements remain, one within the supporting content and one at the bottom. Home, category, policy, contact, and error pages stay ad-free.
+
+## First fix: make publication boundaries part of the content model
+
+The first step was separating an internal tool definition from a tool page approved for publication. A tool existing in the registry is not enough to generate a public route.
+
+A public tool needs a review and useful supporting content: an explanation, examples, FAQs, use cases, and meaningful links to related tools. Publication is not a reward for having a URL. It is a decision made after the page provides real value.
+
+The same principle applies to advertising. The layout decides according to page type, not only according to the presence of an environment variable. A page can be public and indexable while remaining ad-free because its job is navigation or accountability.
+
+## Second fix: test the artifact, not only the components
+
+A policy like this can quietly erode. Someone adds a slot, changes a shared layout, or publishes another route, and an ad appears somewhere that was never intended.
+
+I added a readiness check that scans the generated `dist` directory after the build. It opens the resulting HTML files and inspects the product exactly as it will be delivered to the browser.
+
+The check verifies, among other things:
+
+- Only approved tool pages include the advertising loader.
+- Every tool page contains exactly the `inline` and `bottom` placements.
+- No `top` or `sidebar` placement has returned by accident.
+- `noindex` pages contain no advertising.
+- Backlog tools are not generated as public routes.
+- Every tool page has enough content, examples, FAQs, and visible review provenance.
+
+Testing the final HTML matters. A unit test can prove that a helper returned the right value. It does not necessarily prove that the layout, environment variables, and build pipeline combined to produce the right page.
+
+## Third fix: verify visible behavior in a browser
+
+Alongside the artifact scan, an end-to-end test opens a real tool page. It verifies that the two approved placements exist and that the two forbidden placements do not.
+
+The two checks cover different failure modes:
+
+- The build check scans the complete public output for systemic mistakes.
+- The browser check confirms that the page a visitor receives matches the contract.
+
+These tests do not decide whether the ads look good or whether an advertising network will approve the site. They protect a decision I can control: where my product permits advertising to appear.
+
+## Why this is a product decision
+
+Good monetization is not simply an attempt to maximize revenue per view. It needs to preserve the reason a person came to the site in the first place.
+
+On a tool page, an ad can appear after the visitor already has context and has started working. On a navigation page, the same ad can compete with a choice the visitor is still trying to make. On a privacy or contact page, it can weaken the moment when the product should explain responsibility and build trust.
+
+Placement is therefore not a minor visual detail. It is part of the product model: what the primary action is, what the main content is, and when a business interest is allowed to enter the screen.
+
+## What I learned
+
+My main lesson is that a product policy important enough to document is probably important enough to enforce in code.
+
+Writing "navigation pages remain ad-free" is not enough if a future layout change can break the rule without causing a test to fail. It is better to give each page family a clear contract, inspect the final artifact, and add a browser test that protects visible behavior.
+
+Monetization is not a layer attached to a finished product. It is a force that changes the product. With explicit, tested boundaries, it is possible to pursue a business goal without losing the usefulness and trust that make the site worth visiting.

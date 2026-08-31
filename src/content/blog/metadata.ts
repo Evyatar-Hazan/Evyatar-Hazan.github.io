@@ -6,6 +6,26 @@ import type { BlogLanguage, BlogPostMeta } from './types';
  * not pull the article bodies into their bundle.
  */
 const metadata = {
+  'monetization-needs-product-guardrails:he': {
+      slug: 'monetization-needs-product-guardrails',
+      language: 'he',
+      title: 'מונטיזציה צריכה גבולות מוצריים',
+      excerpt: 'איך הפכתי מדיניות מיקומי מודעות לחוזה שנבדק ב-build ובדפדפן, כדי לקדם יעד עסקי בלי לפגוע בניווט, בתוכן ובאמון.',
+      date: '2026-08-30',
+      readTime: '7 דקות קריאה',
+      tags: ['Product', 'Monetization', 'Testing'],
+      featured: false,
+    },
+  'monetization-needs-product-guardrails:en': {
+      slug: 'monetization-needs-product-guardrails',
+      language: 'en',
+      title: 'Monetization needs product guardrails',
+      excerpt: 'How I turned ad-placement policy into a contract checked in the build and browser, pursuing a business goal without weakening navigation, content, or trust.',
+      date: '2026-08-30',
+      readTime: '7 min read',
+      tags: ['Product', 'Monetization', 'Testing'],
+      featured: false,
+    },
   'tests-need-honest-environments:he': {
       slug: 'tests-need-honest-environments',
       language: 'he',
