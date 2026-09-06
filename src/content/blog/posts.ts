@@ -8,6 +8,8 @@ import DeploymentIsProductEn from './deployment-is-product.en.mdx';
 import DeploymentIsProductHe from './deployment-is-product.he.mdx';
 import MonetizationNeedsProductGuardrailsEn from './monetization-needs-product-guardrails.en.mdx';
 import MonetizationNeedsProductGuardrailsHe from './monetization-needs-product-guardrails.he.mdx';
+import RetriesShouldNotDuplicateDataEn from './retries-should-not-duplicate-data.en.mdx';
+import RetriesShouldNotDuplicateDataHe from './retries-should-not-duplicate-data.he.mdx';
 import TestsNeedHonestEnvironmentsEn from './tests-need-honest-environments.en.mdx';
 import TestsNeedHonestEnvironmentsHe from './tests-need-honest-environments.he.mdx';
 import AccessibilityContrastIsProductQualityEn from './accessibility-contrast-is-product-quality.en.mdx';
@@ -56,6 +58,14 @@ import { blogPostMetadataByKey } from './metadata';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    ...blogPostMetadataByKey['retries-should-not-duplicate-data:he'],
+    Content: RetriesShouldNotDuplicateDataHe,
+  },
+  {
+    ...blogPostMetadataByKey['retries-should-not-duplicate-data:en'],
+    Content: RetriesShouldNotDuplicateDataEn,
+  },
   {
     ...blogPostMetadataByKey['monetization-needs-product-guardrails:he'],
     Content: MonetizationNeedsProductGuardrailsHe,

@@ -1,0 +1,115 @@
+Retry is one of the most natural actions in an interface. A message was not delivered, a network request was interrupted, or the user is unsure whether the first click worked, so they try again.
+
+To the user, the intent has not changed: invite one person to one workspace. To a system that was not designed for retries, those clicks may become two independent create commands. The result is duplicate records, competing invitations, and state that becomes difficult to explain later.
+
+In a recent fix, the retry button was not the real problem. The create contract was not idempotent: executing the same request twice did not guarantee the same outcome.
+
+## The problem: delivery failure is not necessarily creation failure
+
+An invitation flow usually contains at least two different operations:
+
+1. Create the business record for the person.
+2. Send a message that lets them complete onboarding.
+
+The operations are related, but they are not identical. The record may be saved successfully while the email provider fails. When the interface offers Retry, the user expects another delivery attempt. They do not expect another person to be created.
+
+A naive implementation may run the entire flow again:
+
+```text
+Create member
+Send invitation
+```
+
+If the second step fails and the whole flow is repeated, the first step may create a duplicate. In systems where duplicates are not immediately visible, the damage may only appear later in reports, permissions, or account management.
+
+## The diagnosis: define the business identity
+
+Making an operation idempotent starts with deciding when two requests express the same intent.
+
+A new random identifier does not help because every attempt receives a different one. In this case, the business key was the combination of a normalized email address and the workspace receiving the invitation.
+
+Normalization matters. For most invitation flows, these addresses should refer to the same person:
+
+```text
+Person@Example.com
+ person@example.com 
+```
+
+The address is therefore trimmed and converted to lowercase before lookup or persistence. But application-level normalization is still not enough. Two requests can arrive at nearly the same time, and both can observe that no record exists before either one writes it.
+
+## First layer: reuse the existing record
+
+The creation path begins by looking for an active record with the normalized business key.
+
+If a record exists, the system returns it instead of creating another one. The invitation flow can then continue and attempt another delivery for the same canonical record.
+
+The desired behavior looks like this:
+
+```text
+First attempt:
+Record created → invitation delivery failed
+
+Second attempt:
+Same record found → invitation delivered again
+```
+
+This preserves an important distinction: the person already exists in the system even when the message has not been delivered yet.
+
+## Second layer: the database must protect the race
+
+A "find, then create" check handles the common retry path, but not a race:
+
+```text
+Request A: no record found
+Request B: no record found
+Request A: creates the record
+Request B: creates another record
+```
+
+The data layer must therefore reject two active records with the same business key.
+
+When a request loses the race and receives a duplicate conflict, the application does not need to expose a failure to the user. It can read the canonical record and continue. From the user's perspective, both requests converged on the same final state.
+
+The combination of both layers matters:
+
+- An early lookup provides a fast and understandable path for ordinary retries.
+- A database constraint closes the race window that application checks cannot eliminate alone.
+- Reading after a conflict turns expected competition into normal behavior.
+
+## Why not roll everything back?
+
+It is reasonable to ask why the record is not deleted when invitation delivery fails. Sometimes that is the right choice, but not always.
+
+If the record represents a business fact that is already true, such as a person belonging to a team, a temporary messaging failure should not erase it. Otherwise, an external and temporary provider becomes the source of truth for business data.
+
+Instead of pretending there is one transaction across a database and an external provider, it is clearer to store explicit state:
+
+- The record exists.
+- Delivery succeeded, failed, or is pending.
+- Delivery can be retried without recreating the record.
+
+This model is more honest, and it also lets the interface tell the user what actually happened.
+
+## The test that proves the contract
+
+The important regression test is not simply "one creation succeeds." It should run the complete story:
+
+1. The first attempt creates a record but simulates a delivery failure.
+2. The second attempt retries with the same normalized address.
+3. Both responses return the same record identifier.
+4. The messaging provider is called twice, but no second person is created.
+5. The second attempt reports successful delivery.
+
+This test protects the business meaning of Retry, not only the number of function calls.
+
+## What I learned
+
+Idempotency is not a feature reserved for payment APIs or large distributed systems. It matters anywhere a user can click twice, a browser can resend a request, or a worker can repeat work after a timeout.
+
+The rule I am taking from this fix is simple:
+
+> A retry should repeat the intent, not duplicate the outcome.
+
+Meeting that rule requires a stable business key, normalization, reuse of existing records, race protection in the data layer, and an end-to-end test for failure followed by retry.
+
+The Retry button may be small. The contract behind it is part of the reliability of the entire product.

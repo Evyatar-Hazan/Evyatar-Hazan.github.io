@@ -6,6 +6,26 @@ import type { BlogLanguage, BlogPostMeta } from './types';
  * not pull the article bodies into their bundle.
  */
 const metadata = {
+  'retries-should-not-duplicate-data:he': {
+      slug: 'retries-should-not-duplicate-data',
+      language: 'he',
+      title: 'Retry צריך לחזור על הכוונה, לא לשכפל נתונים',
+      excerpt: 'איך נרמול מפתח עסקי, שימוש חוזר ברשומה קיימת והגנה בשכבת הנתונים הופכים ניסיון חוזר להתנהגות אמינה במקום למקור לכפילויות.',
+      date: '2026-09-06',
+      readTime: '7 דקות קריאה',
+      tags: ['Backend', 'Data', 'Reliability'],
+      featured: false,
+    },
+  'retries-should-not-duplicate-data:en': {
+      slug: 'retries-should-not-duplicate-data',
+      language: 'en',
+      title: 'A retry should repeat intent, not duplicate data',
+      excerpt: 'How a normalized business key, record reuse, and data-layer race protection make retries reliable instead of creating duplicate state.',
+      date: '2026-09-06',
+      readTime: '7 min read',
+      tags: ['Backend', 'Data', 'Reliability'],
+      featured: false,
+    },
   'monetization-needs-product-guardrails:he': {
       slug: 'monetization-needs-product-guardrails',
       language: 'he',
