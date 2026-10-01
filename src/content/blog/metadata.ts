@@ -6,6 +6,26 @@ import type { BlogLanguage, BlogPostMeta } from './types';
  * not pull the article bodies into their bundle.
  */
 const metadata = {
+  'one-bad-date-should-not-blank-a-screen:he': {
+      slug: 'one-bad-date-should-not-blank-a-screen',
+      language: 'he',
+      title: 'שדה תאריך שבור לא צריך להפיל מסך שלם',
+      excerpt: 'איך תאריך פגום אחד חשף צורך בהגנה מקומית על הנתונים, בניהול נכון של תצוגות מקדימות ובמסלול התאוששות שאינו מסתיר את הבעיה.',
+      date: '2026-09-13',
+      readTime: '6 דקות קריאה',
+      tags: ['Frontend', 'Reliability', 'Product'],
+      featured: false,
+    },
+  'one-bad-date-should-not-blank-a-screen:en': {
+      slug: 'one-bad-date-should-not-blank-a-screen',
+      language: 'en',
+      title: 'One bad date should not blank an entire screen',
+      excerpt: 'How one malformed timestamp exposed the need for local data guards, proper preview-resource cleanup, and an honest recovery path.',
+      date: '2026-09-13',
+      readTime: '6 min read',
+      tags: ['Frontend', 'Reliability', 'Product'],
+      featured: false,
+    },
   'retries-should-not-duplicate-data:he': {
       slug: 'retries-should-not-duplicate-data',
       language: 'he',

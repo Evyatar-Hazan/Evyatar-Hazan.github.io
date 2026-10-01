@@ -92,7 +92,7 @@ describe('App', () => {
 
     expect(await screen.findByText('blogPreview.eyebrow')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /blogPreview.viewAll/i })).toHaveAttribute('href', '/blog');
-    expect(screen.getByRole('heading', { name: 'A retry should repeat intent, not duplicate data' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'One bad date should not blank an entire screen' })).toBeInTheDocument();
     expect(document.querySelectorAll('#writing article')).toHaveLength(3);
     expect(document.querySelectorAll('#writing .writing-feature')).toHaveLength(1);
     expect(document.querySelectorAll('#writing .writing-entry')).toHaveLength(2);
@@ -179,7 +179,7 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'How I built a business site around WhatsApp' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'What I learned from building a credible portfolio' })).toBeInTheDocument();
     expect(document.querySelectorAll('.blog-archive-feature')).toHaveLength(1);
-    expect(document.querySelectorAll('.blog-archive-entry')).toHaveLength(27);
+    expect(document.querySelectorAll('.blog-archive-entry')).toHaveLength(28);
     expect(screen.getByText('WRITING / Archive')).toBeInTheDocument();
   });
 

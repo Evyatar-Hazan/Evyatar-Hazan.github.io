@@ -1,0 +1,64 @@
+An admin screen can work for weeks and then open as a blank page because of one field in one record. The whole service may be healthy. The UI simply assumed that every value it received was safe to render.
+
+In a file-management tool I worked on, a recent fix addressed several related weaknesses: an unparseable date, preview URLs recreated while someone edited text, and a screen with no useful recovery path after a rendering error. The broader lesson is not about galleries. One bad value should not make an entire task impossible.
+
+## The problem: a small assumption inside a large list
+
+A gallery renders many items, each with a title, image, size, and modification date. Formatting that date can look harmless:
+
+```ts
+new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' })
+  .format(new Date(value));
+```
+
+But `new Date(value)` can produce an invalid Date without throwing. The `format` call is what throws a `RangeError`. When that happens during an item's render, the error can propagate to the whole screen. A person trying to work with dozens of valid items sees nothing because one optional value is malformed.
+
+That is a mismatch between the data contract and the display contract. Even if the service usually returns valid timestamps, the interface still needs a defined behavior for a missing or invalid optional field.
+
+## First fix: contain the bad field
+
+The modification date was not required to view the file or edit its description. I therefore checked it before formatting:
+
+```ts
+const formatDate = (value: string): string => {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  return new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(date);
+};
+```
+
+If the value is invalid, only the date disappears. The title, image, and controls remain available. This is not a rule to ignore all bad data. A missing field that determines the record's identity deserves different handling. A display-only date is a reasonable place for local degradation.
+
+The regression test should not stop at `formatDate('')`. It renders an item without a usable date and checks that its title and edit controls are still present. That verifies the user's task, not just the helper function.
+
+## Second fix: a preview URL has a lifecycle
+
+The same screen also showed a preview of a file selected for upload. Creating its URL inside render seems convenient:
+
+```tsx
+<img src={URL.createObjectURL(file)} alt="" />
+```
+
+But every keystroke in a description field can trigger another render and create another `blob:` URL. The old URL does not disappear just because the JSX changed. A preview URL is a browser resource: create it when the `File` changes, and call `URL.revokeObjectURL` when the preview is no longer needed.
+
+I moved that responsibility into a small preview component. It holds one URL per `File` object, releases it during cleanup, and displays a fallback if URL creation fails. A test edits the description several times and checks that `createObjectURL` was called once rather than once per keystroke.
+
+This is separate from the invalid-date failure. It does not, on its own, explain a blank screen. It removes resource churn and the accidental coupling between typing text and creating a file preview.
+
+## A recovery path, without disguising the defect
+
+Even after guarding known fields, a component can still throw unexpectedly. A screen-level Error Boundary can show a recovery message and reload action instead of leaving empty space. The underlying error still needs to be recorded and investigated.
+
+That distinction matters: the boundary does not repair malformed data. It limits the impact when local checks were not enough. Recovery copy must also stay honest. It should not claim that a file was saved unless that operation was actually verified.
+
+## What I learned
+
+UI reliability is not only about whether the API responds. It is also about the size of the failure when one field violates an assumption:
+
+- A bad secondary field should affect that field, not the whole screen.
+- Browser resources need explicit ownership and cleanup.
+- A recovery screen is a safety net, not a root-cause fix.
+- The most useful test asks what the person can still do after the data goes wrong.
+
+The principle I took from this change is simple: when a failure is local, its effect on the user should be local too.

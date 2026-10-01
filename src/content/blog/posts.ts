@@ -1,3 +1,5 @@
+import OneBadDateShouldNotBlankAScreenEn from './one-bad-date-should-not-blank-a-screen.en.mdx';
+import OneBadDateShouldNotBlankAScreenHe from './one-bad-date-should-not-blank-a-screen.he.mdx';
 import BootProcessPowerButtonEn from './boot-process-power-button.en.mdx';
 import BootProcessPowerButtonHe from './boot-process-power-button.he.mdx';
 import CateringWhatsappEn from './catering-whatsapp.en.mdx';
@@ -58,6 +60,14 @@ import { blogPostMetadataByKey } from './metadata';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    ...blogPostMetadataByKey['one-bad-date-should-not-blank-a-screen:he'],
+    Content: OneBadDateShouldNotBlankAScreenHe,
+  },
+  {
+    ...blogPostMetadataByKey['one-bad-date-should-not-blank-a-screen:en'],
+    Content: OneBadDateShouldNotBlankAScreenEn,
+  },
   {
     ...blogPostMetadataByKey['retries-should-not-duplicate-data:he'],
     Content: RetriesShouldNotDuplicateDataHe,
