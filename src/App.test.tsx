@@ -234,7 +234,18 @@ describe('App', () => {
 
     expect(await screen.findByRole('heading', { name: 'projects.items.online_converter.title' })).toBeInTheDocument();
     expect(screen.getByText('projects.caseStudyAudience')).toBeInTheDocument();
+    const unknownEvidence = screen.getByText('projects.caseStudyEvidenceUnknown');
+    expect(unknownEvidence.closest('div')?.querySelector('time')).not.toBeInTheDocument();
+    expect(unknownEvidence.closest('div')?.querySelector('a')).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'projects.caseStudyBack' })).toHaveAttribute('href', '/#projects');
+    expect(screen.getByRole('link', { name: 'projects.code' })).toHaveAttribute(
+      'href',
+      'https://github.com/Evyatar-Hazan/online-converter',
+    );
+    expect(screen.getByRole('link', { name: 'projects.liveDemo' })).toHaveAttribute(
+      'href',
+      'https://online-converter.evyatarhazan.com/',
+    );
   });
 
   it('discloses contact-form and advertising data use on the privacy page', () => {

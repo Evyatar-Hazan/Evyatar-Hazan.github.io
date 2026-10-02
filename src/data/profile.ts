@@ -1,3 +1,8 @@
+import {
+  assertCaseStudyEvidenceContract,
+  type CaseStudyEvidence,
+} from './caseStudyEvidence';
+
 export const profileLinks = {
   github: 'https://github.com/Evyatar-Hazan',
   linkedin: 'https://www.linkedin.com/in/evyatar-hazan-662235210/',
@@ -25,7 +30,7 @@ export type ProjectCaseStudy = {
   proof: LocalizedText;
   decisions: LocalizedList;
   outcomes: LocalizedList;
-};
+} & CaseStudyEvidence;
 
 export type Project = {
   id: string;
@@ -41,7 +46,7 @@ export type Project = {
   caseStudy?: ProjectCaseStudy;
 };
 
-const caseStudies: Partial<Record<string, ProjectCaseStudy>> = {
+const caseStudies = {
   nis_boutique: {
     eyebrow: {
       en: 'Business website case study',
@@ -73,6 +78,9 @@ const caseStudies: Partial<Record<string, ProjectCaseStudy>> = {
       en: 'The live site is deployed on a custom domain, keeps the CTA visible, and frames the business around a direct conversation instead of generic filler.',
       he: 'האתר החי יושב על דומיין מותאם, שומר על CTA גלוי, ומציג את העסק סביב שיחה ישירה במקום סביב טקסט גנרי.'
     },
+    evidenceStatus: 'unknown',
+    verifiedAt: null,
+    evidenceLinks: null,
     decisions: {
       en: [
         'Kept the content tightly scoped so visitors never need to guess what to do next.',
@@ -129,6 +137,9 @@ const caseStudies: Partial<Record<string, ProjectCaseStudy>> = {
       en: 'The live product now includes a large bilingual converter registry, analytics dashboard, SEO build checks, and production smoke validation.',
       he: 'המוצר החי כולל היום מאגר ממירים דו-לשוני גדול, דשבורד אנליטיקה, בדיקות SEO בבילד ואימות production רציף.'
     },
+    evidenceStatus: 'unknown',
+    verifiedAt: null,
+    evidenceLinks: null,
     decisions: {
       en: [
         'Moved from a small manually managed SPA toward a more content-scalable architecture with registry-driven pages and stronger metadata patterns.',
@@ -185,6 +196,9 @@ const caseStudies: Partial<Record<string, ProjectCaseStudy>> = {
       en: 'The live system combines a React client, Express API, Prisma models, Google OAuth, and collaborative layers such as comments and user handling.',
       he: 'המערכת החיה משלבת לקוח React, שרת Express, מודלי Prisma, Google OAuth ושכבות שיתופיות כמו תגובות וניהול משתמשים.'
     },
+    evidenceStatus: 'unknown',
+    verifiedAt: null,
+    evidenceLinks: null,
     decisions: {
       en: [
         'Separated client, API, auth, and data responsibilities so future protocol changes do not collapse into one fragile layer.',
@@ -241,6 +255,9 @@ const caseStudies: Partial<Record<string, ProjectCaseStudy>> = {
       en: 'The project combines React, Express, Prisma, Cloudinary, and structured deployment so the public layer and admin layer can move together.',
       he: 'הפרויקט משלב React, Express, Prisma, Cloudinary ופריסה מסודרת, כך שהשכבה הציבורית והשכבה הניהולית יכולות להתקדם יחד.'
     },
+    evidenceStatus: 'unknown',
+    verifiedAt: null,
+    evidenceLinks: null,
     decisions: {
       en: [
         'Built the content and media workflow so routine updates do not require touching the codebase.',
@@ -266,7 +283,11 @@ const caseStudies: Partial<Record<string, ProjectCaseStudy>> = {
       ]
     }
   }
-};
+} satisfies Record<string, ProjectCaseStudy>;
+
+assertCaseStudyEvidenceContract(
+  Object.entries(caseStudies).map(([id, evidence]) => ({ id, evidence })),
+);
 
 export const projects: Project[] = [
   {

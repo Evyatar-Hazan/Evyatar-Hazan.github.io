@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getProjectById, type LocalizedText } from '../data/profile';
 import { usePageSeo } from '../hooks/usePageSeo';
+import CaseStudyEvidence from '../components/CaseStudyEvidence';
 
 const pick = (value: LocalizedText, language: string) => (language === 'he' ? value.he : value.en);
 
@@ -128,6 +129,15 @@ const ProjectCaseStudy = () => {
               <p className="mt-3 text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
                 {pick(caseStudy.proof, i18n.language)}
               </p>
+              <CaseStudyEvidence
+                evidence={caseStudy}
+                language={i18n.language}
+                labels={{
+                  sources: t('projects.caseStudyEvidenceSources'),
+                  unknown: t('projects.caseStudyEvidenceUnknown'),
+                  verifiedOn: t('projects.caseStudyVerifiedOn'),
+                }}
+              />
             </div>
           </div>
         </section>
