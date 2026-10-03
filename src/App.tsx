@@ -14,17 +14,23 @@ import { useTheme } from './hooks/useTheme';
 import CustomCursor from './components/animations/CustomCursor';
 import ScrollProgress from './components/animations/ScrollProgress';
 import ContactNode from './components/ContactNode';
+import ContactBriefFeature from './features/contact/ContactBriefFeature';
 import {
   defaultPortfolioLanguage,
   getLanguageFromPath,
   isPortfolioLanguage,
+  localizedPath,
   localizePath,
 } from './routing/portfolioRoutes';
 
 const About = lazy(() => import('./components/sections/About'));
 const Projects = lazy(() => import('./components/sections/Projects'));
 const BlogPreview = lazy(() => import('./components/sections/BlogPreview'));
-const Contact = lazy(() => import('./components/sections/Contact'));
+const AudienceEntryPaths = lazy(() => import('./components/sections/AudienceEntryPaths'));
+const ServiceEngagements = lazy(() => import('./components/sections/ServiceEngagements'));
+const FlagshipProjectComparison = lazy(() => import('./components/sections/FlagshipProjectComparison'));
+const HumanAboutSection = lazy(() => import('./features/humanAbout/HumanAboutSection'));
+const CapabilityProof = lazy(() => import('./features/capability-proof/CapabilityProof'));
 
 type SectionFallbackProps = {
   id: string;
@@ -39,23 +45,43 @@ const SectionFallback = ({ id, minHeightClassName }: SectionFallbackProps) => (
   />
 );
 
-const PortfolioHome = () => (
-  <main>
-    <Home />
-    <Suspense fallback={<SectionFallback id="about" minHeightClassName="min-h-[70vh]" />}>
-      <About />
-    </Suspense>
-    <Suspense fallback={<SectionFallback id="projects" minHeightClassName="min-h-screen" />}>
-      <Projects />
-    </Suspense>
-    <Suspense fallback={<SectionFallback id="writing" minHeightClassName="min-h-[60vh]" />}>
-      <BlogPreview />
-    </Suspense>
-    <Suspense fallback={<SectionFallback id="contact" minHeightClassName="min-h-[80vh]" />}>
-      <Contact />
-    </Suspense>
-  </main>
-);
+const PortfolioHome = () => {
+  const { i18n } = useTranslation();
+  const language = i18n.language === 'he' ? 'he' : 'en';
+
+  return (
+    <main>
+      <Home />
+      <Suspense fallback={<SectionFallback id="audience-paths" minHeightClassName="min-h-[55vh]" />}>
+        <AudienceEntryPaths language={language} buildPath={localizedPath} />
+      </Suspense>
+      <Suspense fallback={<SectionFallback id="service-engagements" minHeightClassName="min-h-[70vh]" />}>
+        <ServiceEngagements language={language} buildPath={localizedPath} />
+      </Suspense>
+      <Suspense fallback={<SectionFallback id="human-about" minHeightClassName="min-h-[55vh]" />}>
+        <HumanAboutSection language={language} />
+      </Suspense>
+      <Suspense fallback={<SectionFallback id="about" minHeightClassName="min-h-[70vh]" />}>
+        <About />
+      </Suspense>
+      <Suspense fallback={<SectionFallback id="flagship-comparison" minHeightClassName="min-h-[60vh]" />}>
+        <FlagshipProjectComparison language={language} buildPath={localizedPath} />
+      </Suspense>
+      <Suspense fallback={<SectionFallback id="projects" minHeightClassName="min-h-screen" />}>
+        <Projects />
+      </Suspense>
+      <Suspense fallback={<SectionFallback id="capability-proof" minHeightClassName="min-h-[70vh]" />}>
+        <CapabilityProof language={language} buildPath={localizedPath} />
+      </Suspense>
+      <Suspense fallback={<SectionFallback id="writing" minHeightClassName="min-h-[60vh]" />}>
+        <BlogPreview />
+      </Suspense>
+      <Suspense fallback={<SectionFallback id="contact" minHeightClassName="min-h-[80vh]" />}>
+        <ContactBriefFeature language={language} buildLocalizedPath={localizedPath} />
+      </Suspense>
+    </main>
+  );
+};
 
 const LocalizedRoute = ({ children }: { children: ReactNode }) => {
   const { language } = useParams();

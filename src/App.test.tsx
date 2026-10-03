@@ -48,7 +48,7 @@ describe('App', () => {
     render(<App />);
 
     expect(await screen.findByRole('heading', { name: 'about.systemTitle' })).toBeInTheDocument();
-    expect(screen.getByText('Web & mobile products')).toBeInTheDocument();
+    expect(screen.getAllByText('Web & mobile products')).toHaveLength(2);
     expect(document.querySelectorAll('.about-capability-module')).toHaveLength(7);
   });
 
@@ -106,12 +106,15 @@ describe('App', () => {
   it('renders the project handoff contact flow without removing direct channels', async () => {
     render(<App />);
 
-    expect(await screen.findByText('contact.eyebrow')).toBeInTheDocument();
-    expect(screen.getByLabelText('contact.form.nameLbl')).toBeRequired();
-    expect(screen.getByLabelText('contact.form.emailLbl')).toBeRequired();
-    expect(screen.getByLabelText('contact.form.msgLbl')).toBeRequired();
-    expect(document.querySelectorAll('#contact .contact-channel-list a')).toHaveLength(2);
-    expect(document.querySelector('#contact .contact-primary-channel')).toHaveAttribute('target', '_blank');
+    expect(await screen.findByText('PROJECT HANDOFF / 01')).toBeInTheDocument();
+    expect(screen.getAllByRole('link', { name: 'WhatsApp' }).at(-1)).toHaveAttribute('target', '_blank');
+    expect(screen.getAllByRole('link', { name: 'Email' }).at(-1)).toHaveAttribute('href', expect.stringContaining('mailto:'));
+    expect(screen.getAllByRole('link', { name: 'LinkedIn' }).at(-1)).toHaveAttribute('target', '_blank');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Build a short project brief (optional)' }));
+    expect(screen.getByLabelText('Name')).toBeRequired();
+    expect(screen.getByLabelText('Email address')).toBeRequired();
+    expect(screen.getByLabelText('Message preview')).toHaveAttribute('readonly');
   });
 
   it('only renders live links for projects with a liveUrl', async () => {

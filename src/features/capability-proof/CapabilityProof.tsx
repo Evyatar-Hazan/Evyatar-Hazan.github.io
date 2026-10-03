@@ -100,7 +100,7 @@ const MeasuredOutcome = ({
   const labels = copy[language];
 
   return (
-    <li className="border-t border-emerald-200/80 py-4 dark:border-emerald-950">
+    <li className="border-t border-success-200/80 py-4 dark:border-success-950">
       <span className="text-sm font-black text-neutral-950 dark:text-white">{outcome.projectTitle}</span>
       <CaseStudyEvidence
         evidence={outcome.evidence}
@@ -177,12 +177,12 @@ export const CapabilityProof = ({ language, className = '', buildPath }: Capabil
                     ))}
                   </ul>
                 ) : (
-                  <p className="mt-3 border-s-2 border-amber-400 ps-4 text-sm leading-6 text-neutral-600 dark:text-neutral-400">
+                  <p className="mt-3 border-s-2 border-warning-300 ps-4 text-sm leading-6 text-neutral-600 dark:text-neutral-400">
                     {group.publicEvidenceGap}
                   </p>
                 )}
                 {group.demonstrations.length > 0 && group.publicEvidenceGap && (
-                  <p className="mt-4 border-s-2 border-amber-400 ps-4 text-xs leading-5 text-neutral-500 dark:text-neutral-400">
+                  <p className="mt-4 border-s-2 border-warning-300 ps-4 text-xs leading-5 text-neutral-500 dark:text-neutral-400">
                     {group.publicEvidenceGap}
                   </p>
                 )}

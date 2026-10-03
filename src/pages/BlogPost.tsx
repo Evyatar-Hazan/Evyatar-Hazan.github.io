@@ -8,6 +8,9 @@ import type { BlogLanguage } from '../content/blog/types';
 import { usePageSeo } from '../hooks/usePageSeo';
 import type { ArticleId } from '../contracts/portfolio';
 import { localizedPath } from '../routing/portfolioRoutes';
+import RelatedContentLinks, { type RelatedContentItem } from '../components/RelatedContentLinks';
+import { getRelatedProjectIds } from '../data/contentRelations';
+import { getProjectById } from '../data/profile';
 
 type ArticleHeading = { id: string; label: string; level: number };
 
@@ -94,6 +97,14 @@ const BlogPost = () => {
 
   const Content = post.Content;
   const articleNumber = String(postIndex + 1).padStart(2, '0');
+  const relatedProjects: RelatedContentItem[] = getRelatedProjectIds(post.slug).flatMap((projectId) => (
+    getProjectById(projectId)
+      ? [{
+          target: { route: 'project', id: projectId },
+          label: t(`projects.items.${projectId}.title`),
+        }]
+      : []
+  ));
 
   return (
     <main className="blog-article">
@@ -152,6 +163,13 @@ const BlogPost = () => {
             <Content />
           </div>
         </div>
+
+        <RelatedContentLinks
+          buildPath={localizedPath}
+          heading={language === 'he' ? 'פרויקטים קשורים' : 'Related projects'}
+          items={relatedProjects}
+          language={language}
+        />
 
         <nav className="blog-article-next" aria-label={t('blog.moreWriting')}>
           <div className="blog-article-next-heading">

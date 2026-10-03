@@ -272,7 +272,7 @@ const ContactBriefFeature = ({
               </p>
               <div id={statusId} aria-live="polite" className="mt-3 min-h-6 text-sm font-semibold">
                 {formStatus === 'success' && <p className="flex items-center gap-2 text-success-700 dark:text-success-400"><CheckCircle2 aria-hidden="true" className="h-4 w-4" />{ui.success}</p>}
-                {formStatus === 'error' && <p className="flex items-center gap-2 text-red-700 dark:text-red-400"><XCircle aria-hidden="true" className="h-4 w-4" />{ui.error}</p>}
+                {formStatus === 'error' && <p className="flex items-center gap-2 text-danger-600 dark:text-danger-400"><XCircle aria-hidden="true" className="h-4 w-4" />{ui.error}</p>}
               </div>
             </form>
           </div>

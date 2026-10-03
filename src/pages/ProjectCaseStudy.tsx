@@ -4,6 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { getProjectById, type LocalizedText } from '../data/profile';
 import { usePageSeo } from '../hooks/usePageSeo';
 import CaseStudyEvidence from '../components/CaseStudyEvidence';
+import RelatedContentLinks, { type RelatedContentItem } from '../components/RelatedContentLinks';
+import { getBlogPostMetadata } from '../content/blog/metadata';
+import { getRelatedArticleIds } from '../data/contentRelations';
 import { localizedPath } from '../routing/portfolioRoutes';
 
 const pick = (value: LocalizedText, language: string) => (language === 'he' ? value.he : value.en);
@@ -48,6 +51,10 @@ const ProjectCaseStudy = () => {
   const overview = i18n.language === 'he' ? caseStudy.overview.he : caseStudy.overview.en;
   const decisions = i18n.language === 'he' ? caseStudy.decisions.he : caseStudy.decisions.en;
   const outcomes = i18n.language === 'he' ? caseStudy.outcomes.he : caseStudy.outcomes.en;
+  const relatedWriting: RelatedContentItem[] = getRelatedArticleIds(project.id).flatMap((articleId) => {
+    const article = getBlogPostMetadata(articleId, language);
+    return article ? [{ target: { route: 'article', id: articleId }, label: article.title }] : [];
+  });
 
   return (
     <main className="bg-white px-6 py-20 transition-colors duration-500 dark:bg-black">
@@ -178,14 +185,12 @@ const ProjectCaseStudy = () => {
           <p className="mt-4 max-w-4xl text-lg leading-relaxed text-neutral-700 dark:text-neutral-300">{role}</p>
         </section>
 
-        <section className="border-t border-neutral-200 py-12 dark:border-neutral-800">
-          <Link
-            to={localizedPath(language, { route: 'blog' })}
-            className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-5 py-3 text-sm font-bold text-neutral-700 transition-colors hover:border-neutral-300 hover:text-neutral-950 dark:border-neutral-800 dark:text-neutral-300 dark:hover:text-white"
-          >
-            {t('projects.caseStudyRelatedWriting')}
-          </Link>
-        </section>
+        <RelatedContentLinks
+          buildPath={localizedPath}
+          heading={t('projects.caseStudyRelatedWriting')}
+          items={relatedWriting}
+          language={language}
+        />
       </article>
     </main>
   );

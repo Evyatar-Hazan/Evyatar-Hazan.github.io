@@ -1509,26 +1509,6 @@ body {
 }
 
 @media (max-width: 639px) {
-  .product-compiler-layout,
-  .product-compiler-copy {
-    min-height: calc(100svh - 8.75rem);
-  }
-
-  .product-compiler-copy {
-    padding-bottom: 7rem;
-  }
-
-  .product-compiler-actions {
-    position: absolute;
-    inset-inline-start: 0;
-    bottom: 0;
-    margin-top: 0;
-  }
-
-  .product-compiler-signature {
-    display: none;
-  }
-
   .product-compiler-grid {
     background-size: 96px 96px, 96px 96px, 24px 24px, 24px 24px;
     opacity: 0.72;
@@ -1566,7 +1546,6 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .product-compiler-primary,
   .product-compiler-hero button,
   .product-compiler-hero svg,
   .product-compiler-hero svg * {

@@ -9,12 +9,15 @@ import {
 import { ArrowDown, ArrowUpRight, MessageCircle } from 'lucide-react';
 import { useRef, type PointerEvent } from 'react';
 import { useTranslation } from 'react-i18next';
+import LocalizedHeroLayout from '../components/sections/LocalizedHeroLayout';
 import { profileLinks } from '../data/profile';
 import { usePageSeo } from '../hooks/usePageSeo';
+import { localizedPath } from '../routing/portfolioRoutes';
 
 const Home = () => {
   const { t, i18n } = useTranslation();
   const isHebrew = i18n.language === 'he';
+  const language = isHebrew ? 'he' : 'en';
   const shouldReduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -65,67 +68,35 @@ const Home = () => {
     pointerY.set(0);
   };
 
-  const scrollToProjects = () => {
-    document.querySelector('#projects')?.scrollIntoView({ behavior: shouldReduceMotion ? 'auto' : 'smooth' });
-  };
-
   return (
     <section ref={sectionRef} id="home" className="product-compiler-hero relative h-[118svh] overflow-clip md:h-[150svh]">
       <div className="product-compiler-sticky sticky top-0 flex min-h-svh items-start overflow-hidden px-5 pb-6 pt-[7.25rem] sm:items-center sm:px-8 sm:pb-10 sm:pt-28 lg:px-12">
         <div className="product-compiler-grid pointer-events-none absolute inset-0" aria-hidden="true" />
         <div className="product-compiler-aura pointer-events-none absolute inset-0" aria-hidden="true" />
 
-        <div className="product-compiler-layout relative mx-auto grid w-full max-w-[1480px] items-center gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:gap-4">
-          <motion.div
-            style={{ y: shouldReduceMotion ? 0 : copyY }}
-            className="product-compiler-copy relative z-20 max-w-4xl lg:py-10"
-          >
-            <div className="mb-5 flex items-center gap-2.5 text-[0.66rem] font-bold uppercase leading-[1.35] tracking-[0.14em] text-neutral-600 dark:text-neutral-300 sm:mb-6 sm:gap-3 sm:text-sm sm:tracking-[0.18em]">
-              <span className="available-status-indicator h-2 w-2 shrink-0 rounded-full bg-success-500" />
-              <span>{t('home.available')}</span>
-            </div>
-
-            <h1 className={`max-w-[15.5ch] font-black leading-[0.92] tracking-[-0.055em] text-neutral-950 dark:text-white md:text-[clamp(3rem,6.5vw,6.75rem)] md:leading-[0.88] md:tracking-[-0.065em] ${isHebrew ? 'text-[clamp(2.7rem,12vw,3.15rem)]' : 'text-[clamp(2.5rem,11.2vw,3rem)]'}`}>
-              <span className="block text-neutral-400 dark:text-neutral-600">{t('home.compiler.prelude')}</span>
-              <span className="mt-3 block">{t('home.compiler.headline')}</span>
-            </h1>
-
-            <p className="mt-6 max-w-2xl text-base leading-[1.6] text-neutral-700 dark:text-neutral-300 sm:mt-7 sm:text-lg sm:leading-relaxed lg:text-xl">
-              {t('home.compiler.description')}
-            </p>
-
-            <div className="product-compiler-actions me-auto mt-6 flex w-fit max-w-full flex-col items-start gap-1 sm:mt-8 sm:flex-row sm:items-center sm:gap-3">
-              <a
-                href={`${profileLinks.whatsapp}?text=${encodeURIComponent(t('home.whatsappText'))}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="product-compiler-primary group inline-flex min-h-12 max-w-full items-center justify-between gap-3 rounded-2xl bg-primary-700 py-1.5 pe-1.5 ps-4 text-sm font-bold text-white shadow-lg shadow-primary-700/20 transition-[transform,background-color,box-shadow] duration-200 hover:bg-primary-800 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 active:scale-[0.99] dark:focus-visible:ring-offset-black sm:justify-center sm:rounded-full sm:px-6 sm:py-3 sm:text-base sm:hover:-translate-y-0.5 sm:active:translate-y-0 sm:active:scale-100"
-              >
-                <span>{t('home.compiler.buildCta')}</span>
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white/15 sm:contents">
-                  <MessageCircle className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
-                </span>
-              </a>
-
-              <button
-                type="button"
-                onClick={scrollToProjects}
-                className="product-compiler-secondary group inline-flex min-h-10 max-w-full items-center justify-between gap-2.5 rounded-xl border-0 bg-transparent px-3 py-1.5 text-sm font-bold text-neutral-700 transition-[transform,color,background-color] duration-200 hover:bg-neutral-100 hover:text-neutral-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 active:scale-[0.99] dark:text-neutral-300 dark:hover:bg-neutral-900 dark:hover:text-white dark:focus-visible:ring-offset-black sm:min-h-12 sm:justify-center sm:rounded-full sm:border sm:border-neutral-300 sm:bg-white/60 sm:px-6 sm:py-3 sm:text-base sm:text-neutral-900 sm:backdrop-blur-md sm:transition-[transform,border-color,background-color] sm:hover:-translate-y-0.5 sm:hover:border-primary-500 sm:hover:bg-white sm:active:translate-y-0 sm:active:scale-100 sm:dark:border-neutral-700 sm:dark:bg-neutral-950/60 sm:dark:text-white sm:dark:hover:border-primary-400 sm:dark:hover:bg-neutral-900"
-              >
-                <span>{t('home.compiler.workCta')}</span>
-                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg border border-neutral-200 bg-white/70 dark:border-neutral-800 dark:bg-neutral-900 sm:contents">
-                  <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5 sm:h-5 sm:w-5" />
-                </span>
-              </button>
-            </div>
-
-            <div className="product-compiler-signature mt-4 flex items-center gap-2.5 font-mono text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-neutral-500 dark:text-neutral-500 sm:mt-8 sm:gap-3 sm:text-xs sm:tracking-[0.14em]" translate="no">
-              <span className="h-px w-8 bg-primary-500" />
-              <span>EVYATAR HAZAN / PRODUCT ENGINEER</span>
-            </div>
-          </motion.div>
-
-          <motion.div
+        <LocalizedHeroLayout
+          language={language}
+          buildPath={localizedPath}
+          copy={{
+            availability: t('home.available'),
+            prelude: t('home.compiler.prelude'),
+            headline: t('home.compiler.headline'),
+            description: t('home.compiler.description'),
+            signature: 'EVYATAR HAZAN / PRODUCT ENGINEER',
+          }}
+          primaryAction={{
+            label: t('home.compiler.buildCta'),
+            href: `${profileLinks.whatsapp}?text=${encodeURIComponent(t('home.whatsappText'))}`,
+            external: true,
+            icon: <MessageCircle className="h-5 w-5" />,
+          }}
+          secondaryAction={{
+            label: t('home.compiler.workCta'),
+            target: { route: 'projects' },
+            icon: <ArrowUpRight className="h-5 w-5 rtl:-scale-x-100" />,
+          }}
+          copyStyle={{ y: shouldReduceMotion ? 0 : copyY }}
+          visual={<motion.div
             onPointerMove={handlePointerMove}
             onPointerLeave={resetPointer}
             style={{
@@ -211,8 +182,8 @@ const Home = () => {
                 </div>
               </motion.div>
             </div>
-          </motion.div>
-        </div>
+          </motion.div>}
+        />
 
         <div className="absolute bottom-5 start-5 hidden items-center gap-3 font-mono text-[0.62rem] font-bold uppercase tracking-[0.16em] text-neutral-500 md:flex lg:start-12" aria-hidden="true">
           <ArrowDown className="h-4 w-4 text-primary-500" />
