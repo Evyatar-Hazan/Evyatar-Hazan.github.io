@@ -90,6 +90,7 @@ describe('App', () => {
     expect(document.querySelectorAll('#projects .project-secondary-index > li')).toHaveLength(
       projects.filter((project) => !project.featured).length
     );
+    expect(await screen.findByRole('heading', { name: 'Project archive' })).toBeInTheDocument();
   });
 
   it('surfaces recent writing on the home page', async () => {
@@ -295,16 +296,16 @@ describe('App', () => {
     renderAt('/en/projects/online_converter/');
 
     expect(await screen.findByRole('heading', { name: 'projects.items.online_converter.title' })).toBeInTheDocument();
-    expect(screen.getByText('projects.caseStudyAudience')).toBeInTheDocument();
-    const unknownEvidence = screen.getByText('projects.caseStudyEvidenceUnknown');
-    expect(unknownEvidence.closest('div')?.querySelector('time')).not.toBeInTheDocument();
-    expect(unknownEvidence.closest('div')?.querySelector('a')).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'projects.caseStudyBack' })).toHaveAttribute('href', '/en/#projects');
-    expect(screen.getByRole('link', { name: 'projects.code' })).toHaveAttribute(
+    expect(screen.getByRole('heading', { name: '30-second overview' })).toBeInTheDocument();
+    const unknownEvidence = screen.getByText('Evidence date and public sources are not yet verified.');
+    expect(unknownEvidence.closest('section')?.querySelector('time')).not.toBeInTheDocument();
+    expect(unknownEvidence.closest('section')?.querySelector('a')).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Back to projects' })).toHaveAttribute('href', '/en/#projects');
+    expect(screen.getByRole('link', { name: 'Source code' })).toHaveAttribute(
       'href',
       'https://github.com/Evyatar-Hazan/online-converter',
     );
-    expect(screen.getByRole('link', { name: 'projects.liveDemo' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Live product' })).toHaveAttribute(
       'href',
       'https://online-converter.evyatarhazan.com/',
     );

@@ -32,6 +32,10 @@ const FlagshipProjectComparison = lazy(() => import('./components/sections/Flags
 const HumanAboutSection = lazy(() => import('./features/humanAbout/HumanAboutSection'));
 const CapabilityProof = lazy(() => import('./features/capability-proof/CapabilityProof'));
 const LabPage = lazy(() => import('./pages/LabPage'));
+const ProjectArchiveSlot = lazy(async () => {
+  const { createProjectArchiveSlot } = await import('./components/projectArchiveSlot');
+  return { default: createProjectArchiveSlot(localizedPath, 'short').Component };
+});
 
 type SectionFallbackProps = {
   id: string;
@@ -70,6 +74,13 @@ const PortfolioHome = () => {
       </Suspense>
       <Suspense fallback={<SectionFallback id="projects" minHeightClassName="min-h-screen" />}>
         <Projects />
+      </Suspense>
+      <Suspense fallback={<SectionFallback id="project-archive" minHeightClassName="min-h-[70vh]" />}>
+        <div className="bg-white px-5 py-20 dark:bg-black sm:px-8 lg:px-12">
+          <div className="mx-auto max-w-[92.5rem]">
+            <ProjectArchiveSlot language={language} />
+          </div>
+        </div>
       </Suspense>
       <Suspense fallback={<SectionFallback id="capability-proof" minHeightClassName="min-h-[70vh]" />}>
         <CapabilityProof language={language} buildPath={localizedPath} />
