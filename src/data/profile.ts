@@ -193,8 +193,8 @@ const caseStudies = {
       he: 'לומדים שרוצים להכיר מסלול BLS ולדון בו בהקשר של למידה ותרגול.'
     },
     proof: {
-      en: 'The live system combines a React client, Express API, Prisma models, Google OAuth, and collaborative layers such as comments and user handling.',
-      he: 'המערכת החיה משלבת לקוח React, שרת Express, מודלי Prisma, Google OAuth ושכבות שיתופיות כמו תגובות וניהול משתמשים.'
+      en: 'The live learning product uses a React client with Cloudflare Pages Functions and D1 for health, authentication, and comments. Express and Prisma remain a local development workspace rather than the production API.',
+      he: 'מוצר הלמידה החי משתמש בלקוח React, ב־Cloudflare Pages Functions וב־D1 עבור בדיקות תקינות, אימות ותגובות. Express ו־Prisma נשארים סביבת פיתוח מקומית ואינם ה־API של הפרודקשן.'
     },
     evidenceStatus: 'unknown',
     verifiedAt: null,
@@ -321,7 +321,7 @@ export const projects: Project[] = [
     category: 'fullstack',
     featured: true,
     status: 'fullstack',
-    tags: ['React', 'Express', 'Prisma', 'Google OAuth', 'CI'],
+    tags: ['React', 'Cloudflare Pages Functions', 'D1', 'Learning', 'CI'],
     githubUrl: 'https://github.com/Evyatar-Hazan/emergency-protocol-diagram',
     liveUrl: 'https://bls-protocol.evyatarhazan.com/',
     visual: 'protocol',

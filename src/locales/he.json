@@ -158,7 +158,7 @@
         "previewTitle": "תצוגה חיה של פרוטוקול חירום אינטראקטיבי",
         "status": "Full Stack",
         "problem": "פרוטוקולים מורכבים קשה להבין, לעדכן ולשתף בין בעלי תפקידים.",
-        "solution": "לקוח React, שרת Express, Prisma, Google OAuth, תגובות ותהליך ולידציה מסודר.",
+        "solution": "לקוח למידה ב־React עם Cloudflare Pages Functions ו־D1 עבור בדיקות תקינות, אימות ותגובות בפרודקשן; Express ו־Prisma נשארים כלי פיתוח מקומיים.",
         "role": "מבנה מונוריפו, API, אימות, ממשק משתמש ותשתית בדיקות."
       },
       "lev_chedva": {

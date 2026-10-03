@@ -158,7 +158,7 @@
         "previewTitle": "Live preview of Emergency Protocol Diagram",
         "status": "Full stack",
         "problem": "Complex protocols are hard to understand, update, and share across stakeholders.",
-        "solution": "A React client, Express API, Prisma, Google OAuth, comments, and a structured validation flow.",
+        "solution": "A React learning client with Cloudflare Pages Functions and D1 for production health, authentication, and comments; Express and Prisma remain local development tooling.",
         "role": "Monorepo structure, API, authentication, user interface, and test infrastructure."
       },
       "lev_chedva": {

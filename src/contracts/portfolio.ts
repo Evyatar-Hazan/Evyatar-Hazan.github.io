@@ -15,10 +15,40 @@ export type ArticleId = ArticleMetadataKey extends `${infer Slug}:${PortfolioLan
   : never;
 export type CapabilityId = PortfolioCapabilityGroup['id'];
 
+/** Keep all four projects already featured on the canonical homepage. */
+export const homepageFeaturedProjectIds = [
+  'nis_boutique',
+  'online_converter',
+  'emergency_protocol',
+  'united_hatzalah',
+] as const satisfies readonly ProjectId[];
+
 export type PortfolioContentRef =
   | { kind: 'project'; id: ProjectId }
   | { kind: 'article'; id: ArticleId }
   | { kind: 'capability'; id: CapabilityId };
+
+export type CapabilityEvidenceStatus = 'public' | 'unavailable' | 'unreviewed';
+
+export type CapabilityEvidenceRecord = {
+  status: CapabilityEvidenceStatus;
+  publicRefs: readonly PortfolioContentRef[];
+};
+
+/**
+ * `unavailable` means that no approved public proof is currently available;
+ * it does not make a claim about whether the underlying capability exists.
+ * Task 04 may promote a group to `public` only with verified public references.
+ */
+export const capabilityEvidenceBaseline = {
+  webMobile: { status: 'unreviewed', publicRefs: [] },
+  languages: { status: 'unreviewed', publicRefs: [] },
+  aiCv: { status: 'unavailable', publicRefs: [] },
+  devops: { status: 'unreviewed', publicRefs: [] },
+  databases: { status: 'unreviewed', publicRefs: [] },
+  automation: { status: 'unavailable', publicRefs: [] },
+  methodologies: { status: 'unreviewed', publicRefs: [] },
+} as const satisfies Record<CapabilityId, CapabilityEvidenceRecord>;
 
 /**
  * Route input contract for task 09. The localized path helper owns URL shape;
