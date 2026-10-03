@@ -9,6 +9,7 @@ import { getBlogPostMetadata } from '../content/blog/metadata';
 import { getRelatedArticleIds } from '../data/contentRelations';
 import { localizedPath } from '../routing/portfolioRoutes';
 import { isCaseStudyReadingProjectId } from '../data/caseStudyReadingLevels';
+import AiProvenanceSection from '../features/ai-provenance/AiProvenanceSection';
 
 const pick = (value: LocalizedText, language: string) => (language === 'he' ? value.he : value.en);
 
@@ -98,6 +99,15 @@ const ProjectCaseStudy = () => {
             role={role}
             githubUrl={project.githubUrl}
             liveUrl={project.liveUrl ?? undefined}
+          />
+        )}
+
+        {project.id === 'nis_boutique' && (
+          <AiProvenanceSection
+            buildPath={localizedPath}
+            className="my-12"
+            language={language}
+            mode="full"
           />
         )}
 
