@@ -28,6 +28,7 @@ const Projects = lazy(() => import('./components/sections/Projects'));
 const BlogPreview = lazy(() => import('./components/sections/BlogPreview'));
 const AudienceEntryPaths = lazy(() => import('./components/sections/AudienceEntryPaths'));
 const ServiceEngagements = lazy(() => import('./components/sections/ServiceEngagements'));
+const CurrentFocus = lazy(() => import('./components/sections/CurrentFocus'));
 const FlagshipProjectComparison = lazy(() => import('./components/sections/FlagshipProjectComparison'));
 const HumanAboutSection = lazy(() => import('./features/humanAbout/HumanAboutSection'));
 const WorkingPrinciples = lazy(() => import('./components/sections/WorkingPrinciples'));
@@ -64,6 +65,9 @@ const PortfolioHome = () => {
       </Suspense>
       <Suspense fallback={<SectionFallback id="service-engagements" minHeightClassName="min-h-[70vh]" />}>
         <ServiceEngagements language={language} buildPath={localizedPath} />
+      </Suspense>
+      <Suspense fallback={<SectionFallback id="current-focus" minHeightClassName="min-h-[55vh]" />}>
+        <CurrentFocus language={language} localizedPathBuilder={localizedPath} />
       </Suspense>
       <Suspense fallback={<SectionFallback id="human-about" minHeightClassName="min-h-[55vh]" />}>
         <HumanAboutSection language={language} />

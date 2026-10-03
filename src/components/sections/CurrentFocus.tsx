@@ -119,7 +119,7 @@ const CurrentFocus = ({
         </ol>
 
         <p
-          className={`mt-5 max-w-4xl text-sm leading-6 ${fresh ? 'text-neutral-500 dark:text-neutral-400' : 'font-semibold text-amber-800 dark:text-amber-300'}`}
+          className={`mt-5 max-w-4xl text-sm leading-6 ${fresh ? 'text-neutral-500 dark:text-neutral-400' : 'font-semibold text-warning-800 dark:text-warning-300'}`}
           role={fresh ? undefined : 'status'}
         >
           {fresh ? languageCopy.freshNote : languageCopy.staleNote}

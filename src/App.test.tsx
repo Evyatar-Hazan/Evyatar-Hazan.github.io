@@ -48,6 +48,8 @@ describe('App', () => {
     render(<App />);
 
     expect(await screen.findByRole('heading', { name: 'about.systemTitle' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'What I am working to make clearer now.' })).toBeInTheDocument();
+    expect(document.querySelectorAll('[data-focus-id]')).toHaveLength(2);
     await waitFor(() => expect(screen.getAllByText('Web & mobile products')).toHaveLength(2));
     expect(document.querySelectorAll('.about-capability-module')).toHaveLength(7);
     expect(await screen.findByRole('heading', { name: 'Follow one need through the product.' })).toBeInTheDocument();
