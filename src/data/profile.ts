@@ -1,7 +1,7 @@
 import {
   assertCaseStudyEvidenceContract,
   type CaseStudyEvidence,
-} from './caseStudyEvidence';
+} from './caseStudyEvidence.ts';
 
 export const profileLinks = {
   github: 'https://github.com/Evyatar-Hazan',
