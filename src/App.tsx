@@ -31,6 +31,7 @@ const ServiceEngagements = lazy(() => import('./components/sections/ServiceEngag
 const FlagshipProjectComparison = lazy(() => import('./components/sections/FlagshipProjectComparison'));
 const HumanAboutSection = lazy(() => import('./features/humanAbout/HumanAboutSection'));
 const WorkingPrinciples = lazy(() => import('./components/sections/WorkingPrinciples'));
+const SignatureInteraction = lazy(() => import('./components/sections/SignatureInteraction'));
 const CapabilityProof = lazy(() => import('./features/capability-proof/CapabilityProof'));
 const LabPage = lazy(() => import('./pages/LabPage'));
 const ProjectArchiveSlot = lazy(async () => {
@@ -69,6 +70,18 @@ const PortfolioHome = () => {
       </Suspense>
       <Suspense fallback={<SectionFallback id="about" minHeightClassName="min-h-[70vh]" />}>
         <About />
+      </Suspense>
+      <Suspense fallback={<SectionFallback id="system-trace" minHeightClassName="min-h-[70vh]" />}>
+        <SignatureInteraction
+          language={language}
+          localizedPath={localizedPath}
+          stableIds={{
+            section: 'system-trace',
+            heading: 'system-trace-heading',
+            detail: 'system-trace-detail',
+            status: 'system-trace-status',
+          }}
+        />
       </Suspense>
       <Suspense fallback={<SectionFallback id="working-principles" minHeightClassName="min-h-[70vh]" />}>
         <WorkingPrinciples language={language} localizedPath={localizedPath} />

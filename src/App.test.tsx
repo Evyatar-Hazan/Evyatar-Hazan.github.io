@@ -50,6 +50,8 @@ describe('App', () => {
     expect(await screen.findByRole('heading', { name: 'about.systemTitle' })).toBeInTheDocument();
     await waitFor(() => expect(screen.getAllByText('Web & mobile products')).toHaveLength(2));
     expect(document.querySelectorAll('.about-capability-module')).toHaveLength(7);
+    expect(await screen.findByRole('heading', { name: 'Follow one need through the product.' })).toBeInTheDocument();
+    expect(document.querySelector('[data-portfolio-slot="shell.signatureInteraction"]')).toBeInTheDocument();
     expect(await screen.findByRole('heading', { name: 'Working principles, visible in the work.' })).toBeInTheDocument();
   });
 
@@ -190,6 +192,8 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'How I built a business site around WhatsApp' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'What I learned from building a credible portfolio' })).toBeInTheDocument();
     expect(document.querySelectorAll('.blog-archive-feature')).toHaveLength(1);
+    expect(screen.getByRole('heading', { name: 'Choose a deliberate route through the work' })).toBeInTheDocument();
+    expect(document.querySelectorAll('[data-reading-route]')).toHaveLength(3);
     expect(document.querySelectorAll('.blog-archive-entry')).toHaveLength(28);
     expect(screen.getByText('WRITING / Archive')).toBeInTheDocument();
   });
@@ -310,6 +314,8 @@ describe('App', () => {
       'href',
       'https://online-converter.evyatarhazan.com/',
     );
+    expect(screen.getByRole('heading', { name: 'Public product views' })).toBeInTheDocument();
+    expect(document.querySelectorAll('[data-project-id="online_converter"] figure')).toHaveLength(2);
   });
 
   it('publishes factual AI provenance only on the Nis case study', async () => {

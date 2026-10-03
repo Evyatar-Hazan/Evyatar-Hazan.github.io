@@ -10,6 +10,8 @@ import { getRelatedArticleIds } from '../data/contentRelations';
 import { localizedPath } from '../routing/portfolioRoutes';
 import { isCaseStudyReadingProjectId } from '../data/caseStudyReadingLevels';
 import AiProvenanceSection from '../features/ai-provenance/AiProvenanceSection';
+import ProductVisualGallery from '../components/ProductVisualGallery';
+import { isPortfolioProjectId } from '../data/portfolioProjects';
 
 const pick = (value: LocalizedText, language: string) => (language === 'he' ? value.he : value.en);
 
@@ -86,6 +88,14 @@ const ProjectCaseStudy = () => {
             ))}
           </div>
         </header>
+
+        {isPortfolioProjectId(project.id) && (
+          <ProductVisualGallery
+            language={language}
+            localizedPath={localizedPath}
+            projectId={project.id}
+          />
+        )}
 
         {isCaseStudyReadingProjectId(project.id) && (
           <CaseStudyReadingLevels

@@ -20,6 +20,15 @@ export type FlagshipPortfolioProjectId = (typeof flagshipPortfolioProjectIds)[nu
 export type RemainingPortfolioProjectId = (typeof remainingPortfolioProjectIds)[number];
 export type PortfolioProjectId = FlagshipPortfolioProjectId | RemainingPortfolioProjectId;
 
+const portfolioProjectIds: readonly PortfolioProjectId[] = [
+  ...flagshipPortfolioProjectIds,
+  ...remainingPortfolioProjectIds,
+];
+
+export const isPortfolioProjectId = (projectId: string): projectId is PortfolioProjectId => (
+  portfolioProjectIds.includes(projectId as PortfolioProjectId)
+);
+
 type ProjectLocaleCopy = {
   title: string;
   description: string;

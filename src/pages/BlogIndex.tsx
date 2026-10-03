@@ -6,6 +6,7 @@ import { getBlogPosts } from '../content/blog/posts';
 import type { BlogLanguage, BlogPost } from '../content/blog/types';
 import { usePageSeo } from '../hooks/usePageSeo';
 import type { ArticleId } from '../contracts/portfolio';
+import ReadingRoutesSection from '../features/curated-reading-routes/ReadingRoutesSection';
 import { localizedPath } from '../routing/portfolioRoutes';
 
 const languageFromI18n = (language: string): BlogLanguage => (language === 'he' ? 'he' : 'en');
@@ -120,6 +121,8 @@ const BlogIndex = () => {
         </header>
 
         {featuredPost && <ArchiveFeature post={featuredPost} language={language} />}
+
+        <ReadingRoutesSection language={language} buildPath={localizedPath} />
 
         <div className="blog-archive-ledger">
           <div className="blog-archive-ledger-heading">
