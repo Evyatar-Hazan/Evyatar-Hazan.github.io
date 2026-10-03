@@ -152,8 +152,8 @@
       },
       "emergency_protocol": {
         "title": "Emergency Protocol Diagram",
-        "description": "A full-stack system for presenting, managing, and discussing emergency protocols.",
-        "summary": "A system that turns complex emergency protocols into an interactive workspace with users, auth, and comments.",
+        "description": "A full-stack tool for learning and practicing a BLS pathway only; not for use during emergencies and without a claim of medical validation.",
+        "summary": "An interactive BLS learning and practice tool with user authentication and discussion features.",
         "impact": "The project shows how a static document can become a structured product with permissions, database models, and maintainable delivery.",
         "previewTitle": "Live preview of Emergency Protocol Diagram",
         "status": "Full stack",

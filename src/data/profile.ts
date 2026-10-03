@@ -175,22 +175,22 @@ const caseStudies = {
       he: 'קייס סטאדי: Emergency Protocol Diagram | אביתר חזן'
     },
     seoDescription: {
-      en: 'How I turned a complex emergency protocol into a structured full-stack workspace with auth, comments, and maintainable flows.',
-      he: 'איך הפכתי פרוטוקול חירום מורכב למרחב עבודה Full Stack מסודר עם אימות, תגובות וזרימות תחזוקה.'
+      en: 'A full-stack learning and practice tool for exploring a BLS pathway, with authentication and discussion features.',
+      he: 'כלי למידה ותרגול Full Stack להיכרות עם מסלול BLS, עם התחברות ודיון.'
     },
     overview: {
       en: [
-        'This project is about taking information that normally lives as a hard-to-read document and reshaping it into a product people can navigate, discuss, and maintain.',
+        'This project organizes a BLS pathway into a tool for learning and practice only. It is not intended for use during an emergency and does not claim medical validation.',
         'The core value is not only the diagram itself. It is the shift from static documentation toward a permissioned workflow with clear ownership and iteration paths.'
       ],
       he: [
-        'הפרויקט הזה עוסק בלקחת מידע שבדרך כלל חי כמסמך קשה לקריאה ולהפוך אותו למוצר שאנשים יכולים לנווט בו, לדון בו ולתחזק אותו.',
+        'הפרויקט מארגן מסלול BLS בכלי למידה ותרגול בלבד. הוא אינו מיועד לשימוש בזמן חירום ואינו מציג טענה לאימות רפואי.',
         'הערך המרכזי הוא לא רק הדיאגרמה עצמה, אלא המעבר מתיעוד סטטי ל-workflow עם הרשאות, בעלות ברורה ויכולת איטרציה.'
       ]
     },
     audience: {
-      en: 'Teams that need to understand, update, and discuss complex operational logic instead of leaving it trapped in a static file.',
-      he: 'צוותים שצריכים להבין, לעדכן ולדון בלוגיקה תפעולית מורכבת במקום להשאיר אותה כלואה בקובץ סטטי.'
+      en: 'Learners who want to explore and discuss a BLS pathway in a learning and practice context.',
+      he: 'לומדים שרוצים להכיר מסלול BLS ולדון בו בהקשר של למידה ותרגול.'
     },
     proof: {
       en: 'The live system combines a React client, Express API, Prisma models, Google OAuth, and collaborative layers such as comments and user handling.',
@@ -202,23 +202,23 @@ const caseStudies = {
     decisions: {
       en: [
         'Separated client, API, auth, and data responsibilities so future protocol changes do not collapse into one fragile layer.',
-        'Focused on interaction clarity because the product only matters if users can actually follow the protocol path under pressure.',
+        'Structured the interaction around step-by-step learning and practice.',
         'Added maintainable backend structure so collaboration features remain grounded in clear models rather than ad hoc state.'
       ],
       he: [
         'הפרדתי בין אחריות של client, API, auth ו-data כדי ששינויים עתידיים בפרוטוקול לא יקרסו לשכבה שבירה אחת.',
-        'התמקדתי בבהירות האינטראקציה, כי המוצר חשוב רק אם משתמשים באמת יכולים לעקוב אחרי הנתיב גם תחת לחץ.',
+        'ארגנתי את האינטראקציה סביב למידה ותרגול צעד-אחר-צעד.',
         'הוספתי מבנה backend תחזוקתי כדי שפיצ׳רי שיתוף יישבו על מודלים ברורים ולא על state מאולתר.'
       ]
     },
     outcomes: {
       en: [
-        'A clearer operational surface than a raw protocol document.',
+        'A step-by-step learning and practice interface for a BLS pathway.',
         'A system that can support discussion, permissions, and future updates.',
         'A concrete example of product thinking inside a full-stack workflow.'
       ],
       he: [
-        'משטח עבודה תפעולי ברור יותר ממסמך פרוטוקול גולמי.',
+        'ממשק למידה ותרגול צעד-אחר-צעד למסלול BLS.',
         'מערכת שיכולה לתמוך בדיון, הרשאות ועדכונים עתידיים.',
         'דוגמה מוחשית לחשיבה מוצרית בתוך workflow של Full Stack.'
       ]
