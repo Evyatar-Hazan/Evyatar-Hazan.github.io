@@ -31,6 +31,7 @@ const ServiceEngagements = lazy(() => import('./components/sections/ServiceEngag
 const FlagshipProjectComparison = lazy(() => import('./components/sections/FlagshipProjectComparison'));
 const HumanAboutSection = lazy(() => import('./features/humanAbout/HumanAboutSection'));
 const CapabilityProof = lazy(() => import('./features/capability-proof/CapabilityProof'));
+const LabPage = lazy(() => import('./pages/LabPage'));
 
 type SectionFallbackProps = {
   id: string;
@@ -91,14 +92,20 @@ const LocalizedRoute = ({ children }: { children: ReactNode }) => {
 const LegacyRedirect = () => {
   const { i18n } = useTranslation();
   const location = useLocation();
-  const language = isPortfolioLanguage(i18n.language)
-    ? i18n.language
-    : defaultPortfolioLanguage;
+  const query = new URLSearchParams(location.search);
+  const requestedLanguage = query.get('lang');
+  const language = requestedLanguage !== null && isPortfolioLanguage(requestedLanguage)
+    ? requestedLanguage
+    : isPortfolioLanguage(i18n.language)
+      ? i18n.language
+      : defaultPortfolioLanguage;
+  query.delete('lang');
+  const search = query.size > 0 ? `?${query.toString()}` : '';
 
   return (
     <Navigate
       replace
-      to={`${localizePath(language, location.pathname)}${location.search}${location.hash}`}
+      to={`${localizePath(language, location.pathname)}${search}${location.hash}`}
     />
   );
 };
@@ -161,12 +168,23 @@ const AppShell = () => {
         <Route path="/:language/blog/:slug" element={<LocalizedRoute><BlogPost /></LocalizedRoute>} />
         <Route path="/:language/contact" element={<LocalizedRoute><ContactPage /></LocalizedRoute>} />
         <Route path="/:language/privacy" element={<LocalizedRoute><PrivacyPage /></LocalizedRoute>} />
+        <Route
+          path="/:language/lab"
+          element={(
+            <LocalizedRoute>
+              <Suspense fallback={<SectionFallback id="lab" minHeightClassName="min-h-screen" />}>
+                <LabPage />
+              </Suspense>
+            </LocalizedRoute>
+          )}
+        />
         <Route path="/" element={<LegacyRedirect />} />
         <Route path="/projects/:projectId" element={<LegacyRedirect />} />
         <Route path="/blog" element={<LegacyRedirect />} />
         <Route path="/blog/:slug" element={<LegacyRedirect />} />
         <Route path="/contact" element={<LegacyRedirect />} />
         <Route path="/privacy" element={<LegacyRedirect />} />
+        <Route path="/lab" element={<LegacyRedirect />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Footer />

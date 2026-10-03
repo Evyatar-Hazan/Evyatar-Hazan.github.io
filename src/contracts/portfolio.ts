@@ -60,6 +60,7 @@ export type PortfolioRouteTarget =
   | { route: 'project'; id: ProjectId }
   | { route: 'blog' }
   | { route: 'article'; id: ArticleId }
+  | { route: 'lab' }
   | { route: 'contact' }
   | { route: 'privacy' };
 

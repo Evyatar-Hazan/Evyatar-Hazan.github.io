@@ -141,6 +141,23 @@ const staticRoutes = [
         { href: '/blog/', label: 'Writing' }
       ]
     }
+  },
+  {
+    path: '/lab/',
+    excludeAds: true,
+    title: 'Interface Craft Lab | Evyatar Hazan',
+    description: 'Synthetic interface experiments and a reusable date presenter, clearly separated from client delivery and product metrics.',
+    preview: {
+      heading: 'Interface Craft Lab',
+      body: [
+        'Synthetic interaction experiments for useful errors, upload states, and explainable workflows.',
+        'Includes a reusable date presenter that demonstrates honest fallback behavior without claiming client delivery or product outcomes.'
+      ],
+      links: [
+        { href: '/', label: 'Home' },
+        { href: '/contact/', label: 'Contact' }
+      ]
+    }
   }
 ];
 
@@ -321,6 +338,22 @@ const localizedSeoForRoute = (route, language) => {
     };
   }
 
+  if (route.path === '/lab/') {
+    return {
+      ...route,
+      title: 'מעבדת ממשק | אביתר חזן',
+      description: 'ניסויי ממשק סינתטיים ורכיב תאריך רב־שימושי, עם הבחנה מפורשת מעבודת לקוח וממדדי מוצר.',
+      preview: {
+        ...route.preview,
+        heading: 'מעבדת ממשק',
+        body: [
+          'ניסויים סינתטיים בהודעות שגיאה שימושיות, מצבי העלאה ותהליכים מוסברים.',
+          'כולל רכיב תאריך רב־שימושי שמדגים fallback אמין בלי לטעון לעבודת לקוח או לתוצאות מוצר.'
+        ]
+      }
+    };
+  }
+
   const blogMatch = route.path.match(/^\/blog\/([^/]+)\/$/);
   if (blogMatch) {
     const entry = localizedBlogEntries.find((candidate) => (
@@ -399,6 +432,7 @@ for (const route of staticRoutes) {
 
 const buildLegacyRedirect = (routePath) => {
   const target = localizedPath('en', routePath);
+  const normalizedRoutePath = normalizePath(routePath);
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -410,7 +444,14 @@ const buildLegacyRedirect = (routePath) => {
 </head>
 <body>
   <p>This page moved to <a href="${target}">${target}</a>.</p>
-  <script>location.replace(${JSON.stringify(target)} + location.search + location.hash)</script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const requestedLanguage = params.get('lang');
+    const language = requestedLanguage === 'he' || requestedLanguage === 'en' ? requestedLanguage : 'en';
+    params.delete('lang');
+    const query = params.toString();
+    location.replace('/' + language + ${JSON.stringify(normalizedRoutePath)} + (query ? '?' + query : '') + location.hash);
+  </script>
 </body>
 </html>
 `;

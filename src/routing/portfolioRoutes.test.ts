@@ -14,6 +14,7 @@ describe('localized portfolio routes', () => {
     expect(localizedPath('he', { route: 'projects' })).toBe('/he/#projects');
     expect(localizedPath('en', { route: 'project', id: 'online_converter' })).toBe('/en/projects/online_converter/');
     expect(localizedPath('he', { route: 'article', id: 'catering-whatsapp' })).toBe('/he/blog/catering-whatsapp/');
+    expect(localizedPath('he', { route: 'lab' })).toBe('/he/lab/');
     expect(localizedPath('en', { route: 'contact' })).toBe('/en/contact/');
   });
 

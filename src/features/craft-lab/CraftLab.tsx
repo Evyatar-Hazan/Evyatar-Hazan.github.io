@@ -231,7 +231,7 @@ const CraftLab = ({ language, buildPath, className }: CraftLabProps) => {
   const content = craftLabContent[language];
 
   return (
-    <main className={joinClassNames('craft-lab', className)}>
+    <div className={joinClassNames('craft-lab', className)}>
       <div className="craft-lab__grid" aria-hidden="true" />
       <header className="craft-lab__intro">
         <div>
@@ -258,7 +258,7 @@ const CraftLab = ({ language, buildPath, className }: CraftLabProps) => {
           <a className="craft-lab__button craft-lab__button--quiet" href={buildPath(language, { route: 'contact' })}>{content.discussProject}</a>
         </nav>
       </div>
-    </main>
+    </div>
   );
 };
 

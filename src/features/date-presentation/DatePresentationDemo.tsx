@@ -40,7 +40,7 @@ export const DatePresentationDemo = ({
       aria-labelledby={`${inputId}-title`}
     >
       <div
-        className="pointer-events-none absolute inset-0 opacity-70 [background-image:linear-gradient(to_right,rgba(14,165,233,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(14,165,233,0.08)_1px,transparent_1px)] [background-size:32px_32px]"
+        className="date-presentation-grid pointer-events-none absolute inset-0 opacity-70"
         aria-hidden="true"
       />
       <div className="relative grid gap-0 lg:grid-cols-[minmax(0,1.1fr)_minmax(19rem,0.9fr)]">

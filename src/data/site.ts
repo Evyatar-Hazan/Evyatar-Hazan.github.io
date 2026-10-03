@@ -91,6 +91,22 @@ export const staticRoutes: RouteSeo[] = [
     title: 'Contact | Evyatar Hazan',
     description: 'Direct contact options for Evyatar Hazan, including WhatsApp, email, and LinkedIn for project inquiries and collaboration.',
     preview: contactPreview
+  },
+  {
+    path: '/lab/',
+    title: 'Interface Craft Lab | Evyatar Hazan',
+    description: 'Synthetic interface experiments and a reusable date presenter, clearly separated from client delivery and product metrics.',
+    preview: {
+      heading: 'Interface Craft Lab',
+      body: [
+        'Synthetic interaction experiments for useful errors, upload states, and explainable workflows.',
+        'Includes a reusable date presenter that demonstrates honest fallback behavior without claiming client delivery or product outcomes.'
+      ],
+      links: [
+        { href: '/', label: 'Home' },
+        { href: '/contact/', label: 'Contact' }
+      ]
+    }
   }
 ];
 

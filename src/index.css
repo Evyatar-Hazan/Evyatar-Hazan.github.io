@@ -1,4 +1,11 @@
 @import "tailwindcss";
+
+.date-presentation-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--color-primary-500) 8%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-primary-500) 8%, transparent) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
 @source not "../experiments";
 @source not "../docs";
 

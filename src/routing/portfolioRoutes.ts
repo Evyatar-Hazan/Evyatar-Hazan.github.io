@@ -46,6 +46,8 @@ const targetPath = (target: PortfolioRouteTarget) => {
       return '/blog/';
     case 'article':
       return `/blog/${target.id}/`;
+    case 'lab':
+      return '/lab/';
     case 'contact':
       return '/contact/';
     case 'privacy':

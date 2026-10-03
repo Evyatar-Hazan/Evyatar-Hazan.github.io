@@ -48,6 +48,7 @@ const Footer = () => {
             <span>SITE MAP / 01</span>
             <Link to={localizedPath(language, { route: 'home' })}>{t('nav.Home')}</Link>
             <Link to={localizedPath(language, { route: 'blog' })}>{t('nav.Blog')}</Link>
+            <Link to={localizedPath(language, { route: 'lab' })}>{isHebrew ? 'מעבדה' : 'Lab'}</Link>
             <Link to={localizedPath(language, { route: 'contact' })}>{t('nav.Contact')}</Link>
             <Link to={localizedPath(language, { route: 'privacy' })}>{t('footer.privacy')}</Link>
           </div>

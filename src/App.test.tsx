@@ -222,6 +222,14 @@ describe('App', () => {
     expect(window.location.hash).toBe('#summary');
   });
 
+  it('migrates the legacy language query into the canonical path', async () => {
+    renderAt('/projects/nis_boutique?lang=he&ref=legacy#evidence');
+
+    await waitFor(() => expect(window.location.pathname).toBe('/he/projects/nis_boutique/'));
+    expect(window.location.search).toBe('?ref=legacy');
+    expect(window.location.hash).toBe('#evidence');
+  });
+
   it('renders a single blog post by slug', async () => {
     renderAt('/en/blog/catering-whatsapp/');
 
@@ -231,6 +239,21 @@ describe('App', () => {
     expect(document.querySelector('.blog-article-masthead')).toBeInTheDocument();
     expect(document.querySelector('.blog-reading-rail')).toBeInTheDocument();
     expect(document.querySelectorAll('.blog-article-next-grid a').length).toBeGreaterThan(0);
+  });
+
+  it('mounts the synthetic retry demo only in its related article', async () => {
+    renderAt('/en/blog/retries-should-not-duplicate-data/');
+
+    expect(await screen.findByRole('heading', { level: 3, name: 'Retry the same intent' })).toBeInTheDocument();
+    expect(screen.getByText(/Local simulation only/)).toBeInTheDocument();
+  });
+
+  it('serves the localized interface lab with its reusable date presenter', async () => {
+    renderAt('/en/lab/');
+
+    expect(await screen.findByRole('heading', { level: 1, name: 'Small states. Serious product decisions.' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2, name: 'A date should inform, not interrupt.' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Lab' })).toHaveAttribute('href', '/en/lab/');
   });
 
   it('renders the closing dock as the shared site footer', () => {
