@@ -2,10 +2,12 @@ import { ArrowLeft, ArrowRight, BookOpen, Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePageSeo } from '../hooks/usePageSeo';
+import { localizedPath } from '../routing/portfolioRoutes';
 
 const NotFoundPage = () => {
   const { i18n } = useTranslation();
   const isHebrew = i18n.language === 'he';
+  const language = isHebrew ? 'he' : 'en';
   const ArrowIcon = isHebrew ? ArrowLeft : ArrowRight;
 
   usePageSeo({
@@ -30,14 +32,14 @@ const NotFoundPage = () => {
         </p>
         <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
           <Link
-            to="/"
+            to={localizedPath(language, { route: 'home' })}
             className="inline-flex items-center justify-center gap-2 rounded-full bg-primary-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-primary-500"
           >
             <Home className="h-4 w-4" />
             {isHebrew ? 'חזרה לעמוד הבית' : 'Back to the home page'}
           </Link>
           <Link
-            to="/blog"
+            to={localizedPath(language, { route: 'blog' })}
             className="inline-flex items-center justify-center gap-2 rounded-full border border-neutral-200 px-6 py-3 text-sm font-bold text-neutral-700 transition hover:border-neutral-300 hover:text-neutral-950 dark:border-neutral-800 dark:text-neutral-300 dark:hover:text-white"
           >
             <BookOpen className="h-4 w-4" />

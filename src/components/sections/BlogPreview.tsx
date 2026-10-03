@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getBlogPosts } from '../../content/blog/posts';
 import type { BlogLanguage, BlogPost } from '../../content/blog/types';
+import type { ArticleId } from '../../contracts/portfolio';
+import { localizedPath } from '../../routing/portfolioRoutes';
 
 const languageFromI18n = (language: string): BlogLanguage => (language === 'he' ? 'he' : 'en');
 
@@ -73,7 +75,7 @@ const ArticleLink = ({ post, language, featured = false, index }: ArticleLinkPro
       <motion.div className="writing-article-copy" style={{ y: featured && !reduceMotion ? copyY : 0 }}>
         <ArticleMeta post={post} language={language} />
         <h3>
-          <Link to={`/blog/${post.slug}`}>
+          <Link to={localizedPath(language, { route: 'article', id: post.slug as ArticleId })}>
             <span className="absolute inset-0" aria-hidden="true" />
             {post.title}
           </Link>
@@ -165,7 +167,7 @@ const BlogPreview = () => {
 
           <div className="writing-header-note">
             <p>{t('blogPreview.subtitle')}</p>
-            <Link to="/blog" className="writing-all-link">
+            <Link to={localizedPath(language, { route: 'blog' })} className="writing-all-link">
               <span>{t('blogPreview.viewAll')}</span>
               <ArrowIcon aria-hidden="true" className="h-4 w-4" />
             </Link>

@@ -3,12 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { profileLinks } from '../data/profile';
 import BrandMark from './BrandMark';
+import { localizedPath } from '../routing/portfolioRoutes';
 
 const Footer = () => {
   const { t, i18n } = useTranslation();
   const currentYear = new Date().getFullYear();
   const appVersion = import.meta.env.VITE_APP_VERSION;
   const isHebrew = i18n.language === 'he';
+  const language = isHebrew ? 'he' : 'en';
   const ArrowIcon = isHebrew ? ArrowUpLeft : ArrowUpRight;
   
   const socialLinks = [
@@ -44,10 +46,10 @@ const Footer = () => {
         <div className="closing-dock-map">
           <div className="closing-dock-links">
             <span>SITE MAP / 01</span>
-            <Link to="/">{t('nav.Home')}</Link>
-            <Link to="/blog">{t('nav.Blog')}</Link>
-            <Link to="/contact">{t('nav.Contact')}</Link>
-            <Link to="/privacy">{t('footer.privacy')}</Link>
+            <Link to={localizedPath(language, { route: 'home' })}>{t('nav.Home')}</Link>
+            <Link to={localizedPath(language, { route: 'blog' })}>{t('nav.Blog')}</Link>
+            <Link to={localizedPath(language, { route: 'contact' })}>{t('nav.Contact')}</Link>
+            <Link to={localizedPath(language, { route: 'privacy' })}>{t('footer.privacy')}</Link>
           </div>
 
           <div className="closing-dock-socials">

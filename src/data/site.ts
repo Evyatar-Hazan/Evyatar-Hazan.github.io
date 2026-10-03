@@ -1,5 +1,8 @@
 import { blogPosts } from './blogPosts-data';
 import { featuredProjects } from './siteProjects-data';
+import { normalizePath } from '../routing/portfolioRoutes';
+
+export { normalizePath } from '../routing/portfolioRoutes';
 
 export const siteUrl = 'https://evyatarhazan.com';
 export const legacySiteUrl = 'https://evyatar-hazan.github.io';
@@ -15,11 +18,6 @@ export type RouteSeo = {
   title: string;
   description: string;
   preview: RoutePreview;
-};
-
-export const normalizePath = (path: string) => {
-  if (!path || path === '/') return '/';
-  return path.endsWith('/') ? path : `${path}/`;
 };
 
 const homePreview: RoutePreview = {

@@ -12,6 +12,7 @@ const normalizePath = (routePath) => {
 };
 
 const absoluteUrl = (routePath) => `${siteUrl}${normalizePath(routePath) === '/' ? '/' : normalizePath(routePath)}`;
+const localizedPath = (language, routePath) => `/${language}${normalizePath(routePath)}`;
 const toRelativeDir = (routePath) => normalizePath(routePath).replace(/^\/+/, '');
 const escapeHtml = (value) => value
   .replaceAll('&', '&amp;')
@@ -43,6 +44,16 @@ const blogEntries = [...blogSource.matchAll(/slug:\s*'([^']+)'[\s\S]*?language:\
     tags: match[5].replace(/'/g, '').split(',').map((value) => value.trim()).filter(Boolean)
   }));
 
+const localizedBlogEntries = [...blogSource.matchAll(/slug:\s*'([^']+)'[\s\S]*?language:\s*'(en|he)'[\s\S]*?title:\s*'([^']+)'[\s\S]*?excerpt:\s*'([^']+)'[\s\S]*?date:\s*'([^']+)'[\s\S]*?tags:\s*\[([^\]]*)\]/g)]
+  .map((match) => ({
+    slug: match[1],
+    language: match[2],
+    title: match[3],
+    excerpt: match[4],
+    date: match[5],
+    tags: match[6].replace(/'/g, '').split(',').map((value) => value.trim()).filter(Boolean)
+  }));
+
 const profileSource = await readFile(path.join(srcDir, 'data', 'profile.ts'), 'utf8');
 const projectBlocks = [
   { id: 'nis_boutique', caseKey: 'nis_boutique', name: 'Nis Boutique Catering' },
@@ -51,14 +62,14 @@ const projectBlocks = [
   { id: 'united_hatzalah', caseKey: 'united_hatzalah', name: 'United Hatzalah Shoham Branch' }
 ];
 
-const extractCaseStudyValue = (caseKey, field) => {
-  const regex = new RegExp(`${caseKey}:\\s*\\{[\\s\\S]*?${field}:\\s*\\{[\\s\\S]*?en:\\s*'([^']+)'`, 'm');
+const extractCaseStudyValue = (caseKey, field, language = 'en') => {
+  const regex = new RegExp(`${caseKey}:\\s*\\{[\\s\\S]*?${field}:\\s*\\{[\\s\\S]*?${language}:\\s*'([^']+)'`, 'm');
   const match = profileSource.match(regex);
   return match?.[1] ?? '';
 };
 
-const extractOverviewParagraph = (caseKey) => {
-  const regex = new RegExp(`${caseKey}:\\s*\\{[\\s\\S]*?overview:\\s*\\{[\\s\\S]*?en:\\s*\\[\\s*'([^']+)'`, 'm');
+const extractOverviewParagraph = (caseKey, language = 'en') => {
+  const regex = new RegExp(`${caseKey}:\\s*\\{[\\s\\S]*?overview:\\s*\\{[\\s\\S]*?${language}:\\s*\\[\\s*'([^']+)'`, 'm');
   const match = profileSource.match(regex);
   return match?.[1] ?? '';
 };
@@ -255,4 +266,214 @@ if (blogSlugs.length === 0) {
   throw new Error('Expected English blog routes for sitemap generation.');
 }
 
-console.log(`Created static route entries and sitemap for ${staticRoutes.length} public routes.`);
+const localizedSeoForRoute = (route, language) => {
+  if (language === 'en') return { ...route };
+
+  if (route.path === '/') {
+    return {
+      ...route,
+      title: 'אביתר חזן | Full Stack Developer',
+      description: 'פורטפוליו של אביתר חזן עם אתרים עסקיים, מערכות Full Stack, כלי מוצר, כתיבה מקצועית ודרכי יצירת קשר ישירות.',
+      preview: {
+        ...route.preview,
+        heading: 'אביתר חזן | Full Stack Developer',
+        body: ['אתרים עסקיים, כלים מובנים, תהליכי אוטומציה ומערכות מוצר ניתנות לתחזוקה.']
+      }
+    };
+  }
+
+  if (route.path === '/blog/') {
+    return {
+      ...route,
+      title: 'בלוג | אביתר חזן',
+      description: 'מאמרים קצרים על פיתוח מוצר, Frontend, אתרים חיים, בדיקות ופריסה.',
+      preview: {
+        ...route.preview,
+        heading: 'כתיבה מקצועית',
+        body: ['מאמרים קצרים על פיתוח מוצר, מערכות Frontend, קידום אורגני, בדיקות ופריסה.']
+      }
+    };
+  }
+
+  if (route.path === '/privacy/') {
+    return {
+      ...route,
+      title: 'פרטיות | אביתר חזן',
+      description: 'מידע בסיסי על פרטיות באתר הפורטפוליו של אביתר חזן, כולל יצירת קשר, שימוש מינימלי במדידה וציפיות טיפול בנתונים.',
+      preview: {
+        ...route.preview,
+        heading: 'פרטיות ושקיפות בסיסית',
+        body: ['הפורטפוליו אינו מבקש ממבקרים ליצור חשבון או להעלות מסמכים אישיים.']
+      }
+    };
+  }
+
+  if (route.path === '/contact/') {
+    return {
+      ...route,
+      title: 'יצירת קשר | אביתר חזן',
+      description: 'דרכי יצירת קשר ישירות עם אביתר חזן דרך WhatsApp, אימייל ו-LinkedIn עבור פרויקטים, ייעוץ ושיתופי פעולה.',
+      preview: {
+        ...route.preview,
+        heading: 'בוא נתחיל משיחה ברורה',
+        body: ['אפשר להתחיל מהמטרה, מהמצב הנוכחי ומהעזרה שנדרשת.']
+      }
+    };
+  }
+
+  const blogMatch = route.path.match(/^\/blog\/([^/]+)\/$/);
+  if (blogMatch) {
+    const entry = localizedBlogEntries.find((candidate) => (
+      candidate.slug === blogMatch[1] && candidate.language === language
+    ));
+    if (!entry) throw new Error(`Missing ${language} blog metadata for ${blogMatch[1]}.`);
+    return {
+      ...route,
+      title: `${entry.title} | כתיבה | אביתר חזן`,
+      description: entry.excerpt,
+      preview: {
+        ...route.preview,
+        heading: entry.title,
+        body: [entry.excerpt, `פורסם ${entry.date}. תגיות: ${entry.tags.join(', ')}.`]
+      }
+    };
+  }
+
+  const projectMatch = route.path.match(/^\/projects\/([^/]+)\/$/);
+  if (projectMatch) {
+    const project = projectBlocks.find((candidate) => candidate.id === projectMatch[1]);
+    if (!project) throw new Error(`Missing project route metadata for ${projectMatch[1]}.`);
+    const title = extractCaseStudyValue(project.caseKey, 'seoTitle', language);
+    const description = extractCaseStudyValue(project.caseKey, 'seoDescription', language);
+    return {
+      ...route,
+      title,
+      description,
+      preview: {
+        ...route.preview,
+        heading: title,
+        body: [description, extractOverviewParagraph(project.caseKey, language)]
+      }
+    };
+  }
+
+  throw new Error(`Missing localized SEO route metadata for ${route.path}.`);
+};
+
+const languages = ['en', 'he'];
+const addLanguageMetadata = (html, route, language) => {
+  const alternates = languages.map((alternateLanguage) => (
+    `<link rel="alternate" hreflang="${alternateLanguage}" href="${absoluteUrl(localizedPath(alternateLanguage, route.path))}" />`
+  ));
+  alternates.push(`<link rel="alternate" hreflang="x-default" href="${absoluteUrl(localizedPath('en', route.path))}" />`);
+
+  return html
+    .replace(/<html lang="[^"]+"(?: dir="[^"]+")?>/, `<html lang="${language}" dir="${language === 'he' ? 'rtl' : 'ltr'}">`)
+    .replace(
+      /(<link rel="canonical" href="[^"]*" \/>)/,
+      `$1\n  ${alternates.join('\n  ')}`
+    )
+    .replace(
+      /<meta property="og:locale" content="[^"]*" \/>/,
+      `<meta property="og:locale" content="${language === 'he' ? 'he_IL' : 'en_US'}" />`
+    );
+};
+
+for (const route of staticRoutes) {
+  for (const language of languages) {
+    const localizedRoute = localizedSeoForRoute(route, language);
+    localizedRoute.path = localizedPath(language, route.path);
+    localizedRoute.preview = {
+      ...localizedRoute.preview,
+      links: localizedRoute.preview.links?.map((link) => ({
+        ...link,
+        href: localizedPath(language, link.href)
+      }))
+    };
+    const html = addLanguageMetadata(buildHtmlForRoute(localizedRoute), route, language);
+    const targetDir = path.join(distDir, toRelativeDir(localizedRoute.path));
+    await mkdir(targetDir, { recursive: true });
+    await writeFile(path.join(targetDir, 'index.html'), html);
+  }
+}
+
+const buildLegacyRedirect = (routePath) => {
+  const target = localizedPath('en', routePath);
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="robots" content="noindex, follow" />
+  <link rel="canonical" href="${absoluteUrl(target)}" />
+  <meta http-equiv="refresh" content="0; url=${target}" />
+  <title>Redirecting | Evyatar Hazan</title>
+</head>
+<body>
+  <p>This page moved to <a href="${target}">${target}</a>.</p>
+  <script>location.replace(${JSON.stringify(target)} + location.search + location.hash)</script>
+</body>
+</html>
+`;
+};
+
+for (const route of staticRoutes) {
+  const targetFile = route.path === '/'
+    ? path.join(distDir, 'index.html')
+    : path.join(distDir, toRelativeDir(route.path), 'index.html');
+  await writeFile(targetFile, buildLegacyRedirect(route.path));
+}
+
+const localizedSitemapEntries = staticRoutes.flatMap((route) => languages.map((language) => {
+  const links = [
+    ...languages.map((alternateLanguage) => (
+      `    <xhtml:link rel="alternate" hreflang="${alternateLanguage}" href="${absoluteUrl(localizedPath(alternateLanguage, route.path))}" />`
+    )),
+    `    <xhtml:link rel="alternate" hreflang="x-default" href="${absoluteUrl(localizedPath('en', route.path))}" />`
+  ];
+  return [
+    '  <url>',
+    `    <loc>${absoluteUrl(localizedPath(language, route.path))}</loc>`,
+    ...links,
+    '  </url>'
+  ].join('\n');
+})).join('\n');
+
+await writeFile(path.join(distDir, 'sitemap.xml'), [
+  '<?xml version="1.0" encoding="UTF-8"?>',
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+  localizedSitemapEntries,
+  '</urlset>',
+  ''
+].join('\n'));
+
+for (const route of staticRoutes) {
+  for (const language of languages) {
+    const routePath = localizedPath(language, route.path);
+    const html = await readFile(path.join(distDir, toRelativeDir(routePath), 'index.html'), 'utf8');
+    const expectedCanonical = `<link rel="canonical" href="${absoluteUrl(routePath)}" />`;
+    const expectedLanguage = `<html lang="${language}" dir="${language === 'he' ? 'rtl' : 'ltr'}">`;
+
+    if (!html.includes(expectedCanonical) || !html.includes(expectedLanguage)) {
+      throw new Error(`Invalid localized metadata for ${routePath}.`);
+    }
+
+    for (const alternateLanguage of [...languages, 'x-default']) {
+      const alternatePath = localizedPath(alternateLanguage === 'x-default' ? 'en' : alternateLanguage, route.path);
+      const expectedAlternate = `hreflang="${alternateLanguage}" href="${absoluteUrl(alternatePath)}"`;
+      if (!html.includes(expectedAlternate)) {
+        throw new Error(`Missing ${alternateLanguage} alternate for ${routePath}.`);
+      }
+    }
+  }
+}
+
+const generatedSitemap = await readFile(path.join(distDir, 'sitemap.xml'), 'utf8');
+const sitemapUrlCount = [...generatedSitemap.matchAll(/<loc>/g)].length;
+if (sitemapUrlCount !== staticRoutes.length * languages.length) {
+  throw new Error(`Expected ${staticRoutes.length * languages.length} localized sitemap URLs, received ${sitemapUrlCount}.`);
+}
+if (new RegExp(`<loc>${siteUrl}/(?!en/|he/)`).test(generatedSitemap)) {
+  throw new Error('Legacy URLs must not appear as sitemap locations.');
+}
+
+console.log(`Created ${staticRoutes.length * languages.length} localized routes, ${staticRoutes.length} legacy redirect documents, and a reciprocal hreflang sitemap.`);

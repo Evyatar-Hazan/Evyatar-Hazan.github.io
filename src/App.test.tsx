@@ -1,6 +1,6 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { projects } from './data/profile';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const changeLanguageMock = vi.fn().mockResolvedValue(undefined);
 
@@ -18,13 +18,18 @@ const renderAt = (path: string) => {
   return render(<App />);
 };
 
+beforeEach(() => {
+  window.history.pushState({}, '', '/en/');
+  changeLanguageMock.mockClear();
+});
+
 describe('App', () => {
   it('renders the main navigation and hero section', () => {
     render(<App />);
 
     expect(screen.getByRole('navigation')).toBeInTheDocument();
     expect(document.querySelector('#home')).toBeInTheDocument();
-    expect(screen.getAllByRole('link', { name: 'nav.Blog' })[0]).toHaveAttribute('href', '/blog');
+    expect(screen.getAllByRole('link', { name: 'nav.Blog' })[0]).toHaveAttribute('href', '/en/blog/');
   });
 
   it('renders the primary contact and profile links', () => {
@@ -91,7 +96,7 @@ describe('App', () => {
     render(<App />);
 
     expect(await screen.findByText('blogPreview.eyebrow')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /blogPreview.viewAll/i })).toHaveAttribute('href', '/blog');
+    expect(screen.getByRole('link', { name: /blogPreview.viewAll/i })).toHaveAttribute('href', '/en/blog/');
     expect(screen.getByRole('heading', { name: 'One bad date should not blank an entire screen' })).toBeInTheDocument();
     expect(document.querySelectorAll('#writing article')).toHaveLength(3);
     expect(document.querySelectorAll('#writing .writing-feature')).toHaveLength(1);
@@ -163,6 +168,7 @@ describe('App', () => {
 
     expect(setItemSpy).toHaveBeenCalledWith('i18nextLng', 'he');
     expect(changeLanguageMock).toHaveBeenCalledWith('he');
+    expect(window.location.pathname).toBe('/he/');
   });
 
   it('marks the active nav item with aria-current', () => {
@@ -173,7 +179,7 @@ describe('App', () => {
   });
 
   it('renders the blog index with posts for the active language', async () => {
-    renderAt('/blog');
+    renderAt('/en/blog/');
 
     expect(await screen.findByRole('heading', { name: 'blog.title' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'How I built a business site around WhatsApp' })).toBeInTheDocument();
@@ -183,12 +189,42 @@ describe('App', () => {
     expect(screen.getByText('WRITING / Archive')).toBeInTheDocument();
   });
 
+  it('publishes self-canonical and reciprocal language metadata', async () => {
+    renderAt('/en/blog/');
+
+    await screen.findByRole('heading', { name: 'blog.title' });
+    expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      'https://evyatarhazan.com/en/blog/',
+    );
+    expect(document.querySelector('link[rel="alternate"][hreflang="en"]')).toHaveAttribute(
+      'href',
+      'https://evyatarhazan.com/en/blog/',
+    );
+    expect(document.querySelector('link[rel="alternate"][hreflang="he"]')).toHaveAttribute(
+      'href',
+      'https://evyatarhazan.com/he/blog/',
+    );
+    expect(document.querySelector('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute(
+      'href',
+      'https://evyatarhazan.com/en/blog/',
+    );
+  });
+
+  it('preserves legacy deep-link query strings and fragments during localization', async () => {
+    renderAt('/blog/catering-whatsapp?ref=legacy#summary');
+
+    await waitFor(() => expect(window.location.pathname).toBe('/en/blog/catering-whatsapp/'));
+    expect(window.location.search).toBe('?ref=legacy');
+    expect(window.location.hash).toBe('#summary');
+  });
+
   it('renders a single blog post by slug', async () => {
-    renderAt('/blog/catering-whatsapp');
+    renderAt('/en/blog/catering-whatsapp/');
 
     expect(await screen.findByRole('heading', { name: 'How I built a business site around WhatsApp' })).toBeInTheDocument();
     expect(screen.getByText(/The solution was almost funny in its simplicity/i)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /blog.backToBlog/i })).toHaveAttribute('href', '/blog');
+    expect(screen.getByRole('link', { name: /blog.backToBlog/i })).toHaveAttribute('href', '/en/blog/');
     expect(document.querySelector('.blog-article-masthead')).toBeInTheDocument();
     expect(document.querySelector('.blog-reading-rail')).toBeInTheDocument();
     expect(document.querySelectorAll('.blog-article-next-grid a').length).toBeGreaterThan(0);
@@ -209,7 +245,7 @@ describe('App', () => {
 
   it('shows the contextual WhatsApp node after scrolling and omits it on contact routes', async () => {
     Object.defineProperty(window, 'scrollY', { value: 0, configurable: true });
-    const blogView = renderAt('/blog');
+    const blogView = renderAt('/en/blog/');
 
     expect(screen.queryByRole('link', { name: 'contactNode.ariaLabel' })).not.toBeInTheDocument();
 
@@ -222,7 +258,7 @@ describe('App', () => {
     );
 
     blogView.unmount();
-    renderAt('/contact');
+    renderAt('/en/contact/');
     fireEvent.scroll(window);
 
     expect(screen.queryByRole('link', { name: 'contactNode.ariaLabel' })).not.toBeInTheDocument();
@@ -230,14 +266,14 @@ describe('App', () => {
   });
 
   it('renders a featured project case study page', async () => {
-    renderAt('/projects/online_converter');
+    renderAt('/en/projects/online_converter/');
 
     expect(await screen.findByRole('heading', { name: 'projects.items.online_converter.title' })).toBeInTheDocument();
     expect(screen.getByText('projects.caseStudyAudience')).toBeInTheDocument();
     const unknownEvidence = screen.getByText('projects.caseStudyEvidenceUnknown');
     expect(unknownEvidence.closest('div')?.querySelector('time')).not.toBeInTheDocument();
     expect(unknownEvidence.closest('div')?.querySelector('a')).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'projects.caseStudyBack' })).toHaveAttribute('href', '/#projects');
+    expect(screen.getByRole('link', { name: 'projects.caseStudyBack' })).toHaveAttribute('href', '/en/#projects');
     expect(screen.getByRole('link', { name: 'projects.code' })).toHaveAttribute(
       'href',
       'https://github.com/Evyatar-Hazan/online-converter',
@@ -249,7 +285,7 @@ describe('App', () => {
   });
 
   it('discloses contact-form and advertising data use on the privacy page', () => {
-    renderAt('/privacy');
+    renderAt('/en/privacy/');
 
     expect(screen.getByRole('heading', { name: 'Advertising and Google AdSense' })).toBeInTheDocument();
     expect(screen.getByText(/FormSubmit processes the submission/i)).toBeInTheDocument();
@@ -260,18 +296,20 @@ describe('App', () => {
   });
 
   it('renders a not found state for an unknown blog post', async () => {
-    renderAt('/blog/missing-post');
+    renderAt('/en/blog/missing-post/');
 
     expect(await screen.findByRole('heading', { name: 'blog.notFoundTitle' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /blog.backToBlog/i })).toHaveAttribute('href', '/blog');
+    expect(screen.getByRole('link', { name: /blog.backToBlog/i })).toHaveAttribute('href', '/en/blog/');
   });
 
   it('renders a noindex site-level not-found page for unknown routes', () => {
-    renderAt('/missing-route');
+    renderAt('/en/missing-route/');
 
     expect(screen.getByRole('heading', { name: 'This page could not be found' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Back to the home page/i })).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: /Back to the home page/i })).toHaveAttribute('href', '/en/');
     expect(document.querySelector('meta[name="robots"]')).toHaveAttribute('content', 'noindex, follow');
+    expect(document.querySelector('link[rel="canonical"]')).not.toBeInTheDocument();
+    expect(document.querySelector('link[rel="alternate"]')).not.toBeInTheDocument();
   });
 
   it('closes the mobile menu when clicking the backdrop', () => {

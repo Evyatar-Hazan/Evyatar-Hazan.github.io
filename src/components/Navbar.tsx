@@ -5,6 +5,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Moon, Sun, Menu, X } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
 import BrandMark from './BrandMark';
+import {
+  localizedPath,
+  stripLanguagePrefix,
+  switchPathLanguage,
+} from '../routing/portfolioRoutes';
 
 const navItems = [
   { name: 'Home', href: '#home' },
@@ -22,6 +27,8 @@ const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
+  const language = i18n.language === 'he' ? 'he' : 'en';
+  const contentPath = stripLanguagePrefix(location.pathname);
 
   useEffect(() => {
     if (isOpen) {
@@ -44,14 +51,18 @@ const Navbar = () => {
     }
   });
 
-  const activeItem = location.pathname.startsWith('/blog')
+  const activeItem = contentPath.startsWith('/blog')
     ? 'Blog'
     : navItems.find((item) => item.href === location.hash)?.name ?? 'Home';
-  const blogContext = location.pathname === '/blog'
+  const blogContext = contentPath === '/blog' || contentPath === '/blog/'
     ? (i18n.language === 'he' ? 'ארכיון' : 'Archive')
-    : location.pathname.startsWith('/blog/')
+    : contentPath.startsWith('/blog/')
       ? (i18n.language === 'he' ? 'רשומה' : 'Entry')
       : null;
+
+  const localizedHref = (href: string) => href.startsWith('/')
+    ? localizedPath(language, { route: 'blog' })
+    : `${localizedPath(language, { route: 'home' })}${href}`;
 
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
@@ -65,13 +76,13 @@ const Navbar = () => {
     setIsOpen(false);
 
     if (href.startsWith('/')) {
-      navigate(href);
+      navigate(localizedPath(language, { route: 'blog' }));
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
-    if (location.pathname !== '/') {
-      navigate({ pathname: '/', hash: href });
+    if (contentPath !== '/') {
+      navigate({ pathname: localizedPath(language, { route: 'home' }), hash: href });
       window.setTimeout(() => scrollToSection(href), 50);
       return;
     }
@@ -83,6 +94,7 @@ const Navbar = () => {
   const toggleLanguage = async () => {
     const newLang = i18n.language === 'en' ? 'he' : 'en';
     localStorage.setItem('i18nextLng', newLang);
+    navigate(switchPathLanguage(location.pathname, newLang, location.search, location.hash));
     await i18n.changeLanguage(newLang);
   };
 
@@ -98,7 +110,7 @@ const Navbar = () => {
     >
       <div className="system-rail">
         <a 
-          href="#home" 
+          href={`${localizedPath(language, { route: 'home' })}#home`}
           onClick={(e) => handleClick(e, '#home')}
           className="system-rail-brand"
           aria-label="Go to home section"
@@ -112,7 +124,7 @@ const Navbar = () => {
           {navItems.map((item) => (
             <a
               key={item.name}
-              href={item.href}
+              href={localizedHref(item.href)}
               onClick={(e) => handleClick(e, item.href)}
               aria-current={activeItem === item.name ? 'page' : undefined}
               className={`system-rail-link ${activeItem === item.name ? 'is-active' : ''}`}
@@ -192,7 +204,7 @@ const Navbar = () => {
                 {navItems.map((item) => (
                   <a
                     key={item.name}
-                    href={item.href}
+                    href={localizedHref(item.href)}
                     onClick={(e) => handleClick(e, item.href)}
                     aria-current={activeItem === item.name ? 'page' : undefined}
                     className={`text-2xl font-bold transition-colors ${

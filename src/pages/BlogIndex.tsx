@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { getBlogPosts } from '../content/blog/posts';
 import type { BlogLanguage, BlogPost } from '../content/blog/types';
 import { usePageSeo } from '../hooks/usePageSeo';
+import type { ArticleId } from '../contracts/portfolio';
+import { localizedPath } from '../routing/portfolioRoutes';
 
 const languageFromI18n = (language: string): BlogLanguage => (language === 'he' ? 'he' : 'en');
 
@@ -36,13 +38,13 @@ const ArchiveFeature = ({ post, language }: { post: BlogPost; language: BlogLang
       <div className="blog-archive-feature-copy">
         <EntryMeta post={post} language={language} />
         <p className="blog-archive-label">{t('blog.latestEntry')}</p>
-        <h2><Link to={`/blog/${post.slug}`}>{post.title}</Link></h2>
+        <h2><Link to={localizedPath(language, { route: 'article', id: post.slug as ArticleId })}>{post.title}</Link></h2>
         <p>{post.excerpt}</p>
         <div className="blog-archive-feature-footer">
           <ul aria-label={t('blog.articleTopics')}>
             {post.tags.map((tag) => <li key={tag}>{tag}</li>)}
           </ul>
-          <Link to={`/blog/${post.slug}`} className="blog-archive-read">
+          <Link to={localizedPath(language, { route: 'article', id: post.slug as ArticleId })} className="blog-archive-read">
             {t('blog.readPost')}<ArrowIcon aria-hidden="true" />
           </Link>
         </div>
@@ -75,13 +77,13 @@ const ArchiveEntry = ({ post, index, language }: { post: BlogPost; index: number
       </div>
       <div className="blog-archive-entry-copy">
         <EntryMeta post={post} language={language} />
-        <h2><Link to={`/blog/${post.slug}`}>{post.title}</Link></h2>
+        <h2><Link to={localizedPath(language, { route: 'article', id: post.slug as ArticleId })}>{post.title}</Link></h2>
         <p>{post.excerpt}</p>
         <div className="blog-archive-entry-footer">
           <ul aria-label={t('blog.articleTopics')}>
             {post.tags.slice(0, 3).map((tag) => <li key={tag}>{tag}</li>)}
           </ul>
-          <Link to={`/blog/${post.slug}`} aria-label={`${t('blog.readPost')}: ${post.title}`}>
+          <Link to={localizedPath(language, { route: 'article', id: post.slug as ArticleId })} aria-label={`${t('blog.readPost')}: ${post.title}`}>
             {t('blog.readPost')}<ArrowIcon aria-hidden="true" />
           </Link>
         </div>

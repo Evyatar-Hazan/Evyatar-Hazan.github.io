@@ -18,6 +18,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { projects, type Project } from '../../data/profile';
+import type { ProjectId } from '../../contracts/portfolio';
+import { localizedPath } from '../../routing/portfolioRoutes';
 
 const featuredProjects = projects.filter((project) => project.featured);
 const secondaryProjects = projects.filter((project) => !project.featured);
@@ -39,7 +41,8 @@ const previewImages: Partial<Record<Project['visual'], string>> = {
 };
 
 const ProjectActions = ({ project, compact = false }: { project: Project; compact?: boolean }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const language = i18n.language === 'he' ? 'he' : 'en';
   const secondaryClass = compact
     ? 'inline-flex min-h-9 items-center justify-center gap-2 border border-neutral-300 px-3 text-xs font-bold text-neutral-700 transition-[transform,border-color,color] duration-200 hover:border-primary-500 hover:text-neutral-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:border-neutral-700 dark:text-neutral-300 dark:hover:text-white'
     : 'inline-flex min-h-11 items-center justify-center gap-2 border border-neutral-300 bg-white/60 px-3.5 text-sm font-bold text-neutral-700 transition-[transform,border-color,color,background-color] duration-200 hover:-translate-y-0.5 hover:border-primary-500 hover:text-neutral-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:border-neutral-700 dark:bg-neutral-950/50 dark:text-neutral-300 dark:hover:text-white';
@@ -48,7 +51,7 @@ const ProjectActions = ({ project, compact = false }: { project: Project; compac
     <div className={`project-actions flex flex-wrap items-center gap-2 ${compact ? 'project-actions-compact' : ''}`}>
       {project.caseStudy && !compact && (
         <Link
-          to={`/projects/${project.id}`}
+          to={localizedPath(language, { route: 'project', id: project.id as ProjectId })}
           className="inline-flex min-h-11 items-center justify-center gap-2 border border-primary-600 bg-primary-600 px-4 text-sm font-black text-white transition-[transform,background-color] duration-200 hover:-translate-y-0.5 hover:bg-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 dark:focus-visible:ring-offset-neutral-950"
         >
           {t('projects.caseStudy')}

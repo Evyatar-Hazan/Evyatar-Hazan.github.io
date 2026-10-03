@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { getProjectById, type LocalizedText } from '../data/profile';
 import { usePageSeo } from '../hooks/usePageSeo';
 import CaseStudyEvidence from '../components/CaseStudyEvidence';
+import { localizedPath } from '../routing/portfolioRoutes';
 
 const pick = (value: LocalizedText, language: string) => (language === 'he' ? value.he : value.en);
 
@@ -12,6 +13,7 @@ const ProjectCaseStudy = () => {
   const { t, i18n } = useTranslation();
   const project = getProjectById(projectId);
   const caseStudy = project?.caseStudy;
+  const language = i18n.language === 'he' ? 'he' : 'en';
 
   usePageSeo({
     title: caseStudy ? pick(caseStudy.seoTitle, i18n.language) : t('projects.caseStudyNotFoundSeoTitle'),
@@ -26,7 +28,7 @@ const ProjectCaseStudy = () => {
           <h1 className="text-3xl font-bold text-neutral-950 dark:text-white">{t('projects.caseStudyNotFoundTitle')}</h1>
           <p className="mt-4 text-lg text-neutral-600 dark:text-neutral-400">{t('projects.caseStudyNotFoundDescription')}</p>
           <Link
-            to="/#projects"
+            to={localizedPath(language, { route: 'projects' })}
             className="mt-8 inline-flex items-center gap-2 rounded-full border border-neutral-200 px-5 py-3 text-sm font-bold text-neutral-700 transition-colors hover:border-neutral-300 hover:text-neutral-950 dark:border-neutral-800 dark:text-neutral-300 dark:hover:text-white"
           >
             <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
@@ -51,7 +53,7 @@ const ProjectCaseStudy = () => {
     <main className="bg-white px-6 py-20 transition-colors duration-500 dark:bg-black">
       <article className="mx-auto max-w-5xl">
         <Link
-          to="/#projects"
+          to={localizedPath(language, { route: 'projects' })}
           className="inline-flex items-center gap-2 text-sm font-bold text-primary-600 transition-colors hover:text-primary-500 dark:text-primary-300"
         >
           <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
@@ -178,7 +180,7 @@ const ProjectCaseStudy = () => {
 
         <section className="border-t border-neutral-200 py-12 dark:border-neutral-800">
           <Link
-            to="/blog"
+            to={localizedPath(language, { route: 'blog' })}
             className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-5 py-3 text-sm font-bold text-neutral-700 transition-colors hover:border-neutral-300 hover:text-neutral-950 dark:border-neutral-800 dark:text-neutral-300 dark:hover:text-white"
           >
             {t('projects.caseStudyRelatedWriting')}

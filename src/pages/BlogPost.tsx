@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { getBlogPost, getBlogPosts } from '../content/blog/posts';
 import type { BlogLanguage } from '../content/blog/types';
 import { usePageSeo } from '../hooks/usePageSeo';
+import type { ArticleId } from '../contracts/portfolio';
+import { localizedPath } from '../routing/portfolioRoutes';
 
 type ArticleHeading = { id: string; label: string; level: number };
 
@@ -84,7 +86,7 @@ const BlogPost = () => {
           <span>WRITING / 404</span>
           <h1 tabIndex={-1}>{t('blog.notFoundTitle')}</h1>
           <p>{t('blog.notFoundDescription')}</p>
-          <Link to="/blog"><BackIcon aria-hidden="true" />{t('blog.backToBlog')}</Link>
+          <Link to={localizedPath(language, { route: 'blog' })}><BackIcon aria-hidden="true" />{t('blog.backToBlog')}</Link>
         </section>
       </main>
     );
@@ -97,7 +99,7 @@ const BlogPost = () => {
     <main className="blog-article">
       <div className="blog-article-grid" aria-hidden="true" />
       <article ref={articleRef} className="blog-article-shell">
-        <Link to="/blog" className="blog-article-back">
+        <Link to={localizedPath(language, { route: 'blog' })} className="blog-article-back">
           <BackIcon aria-hidden="true" />{t('blog.backToBlog')}
         </Link>
 
@@ -158,12 +160,12 @@ const BlogPost = () => {
           </div>
           <div className="blog-article-next-grid">
             {newerPost && (
-              <Link to={`/blog/${newerPost.slug}`}>
+              <Link to={localizedPath(language, { route: 'article', id: newerPost.slug as ArticleId })}>
                 <span>{t('blog.newerPost')}</span><strong>{newerPost.title}</strong><BackIcon aria-hidden="true" />
               </Link>
             )}
             {olderPost && (
-              <Link to={`/blog/${olderPost.slug}`}>
+              <Link to={localizedPath(language, { route: 'article', id: olderPost.slug as ArticleId })}>
                 <span>{t('blog.olderPost')}</span><strong>{olderPost.title}</strong><ForwardIcon aria-hidden="true" />
               </Link>
             )}

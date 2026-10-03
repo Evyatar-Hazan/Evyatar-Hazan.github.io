@@ -3,6 +3,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 import { ArrowUpLeft, ArrowUpRight, CheckCircle2, Linkedin, Mail, MessageCircle, Send, XCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { localizedPath } from '../../routing/portfolioRoutes';
 import { profileLinks } from '../../data/profile';
 
 const Contact = () => {
@@ -12,6 +13,7 @@ const Contact = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
   const isHebrew = i18n.language === 'he';
+  const language = isHebrew ? 'he' : 'en';
   const ArrowIcon = isHebrew ? ArrowUpLeft : ArrowUpRight;
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start 86%', 'end 18%'] });
   const targetScale = useTransform(scrollYProgress, [0, 0.58, 1], [0.72, 1, 1.08]);
@@ -144,7 +146,7 @@ const Contact = () => {
               </button>
 
               <div className="contact-form-meta">
-                <p>{t('contact.form.privacyNotice')} <Link to="/privacy">{t('contact.form.privacyLink')}</Link></p>
+                <p>{t('contact.form.privacyNotice')} <Link to={localizedPath(language, { route: 'privacy' })}>{t('contact.form.privacyLink')}</Link></p>
                 <div aria-live="polite" className="contact-form-status">
                   {formStatus === 'success' && <p data-status="success"><CheckCircle2 aria-hidden="true" className="h-4 w-4" />{t('contact.form.successMsg')}</p>}
                   {formStatus === 'error' && <p data-status="error"><XCircle aria-hidden="true" className="h-4 w-4" />{t('contact.form.errorMsg')}</p>}

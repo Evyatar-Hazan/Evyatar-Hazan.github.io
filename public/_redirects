@@ -1,1 +1,9 @@
-/* /index.html 200
+/ /en/ 301
+/blog /en/blog/ 301
+/blog/ /en/blog/ 301
+/blog/* /en/blog/:splat 301
+/projects/* /en/projects/:splat 301
+/contact /en/contact/ 301
+/contact/ /en/contact/ 301
+/privacy /en/privacy/ 301
+/privacy/ /en/privacy/ 301

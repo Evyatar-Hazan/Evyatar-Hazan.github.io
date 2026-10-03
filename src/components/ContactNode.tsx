@@ -4,18 +4,21 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { profileLinks } from '../data/profile';
+import { stripLanguagePrefix } from '../routing/portfolioRoutes';
 
 const ContactNode = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const reduceMotion = useReducedMotion();
   const [visiblePath, setVisiblePath] = useState<string | null>(null);
+  const contentPath = stripLanguagePrefix(location.pathname);
 
   const isEligibleRoute =
-    location.pathname === '/' ||
-    location.pathname === '/blog' ||
-    location.pathname.startsWith('/blog/') ||
-    location.pathname.startsWith('/projects/');
+    contentPath === '/' ||
+    contentPath === '/blog' ||
+    contentPath === '/blog/' ||
+    contentPath.startsWith('/blog/') ||
+    contentPath.startsWith('/projects/');
 
   useEffect(() => {
     if (!isEligibleRoute) return;
@@ -26,7 +29,7 @@ const ContactNode = () => {
       frameId = null;
 
       const viewportHeight = window.innerHeight;
-      const homeSection = location.pathname === '/' ? document.querySelector('#home') : null;
+      const homeSection = contentPath === '/' ? document.querySelector('#home') : null;
       const homeRect = homeSection?.getBoundingClientRect();
       const hasMeasuredHome = Boolean(homeRect && homeRect.height > 0);
       const hasEnteredContent = hasMeasuredHome
@@ -58,7 +61,7 @@ const ContactNode = () => {
       window.removeEventListener('resize', scheduleUpdate);
       if (frameId !== null) window.cancelAnimationFrame(frameId);
     };
-  }, [isEligibleRoute, location.pathname]);
+  }, [contentPath, isEligibleRoute, location.pathname]);
 
   const shouldShow = isEligibleRoute && visiblePath === location.pathname;
 

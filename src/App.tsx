@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { lazy, Suspense, useEffect } from 'react';
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { lazy, Suspense, useEffect, type ReactNode } from 'react';
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import Home from './pages/Home';
 import BlogIndex from './pages/BlogIndex';
 import BlogPost from './pages/BlogPost';
@@ -14,6 +14,12 @@ import { useTheme } from './hooks/useTheme';
 import CustomCursor from './components/animations/CustomCursor';
 import ScrollProgress from './components/animations/ScrollProgress';
 import ContactNode from './components/ContactNode';
+import {
+  defaultPortfolioLanguage,
+  getLanguageFromPath,
+  isPortfolioLanguage,
+  localizePath,
+} from './routing/portfolioRoutes';
 
 const About = lazy(() => import('./components/sections/About'));
 const Projects = lazy(() => import('./components/sections/Projects'));
@@ -51,19 +57,49 @@ const PortfolioHome = () => (
   </main>
 );
 
+const LocalizedRoute = ({ children }: { children: ReactNode }) => {
+  const { language } = useParams();
+  return isPortfolioLanguage(language) ? children : <NotFoundPage />;
+};
+
+const LegacyRedirect = () => {
+  const { i18n } = useTranslation();
+  const location = useLocation();
+  const language = isPortfolioLanguage(i18n.language)
+    ? i18n.language
+    : defaultPortfolioLanguage;
+
+  return (
+    <Navigate
+      replace
+      to={`${localizePath(language, location.pathname)}${location.search}${location.hash}`}
+    />
+  );
+};
+
 const AppShell = () => {
   const { i18n } = useTranslation();
   const location = useLocation();
-  const dir = i18n.language === 'he' ? 'rtl' : 'ltr';
+  const routeLanguage = getLanguageFromPath(location.pathname);
+  const activeLanguage = routeLanguage ?? (isPortfolioLanguage(i18n.language)
+    ? i18n.language
+    : defaultPortfolioLanguage);
+  const dir = activeLanguage === 'he' ? 'rtl' : 'ltr';
   
   // Use custom theme hook to initialize global dark class mapping correctly
   useTheme();
   
-  // Update HTML dir attribute immediately when language changes
+  useEffect(() => {
+    if (routeLanguage && i18n.language !== routeLanguage) {
+      void i18n.changeLanguage(routeLanguage);
+    }
+  }, [i18n, i18n.language, routeLanguage]);
+
+  // Keep the document language tied to the canonical URL.
   useEffect(() => {
     document.documentElement.dir = dir;
-    document.documentElement.lang = i18n.language;
-  }, [dir, i18n.language]); 
+    document.documentElement.lang = activeLanguage;
+  }, [activeLanguage, dir]);
 
   useEffect(() => {
     if (!location.hash) return;
@@ -93,12 +129,18 @@ const AppShell = () => {
       <Navbar />
       <ContactNode />
       <Routes>
-        <Route path="/" element={<PortfolioHome />} />
-        <Route path="/projects/:projectId" element={<ProjectCaseStudy />} />
-        <Route path="/blog" element={<BlogIndex />} />
-        <Route path="/blog/:slug" element={<BlogPost />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/:language" element={<LocalizedRoute><PortfolioHome /></LocalizedRoute>} />
+        <Route path="/:language/projects/:projectId" element={<LocalizedRoute><ProjectCaseStudy /></LocalizedRoute>} />
+        <Route path="/:language/blog" element={<LocalizedRoute><BlogIndex /></LocalizedRoute>} />
+        <Route path="/:language/blog/:slug" element={<LocalizedRoute><BlogPost /></LocalizedRoute>} />
+        <Route path="/:language/contact" element={<LocalizedRoute><ContactPage /></LocalizedRoute>} />
+        <Route path="/:language/privacy" element={<LocalizedRoute><PrivacyPage /></LocalizedRoute>} />
+        <Route path="/" element={<LegacyRedirect />} />
+        <Route path="/projects/:projectId" element={<LegacyRedirect />} />
+        <Route path="/blog" element={<LegacyRedirect />} />
+        <Route path="/blog/:slug" element={<LegacyRedirect />} />
+        <Route path="/contact" element={<LegacyRedirect />} />
+        <Route path="/privacy" element={<LegacyRedirect />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Footer />

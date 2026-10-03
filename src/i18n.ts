@@ -4,11 +4,17 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 
 import en from './locales/en.json';
 import he from './locales/he.json';
+import { getLanguageFromPath } from './routing/portfolioRoutes';
+
+const routeLanguage = typeof window === 'undefined'
+  ? null
+  : getLanguageFromPath(window.location.pathname);
 
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
+    ...(routeLanguage ? { lng: routeLanguage } : {}),
     resources: {
       en: { translation: en },
       he: { translation: he }

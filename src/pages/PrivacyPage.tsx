@@ -2,10 +2,12 @@ import { ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePageSeo } from '../hooks/usePageSeo';
+import { localizedPath } from '../routing/portfolioRoutes';
 
 const PrivacyPage = () => {
   const { i18n } = useTranslation();
   const isHebrew = i18n.language === 'he';
+  const language = isHebrew ? 'he' : 'en';
 
   usePageSeo({
     title: isHebrew ? 'פרטיות | אביתר חזן' : 'Privacy | Evyatar Hazan',
@@ -123,13 +125,13 @@ const PrivacyPage = () => {
 
         <div className="mt-10 flex flex-wrap gap-3">
           <Link
-            to="/contact"
+            to={localizedPath(language, { route: 'contact' })}
             className="inline-flex items-center rounded-full bg-primary-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-primary-500"
           >
             {isHebrew ? 'מעבר ליצירת קשר' : 'Go to contact'}
           </Link>
           <Link
-            to="/blog"
+            to={localizedPath(language, { route: 'blog' })}
             className="inline-flex items-center rounded-full border border-neutral-200 px-5 py-3 text-sm font-bold text-neutral-700 transition hover:border-neutral-300 hover:text-neutral-950 dark:border-neutral-800 dark:text-neutral-300 dark:hover:text-white"
           >
             {isHebrew ? 'לכתיבה מקצועית' : 'Go to writing'}
