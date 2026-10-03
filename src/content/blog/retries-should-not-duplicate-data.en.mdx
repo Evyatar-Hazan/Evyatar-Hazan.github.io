@@ -1,3 +1,5 @@
+import RetryIdempotencyDemo from '../../components/blog/RetryIdempotencyDemo';
+
 Retry is one of the most natural actions in an interface. A message was not delivered, a network request was interrupted, or the user is unsure whether the first click worked, so they try again.
 
 To the user, the intent has not changed: invite one person to one workspace. To a system that was not designed for retries, those clicks may become two independent create commands. The result is duplicate records, competing invitations, and state that becomes difficult to explain later.
@@ -101,6 +103,12 @@ The important regression test is not simply "one creation succeeds." It should r
 5. The second attempt reports successful delivery.
 
 This test protects the business meaning of Retry, not only the number of function calls.
+
+## Try the retry contract
+
+The comparison below uses one fixed, synthetic invitation. Run the first attempt, then retry the same intent to see why record creation and delivery need separate contracts. The explanation above contains the complete lesson; this optional demo only makes the state change visible.
+
+<RetryIdempotencyDemo language="en" />
 
 ## What I learned
 
