@@ -6,6 +6,26 @@ import type { BlogLanguage, BlogPostMeta } from './types';
  * not pull the article bodies into their bundle.
  */
 const metadata = {
+  'failed-render-should-not-destroy-good-output:he': {
+      slug: 'failed-render-should-not-destroy-good-output',
+      language: 'he',
+      title: 'רינדור שנכשל לא צריך למחוק פלט תקין',
+      excerpt: 'איך קובץ candidate, אימות מדיה וקידום אטומי מגנים על הפלט התקין האחרון גם כשהרינדור נכשל, מתבטל או חורג ממגבלת הזמן.',
+      date: '2026-10-04',
+      readTime: '7 דקות קריאה',
+      tags: ['Reliability', 'Media', 'Testing'],
+      featured: false,
+    },
+  'failed-render-should-not-destroy-good-output:en': {
+      slug: 'failed-render-should-not-destroy-good-output',
+      language: 'en',
+      title: 'A failed render should not destroy good output',
+      excerpt: 'How a candidate file, media validation, and atomic promotion protect the last known good output when rendering fails, times out, or is cancelled.',
+      date: '2026-10-04',
+      readTime: '7 min read',
+      tags: ['Reliability', 'Media', 'Testing'],
+      featured: false,
+    },
   'one-bad-date-should-not-blank-a-screen:he': {
       slug: 'one-bad-date-should-not-blank-a-screen',
       language: 'he',

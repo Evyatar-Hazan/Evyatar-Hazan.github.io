@@ -103,7 +103,7 @@ describe('App', () => {
 
     expect(await screen.findByText('blogPreview.eyebrow')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /blogPreview.viewAll/i })).toHaveAttribute('href', '/en/blog/');
-    expect(screen.getByRole('heading', { name: 'One bad date should not blank an entire screen' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'A failed render should not destroy good output' })).toBeInTheDocument();
     expect(document.querySelectorAll('#writing article')).toHaveLength(3);
     expect(document.querySelectorAll('#writing .writing-feature')).toHaveLength(1);
     expect(document.querySelectorAll('#writing .writing-entry')).toHaveLength(2);
@@ -196,7 +196,7 @@ describe('App', () => {
     expect(document.querySelectorAll('.blog-archive-feature')).toHaveLength(1);
     expect(screen.getByRole('heading', { name: 'Choose a deliberate route through the work' })).toBeInTheDocument();
     expect(document.querySelectorAll('[data-reading-route]')).toHaveLength(3);
-    expect(document.querySelectorAll('.blog-archive-entry')).toHaveLength(28);
+    expect(document.querySelectorAll('.blog-archive-entry')).toHaveLength(29);
     expect(screen.getByText('WRITING / Archive')).toBeInTheDocument();
   });
 

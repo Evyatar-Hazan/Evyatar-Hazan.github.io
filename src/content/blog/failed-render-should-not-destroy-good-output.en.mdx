@@ -1,0 +1,123 @@
+Not every render that starts will finish. The process can fail halfway through, exceed its time limit, or be cancelled when the browser disconnects. If an export engine writes directly over its stable output path, that failure can leave a partial file while also destroying the last version that was known to work.
+
+I recently addressed this reliability gap in Programmatic Video Studio. The editor could already export an MP4, but the export needed a stronger contract: until a new output has both completed and passed validation, the previous file remains the official result.
+
+## The problem: a stable path is also a promise
+
+The editor exposes a predictable download path such as:
+
+```text
+output/sample.mp4
+```
+
+That path is convenient for both the interface and the user. But if Remotion writes to it directly, the existing file stops being the last known good version as soon as rendering begins. It can be truncated, partially replaced, or left unreadable.
+
+The problem is larger than losing a file. The interface may continue to show a valid-looking download button while the target behind it is no longer fit for delivery.
+
+I separated two concepts:
+
+- **Candidate**: a new output that is not trusted yet.
+- **Published output**: the latest output that passed every check and may be served to the user.
+
+## First: render into a candidate
+
+Every export attempt receives a unique filename in the same directory as the published output:
+
+```text
+output/.sample.candidate-<unique-id>.mp4
+```
+
+The stable file does not change during rendering. If a valid `sample.mp4` already exists, the download endpoint keeps serving it while the new attempt is still running.
+
+Keeping the candidate on the same filesystem matters. The promotion step can use one `rename` operation instead of copying a large file into place. The candidate remains private until the system is ready to commit to it.
+
+The flow resembles a small artifact transaction:
+
+```text
+Render candidate
+      ↓
+Validate candidate
+      ↓
+Promote candidate
+      ↓
+Write matching manifest
+```
+
+Only the first three successful stages turn the new video into downloadable output.
+
+## Second: process success is not artifact proof
+
+An exit code of `0` from the rendering process is useful evidence, but it does not describe what is actually inside the file. Before promotion, the system runs `ffprobe` and verifies that the candidate is a non-empty regular file with a video stream.
+
+It then compares the result with the project contract:
+
+- The resolution matches the requested width and height.
+- The frame rate matches the project's FPS.
+- The video duration matches the expected frame count.
+- The file is recognized as valid media, rather than merely having an `.mp4` extension.
+
+This distinction applies beyond video. A process that finished is not the same as a usable artifact. The output itself needs validation, not only the command that produced it.
+
+## Third: promote instead of overwriting
+
+Only a validated candidate is promoted to `sample.mp4`. Promotion uses a same-directory `rename`, making the identity change a short, separate step after the expensive render.
+
+If rendering fails, validation rejects the candidate, or promotion itself fails, the previous published output remains in place. Cleanup removes the partial candidate.
+
+The resulting behavior is easier to reason about:
+
+```text
+Before the attempt: output A is available
+During rendering: output A is still available
+Failure: output A is still available
+Success and validation: output B replaces output A
+```
+
+The failure is still reported. The system does not pretend the new export succeeded. It simply prevents a new failure from damaging an older successful result.
+
+## The manifest has its own truth contract
+
+The MP4 has a sidecar manifest describing the render source and the output properties that were verified. Ordering matters here too.
+
+While rendering or validation fails, the previous video and manifest remain a matching pair. After a new video is promoted, the old manifest must not remain beside it because it describes a different artifact. The stale sidecar is removed before a new one is written for the promoted video.
+
+If writing the new manifest fails, the new video stays in place but is reported explicitly as undocumented. That state is inconvenient, but honest: a missing manifest is safer than a stale manifest that lies about the file.
+
+## Timeout and cancellation are ordinary failure paths
+
+Video rendering can take time, so ordinary exceptions are not the only failures that matter. I added cancellation control that connects three events:
+
+- The render exceeds its time limit.
+- The client disconnects while the request is running.
+- The operation is explicitly cancelled.
+
+In each case, the render process is stopped, the partial candidate is removed, the rendering lock is released, and the last known good output is preserved.
+
+A concurrent attempt also receives a clear response instead of starting two writers that compete for the same destination. Reliability here includes defining who may write and when.
+
+## The tests that mattered
+
+The important test was not merely "a successful render creates a file." I built scenarios that begin with a valid output already present:
+
+1. A render failure leaves the previous output and manifest unchanged.
+2. A corrupt candidate is rejected before it can replace the published file.
+3. A promotion failure preserves the old output and cleans the temporary file.
+4. Timeout and cancellation preserve the output and release the system for another attempt.
+5. Success promotes the file only after validation and writes a matching manifest.
+
+These are tests of a product contract, not only filesystem functions. They prove that the user receives one of two understandable states: a new verified output, or the previous valid output together with an honest failure message.
+
+## What I learned
+
+When a system produces an expensive artifact, the existing output is an asset, not scratch space. It should never become the work area for the next attempt.
+
+The pattern I will carry into other systems is:
+
+- Write to an isolated candidate.
+- Validate the artifact itself.
+- Promote it in a short commit step.
+- Clean partial files on every failure path.
+- Keep matching metadata, or report honestly that it is missing.
+- Test timeout, cancellation, and promotion failure as seriously as success.
+
+Success creates a new version. Failure should create a clear message and diagnostic evidence, not destroy the last thing that already worked.
