@@ -20,6 +20,109 @@ const escapeHtml = (value) => value
   .replaceAll('<', '&lt;')
   .replaceAll('>', '&gt;');
 
+const countWords = (value) => value
+  .replace(/<[^>]+>/g, ' ')
+  .split(/\s+/u)
+  .filter((word) => /[\p{L}\p{N}]/u.test(word))
+  .length;
+
+const renderMdxArticle = (source) => {
+  const blocks = [];
+  let paragraph = [];
+  let listType = null;
+  let inFence = false;
+  let codeLines = [];
+
+  const flushParagraph = () => {
+    if (paragraph.length === 0) return;
+    blocks.push(`<p>${escapeHtml(paragraph.join(' '))}</p>`);
+    paragraph = [];
+  };
+
+  const closeList = () => {
+    if (!listType) return;
+    blocks.push(`</${listType}>`);
+    listType = null;
+  };
+
+  const openList = (type) => {
+    flushParagraph();
+    if (listType === type) return;
+    closeList();
+    listType = type;
+    blocks.push(`<${type}>`);
+  };
+
+  const flushCode = () => {
+    if (codeLines.length === 0) return;
+    blocks.push(`<pre><code>${escapeHtml(codeLines.join('\n'))}</code></pre>`);
+    codeLines = [];
+  };
+
+  for (const rawLine of source.split(/\r?\n/u)) {
+    const line = rawLine.trim();
+
+    if (line.startsWith('import ')) continue;
+    if (line.startsWith('```')) {
+      flushParagraph();
+      closeList();
+      if (inFence) flushCode();
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) {
+      codeLines.push(rawLine);
+      continue;
+    }
+    if (/^<[A-Z][^>]*\/>$/u.test(line)) continue;
+    if (!line) {
+      flushParagraph();
+      closeList();
+      continue;
+    }
+
+    const heading = line.match(/^(#{2,4})\s+(.+)$/u);
+    if (heading) {
+      flushParagraph();
+      closeList();
+      const level = heading[1].length;
+      blocks.push(`<h${level}>${escapeHtml(heading[2])}</h${level}>`);
+      continue;
+    }
+
+    const unorderedItem = line.match(/^[-*]\s+(.+)$/u);
+    if (unorderedItem) {
+      openList('ul');
+      blocks.push(`<li>${escapeHtml(unorderedItem[1])}</li>`);
+      continue;
+    }
+
+    const orderedItem = line.match(/^\d+\.\s+(.+)$/u);
+    if (orderedItem) {
+      openList('ol');
+      blocks.push(`<li>${escapeHtml(orderedItem[1])}</li>`);
+      continue;
+    }
+
+    const quote = line.match(/^>\s+(.+)$/u);
+    if (quote) {
+      flushParagraph();
+      closeList();
+      blocks.push(`<blockquote>${escapeHtml(quote[1])}</blockquote>`);
+      continue;
+    }
+
+    closeList();
+    paragraph.push(line);
+  }
+
+  flushParagraph();
+  closeList();
+  if (inFence) flushCode();
+
+  return blocks.join('');
+};
+
 const removeAdSenseScript = (html) => html.replace(
   /\s*<script async src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-6696643120887220"[\s\S]*?<\/script>/,
   ''
@@ -34,6 +137,13 @@ const blogSlugs = [...new Set(
     .filter((file) => file.endsWith('.en.mdx'))
     .map((file) => file.replace(/\.en\.mdx$/, ''))
 )];
+const blogArticleHtml = new Map();
+for (const file of blogFiles.filter((candidate) => /\.(en|he)\.mdx$/u.test(candidate))) {
+  const match = file.match(/^(.*)\.(en|he)\.mdx$/u);
+  if (!match) continue;
+  const source = await readFile(path.join(srcDir, 'content', 'blog', file), 'utf8');
+  blogArticleHtml.set(`${match[1]}:${match[2]}`, renderMdxArticle(source));
+}
 
 const blogEntries = [...blogSource.matchAll(/slug:\s*'([^']+)'[\s\S]*?language:\s*'en'[\s\S]*?title:\s*'([^']+)'[\s\S]*?excerpt:\s*'([^']+)'[\s\S]*?date:\s*'([^']+)'[\s\S]*?tags:\s*\[([^\]]*)\]/g)]
   .map((match) => ({
@@ -82,8 +192,10 @@ const staticRoutes = [
     preview: {
       heading: 'Evyatar Hazan | Full Stack Developer',
       body: [
-        'Portfolio with case studies, live product work, technical writing, and direct contact options.',
-        'Includes business websites, converter products, full-stack systems, and production-minded delivery examples.'
+        'This portfolio documents production work rather than presenting a generic template. Each case study explains the problem, the constraints, the implementation decisions, and the evidence that can be verified from live products or public repositories.',
+        'The work spans business websites, bilingual utilities, operational systems, automation workflows, and maintainable React and TypeScript applications. The goal is to make the engineering tradeoffs visible: what was built, why it was structured that way, and how the result was tested before release.',
+        'The writing section develops those lessons into practical articles about reliability, data contracts, accessibility, deployment, search discovery, and product guardrails. Articles include concrete examples and distinguish shipped evidence from experiments or personal interpretation.',
+        'Visitors can browse focused project case studies, read the technical notes, inspect live products, and use the contact page for a direct project conversation. English and Hebrew routes are maintained as first-class versions of the same portfolio.'
       ],
       links: [
         { href: '/blog/', label: 'Writing' },
@@ -99,8 +211,9 @@ const staticRoutes = [
     preview: {
       heading: 'Writing by Evyatar Hazan',
       body: [
-        'Short notes about product engineering, frontend systems, SEO, validation, and deployment.',
-        'These posts are meant to show how real project choices are reasoned about and shipped.'
+        'This collection turns concrete engineering work into practical explanations of product decisions, failure modes, validation, and delivery.',
+        'The articles cover frontend systems, backend reliability, data modeling, accessibility, SEO, deployment, operating systems, Java, and production safeguards. Each article is written as a complete lesson rather than a search snippet or a list of headlines.',
+        'The archive is maintained over time as projects produce new evidence. Posts identify the problem, explain the reasoning, show representative examples, and close with a reusable principle.'
       ],
       links: [
         { href: '/', label: 'Home' },
@@ -172,6 +285,7 @@ for (const entry of blogEntries) {
         entry.excerpt,
         `Published ${entry.date}. Tags: ${entry.tags.join(', ')}.`
       ],
+      article: blogArticleHtml.get(`${entry.slug}:en`) ?? '',
       links: [
         { href: '/blog/', label: 'All writing' },
         { href: '/contact/', label: 'Contact' }
@@ -208,6 +322,9 @@ const renderPreview = (route) => {
     '<div id="route-preview" style="max-width:880px;margin:0 auto;padding:40px 24px 8px;font-family:Inter,Arial,sans-serif;color:#111827;background:#ffffff;">',
     `<h1 style="font-size:40px;line-height:1.1;margin:0 0 20px;">${escapeHtml(route.preview.heading)}</h1>`,
     ...route.preview.body.map((paragraph) => `<p style="font-size:18px;line-height:1.8;margin:0 0 16px;color:#374151;">${escapeHtml(paragraph)}</p>`),
+    route.preview.article
+      ? `<article style="font-size:17px;line-height:1.8;color:#1f2937;">${route.preview.article}</article>`
+      : '',
     links ? `<nav style="margin-top:24px;">${links}</nav>` : '',
     '</div>'
   ].join('');
@@ -294,7 +411,13 @@ const localizedSeoForRoute = (route, language) => {
       preview: {
         ...route.preview,
         heading: 'אביתר חזן | Full Stack Developer',
-        body: ['אתרים עסקיים, כלים מובנים, תהליכי אוטומציה ומערכות מוצר ניתנות לתחזוקה.']
+        body: [
+          'הפורטפוליו הזה מתעד עבודת פרודקשן ולא מציג תבנית כללית. כל case study מסביר את הבעיה, האילוצים, החלטות המימוש והראיות שאפשר לאמת במוצרים חיים או במאגרים ציבוריים.',
+          'העבודה כוללת אתרים עסקיים, כלים דו־לשוניים, מערכות תפעוליות, תהליכי אוטומציה ויישומי React ו־TypeScript שנועדו להישאר ניתנים לתחזוקה. המטרה היא להציג גם את שיקולי ההנדסה: מה נבנה, למה נבחר המבנה הזה ואיך התוצאה נבדקה לפני השחרור.',
+          'אזור הכתיבה הופך את הלקחים האלה למאמרים מעשיים על אמינות, חוזי נתונים, נגישות, פריסה, גילוי בחיפוש וגבולות מוצריים. המאמרים כוללים דוגמאות קונקרטיות ומפרידים בין ראיות שנמסרו בפרודקשן לבין ניסויים או פרשנות אישית.',
+          'כל עמוד נועד לענות על צורך ברור: להבין יכולת מקצועית, לעקוב אחרי החלטה טכנית, ללמוד מתקלה אמיתית או להגיע למוצר פעיל. הניווט מחבר בין הפרויקטים, המאמרים והדרכים ליצור קשר בלי להסתיר את המקור או את גבולות הראיות.',
+          'אפשר לעבור בין case studies ממוקדים, לקרוא את המאמרים הטכניים, לבדוק מוצרים חיים ולהשתמש בעמוד יצירת הקשר לשיחה ישירה על פרויקט. נתיבי העברית והאנגלית מתוחזקים כגרסאות מלאות של אותו פורטפוליו.'
+        ]
       }
     };
   }
@@ -307,7 +430,11 @@ const localizedSeoForRoute = (route, language) => {
       preview: {
         ...route.preview,
         heading: 'כתיבה מקצועית',
-        body: ['מאמרים קצרים על פיתוח מוצר, מערכות Frontend, קידום אורגני, בדיקות ופריסה.']
+        body: [
+          'הספרייה הזאת הופכת עבודת הנדסה אמיתית להסברים מעשיים על החלטות מוצר, תקלות, בדיקות ותהליכי מסירה.',
+          'המאמרים עוסקים במערכות Frontend ו־Backend, אמינות נתונים, נגישות, SEO, פריסה, מערכות הפעלה, Java וגבולות בטוחים למונטיזציה. כל מאמר נכתב כשיעור מלא ולא כסניפט או אוסף כותרות.',
+          'הארכיון מתעדכן כאשר עבודה חדשה מספקת ראיות חדשות. כל פוסט מגדיר את הבעיה, מסביר את דרך החשיבה, מציג דוגמאות מייצגות ומסכם עיקרון שאפשר להשתמש בו בפרויקט אחר.'
+        ]
       }
     };
   }
@@ -367,7 +494,8 @@ const localizedSeoForRoute = (route, language) => {
       preview: {
         ...route.preview,
         heading: entry.title,
-        body: [entry.excerpt, `פורסם ${entry.date}. תגיות: ${entry.tags.join(', ')}.`]
+        body: [entry.excerpt, `פורסם ${entry.date}. תגיות: ${entry.tags.join(', ')}.`],
+        article: blogArticleHtml.get(`${entry.slug}:${language}`) ?? ''
       }
     };
   }
@@ -496,6 +624,14 @@ for (const route of staticRoutes) {
 
     if (!html.includes(expectedCanonical) || !html.includes(expectedLanguage)) {
       throw new Error(`Invalid localized metadata for ${routePath}.`);
+    }
+
+    const previewMatch = html.match(/<div id="route-preview"[\s\S]*?<div id="root"><\/div>/u);
+    const previewWordCount = countWords(previewMatch?.[0] ?? '');
+    const isArticle = /^\/(en|he)\/blog\/[^/]+\/$/u.test(routePath);
+    const minimumWords = isArticle ? 350 : route.path === '/' ? 150 : 12;
+    if (previewWordCount < minimumWords) {
+      throw new Error(`Static preview for ${routePath} has ${previewWordCount} words; expected at least ${minimumWords}.`);
     }
 
     for (const alternateLanguage of [...languages, 'x-default']) {
