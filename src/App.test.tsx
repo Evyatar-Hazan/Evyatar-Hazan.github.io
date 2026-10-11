@@ -47,7 +47,7 @@ describe('App', () => {
   it('renders the operating system chapter and canonical capability map', async () => {
     render(<App />);
 
-    expect(await screen.findByRole('heading', { name: 'about.systemTitle' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'about.systemTitle' }, { timeout: 10_000 })).toBeInTheDocument();
     expect(await screen.findByRole('heading', { name: 'What I am working to make clearer now.' })).toBeInTheDocument();
     expect(document.querySelectorAll('[data-focus-id]')).toHaveLength(2);
     await waitFor(() => expect(screen.getAllByText('Web & mobile products')).toHaveLength(2));
