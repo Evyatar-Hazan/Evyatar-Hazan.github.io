@@ -1,3 +1,5 @@
+import InitialHtmlShouldContainTheArticleEn from './initial-html-should-contain-the-article.en.mdx';
+import InitialHtmlShouldContainTheArticleHe from './initial-html-should-contain-the-article.he.mdx';
 import FailedRenderShouldNotDestroyGoodOutputEn from './failed-render-should-not-destroy-good-output.en.mdx';
 import FailedRenderShouldNotDestroyGoodOutputHe from './failed-render-should-not-destroy-good-output.he.mdx';
 import OneBadDateShouldNotBlankAScreenEn from './one-bad-date-should-not-blank-a-screen.en.mdx';
@@ -62,6 +64,14 @@ import { blogPostMetadataByKey } from './metadata';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    ...blogPostMetadataByKey['initial-html-should-contain-the-article:he'],
+    Content: InitialHtmlShouldContainTheArticleHe,
+  },
+  {
+    ...blogPostMetadataByKey['initial-html-should-contain-the-article:en'],
+    Content: InitialHtmlShouldContainTheArticleEn,
+  },
   {
     ...blogPostMetadataByKey['failed-render-should-not-destroy-good-output:he'],
     Content: FailedRenderShouldNotDestroyGoodOutputHe,

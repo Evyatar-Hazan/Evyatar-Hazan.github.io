@@ -1,0 +1,47 @@
+I recently wrote about SPA routes needing a proper HTTP response. This week I returned to the same boundary between the browser and the server and found another layer: a link can return `200`, carry the right title, and still deliver only a summary of the article in its initial response.
+
+In my portfolio, React could display the complete post once the application loaded. The HTML documents generated during the build already contained a title, description, links, and metadata. The article body, however, still depended on JavaScript. The latest change puts article content into those static documents in both English and Hebrew.
+
+## A successful response can still be incomplete
+
+Opening a post in a browser can make everything look correct. The heading appears, paragraphs load, and code examples are visible. But the browser has already performed extra work after receiving the HTML: it downloaded and ran the application.
+
+A client reading only the server response gets a different view. It may receive the article name and excerpt without its explanation, examples, or conclusion. A visitor whose browser cannot run JavaScript receives the same limited layer.
+
+I therefore separated three questions: does the address exist, does its metadata match, and is its main content present in the response? Passing the first two checks does not establish the third.
+
+## Keep the existing content source
+
+I did not want a second manually maintained copy of every post. The content source remains a pair of MDX files, one for each language.
+
+The route-generation script now reads those files during the build and constructs an HTML body from each one. It stores the result under a key combining the slug and language. An English article document selects the English body; a Hebrew route selects the Hebrew body.
+
+That detail matters. A page with a Hebrew title and an English body could pass a title check while still failing the reader. Language selection must apply to the article itself, not only its description.
+
+## A focused converter with explicit limits
+
+The new converter handles paragraphs, headings, lists, quotations, and fenced code blocks, and escapes text before placing it in HTML. Angle brackets in a code example therefore remain text instead of accidentally becoming markup.
+
+It is not a complete MDX engine. Interactive components are omitted from the static layer, and inline features such as links and emphasis do not receive full Markdown interpretation. That boundary matters if future articles use richer syntax.
+
+It also reinforces an editorial rule: the explanation should work on its own. An interactive demonstration can help a reader understand, but the surrounding article needs to carry the lesson when the demonstration cannot run.
+
+## Inspect the generated document
+
+The build now counts words in the static content layer and requires an article document to meet a threshold of 350 words. This catches a basic regression: generating a page containing only a heading and a few sentences again.
+
+It is a completeness check, not a quality metric. A long response could contain duplicated text, use the wrong language, or omit an important example. The count also includes the static preview wrapper, so it does not prove that every word from the source survived.
+
+That check needs an inspection of the output alongside it: the heading, a passage from the body, a code example where applicable, and the article ending. HTML checks and browser checks examine different stages of delivery.
+
+## Two presentations must stay consistent
+
+The application still removes the static preview when it starts and renders the React interface. This is not hydration of that same HTML tree. There are two presentation paths using the same content source through different rendering mechanisms.
+
+The benefit is a more useful initial response. The cost is keeping those layers aligned and checking the transition between them. Adding content alone does not establish better search rankings or performance metrics; those claims require separate measurements.
+
+## What I will carry forward
+
+Public content starts with the response the server sends. A correct title and status code are part of delivery, but the text the reader came for also needs to be there.
+
+The check I will keep is simple: read the HTML before the application gets a chance to complete it. That reveals what was actually delivered and makes it easier to define precisely what JavaScript adds to the experience.

@@ -6,6 +6,26 @@ import type { BlogLanguage, BlogPostMeta } from './types';
  * not pull the article bodies into their bundle.
  */
 const metadata = {
+  'initial-html-should-contain-the-article:he': {
+      slug: 'initial-html-should-contain-the-article',
+      language: 'he',
+      title: 'ה־HTML הראשוני צריך להכיל את הכתבה',
+      excerpt: 'איך תיקון בפורטפוליו הכניס את גוף המאמר לתגובה הסטטית, ולמה HTTP 200, כותרת נכונה וספירת מילים עדיין אינם מספיקים לבדם.',
+      date: '2026-10-11',
+      readTime: '5 דקות קריאה',
+      tags: ['Frontend', 'Content', 'Testing'],
+      featured: false,
+    },
+  'initial-html-should-contain-the-article:en': {
+      slug: 'initial-html-should-contain-the-article',
+      language: 'en',
+      title: 'The initial HTML should contain the article',
+      excerpt: 'How a portfolio fix brought article bodies into the static response, and why HTTP 200, correct titles, and word counts still need content verification.',
+      date: '2026-10-11',
+      readTime: '5 min read',
+      tags: ['Frontend', 'Content', 'Testing'],
+      featured: false,
+    },
   'failed-render-should-not-destroy-good-output:he': {
       slug: 'failed-render-should-not-destroy-good-output',
       language: 'he',
