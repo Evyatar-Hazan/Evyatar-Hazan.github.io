@@ -4,7 +4,37 @@
     "About": "About",
     "Projects": "Projects",
     "Blog": "Blog",
-    "Contact": "Contact"
+    "Contact": "Contact",
+    "Lab": "Lab",
+    "Privacy": "Privacy"
+  },
+  "shell": {
+    "skipToContent": "Skip to content",
+    "primaryNavigation": "Primary navigation",
+    "homeLabel": "Go to the home page",
+    "routeContext": "Current page context",
+    "languageSwitch": "Switch language to {{language}}",
+    "theme": {
+      "useLight": "Use light theme",
+      "useDark": "Use dark theme"
+    },
+    "menu": {
+      "open": "Open navigation menu",
+      "close": "Close navigation menu",
+      "closeBackdrop": "Close navigation menu backdrop",
+      "label": "Site navigation"
+    },
+    "context": {
+      "project": "Project",
+      "writing": "Writing",
+      "system": "System",
+      "contact": "Contact",
+      "profile": "Profile",
+      "library": "Library",
+      "article": "Article",
+      "caseStudy": "Case study",
+      "brief": "Brief"
+    }
   },
   "home": {
     "available": "Available for web products, full-stack systems, and automation",
@@ -348,6 +378,8 @@
     "status": "Channel open for new projects",
     "title": "Have a need, an idea, or a system that needs to move?",
     "cta": "Start a conversation",
-    "privacy": "Privacy"
+    "privacy": "Privacy",
+    "siteMap": "Site map / 01",
+    "secondaryNavigation": "Secondary navigation"
   }
 }

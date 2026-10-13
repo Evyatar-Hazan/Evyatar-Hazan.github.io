@@ -84,7 +84,7 @@ const BlogPost = () => {
 
   if (!post) {
     return (
-      <main className="blog-article blog-article-not-found">
+      <main id="main-content" tabIndex={-1} className="blog-article blog-article-not-found">
         <section>
           <span>WRITING / 404</span>
           <h1 tabIndex={-1}>{t('blog.notFoundTitle')}</h1>
@@ -107,7 +107,7 @@ const BlogPost = () => {
   ));
 
   return (
-    <main className="blog-article">
+    <main id="main-content" tabIndex={-1} className="blog-article">
       <div className="blog-article-grid" aria-hidden="true" />
       <article ref={articleRef} className="blog-article-shell">
         <Link to={localizedPath(language, { route: 'blog' })} className="blog-article-back">

@@ -1,19 +1,19 @@
-import { useTranslation } from 'react-i18next';
 import { lazy, Suspense, useEffect, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
-import Home from './pages/Home';
+import ContactNode from './components/ContactNode';
+import Footer from './components/Footer';
+import Navbar from './components/Navbar';
+import ScrollProgress from './components/animations/ScrollProgress';
+import ContactBriefFeature from './features/contact/ContactBriefFeature';
+import { useTheme } from './hooks/useTheme';
 import BlogIndex from './pages/BlogIndex';
 import BlogPost from './pages/BlogPost';
-import ProjectCaseStudy from './pages/ProjectCaseStudy';
 import ContactPage from './pages/ContactPage';
-import PrivacyPage from './pages/PrivacyPage';
+import Home from './pages/Home';
 import NotFoundPage from './pages/NotFoundPage';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import { useTheme } from './hooks/useTheme';
-import ScrollProgress from './components/animations/ScrollProgress';
-import ContactNode from './components/ContactNode';
-import ContactBriefFeature from './features/contact/ContactBriefFeature';
+import PrivacyPage from './pages/PrivacyPage';
+import ProjectCaseStudy from './pages/ProjectCaseStudy';
 import {
   defaultPortfolioLanguage,
   getLanguageFromPath,
@@ -42,12 +42,18 @@ const SectionFallback = ({ id, minHeightClassName }: SectionFallbackProps) => (
   />
 );
 
+const PageFallback = ({ id, minHeightClassName }: SectionFallbackProps) => (
+  <main id="main-content" tabIndex={-1}>
+    <SectionFallback id={id} minHeightClassName={minHeightClassName} />
+  </main>
+);
+
 const PortfolioHome = () => {
   const { i18n } = useTranslation();
   const language = i18n.language === 'he' ? 'he' : 'en';
 
   return (
-    <main>
+    <main id="main-content" tabIndex={-1}>
       <Home />
       <Suspense fallback={<SectionFallback id="projects" minHeightClassName="min-h-screen" />}>
         <Projects />
@@ -99,97 +105,78 @@ const AppShell = () => {
     ? i18n.language
     : defaultPortfolioLanguage);
   const dir = activeLanguage === 'he' ? 'rtl' : 'ltr';
-  
-  // Use custom theme hook to initialize global dark class mapping correctly
+
   useTheme();
-  
+
   useEffect(() => {
     if (routeLanguage && i18n.language !== routeLanguage) {
       void i18n.changeLanguage(routeLanguage);
     }
   }, [i18n, i18n.language, routeLanguage]);
 
-  // Keep the document language tied to the canonical URL.
   useEffect(() => {
     document.documentElement.dir = dir;
     document.documentElement.lang = activeLanguage;
   }, [activeLanguage, dir]);
 
   useEffect(() => {
-    if (!location.hash) return;
-
-    const timeoutId = window.setTimeout(() => {
-      document.querySelector(location.hash)?.scrollIntoView({ behavior: 'auto' });
-    }, 0);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [location.hash, location.pathname]);
-
-  useEffect(() => {
     if (location.hash) return;
 
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-    const focusId = window.setTimeout(() => {
-      document.querySelector<HTMLElement>('main h1')?.focus({ preventScroll: true });
-    }, 0);
+    const focusId = window.requestAnimationFrame(() => {
+      document.querySelector<HTMLElement>('#main-content')?.focus({ preventScroll: true });
+    });
 
-    return () => window.clearTimeout(focusId);
+    return () => window.cancelAnimationFrame(focusId);
   }, [location.pathname, location.hash]);
-  
+
   return (
     <div className={`min-h-screen font-sans ${dir === 'rtl' ? '[&_*]:font-sans-hebrew' : ''}`}>
       <ScrollProgress />
       <Navbar />
-      <ContactNode />
-      <Routes>
-        <Route path="/:language" element={<LocalizedRoute><PortfolioHome /></LocalizedRoute>} />
-        <Route
-          path="/:language/projects"
-          element={(
+      <div id="site-shell-content">
+        <ContactNode />
+        <Routes>
+          <Route path="/:language" element={<LocalizedRoute><PortfolioHome /></LocalizedRoute>} />
+          <Route path="/:language/projects" element={(
             <LocalizedRoute>
-              <Suspense fallback={<SectionFallback id="projects-hub" minHeightClassName="min-h-screen" />}>
+              <Suspense fallback={<PageFallback id="projects-hub" minHeightClassName="min-h-screen" />}>
                 <ProjectsPage />
               </Suspense>
             </LocalizedRoute>
-          )}
-        />
-        <Route path="/:language/projects/:projectId" element={<LocalizedRoute><ProjectCaseStudy /></LocalizedRoute>} />
-        <Route path="/:language/blog" element={<LocalizedRoute><BlogIndex /></LocalizedRoute>} />
-        <Route path="/:language/blog/:slug" element={<LocalizedRoute><BlogPost /></LocalizedRoute>} />
-        <Route path="/:language/contact" element={<LocalizedRoute><ContactPage /></LocalizedRoute>} />
-        <Route
-          path="/:language/about"
-          element={(
+          )} />
+          <Route path="/:language/projects/:projectId" element={<LocalizedRoute><ProjectCaseStudy /></LocalizedRoute>} />
+          <Route path="/:language/blog" element={<LocalizedRoute><BlogIndex /></LocalizedRoute>} />
+          <Route path="/:language/blog/:slug" element={<LocalizedRoute><BlogPost /></LocalizedRoute>} />
+          <Route path="/:language/contact" element={<LocalizedRoute><ContactPage /></LocalizedRoute>} />
+          <Route path="/:language/about" element={(
             <LocalizedRoute>
-              <Suspense fallback={<SectionFallback id="about-page" minHeightClassName="min-h-screen" />}>
+              <Suspense fallback={<PageFallback id="about-page" minHeightClassName="min-h-screen" />}>
                 <AboutPage />
               </Suspense>
             </LocalizedRoute>
-          )}
-        />
-        <Route path="/:language/privacy" element={<LocalizedRoute><PrivacyPage /></LocalizedRoute>} />
-        <Route
-          path="/:language/lab"
-          element={(
+          )} />
+          <Route path="/:language/privacy" element={<LocalizedRoute><PrivacyPage /></LocalizedRoute>} />
+          <Route path="/:language/lab" element={(
             <LocalizedRoute>
-              <Suspense fallback={<SectionFallback id="lab" minHeightClassName="min-h-screen" />}>
+              <Suspense fallback={<PageFallback id="lab" minHeightClassName="min-h-screen" />}>
                 <LabPage />
               </Suspense>
             </LocalizedRoute>
-          )}
-        />
-        <Route path="/" element={<LegacyRedirect />} />
-        <Route path="/projects" element={<LegacyRedirect />} />
-        <Route path="/projects/:projectId" element={<LegacyRedirect />} />
-        <Route path="/blog" element={<LegacyRedirect />} />
-        <Route path="/blog/:slug" element={<LegacyRedirect />} />
-        <Route path="/contact" element={<LegacyRedirect />} />
-        <Route path="/about" element={<LegacyRedirect />} />
-        <Route path="/privacy" element={<LegacyRedirect />} />
-        <Route path="/lab" element={<LegacyRedirect />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-      <Footer />
+          )} />
+          <Route path="/" element={<LegacyRedirect />} />
+          <Route path="/projects" element={<LegacyRedirect />} />
+          <Route path="/projects/:projectId" element={<LegacyRedirect />} />
+          <Route path="/blog" element={<LegacyRedirect />} />
+          <Route path="/blog/:slug" element={<LegacyRedirect />} />
+          <Route path="/contact" element={<LegacyRedirect />} />
+          <Route path="/about" element={<LegacyRedirect />} />
+          <Route path="/privacy" element={<LegacyRedirect />} />
+          <Route path="/lab" element={<LegacyRedirect />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+        <Footer />
+      </div>
     </div>
   );
 };

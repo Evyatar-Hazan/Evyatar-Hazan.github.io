@@ -143,7 +143,7 @@ const ProjectsPage = () => {
   const clearComparison = () => updateParam(COMPARE_PARAM, '');
 
   return (
-    <main className="projects-hub">
+    <main id="main-content" tabIndex={-1} className="projects-hub">
       <div className="projects-hub-grid" aria-hidden="true" />
       <header className="projects-hub-hero">
         <div>

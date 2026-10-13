@@ -19,7 +19,7 @@ const NotFoundPage = () => {
   });
 
   return (
-    <main className="flex min-h-screen items-center px-6 pb-20 pt-32">
+    <main id="main-content" tabIndex={-1} className="flex min-h-screen items-center px-6 pb-20 pt-32">
       <section className="mx-auto w-full max-w-3xl rounded-[2rem] border border-neutral-200 bg-white/80 p-8 text-center shadow-sm backdrop-blur-xl dark:border-neutral-800 dark:bg-neutral-900/70 md:p-12">
         <p className="text-sm font-bold uppercase tracking-[0.22em] text-primary-500">404</p>
         <h1 className="mt-4 text-4xl font-bold tracking-tight text-neutral-950 dark:text-white md:text-6xl">

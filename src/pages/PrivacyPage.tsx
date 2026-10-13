@@ -64,7 +64,7 @@ const PrivacyPage = () => {
       ];
 
   return (
-    <main className="min-h-screen px-6 pb-20 pt-32">
+    <main id="main-content" tabIndex={-1} className="min-h-screen px-6 pb-20 pt-32">
       <section className="mx-auto max-w-4xl rounded-[2rem] border border-neutral-200 bg-white/80 p-8 shadow-sm backdrop-blur-xl dark:border-neutral-800 dark:bg-neutral-900/70 md:p-10">
         <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-neutral-50 px-4 py-1.5 text-sm font-semibold text-neutral-700 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-300">
           <ShieldCheck className="h-4 w-4 text-primary-500" />

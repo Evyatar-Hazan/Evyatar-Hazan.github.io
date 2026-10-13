@@ -125,7 +125,7 @@ const AboutPage = () => {
   };
 
   return (
-    <main className="about-dossier overflow-x-clip bg-neutral-50 text-neutral-950 dark:bg-neutral-950 dark:text-white">
+    <main id="main-content" tabIndex={-1} className="about-dossier overflow-x-clip bg-neutral-50 text-neutral-950 dark:bg-neutral-950 dark:text-white">
       <PersonStructuredData language={language} />
 
       <section className="relative overflow-hidden border-b border-neutral-300/80 px-5 pb-16 pt-28 dark:border-neutral-800 sm:px-8 sm:pb-24 sm:pt-36 lg:px-12">

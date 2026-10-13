@@ -35,7 +35,7 @@ const ProjectCaseStudy = () => {
 
   if (!project || !caseStudy) {
     return (
-      <main className="min-h-[70vh] bg-white px-6 py-24 transition-colors duration-500 dark:bg-black">
+      <main id="main-content" tabIndex={-1} className="min-h-[70vh] bg-white px-6 py-24 transition-colors duration-500 dark:bg-black">
         <div className="mx-auto max-w-3xl text-center">
           <h1 className="text-3xl font-bold text-neutral-950 dark:text-white">{t('projects.caseStudyNotFoundTitle')}</h1>
           <p className="mt-4 text-lg text-neutral-600 dark:text-neutral-400">{t('projects.caseStudyNotFoundDescription')}</p>
@@ -66,7 +66,7 @@ const ProjectCaseStudy = () => {
 
   if (!story) {
     return (
-      <main className="min-h-[70vh] bg-white px-6 py-24 transition-colors duration-500 dark:bg-black">
+      <main id="main-content" tabIndex={-1} className="min-h-[70vh] bg-white px-6 py-24 transition-colors duration-500 dark:bg-black">
         <div className="mx-auto max-w-3xl text-center">
           <h1 className="text-3xl font-bold text-neutral-950 dark:text-white">{t('projects.caseStudyNotFoundTitle')}</h1>
           <p className="mt-4 text-lg text-neutral-600 dark:text-neutral-400">{t('projects.caseStudyNotFoundDescription')}</p>
@@ -97,7 +97,7 @@ const ProjectCaseStudy = () => {
   ) : undefined;
 
   return (
-    <main className="bg-white px-6 transition-colors duration-500 dark:bg-black">
+    <main id="main-content" tabIndex={-1} className="bg-white px-6 transition-colors duration-500 dark:bg-black">
       <div className="mx-auto max-w-6xl">
         <CaseStudyStory
           buildPath={localizedPath}

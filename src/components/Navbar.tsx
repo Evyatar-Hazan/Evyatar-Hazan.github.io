@@ -1,230 +1,274 @@
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { Menu, Moon, Sun, X } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Moon, Sun, Menu, X } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
-import BrandMark from './BrandMark';
 import {
-  localizedPath,
-  stripLanguagePrefix,
-  switchPathLanguage,
-} from '../routing/portfolioRoutes';
-import type { PortfolioRouteTarget } from '../contracts/portfolio';
+  activeNavigationId,
+  getPortfolioRouteContext,
+  navigationHref,
+  primaryNavigation,
+  secondaryNavigation,
+} from '../navigation/portfolioNavigation';
+import { switchPathLanguage } from '../routing/portfolioRoutes';
+import BrandMark from './BrandMark';
 
-const navItems: ReadonlyArray<{
-  name: string;
-  target: PortfolioRouteTarget;
-  hash?: string;
-}> = [
-  { name: 'Home', target: { route: 'home' }, hash: '#home' },
-  { name: 'Projects', target: { route: 'projects' } },
-  { name: 'About', target: { route: 'about' } },
-  { name: 'Blog', target: { route: 'blog' } },
-  { name: 'Contact', target: { route: 'contact' } },
-];
+const focusableSelector = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(',');
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [menuOpenedAt, setMenuOpenedAt] = useState<string | null>(null);
   const { t, i18n } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const reduceMotion = useReducedMotion();
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const wasOpenRef = useRef(false);
   const language = i18n.language === 'he' ? 'he' : 'en';
-  const contentPath = stripLanguagePrefix(location.pathname);
+  const menuContextKey = `${language}:${location.pathname}${location.search}${location.hash}`;
+  const isOpen = menuOpenedAt === menuContextKey;
+  const activeId = activeNavigationId(location.pathname, location.hash);
+  const routeContext = useMemo(
+    () => getPortfolioRouteContext(location.pathname, language, t),
+    [language, location.pathname, t],
+  );
+
+  const closeMenu = useCallback(() => setMenuOpenedAt(null), []);
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
+    if (!isOpen) {
+      if (wasOpenRef.current) menuButtonRef.current?.focus();
+      wasOpenRef.current = false;
+      return;
     }
 
-    return () => {
-      document.body.style.overflow = 'unset';
+    wasOpenRef.current = true;
+    const bodyStyle = document.body.getAttribute('style');
+    const content = document.querySelector<HTMLElement>('#site-shell-content');
+    const hadInert = content?.hasAttribute('inert') ?? false;
+    const previousAriaHidden = content?.getAttribute('aria-hidden');
+    const scrollbarGap = window.innerWidth - document.documentElement.clientWidth;
+
+    document.body.style.overflow = 'hidden';
+    if (scrollbarGap > 0) document.body.style.paddingRight = `${scrollbarGap}px`;
+    if (content) {
+      content.inert = true;
+      content.setAttribute('inert', '');
+      content.setAttribute('aria-hidden', 'true');
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      menuRef.current?.querySelector<HTMLElement>(focusableSelector)?.focus();
+    });
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeMenu();
+        return;
+      }
+
+      if (event.key !== 'Tab' || !menuRef.current) return;
+      const focusable = Array.from(
+        menuRef.current.querySelectorAll<HTMLElement>(focusableSelector),
+      ).filter((element) => !element.hasAttribute('disabled'));
+      if (focusable.length === 0) return;
+
+      const first = focusable[0]!;
+      const last = focusable[focusable.length - 1]!;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
-  }, [isOpen]);
 
-  const activeItem = contentPath.startsWith('/projects')
-    ? 'Projects'
-    : contentPath.startsWith('/about')
-    ? 'About'
-    : contentPath.startsWith('/blog')
-    ? 'Blog'
-    : contentPath.startsWith('/contact')
-      ? 'Contact'
-      : navItems.find((item) => item.hash === location.hash)?.name ?? 'Home';
-  const blogContext = contentPath === '/blog' || contentPath === '/blog/'
-    ? (i18n.language === 'he' ? 'ארכיון' : 'Archive')
-    : contentPath.startsWith('/blog/')
-      ? (i18n.language === 'he' ? 'רשומה' : 'Entry')
-      : null;
-
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'auto' });
-    }
-  };
-
-  const handleClick = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    target: PortfolioRouteTarget,
-    hash?: string,
-  ) => {
-    e.preventDefault();
-    setIsOpen(false);
-
-    if (!hash) {
-      navigate(localizedPath(language, target));
-      window.scrollTo({ top: 0, behavior: 'auto' });
-      return;
-    }
-
-    if (contentPath !== '/') {
-      navigate({ pathname: localizedPath(language, { route: 'home' }), hash });
-      window.setTimeout(() => scrollToSection(hash), 50);
-      return;
-    }
-
-    navigate({ hash });
-    scrollToSection(hash);
-  };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      document.removeEventListener('keydown', handleKeyDown);
+      if (bodyStyle === null) document.body.removeAttribute('style');
+      else document.body.setAttribute('style', bodyStyle);
+      if (content) {
+        content.inert = hadInert;
+        if (hadInert) content.setAttribute('inert', '');
+        else content.removeAttribute('inert');
+        if (previousAriaHidden == null) content.removeAttribute('aria-hidden');
+        else content.setAttribute('aria-hidden', previousAriaHidden);
+      }
+    };
+  }, [closeMenu, isOpen]);
 
   const toggleLanguage = async () => {
-    const newLang = i18n.language === 'en' ? 'he' : 'en';
-    localStorage.setItem('i18nextLng', newLang);
-    navigate(switchPathLanguage(location.pathname, newLang, location.search, location.hash));
-    await i18n.changeLanguage(newLang);
+    const newLanguage = language === 'en' ? 'he' : 'en';
+    closeMenu();
+    localStorage.setItem('i18nextLng', newLanguage);
+    navigate(switchPathLanguage(location.pathname, newLanguage, location.search, location.hash));
+    await i18n.changeLanguage(newLanguage);
   };
 
+  const focusMainContent = () => {
+    window.requestAnimationFrame(() => {
+      document.querySelector<HTMLElement>('#main-content')?.focus({ preventScroll: true });
+    });
+  };
+
+  const themeLabel = theme === 'dark' ? t('shell.theme.useLight') : t('shell.theme.useDark');
+
+  const renderLinks = (mobile = false) => primaryNavigation.map((item) => (
+    <a
+      key={item.id}
+      href={navigationHref(item, language)}
+      onClick={mobile ? closeMenu : undefined}
+      aria-current={activeId === item.id ? 'page' : undefined}
+      className={mobile
+        ? `system-rail-mobile-link ${activeId === item.id ? 'is-active' : ''}`
+        : `system-rail-link ${activeId === item.id ? 'is-active' : ''}`}
+    >
+      {t(item.translationKey)}
+    </a>
+  ));
+
   return (
-    <nav className="system-rail-nav">
-      <div className="system-rail">
-        <a 
-          href={`${localizedPath(language, { route: 'home' })}#home`}
-          onClick={(e) => handleClick(e, { route: 'home' }, '#home')}
-          className="system-rail-brand"
-          aria-label="Go to home section"
-          translate="no"
-        >
-          <BrandMark className="system-rail-brand-mark" />
-        </a>
-
-        {/* Desktop Nav */}
-        <div className="system-rail-desktop">
-          {navItems.map((item) => (
+    <>
+      <a className="skip-link" href="#main-content" onClick={focusMainContent}>
+        {t('shell.skipToContent')}
+      </a>
+      <header className="system-rail-header">
+        <nav className="system-rail-nav" aria-label={t('shell.primaryNavigation')}>
+          <div className="system-rail">
             <a
-              key={item.name}
-              href={localizedPath(language, item.target)}
-              onClick={(e) => handleClick(e, item.target, item.hash)}
-              aria-current={activeItem === item.name ? 'page' : undefined}
-              className={`system-rail-link ${activeItem === item.name ? 'is-active' : ''}`}
+              href={navigationHref(primaryNavigation[0], language)}
+              className="system-rail-brand"
+              aria-label={t('shell.homeLabel')}
+              translate="no"
             >
-              {t(`nav.${item.name}`)}
+              <BrandMark className="system-rail-brand-mark" />
             </a>
-          ))}
-          {blogContext && <span className="system-rail-context">WRITING / {blogContext}</span>}
-          <div className="system-rail-divider" />
-          
-          <button 
-            type="button"
-            onClick={toggleTheme}
-            className="system-rail-icon"
-            title="Toggle theme"
-            aria-label="Toggle color theme"
-          >
-            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-          </button>
-          
-          <button 
-            type="button"
-            onClick={toggleLanguage}
-            className="system-rail-language"
-            aria-label="Toggle language"
-          >
-            {i18n.language === 'en' ? 'עב' : 'EN'}
-          </button>
-        </div>
 
-        {/* Mobile Menu Button */}
-        <div className="system-rail-mobile-actions">
-          <button 
-            type="button"
-            onClick={toggleTheme}
-            className="system-rail-icon"
-            aria-label="Toggle color theme"
-          >
-            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-          </button>
-          <button 
-            type="button"
-            onClick={() => setIsOpen(!isOpen)}
-            className="system-rail-menu-toggle"
-            aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
-            aria-expanded={isOpen}
-            aria-controls="mobile-navigation-menu"
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              data-testid="mobile-menu-backdrop"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: reduceMotion ? 0 : 0.2 }}
-              onClick={() => setIsOpen(false)}
-              className="system-rail-backdrop"
-            />
-            
-            <motion.div
-              id="mobile-navigation-menu"
-              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
-              transition={{ duration: reduceMotion ? 0 : 0.2 }}
-              className="system-rail-mobile-menu"
-            >
-              <div className="flex flex-col items-center gap-6 w-full">
-                {navItems.map((item) => (
-                  <a
-                    key={item.name}
-                    href={localizedPath(language, item.target)}
-                    onClick={(e) => handleClick(e, item.target, item.hash)}
-                    aria-current={activeItem === item.name ? 'page' : undefined}
-                    className={`text-2xl font-bold transition-colors ${
-                      activeItem === item.name ? 'text-primary-500' : 'text-neutral-600 dark:text-neutral-400'
-                    }`}
-                  >
-                    {t(`nav.${item.name}`)}
-                  </a>
-                ))}
+            {routeContext && (
+              <div className="system-rail-context" aria-label={t('shell.routeContext')}>
+                <span>{routeContext.category}</span>
+                <i aria-hidden="true" />
+                <strong title={routeContext.detail}>{routeContext.detail}</strong>
               </div>
-              
-              <div className="w-full h-px bg-neutral-200 dark:bg-neutral-800"></div>
-              
-              <button 
+            )}
+
+            <div className="system-rail-desktop">
+              <div className="system-rail-links">{renderLinks()}</div>
+              <div className="system-rail-divider" aria-hidden="true" />
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="system-rail-icon"
+                aria-label={themeLabel}
+                aria-pressed={theme === 'dark'}
+              >
+                {theme === 'dark'
+                  ? <Sun className="w-4 h-4" aria-hidden="true" />
+                  : <Moon className="w-4 h-4" aria-hidden="true" />}
+              </button>
+              <button
                 type="button"
                 onClick={toggleLanguage}
-                className="w-full py-4 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white rounded-2xl text-lg font-bold flex items-center justify-center gap-2"
-                aria-label="Toggle language"
+                className="system-rail-language"
+                aria-label={t('shell.languageSwitch', { language: language === 'en' ? 'עברית' : 'English' })}
               >
-                <span>{i18n.language === 'en' ? 'עברית (HE)' : 'English (EN)'}</span>
+                {language === 'en' ? 'עב' : 'EN'}
               </button>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-    </nav>
+            </div>
+
+            <div className="system-rail-mobile-actions">
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="system-rail-icon"
+                aria-label={themeLabel}
+                aria-pressed={theme === 'dark'}
+              >
+                {theme === 'dark'
+                  ? <Sun className="w-5 h-5" aria-hidden="true" />
+                  : <Moon className="w-5 h-5" aria-hidden="true" />}
+              </button>
+              <button
+                ref={menuButtonRef}
+                type="button"
+                onClick={() => setMenuOpenedAt((current) => current === menuContextKey ? null : menuContextKey)}
+                className="system-rail-menu-toggle"
+                aria-label={isOpen ? t('shell.menu.close') : t('shell.menu.open')}
+                aria-expanded={isOpen}
+                aria-controls="mobile-navigation-menu"
+              >
+                {isOpen
+                  ? <X className="w-6 h-6" aria-hidden="true" />
+                  : <Menu className="w-6 h-6" aria-hidden="true" />}
+              </button>
+            </div>
+          </div>
+
+          <AnimatePresence>
+            {isOpen && (
+              <>
+                <motion.button
+                  type="button"
+                  data-testid="mobile-menu-backdrop"
+                  aria-label={t('shell.menu.closeBackdrop')}
+                  initial={reduceMotion ? false : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={reduceMotion ? undefined : { opacity: 0 }}
+                  onClick={closeMenu}
+                  className="system-rail-backdrop"
+                />
+                <motion.div
+                  ref={menuRef}
+                  id="mobile-navigation-menu"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label={t('shell.menu.label')}
+                  initial={reduceMotion ? false : { opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
+                  transition={{ duration: reduceMotion ? 0 : 0.18 }}
+                  className="system-rail-mobile-menu"
+                >
+                  <div className="system-rail-mobile-heading">
+                    <span>{t('shell.menu.label')}</span>
+                    {routeContext && <strong>{routeContext.category} / {routeContext.detail}</strong>}
+                  </div>
+                  <div className="system-rail-mobile-links">{renderLinks(true)}</div>
+                  <div className="system-rail-mobile-secondary">
+                    {secondaryNavigation.map((item) => (
+                      <a key={item.id} href={navigationHref(item, language)} onClick={closeMenu}>
+                        {t(item.translationKey)}
+                      </a>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={toggleLanguage}
+                    className="system-rail-mobile-language"
+                    aria-label={t('shell.languageSwitch', { language: language === 'en' ? 'עברית' : 'English' })}
+                  >
+                    {language === 'en' ? 'עברית (HE)' : 'English (EN)'}
+                  </button>
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
+        </nav>
+      </header>
+    </>
   );
 };
 

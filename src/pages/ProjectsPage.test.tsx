@@ -116,7 +116,7 @@ describe('ProjectsPage', () => {
 
   it('preserves the project route and query when changing language', () => {
     renderAt('/en/projects/?category=tool&ref=language');
-    fireEvent.click(screen.getAllByRole('button', { name: /toggle language/i })[0]);
+    fireEvent.click(screen.getAllByRole('button', { name: 'shell.languageSwitch' })[0]);
 
     expect(window.location.pathname).toBe('/he/projects/');
     expect(window.location.search).toBe('?category=tool&ref=language');

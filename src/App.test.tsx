@@ -24,6 +24,9 @@ beforeEach(() => {
   currentLanguage = 'en';
   window.history.pushState({}, '', '/en/');
   changeLanguageMock.mockClear();
+  window.localStorage.clear();
+  document.body.removeAttribute('style');
+  document.documentElement.classList.remove('dark');
 });
 
 describe('App', () => {
@@ -31,8 +34,102 @@ describe('App', () => {
     render(<App />);
 
     expect(screen.getByRole('navigation')).toBeInTheDocument();
+    expect(document.querySelector('.system-rail-header')).toBeInTheDocument();
     expect(document.querySelector('#home')).toBeInTheDocument();
     expect(screen.getAllByRole('link', { name: 'nav.Blog' })[0]).toHaveAttribute('href', '/en/blog/');
+  });
+
+  it('provides one translated skip target and moves focus to the single main landmark', async () => {
+    render(<App />);
+
+    const skipLink = screen.getByRole('link', { name: 'shell.skipToContent' });
+    const main = document.querySelector<HTMLElement>('#main-content');
+    expect(skipLink).toHaveAttribute('href', '#main-content');
+    expect(document.querySelectorAll('main')).toHaveLength(1);
+    expect(document.querySelectorAll('#main-content')).toHaveLength(1);
+
+    fireEvent.click(skipLink);
+    await waitFor(() => expect(document.activeElement).toBe(main));
+  });
+
+  it('moves route-entry focus to the main landmark when no fragment is present', async () => {
+    renderAt('/en/contact/');
+
+    await waitFor(() => expect(document.activeElement).toBe(document.querySelector('#main-content')));
+  });
+
+  it('keeps ordinary and modified navigation clicks native', () => {
+    render(<App />);
+    const blogLink = screen.getAllByRole('link', { name: 'nav.Blog' })[0];
+    const modifiedClick = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      ctrlKey: true,
+    });
+
+    let preventedByApplication = true;
+    blogLink.addEventListener('click', (event) => {
+      preventedByApplication = event.defaultPrevented;
+      event.preventDefault();
+    }, { once: true });
+
+    blogLink.dispatchEvent(modifiedClick);
+    expect(preventedByApplication).toBe(false);
+  });
+
+  it('implements the mobile navigation as a modal with focus trap, inert background, Escape, and focus return', async () => {
+    document.body.setAttribute('style', 'overflow: clip; color: red;');
+    render(<App />);
+
+    const trigger = screen.getByRole('button', { name: 'shell.menu.open' });
+    trigger.focus();
+    fireEvent.click(trigger);
+
+    const dialog = screen.getByRole('dialog', { name: 'shell.menu.label' });
+    const content = document.querySelector('#site-shell-content');
+    const firstLink = within(dialog).getByRole('link', { name: 'nav.Home' });
+    const languageButton = within(dialog).getByRole('button', { name: 'shell.languageSwitch' });
+
+    expect(dialog).toHaveAttribute('aria-modal', 'true');
+    expect(content).toHaveAttribute('inert');
+    expect(content).toHaveAttribute('aria-hidden', 'true');
+    expect(document.body.style.overflow).toBe('hidden');
+    await waitFor(() => expect(document.activeElement).toBe(firstLink));
+
+    languageButton.focus();
+    fireEvent.keyDown(document, { key: 'Tab' });
+    expect(document.activeElement).toBe(firstLink);
+    firstLink.focus();
+    fireEvent.keyDown(document, { key: 'Tab', shiftKey: true });
+    expect(document.activeElement).toBe(languageButton);
+
+    fireEvent.keyDown(document, { key: 'Escape' });
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(document.activeElement).toBe(trigger);
+    expect(content).not.toHaveAttribute('inert');
+    expect(content).not.toHaveAttribute('aria-hidden');
+    expect(document.body.getAttribute('style')).toBe('overflow: clip; color: red;');
+    document.body.removeAttribute('style');
+  });
+
+  it('closes the mobile navigation after a route change', async () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'shell.menu.open' }));
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+    window.history.pushState({}, '', '/en/blog/');
+    window.dispatchEvent(new PopStateEvent('popstate'));
+
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+  });
+
+  it('exposes the same translated theme state on desktop and mobile controls', () => {
+    render(<App />);
+    const themeButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.system-rail-icon'));
+
+    expect(themeButtons).toHaveLength(2);
+    expect(new Set(themeButtons.map((button) => button.getAttribute('aria-label'))).size).toBe(1);
+    expect(new Set(themeButtons.map((button) => button.getAttribute('aria-pressed'))).size).toBe(1);
   });
 
   it('renders the primary contact and profile links', () => {
@@ -298,23 +395,25 @@ describe('App', () => {
   });
 
   it('locks and unlocks body scroll when mobile menu toggles', () => {
+    document.body.style.overflow = 'clip';
     render(<App />);
 
-    const menuToggle = screen.getByRole('button', { name: /open navigation menu/i });
+    const menuToggle = screen.getByRole('button', { name: 'shell.menu.open' });
     fireEvent.click(menuToggle);
 
-    expect(screen.getByRole('button', { name: /close navigation menu/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'shell.menu.close' })).toBeInTheDocument();
     expect(document.body.style.overflow).toBe('hidden');
 
-    fireEvent.click(screen.getByRole('button', { name: /close navigation menu/i }));
-    expect(document.body.style.overflow).toBe('unset');
+    fireEvent.click(screen.getByRole('button', { name: 'shell.menu.close' }));
+    expect(document.body.style.overflow).toBe('clip');
+    document.body.removeAttribute('style');
   });
 
   it('updates i18n and localStorage when language toggle is clicked', () => {
     const setItemSpy = vi.spyOn(window.localStorage, 'setItem');
     render(<App />);
 
-    const languageButtons = screen.getAllByRole('button', { name: /toggle language/i });
+    const languageButtons = screen.getAllByRole('button', { name: 'shell.languageSwitch' });
     fireEvent.click(languageButtons[0]);
 
     expect(setItemSpy).toHaveBeenCalledWith('i18nextLng', 'he');
@@ -323,10 +422,9 @@ describe('App', () => {
   });
 
   it('marks the active nav item with aria-current', () => {
-    render(<App />);
+    renderAt('/en/about/');
 
-    fireEvent.click(screen.getAllByRole('link', { name: 'nav.About' })[0]);
-    expect(screen.getAllByRole('link', { name: 'nav.About' }).some((link) => link.getAttribute('aria-current') === 'page')).toBe(true);
+    expect(screen.getAllByRole('link', { name: 'nav.About' })[0]).toHaveAttribute('aria-current', 'page');
   });
 
   it('renders the blog index with posts for the active language', async () => {
@@ -341,13 +439,14 @@ describe('App', () => {
     fireEvent.click(screen.getByRole('button', { name: /blog\.library\.loadMore/ }));
     expect(screen.getByRole('heading', { name: 'How I built a business site around WhatsApp' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'What I learned from building a credible portfolio' })).toBeInTheDocument();
-    expect(screen.getByText('WRITING / Archive')).toBeInTheDocument();
+    expect(screen.getByText('shell.context.writing')).toBeInTheDocument();
+    expect(screen.getByText('shell.context.library')).toBeInTheDocument();
   });
 
   it('preserves blog library query state when switching language', async () => {
     renderAt('/en/blog/?q=frontend&topic=Product&ref=campaign');
 
-    fireEvent.click(screen.getAllByRole('button', { name: /toggle language/i })[0]);
+    fireEvent.click(screen.getAllByRole('button', { name: 'shell.languageSwitch' })[0]);
 
     expect(window.location.pathname).toBe('/he/blog/');
     expect(window.location.search).toBe('?q=frontend&topic=Product&ref=campaign');
@@ -414,7 +513,7 @@ describe('App', () => {
 
     expect(await screen.findByRole('heading', { level: 1, name: 'Small states. Serious product decisions.' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: 'A date should inform, not interrupt.' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Lab' })).toHaveAttribute('href', '/en/lab/');
+    expect(screen.getAllByRole('link', { name: 'nav.Lab' }).some((link) => link.getAttribute('href') === '/en/lab/')).toBe(true);
   });
 
   it('renders the closing dock as the shared site footer', () => {
@@ -428,6 +527,11 @@ describe('App', () => {
       'href',
       expect.stringContaining('https://wa.me/972587127547')
     );
+    const headerDestinations = Array.from(document.querySelectorAll<HTMLAnchorElement>('.system-rail-links a'))
+      .map((link) => link.getAttribute('href'));
+    const footerDestinations = Array.from(document.querySelectorAll<HTMLAnchorElement>('.closing-dock-primary-links a'))
+      .map((link) => link.getAttribute('href'));
+    expect(footerDestinations).toEqual(headerDestinations);
   });
 
   it('shows the contextual WhatsApp node after scrolling and omits it on contact routes', async () => {
@@ -539,21 +643,23 @@ describe('App', () => {
   it('closes the mobile menu when clicking the backdrop', () => {
     render(<App />);
 
-    fireEvent.click(screen.getByRole('button', { name: /open navigation menu/i }));
+    fireEvent.click(screen.getByRole('button', { name: 'shell.menu.open' }));
     expect(document.body.style.overflow).toBe('hidden');
 
     fireEvent.click(screen.getByTestId('mobile-menu-backdrop'));
-    expect(screen.getByRole('button', { name: /open navigation menu/i })).toBeInTheDocument();
-    expect(document.body.style.overflow).toBe('unset');
+    expect(screen.getByRole('button', { name: 'shell.menu.open' })).toBeInTheDocument();
+    expect(document.body.style.overflow).toBe('');
   });
 
   it('restores body scroll when app unmounts with mobile menu open', () => {
+    document.body.style.overflow = 'scroll';
     const { unmount } = render(<App />);
 
-    fireEvent.click(screen.getByRole('button', { name: /open navigation menu/i }));
+    fireEvent.click(screen.getByRole('button', { name: 'shell.menu.open' }));
     expect(document.body.style.overflow).toBe('hidden');
 
     unmount();
-    expect(document.body.style.overflow).toBe('unset');
+    expect(document.body.style.overflow).toBe('scroll');
+    document.body.removeAttribute('style');
   });
 });

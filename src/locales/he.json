@@ -4,7 +4,37 @@
     "About": "אודות",
     "Projects": "פרויקטים",
     "Blog": "בלוג",
-    "Contact": "צור קשר"
+    "Contact": "צור קשר",
+    "Lab": "מעבדה",
+    "Privacy": "פרטיות"
+  },
+  "shell": {
+    "skipToContent": "דילוג לתוכן הראשי",
+    "primaryNavigation": "ניווט ראשי",
+    "homeLabel": "מעבר לעמוד הבית",
+    "routeContext": "הקשר העמוד הנוכחי",
+    "languageSwitch": "החלפת השפה ל{{language}}",
+    "theme": {
+      "useLight": "מעבר לערכת נושא בהירה",
+      "useDark": "מעבר לערכת נושא כהה"
+    },
+    "menu": {
+      "open": "פתיחת תפריט ניווט",
+      "close": "סגירת תפריט ניווט",
+      "closeBackdrop": "סגירת תפריט הניווט מהרקע",
+      "label": "ניווט באתר"
+    },
+    "context": {
+      "project": "פרויקט",
+      "writing": "כתיבה",
+      "system": "מערכת",
+      "contact": "יצירת קשר",
+      "profile": "פרופיל",
+      "library": "ספרייה",
+      "article": "מאמר",
+      "caseStudy": "קייס סטאדי",
+      "brief": "בריף"
+    }
   },
   "home": {
     "available": "זמין לפרויקטי Web, מוצרי Full Stack ואוטומציה",
@@ -348,6 +378,8 @@
     "status": "ערוץ פתוח לפרויקטים חדשים",
     "title": "יש לכם צורך, רעיון או מערכת שצריכה לזוז?",
     "cta": "בואו נדבר",
-    "privacy": "פרטיות"
+    "privacy": "פרטיות",
+    "siteMap": "מפת אתר / 01",
+    "secondaryNavigation": "ניווט משני"
   }
 }

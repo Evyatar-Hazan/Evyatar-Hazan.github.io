@@ -154,7 +154,7 @@ const BlogIndex = () => {
   });
 
   return (
-    <main className="blog-archive">
+    <main id="main-content" tabIndex={-1} className="blog-archive">
       <div className="blog-archive-grid" aria-hidden="true" />
       <section className="blog-archive-shell" aria-labelledby="blog-archive-title">
         <header className="blog-archive-header">

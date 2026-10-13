@@ -3,7 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { profileLinks } from '../data/profile';
 import BrandMark from './BrandMark';
-import { localizedPath } from '../routing/portfolioRoutes';
+import {
+  navigationHref,
+  primaryNavigation,
+  secondaryNavigation,
+} from '../navigation/portfolioNavigation';
 
 const Footer = () => {
   const { t, i18n } = useTranslation();
@@ -45,14 +49,17 @@ const Footer = () => {
 
         <div className="closing-dock-map">
           <div className="closing-dock-links">
-            <span>SITE MAP / 01</span>
-            <Link to={localizedPath(language, { route: 'home' })}>{t('nav.Home')}</Link>
-            <Link to={localizedPath(language, { route: 'projects' })}>{t('nav.Projects')}</Link>
-            <Link to={localizedPath(language, { route: 'about' })}>{t('nav.About')}</Link>
-            <Link to={localizedPath(language, { route: 'blog' })}>{t('nav.Blog')}</Link>
-            <Link to={localizedPath(language, { route: 'lab' })}>{isHebrew ? 'מעבדה' : 'Lab'}</Link>
-            <Link to={localizedPath(language, { route: 'contact' })}>{t('nav.Contact')}</Link>
-            <Link to={localizedPath(language, { route: 'privacy' })}>{t('footer.privacy')}</Link>
+            <span>{t('footer.siteMap')}</span>
+            <div className="closing-dock-primary-links">
+              {primaryNavigation.map((item) => (
+                <Link key={item.id} to={navigationHref(item, language)}>{t(item.translationKey)}</Link>
+              ))}
+            </div>
+            <div className="closing-dock-secondary-links" aria-label={t('footer.secondaryNavigation')}>
+              {secondaryNavigation.map((item) => (
+                <Link key={item.id} to={navigationHref(item, language)}>{t(item.translationKey)}</Link>
+              ))}
+            </div>
           </div>
 
           <div className="closing-dock-socials">
