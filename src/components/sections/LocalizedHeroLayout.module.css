@@ -31,6 +31,11 @@
   text-wrap: pretty;
 }
 
+.layout[data-language='he'] .availability {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
 :global(.dark) .availability {
   color: var(--color-neutral-300);
 }

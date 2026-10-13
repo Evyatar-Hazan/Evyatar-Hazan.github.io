@@ -94,6 +94,18 @@ describe('LocalizedHeroLayout', () => {
     expect(darkPreludeRule).not.toContain('color: var(--color-neutral-600);');
   });
 
+  it('normalizes availability typography only for Hebrew', () => {
+    const defaultAvailabilityRule = stylesheet.match(/\.availability\s*{([^}]*)}/)?.[1];
+    const hebrewAvailabilityRule = stylesheet.match(
+      /\.layout\[data-language='he'\] \.availability\s*{([^}]*)}/,
+    )?.[1];
+
+    expect(defaultAvailabilityRule).toContain('letter-spacing: 0.04em;');
+    expect(defaultAvailabilityRule).toContain('text-transform: uppercase;');
+    expect(hebrewAvailabilityRule).toContain('letter-spacing: 0;');
+    expect(hebrewAvailabilityRule).toContain('text-transform: none;');
+  });
+
   it('scopes the compact heading scale to the desktop hero', () => {
     const desktopHeroStyles = stylesheet
       .split('@media (min-width: 1024px) {')[1]
