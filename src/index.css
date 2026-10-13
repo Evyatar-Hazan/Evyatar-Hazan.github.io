@@ -88,6 +88,8 @@
   --effect-compiler-layer-border: color-mix(in srgb, var(--color-neutral-900) 18%, transparent);
   --effect-compiler-layer-shadow: 0 24px 70px color-mix(in srgb, var(--color-neutral-950) 14%, transparent);
   --effect-compiler-output: color-mix(in srgb, var(--color-white) 90%, var(--color-primary-50));
+  --effect-compiler-output-panel: color-mix(in srgb, var(--color-primary-50) 72%, var(--color-white));
+  --effect-compiler-copy: color-mix(in srgb, var(--color-neutral-950) 82%, transparent);
   --effect-about-surface: color-mix(in srgb, var(--color-neutral-50) 97%, var(--color-primary-50));
   --effect-about-grid: color-mix(in srgb, var(--color-neutral-900) 6%, transparent);
   --effect-about-module: color-mix(in srgb, var(--color-white) 44%, transparent);
@@ -136,6 +138,8 @@
   --effect-compiler-layer-border: color-mix(in srgb, var(--color-white) 18%, transparent);
   --effect-compiler-layer-shadow: 0 28px 90px color-mix(in srgb, var(--color-black) 72%, transparent);
   --effect-compiler-output: color-mix(in srgb, var(--color-neutral-950) 92%, var(--color-primary-950));
+  --effect-compiler-output-panel: color-mix(in srgb, var(--color-neutral-900) 76%, var(--color-primary-950));
+  --effect-compiler-copy: color-mix(in srgb, var(--color-white) 84%, transparent);
   --effect-about-surface: color-mix(in srgb, var(--color-neutral-950) 97%, var(--color-primary-950));
   --effect-about-grid: color-mix(in srgb, var(--color-white) 6%, transparent);
   --effect-about-module: color-mix(in srgb, var(--color-black) 28%, transparent);
@@ -1172,105 +1176,360 @@ body {
 }
 
 .product-compiler-scene {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 640px;
+  margin-inline: auto;
   perspective: 1100px;
   transform-style: preserve-3d;
 }
 
-.product-compiler-orbit {
-  border: 1px solid var(--effect-compiler-layer-border);
-  box-shadow: inset 0 0 40px var(--effect-primary-hover);
-}
-
-.product-compiler-orbit::before,
-.product-compiler-orbit::after {
-  position: absolute;
-  content: '';
-  background: var(--color-primary-500);
-}
-
-.product-compiler-orbit::before {
-  inset-inline: 50% auto;
-  top: -4px;
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-}
-
-.product-compiler-orbit::after {
-  inset-inline-end: -3px;
-  top: 50%;
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-}
-
-.product-compiler-orbit-inner {
-  border-style: dashed;
-  opacity: 0.65;
-}
-
-.product-compiler-layer {
-  display: flex;
+.product-compiler-flow {
+  display: grid;
+  grid-template-areas: 'inputs connectors output';
+  grid-template-columns: minmax(180px, 0.9fr) 76px minmax(250px, 1.22fr);
+  align-items: center;
   width: 100%;
-  aspect-ratio: 1.8;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
+  min-height: 400px;
+  padding: 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--effect-compiler-layer-border) 70%, transparent);
+  border-radius: 1.75rem;
+  background: color-mix(in srgb, var(--effect-compiler-layer) 38%, transparent);
+  box-shadow: inset 0 1px color-mix(in srgb, var(--color-white) 48%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.product-compiler-scene-rtl .product-compiler-flow {
+  grid-template-areas: 'output connectors inputs';
+  grid-template-columns: minmax(250px, 1.22fr) 76px minmax(180px, 0.9fr);
+}
+
+.product-compiler-inputs {
+  display: grid;
+  grid-area: inputs;
+  gap: 0.7rem;
+}
+
+.product-compiler-input {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 0.45rem 0.75rem;
+  width: 100%;
   border: 1px solid var(--effect-compiler-layer-border);
-  border-inline-start: 3px solid var(--color-primary-500);
-  border-radius: 1.25rem;
-  padding: 1rem 1.15rem;
+  border-inline-start: 3px solid var(--compiler-accent);
+  border-radius: 1rem;
+  padding: 0.85rem 0.9rem 0.8rem;
   background: var(--effect-compiler-layer);
-  box-shadow: var(--effect-compiler-layer-shadow);
-  backdrop-filter: blur(16px);
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--color-neutral-950) 10%, transparent);
+  backdrop-filter: blur(14px);
   color: var(--color-neutral-700);
 }
 
-.dark .product-compiler-layer {
+.dark .product-compiler-input {
   color: var(--color-neutral-300);
 }
 
-.product-compiler-layer span,
-.product-compiler-layer strong {
+.product-compiler-input-heading {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.product-compiler-input-number,
+.product-compiler-output-code,
+.product-compiler-output-footer {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.64rem;
+  font-size: 0.72rem;
+  font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.product-compiler-layer span {
-  color: var(--color-primary-600);
+.product-compiler-input-number {
+  color: var(--compiler-accent-ink);
 }
 
-.dark .product-compiler-layer span {
-  color: var(--color-primary-400);
+.product-compiler-input-icon {
+  display: grid;
+  width: 1.85rem;
+  height: 1.85rem;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--compiler-accent) 50%, transparent);
+  border-radius: 0.55rem;
+  background: color-mix(in srgb, var(--compiler-accent) 10%, transparent);
+  color: var(--compiler-accent-ink);
 }
 
-.product-compiler-layer-business {
-  border-inline-start-color: var(--color-warning-300);
+.product-compiler-input-icon svg {
+  width: 1rem;
+  height: 1rem;
 }
 
-.product-compiler-layer-experience {
-  border-inline-start-color: var(--color-primary-500);
+.product-compiler-input strong {
+  align-self: end;
+  font-size: 0.83rem;
+  line-height: 1.25;
 }
 
-.product-compiler-layer-engineering {
-  border-inline-start-color: var(--color-info-300);
+.product-compiler-signal {
+  display: flex;
+  align-items: end;
+  justify-content: end;
+  gap: 3px;
+  min-width: 1.75rem;
+  height: 1rem;
+}
+
+.product-compiler-signal i {
+  width: 3px;
+  height: 45%;
+  border-radius: 999px;
+  background: var(--compiler-accent);
+}
+
+.product-compiler-signal i:nth-child(2) { height: 72%; }
+.product-compiler-signal i:nth-child(3) { height: 100%; }
+
+.product-compiler-input-business {
+  --compiler-accent: var(--color-warning-300);
+  --compiler-accent-ink: color-mix(in srgb, var(--color-warning-300) 42%, var(--color-neutral-950));
+}
+
+.product-compiler-input-experience {
+  --compiler-accent: var(--color-primary-500);
+  --compiler-accent-ink: var(--color-primary-700);
+}
+
+.product-compiler-input-engineering {
+  --compiler-accent: var(--color-info-300);
+  --compiler-accent-ink: color-mix(in srgb, var(--color-info-300) 40%, var(--color-neutral-950));
+}
+
+.dark .product-compiler-input-business { --compiler-accent-ink: var(--color-warning-300); }
+.dark .product-compiler-input-experience { --compiler-accent-ink: var(--color-primary-300); }
+.dark .product-compiler-input-engineering { --compiler-accent-ink: var(--color-info-300); }
+
+.product-compiler-connectors {
+  grid-area: connectors;
+  width: 100%;
+  overflow: visible;
+  color: var(--color-primary-500);
+}
+
+.product-compiler-connectors path {
+  stroke: currentColor;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.product-compiler-connectors circle {
+  fill: var(--effect-compiler-output);
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.product-compiler-scene-rtl .product-compiler-connectors-desktop {
+  transform: scaleX(-1);
+}
+
+.product-compiler-connectors-mobile {
+  display: none;
 }
 
 .product-compiler-output {
-  z-index: 10;
+  position: relative;
   display: flex;
-  width: 82%;
-  aspect-ratio: 1.45;
+  grid-area: output;
+  min-width: 0;
+  min-height: 330px;
   flex-direction: column;
   overflow: hidden;
   border: 1px solid var(--effect-primary-border-strong);
-  border-radius: 1rem;
+  border-radius: 1.15rem;
   background: var(--effect-compiler-output);
-  box-shadow: var(--effect-compiler-layer-shadow), 0 0 55px var(--effect-primary-glow-soft);
+  box-shadow: var(--effect-compiler-layer-shadow), 0 0 44px var(--effect-primary-glow-soft);
   backdrop-filter: blur(20px);
 }
+
+.product-compiler-output::before {
+  position: absolute;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-primary-400) 10%, transparent), transparent 42%);
+}
+
+.product-compiler-output-header,
+.product-compiler-output-footer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 0.95rem;
+  border-bottom: 1px solid var(--effect-compiler-layer-border);
+}
+
+.product-compiler-output-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-success-700);
+}
+
+.dark .product-compiler-output-status { color: var(--color-success-400); }
+
+.product-compiler-output-status svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.product-compiler-output-status strong {
+  font-size: 0.86rem;
+  line-height: 1.2;
+}
+
+.product-compiler-output-code {
+  color: var(--color-neutral-500);
+}
+
+.product-compiler-output-body {
+  position: relative;
+  display: grid;
+  flex: 1;
+  grid-template-columns: 38px 1fr;
+  min-height: 0;
+}
+
+.product-compiler-output-sidebar {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding-top: 1rem;
+  border-inline-end: 1px solid var(--effect-compiler-layer-border);
+  background: color-mix(in srgb, var(--effect-compiler-output-panel) 72%, transparent);
+}
+
+.product-compiler-output-sidebar span {
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 1px solid var(--effect-compiler-layer-border);
+  border-radius: 0.25rem;
+}
+
+.product-compiler-output-sidebar .is-active {
+  border-color: var(--color-primary-500);
+  background: var(--color-primary-500);
+}
+
+.product-compiler-output-interface {
+  padding: 0.85rem;
+}
+
+.product-compiler-output-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--effect-compiler-layer-border);
+}
+
+.product-compiler-output-toolbar span {
+  width: 56%;
+  height: 0.48rem;
+  margin-inline-end: auto;
+  border-radius: 999px;
+  background: var(--effect-compiler-copy);
+}
+
+.product-compiler-output-toolbar i {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--color-primary-300);
+}
+
+.product-compiler-output-content {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 0.75rem;
+  padding-top: 0.9rem;
+}
+
+.product-compiler-output-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.product-compiler-output-copy strong,
+.product-compiler-output-copy span,
+.product-compiler-output-copy i,
+.product-compiler-output-panel span {
+  display: block;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--effect-compiler-copy) 18%, transparent);
+}
+
+.product-compiler-output-copy strong { width: 84%; height: 0.72rem; background: var(--effect-compiler-copy); }
+.product-compiler-output-copy span { width: 100%; height: 0.38rem; }
+.product-compiler-output-copy span:nth-child(3) { width: 72%; }
+.product-compiler-output-copy i { width: 46%; height: 1.65rem; margin-top: 0.45rem; background: var(--color-primary-500); }
+
+.product-compiler-output-panel {
+  display: grid;
+  align-content: end;
+  gap: 0.45rem;
+  min-height: 112px;
+  padding: 0.7rem;
+  border: 1px solid var(--effect-compiler-layer-border);
+  border-radius: 0.75rem;
+  background: var(--effect-compiler-output-panel);
+}
+
+.product-compiler-output-panel span { height: 0.42rem; }
+.product-compiler-output-panel span:nth-child(1) { width: 62%; height: 2.4rem; border-radius: 0.55rem; background: color-mix(in srgb, var(--color-info-300) 34%, transparent); }
+.product-compiler-output-panel span:nth-child(3) { width: 76%; }
+
+.product-compiler-output-footer {
+  justify-content: flex-start;
+  border-top: 1px solid var(--effect-compiler-layer-border);
+  border-bottom: 0;
+  padding-block: 0.7rem;
+  color: var(--color-neutral-500);
+}
+
+.product-compiler-output-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.product-compiler-output-indicator i {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 999px;
+  background: var(--color-primary-500);
+}
+
+.product-compiler-output-indicator.is-business i { background: var(--color-warning-300); }
+.product-compiler-output-indicator.is-engineering i { background: var(--color-info-300); }
+
+.product-compiler-output-verified {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-inline-start: auto;
+  color: var(--color-success-700);
+}
+
+.dark .product-compiler-output-verified { color: var(--color-success-400); }
+.product-compiler-output-verified svg { width: 0.85rem; height: 0.85rem; }
 
 .about-system {
   background: var(--effect-about-surface);
@@ -1519,51 +1778,148 @@ body {
   }
 
   .product-compiler-scene {
-    position: absolute;
-    inset-inline-end: -8%;
-    bottom: -12%;
-    width: min(54vw, 340px);
+    position: relative;
+    width: min(58vw, 440px);
+    margin-inline-start: auto;
     pointer-events: none;
   }
+
+  .product-compiler-flow {
+    grid-template-columns: minmax(138px, 0.85fr) 50px minmax(190px, 1.15fr);
+    min-height: 310px;
+    padding: 0.85rem;
+    border-radius: 1.35rem;
+  }
+
+  .product-compiler-scene-rtl .product-compiler-flow {
+    grid-template-columns: minmax(190px, 1.15fr) 50px minmax(138px, 0.85fr);
+  }
+
+  .product-compiler-inputs { gap: 0.5rem; }
+
+  .product-compiler-input {
+    gap: 0.25rem 0.5rem;
+    border-radius: 0.75rem;
+    padding: 0.58rem 0.65rem;
+  }
+
+  .product-compiler-input-icon { width: 1.5rem; height: 1.5rem; }
+  .product-compiler-input-icon svg { width: 0.82rem; height: 0.82rem; }
+  .product-compiler-input strong { font-size: 0.74rem; }
+  .product-compiler-input-number { font-size: 0.66rem; }
+  .product-compiler-output { min-height: 260px; }
+  .product-compiler-output-interface { padding: 0.65rem; }
+  .product-compiler-output-content { gap: 0.55rem; }
+  .product-compiler-output-panel { min-height: 84px; }
+  .product-compiler-output-footer { gap: 0.5rem; font-size: 0.61rem; }
 }
 
 @media (max-width: 639px) {
+  .product-compiler-hero {
+    height: 124svh;
+  }
+
   .product-compiler-grid {
     background-size: 96px 96px, 96px 96px, 24px 24px, 24px 24px;
   }
 
   .product-compiler-scene {
-    inset-inline-end: -18%;
-    bottom: 6%;
-    width: min(68vw, 290px);
-    opacity: 0.5 !important;
-    mask-image: linear-gradient(to bottom, transparent, black 28%, black);
+    inset: auto;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    opacity: 1 !important;
+    transform-origin: bottom center;
   }
 
-  .product-compiler-scene > span {
-    display: none;
+  .product-compiler-flow,
+  .product-compiler-scene-rtl .product-compiler-flow {
+    grid-template-areas:
+      'inputs'
+      'connectors'
+      'output';
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 24px auto;
+    min-height: 0;
+    padding: 0.65rem;
+    border-radius: 1.1rem;
+    background: color-mix(in srgb, var(--effect-compiler-layer) 68%, transparent);
   }
 
-  .product-compiler-layer {
-    border-radius: 0.9rem;
-    padding: 0.7rem;
+  .product-compiler-inputs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.35rem;
   }
+
+  .product-compiler-input {
+    display: flex;
+    min-width: 0;
+    min-height: 54px;
+    flex-direction: column;
+    gap: 0.25rem;
+    justify-content: space-between;
+    border-inline-start-width: 2px;
+    border-radius: 0.65rem;
+    padding: 0.45rem 0.5rem;
+  }
+
+  .product-compiler-input-heading { width: 100%; }
+  .product-compiler-input-icon { width: 1.25rem; height: 1.25rem; border-radius: 0.4rem; }
+  .product-compiler-input-icon svg { width: 0.7rem; height: 0.7rem; }
+  .product-compiler-input strong { font-size: clamp(0.65rem, 2.8vw, 0.74rem); overflow-wrap: anywhere; }
+  .product-compiler-signal { display: none; }
+  .product-compiler-connectors-desktop { display: none; }
+  .product-compiler-connectors-mobile { display: block; height: 24px; }
+  .product-compiler-scene-rtl .product-compiler-connectors-mobile { transform: scaleX(-1); }
 
   .product-compiler-output {
+    min-height: 112px;
     border-radius: 0.8rem;
   }
+
+  .product-compiler-output-header { padding: 0.55rem 0.65rem; }
+  .product-compiler-output-status strong { font-size: 0.75rem; }
+  .product-compiler-output-code { font-size: 0.58rem; }
+  .product-compiler-output-body { grid-template-columns: 26px 1fr; }
+  .product-compiler-output-sidebar { gap: 0.4rem; padding-top: 0.55rem; }
+  .product-compiler-output-sidebar span { width: 0.55rem; height: 0.55rem; }
+  .product-compiler-output-interface { padding: 0.45rem 0.55rem; }
+  .product-compiler-output-toolbar { padding-bottom: 0.4rem; }
+  .product-compiler-output-content { grid-template-columns: 1.35fr 0.65fr; padding-top: 0.4rem; }
+  .product-compiler-output-copy { gap: 0.3rem; }
+  .product-compiler-output-copy strong { height: 0.5rem; }
+  .product-compiler-output-copy span { height: 0.26rem; }
+  .product-compiler-output-copy i { height: 1rem; margin-top: 0.15rem; }
+  .product-compiler-output-panel { min-height: 42px; padding: 0.35rem; }
+  .product-compiler-output-panel span:nth-child(1) { height: 1.25rem; }
+  .product-compiler-output-footer { padding: 0.42rem 0.6rem; font-size: 0.54rem; }
+  .product-compiler-output-verified { display: none; }
 }
 
 @media (max-width: 639px) and (max-height: 700px) {
   .product-compiler-scene {
-    inset-inline-end: -15%;
-    bottom: -2%;
-    width: min(60vw, 240px);
-    opacity: 0.42 !important;
+    transform: scale(0.92) !important;
+    transform-origin: top center;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .product-compiler-hero {
+    height: auto !important;
+    min-height: 100svh;
+  }
+
+  .product-compiler-sticky {
+    position: relative;
+  }
+
+  .product-compiler-scene,
+  .product-compiler-inputs,
+  .product-compiler-output {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
   .product-compiler-hero button,
   .product-compiler-hero svg,
   .product-compiler-hero svg * {
