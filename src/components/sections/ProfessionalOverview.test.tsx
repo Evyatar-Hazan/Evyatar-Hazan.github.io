@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { localizedPath } from '../../routing/portfolioRoutes';
 import ProfessionalOverview from './ProfessionalOverview';
 
@@ -19,5 +19,16 @@ describe('ProfessionalOverview', () => {
     expect(container.querySelectorAll('[data-professional-engagement]')).toHaveLength(0);
     expect(container.querySelector('.about-capability-module')).not.toBeInTheDocument();
     expect(container.querySelector('#service-engagements')).not.toBeInTheDocument();
+  });
+
+  it('realigns the legacy #about deep link after the lazy section mounts', () => {
+    window.history.replaceState({}, '', '/en/#about');
+    const scrollIntoView = vi.spyOn(Element.prototype, 'scrollIntoView');
+
+    render(<ProfessionalOverview language="en" buildPath={localizedPath} />);
+
+    expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'auto', block: 'start' });
+    scrollIntoView.mockRestore();
+    window.history.replaceState({}, '', '/en/');
   });
 });

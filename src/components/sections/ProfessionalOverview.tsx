@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import type { LocalizedPathBuilder, PortfolioSlotProps } from '../../contracts/portfolio';
 import { getPortfolioCapabilityGroups } from '../../data/portfolioCapabilities';
 import { getHumanAboutContent } from '../../features/humanAbout/content';
@@ -41,6 +42,12 @@ const ProfessionalOverview = ({
   const capabilities = getPortfolioCapabilityGroups(language).filter(({ id }) =>
     selectedCapabilityIds.includes(id as (typeof selectedCapabilityIds)[number]),
   );
+
+  useEffect(() => {
+    if (window.location.hash !== '#about') return;
+
+    document.getElementById('about')?.scrollIntoView({ behavior: 'auto', block: 'start' });
+  }, []);
 
   return (
     <section
