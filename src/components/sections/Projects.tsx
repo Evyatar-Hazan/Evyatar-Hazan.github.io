@@ -1,37 +1,13 @@
-import {
-  motion,
-  useMotionValue,
-  useMotionValueEvent,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from 'framer-motion';
-import { useLayoutEffect, useRef, useState } from 'react';
-import {
-  ArrowDown,
-  CheckCircle2,
-  ExternalLink,
-  Github,
-  Hammer,
-  Target,
-} from 'lucide-react';
+import { ExternalLink, Github } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { projects, type Project } from '../../data/profile';
 import type { ProjectId } from '../../contracts/portfolio';
 import { localizedPath } from '../../routing/portfolioRoutes';
+import './Projects.css';
 
 const featuredProjects = projects.filter((project) => project.featured);
 const secondaryProjects = projects.filter((project) => !project.featured);
-const storySteps = ['problem', 'solution', 'impact'] as const;
-
-const getStoryProgress = (progress: number) => {
-  if (progress <= 0.28) return 0;
-  if (progress < 0.38) return ((progress - 0.28) / 0.1) * 0.5;
-  if (progress <= 0.62) return 0.5;
-  if (progress < 0.72) return 0.5 + ((progress - 0.62) / 0.1) * 0.5;
-  return 1;
-};
 
 const previewImages: Partial<Record<Project['visual'], string>> = {
   catering: '/project-nis-boutique.webp',
@@ -68,20 +44,23 @@ const ProjectActions = ({ project, compact = false }: { project: Project; compac
           {t('projects.liveDemo')}
         </a>
       )}
-      <a
-        href={project.githubUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={secondaryClass}
-      >
-        <Github className="h-4 w-4" />
-        {t('projects.code')}
-      </a>
+      {project.githubUrl && (
+        <a
+          href={project.githubUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={secondaryClass}
+          aria-label={`${t('projects.code')} ${t(`projects.items.${project.id}.title`)}`}
+        >
+          <Github className="h-4 w-4" />
+          {t('projects.code')}
+        </a>
+      )}
     </div>
   );
 };
 
-const ProjectScrollChapter = ({
+const FeaturedProjectCard = ({
   project,
   projectIndex,
 }: {
@@ -89,185 +68,96 @@ const ProjectScrollChapter = ({
   projectIndex: number;
 }) => {
   const { t, i18n } = useTranslation();
-  const stageRef = useRef<HTMLElement>(null);
-  const railRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const distance = useMotionValue(0);
-  const shouldReduceMotion = useReducedMotion();
   const isHebrew = i18n.language === 'he';
-  const direction = isHebrew ? 1 : -1;
-  const [activeFrame, setActiveFrame] = useState(0);
   const localizedProof = project.caseStudy
     ? project.caseStudy.proof[isHebrew ? 'he' : 'en']
     : t(project.impactKey);
-  const localizedOutcomes = project.caseStudy?.outcomes[isHebrew ? 'he' : 'en'].slice(0, 2) ?? [];
-  const titleId = `project-chapter-${project.id}`;
+  const titleId = `featured-project-${project.id}`;
   const projectTitle = t(`projects.items.${project.id}.title`);
   const previewImage = previewImages[project.visual];
 
-  useLayoutEffect(() => {
-    const stage = stageRef.current;
-    const rail = railRef.current;
-    const track = trackRef.current;
-
-    if (!stage || !rail || !track) {
-      return;
-    }
-
-    if (shouldReduceMotion) {
-      distance.set(0);
-      stage.style.removeProperty('--project-duration');
-      stage.style.removeProperty('--project-story-width');
-      return;
-    }
-
-    const measure = () => {
-      const visibleWidth = rail.clientWidth;
-      stage.style.setProperty('--project-story-width', `${visibleWidth}px`);
-      const travel = Math.max(0, track.scrollWidth - visibleWidth);
-      const scrollDuration = Math.min(travel, Math.max(680, window.innerHeight * 1.35));
-      distance.set(travel);
-      stage.style.setProperty('--project-duration', `${scrollDuration}px`);
-    };
-
-    measure();
-    window.addEventListener('resize', measure);
-    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure);
-    observer?.observe(rail);
-    observer?.observe(track);
-
-    return () => {
-      window.removeEventListener('resize', measure);
-      observer?.disconnect();
-    };
-  }, [distance, shouldReduceMotion]);
-
-  const { scrollYProgress } = useScroll({
-    target: stageRef,
-    offset: ['start start', 'end end'],
-  });
-  const storyProgress = useTransform(scrollYProgress, getStoryProgress);
-  const trackX = useTransform(
-    [storyProgress, distance],
-    ([progress, measuredDistance]) => Number(progress) * direction * Number(measuredDistance),
-  );
-  useMotionValueEvent(storyProgress, 'change', (progress) => {
-    const nextFrame = Math.min(storySteps.length - 1, Math.round(progress * (storySteps.length - 1)));
-    setActiveFrame((currentFrame) => (currentFrame === nextFrame ? currentFrame : nextFrame));
-  });
-
   return (
     <article
-      ref={stageRef}
-      className={`project-scroll-stage project-scroll-chapter relative border-t border-neutral-300/80 dark:border-neutral-800 ${shouldReduceMotion ? 'project-scroll-stage-static' : ''}`}
+      className="featured-case-card"
       data-project-visual={project.visual}
+      data-featured-project={project.id}
       aria-labelledby={titleId}
     >
-      <div className="project-scroll-pin">
-        <div className="project-scroll-hud mx-auto flex w-full max-w-[1480px] items-end justify-between gap-4 px-5 sm:px-8 lg:px-12" aria-hidden="true">
-          <div className="flex items-center gap-3">
-            <span className="project-scroll-index grid h-9 w-9 place-items-center border border-current font-mono text-[0.6rem] font-black">
-              {String(projectIndex + 1).padStart(2, '0')}
-            </span>
-            <div>
-              <p className="font-mono text-[0.56rem] font-bold uppercase tracking-[0.16em] text-neutral-500">
-                PROJECT {String(projectIndex + 1).padStart(2, '0')} / {String(featuredProjects.length).padStart(2, '0')}
-              </p>
-              <p className="mt-1 font-mono text-[0.62rem] font-black tracking-[0.12em] text-neutral-800 dark:text-neutral-200">
-                {t(`projects.${storySteps[activeFrame]}`)} {String(activeFrame + 1).padStart(2, '0')} / 03
-              </p>
-            </div>
+      <div className="featured-case-card__masthead">
+        <span className="featured-case-card__index" aria-hidden="true">
+          {String(projectIndex + 1).padStart(2, '0')}
+        </span>
+        <p>
+          PROJECT {String(projectIndex + 1).padStart(2, '0')} / {String(featuredProjects.length).padStart(2, '0')}
+        </p>
+        <div className="featured-case-card__meta">
+          <span>{t(`projects.statuses.${project.status}`)}</span>
+          <span>{t(`projects.categories.${project.category}`)}</span>
+        </div>
+      </div>
+
+      {previewImage && (
+        project.liveUrl ? (
+          <a
+            href={project.liveUrl}
+            className="featured-case-card__media"
+            aria-label={`${t('projects.openLivePreview')} ${projectTitle}`}
+          >
+            <img
+              src={previewImage}
+              alt={t(`projects.items.${project.id}.previewTitle`)}
+              width="1440"
+              height="900"
+              loading="lazy"
+              decoding="async"
+            />
+            <span>{t('projects.liveDemo')} <ExternalLink className="h-3.5 w-3.5" /></span>
+          </a>
+        ) : (
+          <div className="featured-case-card__media">
+            <img
+              src={previewImage}
+              alt={t(`projects.items.${project.id}.previewTitle`)}
+              width="1440"
+              height="900"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
-          <div className="hidden items-center gap-2 font-mono text-[0.56rem] font-bold uppercase tracking-[0.14em] text-neutral-500 sm:flex">
-            <span>{t('projects.scrollHint')}</span>
-            <ArrowDown className="h-3.5 w-3.5 project-scroll-accent-text" />
-          </div>
+        )
+      )}
+
+      <div className="featured-case-card__body">
+        <div className="featured-case-card__intro">
+          <h3 id={titleId}>{projectTitle}</h3>
+          <p>{t(project.summaryKey)}</p>
         </div>
 
-        <div className="project-story-layout mx-auto w-full max-w-[1480px] px-5 sm:px-8 lg:px-12">
-          <aside className="project-story-anchor">
-            {previewImage && (
-              <a
-                href={project.liveUrl}
-                className="project-story-preview"
-                aria-label={`${t('projects.openLivePreview')} ${projectTitle}`}
-              >
-                <img
-                  src={previewImage}
-                  alt={t(`projects.items.${project.id}.previewTitle`)}
-                  width="1440"
-                  height="900"
-                  loading="lazy"
-                  decoding="async"
-                  className="project-live-capture"
-                />
-                <span className="project-story-live">
-                  {t('projects.liveDemo')} <ExternalLink className="h-3.5 w-3.5" />
-                </span>
-              </a>
-            )}
-            <div className="project-story-identity">
-              <div className="project-story-meta">
-                <span>{t(`projects.statuses.${project.status}`)}</span>
-                <span>{t(`projects.categories.${project.category}`)}</span>
-              </div>
-              <h3 id={titleId}>{projectTitle}</h3>
-              <p>{t(project.summaryKey)}</p>
-              <div className="project-story-tags" aria-label={t('projects.technologiesLabel')}>
-                {project.tags.slice(0, 5).map((tag) => <span key={tag}>+ {tag}</span>)}
-              </div>
-            </div>
-          </aside>
-
-          <div ref={railRef} className="project-scroll-rail project-story-rail">
-            <motion.div
-              ref={trackRef}
-              style={shouldReduceMotion ? undefined : { x: trackX }}
-              className="project-scroll-track project-story-track"
-            >
-              <section className="project-scroll-frame project-story-slide project-story-challenge" data-frame-index="01">
-                <div className="project-story-step"><span>01</span><span>/ 03</span></div>
-                <Target className="project-story-icon" aria-hidden="true" />
-                <p className="project-story-kicker">{t('projects.storyChallenge')}</p>
-                <h4>{t('projects.problem')}</h4>
-                <p className="project-story-lead">{t(`projects.items.${project.id}.problem`)}</p>
-              </section>
-
-              <section className="project-scroll-frame project-story-slide project-story-build" data-frame-index="02">
-                <div className="project-story-step"><span>02</span><span>/ 03</span></div>
-                <Hammer className="project-story-icon" aria-hidden="true" />
-                <p className="project-story-kicker">{t('projects.storyBuild')}</p>
-                <h4>{t('projects.solution')}</h4>
-                <p className="project-story-lead">{t(`projects.items.${project.id}.solution`)}</p>
-                <div className="project-story-role">
-                  <span>{t('projects.role')}</span>
-                  <p>{t(`projects.items.${project.id}.role`)}</p>
-                </div>
-              </section>
-
-              <section className="project-scroll-frame project-story-slide project-story-result" data-frame-index="03">
-                <div className="project-story-step"><span>03</span><span>/ 03</span></div>
-                <CheckCircle2 className="project-story-icon" aria-hidden="true" />
-                <p className="project-story-kicker">{t('projects.storyResult')}</p>
-                <h4>{t('projects.storyResult')}</h4>
-                <p className="project-story-impact">{t(project.impactKey)}</p>
-                <p className="project-story-proof">{localizedProof}</p>
-                {localizedOutcomes.length > 0 && (
-                  <ul className="project-story-outcomes">
-                    {localizedOutcomes.map((outcome) => <li key={outcome}>{outcome}</li>)}
-                  </ul>
-                )}
-                <ProjectActions project={project} />
-              </section>
-            </motion.div>
-          </div>
+        <div className="featured-case-card__story">
+          <section>
+            <span>01</span>
+            <h4>{t('projects.storyChallenge')}</h4>
+            <p>{t(`projects.items.${project.id}.problem`)}</p>
+          </section>
+          <section>
+            <span>02</span>
+            <h4>{t('projects.storyBuild')}</h4>
+            <p>{t(`projects.items.${project.id}.solution`)}</p>
+          </section>
+          <section>
+            <span>03</span>
+            <h4>{t('projects.storyResult')}</h4>
+            <p>{t(project.impactKey)}</p>
+            <small>{localizedProof}</small>
+          </section>
         </div>
 
-        {!shouldReduceMotion && (
-          <div className="mx-auto h-px w-[calc(100%-2.5rem)] max-w-[calc(1480px-6rem)] overflow-hidden bg-neutral-300 dark:bg-neutral-800" aria-hidden="true">
-            <motion.div style={{ scaleX: scrollYProgress }} className="project-scroll-progress h-full origin-left rtl:origin-right" />
+        <div className="featured-case-card__footer">
+          <div className="featured-case-card__tags" aria-label={t('projects.technologiesLabel')}>
+            {project.tags.slice(0, 5).map((tag) => <span key={tag}>+ {tag}</span>)}
           </div>
-        )}
+          <ProjectActions project={project} />
+        </div>
       </div>
     </article>
   );
@@ -323,9 +213,9 @@ const Projects = () => {
         </p>
       </header>
 
-      <div aria-label={t('projects.featuredLabel')} className="relative">
+      <div aria-label={t('projects.featuredLabel')} className="featured-case-grid relative mx-auto w-full max-w-[1480px] px-5 pb-16 sm:px-8 sm:pb-24 lg:px-12">
         {featuredProjects.map((project, index) => (
-          <ProjectScrollChapter key={project.id} project={project} projectIndex={index} />
+          <FeaturedProjectCard key={project.id} project={project} projectIndex={index} />
         ))}
       </div>
 

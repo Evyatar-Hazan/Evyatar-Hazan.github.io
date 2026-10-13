@@ -1,13 +1,14 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { projects } from './data/profile';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const changeLanguageMock = vi.fn().mockResolvedValue(undefined);
+let currentLanguage = 'en';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => key,
-    i18n: { language: 'en', changeLanguage: changeLanguageMock },
+    i18n: { language: currentLanguage, changeLanguage: changeLanguageMock },
   }),
 }));
 
@@ -19,6 +20,7 @@ const renderAt = (path: string) => {
 };
 
 beforeEach(() => {
+  currentLanguage = 'en';
   window.history.pushState({}, '', '/en/');
   changeLanguageMock.mockClear();
 });
@@ -68,7 +70,7 @@ describe('App', () => {
       });
   });
 
-  it('renders the selected featured projects and public project index', async () => {
+  it('renders exactly four featured case-study cards and preserves the public project index', async () => {
     render(<App />);
 
     const featuredIds = projects.filter((project) => project.featured).map((project) => project.id);
@@ -85,17 +87,56 @@ describe('App', () => {
 
     expect(screen.getByText('projects.indexTitle')).toBeInTheDocument();
     expect(screen.getAllByText('projects.caseStudy').length).toBeGreaterThan(0);
-    expect(document.querySelectorAll('.project-scroll-chapter')).toHaveLength(featuredIds.length);
-    expect(document.querySelectorAll('.project-scroll-frame')).toHaveLength(featuredIds.length * 3);
-    expect(document.querySelectorAll('.project-live-capture')).toHaveLength(featuredIds.length);
-    const liveCaptureLinks = document.querySelectorAll<HTMLAnchorElement>('.project-story-preview');
-    expect(liveCaptureLinks).toHaveLength(featuredIds.length);
-    liveCaptureLinks.forEach((link) => expect(link).not.toHaveAttribute('target'));
-    expect(document.querySelectorAll('.project-scroll-stage-static')).toHaveLength(0);
+    expect(document.querySelectorAll('[data-featured-project]')).toHaveLength(4);
+    featuredIds.forEach((projectId) => {
+      expect(document.querySelector(`[data-featured-project="${projectId}"]`)).toBeInTheDocument();
+    });
+    expect(document.querySelector('.project-scroll-stage')).not.toBeInTheDocument();
     expect(document.querySelectorAll('#projects .project-secondary-index > li')).toHaveLength(
       projects.filter((project) => !project.featured).length
     );
     expect(await screen.findByRole('heading', { name: 'Project archive' })).toBeInTheDocument();
+  });
+
+  it.each(['en', 'he'] as const)('uses the correct %s case-study links for all featured cards', async (language) => {
+    currentLanguage = language;
+    window.history.pushState({}, '', `/${language}/`);
+    render(<App />);
+
+    await screen.findByText('projects.indexTitle');
+
+    projects.filter((project) => project.featured).forEach((project) => {
+      const card = document.querySelector<HTMLElement>(`[data-featured-project="${project.id}"]`);
+      expect(card).not.toBeNull();
+      expect(within(card!).getByRole('link', { name: 'projects.caseStudy' })).toHaveAttribute(
+        'href',
+        `/${language}/projects/${project.id}/`,
+      );
+    });
+  });
+
+  it('shows featured live and code links only when their canonical URLs exist', async () => {
+    render(<App />);
+
+    await screen.findByText('projects.indexTitle');
+
+    projects.filter((project) => project.featured).forEach((project) => {
+      const card = document.querySelector<HTMLElement>(`[data-featured-project="${project.id}"]`);
+      expect(card).not.toBeNull();
+      const cardQueries = within(card!);
+
+      if (project.liveUrl) {
+        expect(cardQueries.getByRole('link', { name: `projects.liveDemo projects.items.${project.id}.title` })).toHaveAttribute('href', project.liveUrl);
+      } else {
+        expect(cardQueries.queryByRole('link', { name: `projects.liveDemo projects.items.${project.id}.title` })).not.toBeInTheDocument();
+      }
+
+      if (project.githubUrl) {
+        expect(cardQueries.getByRole('link', { name: `projects.code projects.items.${project.id}.title` })).toHaveAttribute('href', project.githubUrl);
+      } else {
+        expect(cardQueries.queryByRole('link', { name: `projects.code projects.items.${project.id}.title` })).not.toBeInTheDocument();
+      }
+    });
   });
 
   it('surfaces recent writing on the home page', async () => {
