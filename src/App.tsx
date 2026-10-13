@@ -11,7 +11,6 @@ import NotFoundPage from './pages/NotFoundPage';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { useTheme } from './hooks/useTheme';
-import CustomCursor from './components/animations/CustomCursor';
 import ScrollProgress from './components/animations/ScrollProgress';
 import ContactNode from './components/ContactNode';
 import ContactBriefFeature from './features/contact/ContactBriefFeature';
@@ -189,7 +188,6 @@ const AppShell = () => {
   
   return (
     <div className={`min-h-screen font-sans ${dir === 'rtl' ? '[&_*]:font-sans-hebrew' : ''}`}>
-      <CustomCursor />
       <ScrollProgress />
       <Navbar />
       <ContactNode />
