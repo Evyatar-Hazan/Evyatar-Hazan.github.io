@@ -38,4 +38,11 @@ describe('color system', () => {
     expect(stylesheet).toMatch(/\.dark \.contact-status p,[\s\S]*?color: var\(--color-neutral-400\);/);
     expect(stylesheet).toMatch(/\.dark \.closing-dock-kicker,[\s\S]*?color: var\(--color-neutral-400\);/);
   });
+
+  it('keeps dark desktop navigation links readable without changing the active color', () => {
+    expect(stylesheet).toMatch(/\.dark \.system-rail-link\s*{\s*color: var\(--color-neutral-300\);\s*}/);
+    expect(stylesheet).toMatch(
+      /\.dark \.system-rail-link\.is-active\s*{\s*color: var\(--color-primary-300\);\s*}/,
+    );
+  });
 });
