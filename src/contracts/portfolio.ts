@@ -58,6 +58,7 @@ export type PortfolioRouteTarget =
   | { route: 'home' }
   | { route: 'homeProjects' }
   | { route: 'projects' }
+  | { route: 'about' }
   | { route: 'project'; id: ProjectId }
   | { route: 'blog' }
   | { route: 'article'; id: ArticleId }

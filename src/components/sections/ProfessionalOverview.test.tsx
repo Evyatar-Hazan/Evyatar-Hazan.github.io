@@ -5,18 +5,18 @@ import ProfessionalOverview from './ProfessionalOverview';
 
 describe('ProfessionalOverview', () => {
   it.each([
-    ['en', 'Full-stack product work, shaped around the outcome.', 'A new public product or site'],
-    ['he', 'עבודת מוצר מקצה לקצה, ממוקדת בתוצאה.', 'מוצר או אתר ציבורי חדש'],
-  ] as const)('presents one factual overview in %s', (language, title, firstEngagement) => {
+    ['en', 'Full-stack product work, shaped around the outcome.', 'Open the full professional profile'],
+    ['he', 'עבודת מוצר מקצה לקצה, ממוקדת בתוצאה.', 'לפרופיל המקצועי המלא'],
+  ] as const)('presents one factual overview in %s', (language, title, fullProfileLabel) => {
     const { container } = render(
       <ProfessionalOverview language={language} buildPath={localizedPath} />,
     );
 
     expect(screen.getByRole('heading', { level: 2, name: title })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: firstEngagement })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: fullProfileLabel })).toHaveAttribute('href', `/${language}/about/`);
     expect(container.querySelectorAll('#about')).toHaveLength(1);
     expect(container.querySelectorAll('[data-professional-capability]')).toHaveLength(4);
-    expect(container.querySelectorAll('[data-professional-engagement]')).toHaveLength(3);
+    expect(container.querySelectorAll('[data-professional-engagement]')).toHaveLength(0);
     expect(container.querySelector('.about-capability-module')).not.toBeInTheDocument();
     expect(container.querySelector('#service-engagements')).not.toBeInTheDocument();
   });

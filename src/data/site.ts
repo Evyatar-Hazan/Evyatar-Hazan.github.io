@@ -81,6 +81,24 @@ export const staticRoutes: RouteSeo[] = [
     }
   },
   {
+    path: '/about/',
+    title: 'About Evyatar Hazan | Professional Profile',
+    description: 'Evidence-backed professional profile for Evyatar Hazan across product work, full-stack systems, infrastructure, automation, delivery, and public projects.',
+    preview: {
+      heading: 'Evyatar Hazan | Full Stack Developer',
+      body: [
+        'A professional profile connecting product thinking, frontend, backend, infrastructure, validation, public projects, and technical writing.',
+        'Capabilities are linked to public evidence, while explicit evidence gaps remain visible and measured outcomes appear only when verified.'
+      ],
+      links: [
+        { href: '/#projects', label: 'Projects' },
+        { href: '/contact/', label: 'Contact' },
+        { href: 'https://github.com/Evyatar-Hazan', label: 'GitHub' },
+        { href: 'https://www.linkedin.com/in/evyatar-hazan-662235210/', label: 'LinkedIn' }
+      ]
+    }
+  },
+  {
     path: '/privacy/',
     title: 'Privacy | Evyatar Hazan',
     description: 'Privacy information for Evyatar Hazan portfolio visitors, including contact paths, analytics boundaries, and basic data handling expectations.',

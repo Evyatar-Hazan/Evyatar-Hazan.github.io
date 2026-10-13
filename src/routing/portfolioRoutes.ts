@@ -42,6 +42,8 @@ const targetPath = (target: PortfolioRouteTarget) => {
       return '/#projects';
     case 'projects':
       return '/projects/';
+    case 'about':
+      return '/about/';
     case 'project':
       return `/projects/${target.id}/`;
     case 'blog':

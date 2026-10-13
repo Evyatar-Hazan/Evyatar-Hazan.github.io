@@ -238,6 +238,33 @@ const staticRoutes = [
     }
   },
   {
+    path: '/about/',
+    title: 'About Evyatar Hazan | Professional Profile',
+    description: 'Evidence-backed professional profile for Evyatar Hazan across product work, full-stack systems, infrastructure, automation, delivery, and public projects.',
+    structuredData: 'person',
+    preview: {
+      heading: 'Evyatar Hazan | Full Stack Developer',
+      body: [
+        'I connect product thinking, frontend, backend, infrastructure, and verification into systems that are clear to use and maintain.',
+        'My working surface spans Web and mobile products, Languages, AI and computer vision, Delivery and infrastructure, Data, Quality automation, and Product methodology.',
+        'Public projects and technical articles demonstrate applied practice. No canonical public project or article currently demonstrates the listed AI and computer-vision stack, and the automation references do not publicly verify every named device-automation tool.',
+        'The delivery path moves through five steps: clarify the need and outcome, choose the product and architecture decision, build the system, test and verify the live result, then hand off and document for continued maintenance.',
+        'Working principles connect each position to a real example, an exception or boundary, and a public source. Collaboration can start with a public product or site, an internal or full-stack system, or an improvement to an existing system.'
+      ],
+      links: [
+        { href: '/projects/', label: 'Projects' },
+        { href: '/projects/nis_boutique/', label: 'Nis Boutique case study' },
+        { href: '/projects/online_converter/', label: 'Online Converter case study' },
+        { href: '/projects/emergency_protocol/', label: 'Emergency Protocol case study' },
+        { href: '/blog/small-project-architecture/', label: 'Small project architecture article' },
+        { href: '/blog/tests-need-honest-environments/', label: 'Honest test environments article' },
+        { href: '/contact/', label: 'Contact' },
+        { href: 'https://github.com/Evyatar-Hazan', label: 'GitHub' },
+        { href: 'https://www.linkedin.com/in/evyatar-hazan-662235210/', label: 'LinkedIn' }
+      ]
+    }
+  },
+  {
     path: '/blog/',
     title: 'Writing | Evyatar Hazan',
     description: 'Short articles about product engineering, frontend work, live websites, SEO, validation, and deployment.',
@@ -386,6 +413,23 @@ const buildHtmlForRoute = (route) => {
   html = replaceHeadValue(html, /<meta name="twitter:title" content="[^"]*" \/>/, `<meta name="twitter:title" content="${escapeHtml(route.title)}" />`);
   html = replaceHeadValue(html, /<meta name="twitter:description"[^>]*content="[^"]*"[^>]*>/, `<meta name="twitter:description" content="${escapeHtml(route.description)}" />`);
   if (route.excludeAds) html = removeAdSenseScript(html);
+  if (route.structuredData === 'person') {
+    const person = {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: 'Evyatar Hazan',
+      url: pageUrl,
+      jobTitle: 'Full Stack Developer',
+      sameAs: [
+        'https://github.com/Evyatar-Hazan',
+        'https://www.linkedin.com/in/evyatar-hazan-662235210/'
+      ]
+    };
+    html = html.replace(
+      '</head>',
+      `  <script id="person-profile-structured-data" type="application/ld+json">${JSON.stringify(person).replaceAll('<', '\\u003c')}</script>\n</head>`
+    );
+  }
   html = html.replace('<div id="root"></div>', `${renderPreview(route)}<div id="root"></div>`);
 
   return html;
@@ -503,6 +547,32 @@ const localizedSeoForRoute = (route, language) => {
     };
   }
 
+  if (route.path === '/about/') {
+    return {
+      ...route,
+      title: 'אודות אביתר חזן | פרופיל מקצועי',
+      description: 'פרופיל מקצועי מבוסס ראיות של אביתר חזן: עבודת מוצר, Full Stack, תשתיות, אוטומציה, דרך עבודה ופרויקטים ציבוריים.',
+      preview: {
+        ...route.preview,
+        heading: 'אביתר חזן | Full Stack Developer',
+        body: [
+          'אני מחבר חשיבה מוצרית, Frontend, Backend, תשתיות ואימות למערכות ברורות לשימוש ולתחזוקה.',
+          'מרחב העבודה כולל מוצרי Web ומובייל, שפות פיתוח, AI וראייה ממוחשבת, תשתיות ו-Delivery, נתונים, אוטומציית איכות ומתודולוגיות מוצר.',
+          'פרויקטים ומאמרים ציבוריים מדגימים פרקטיקה שיושמה. אין כרגע פרויקט או מאמר קנוני ציבורי שמדגים את סטאק ה-AI והראייה הממוחשבת, וההפניות בתחום האוטומציה אינן מאמתות בפומבי כל כלי אוטומציית מכשירים שמופיע ברשימה.',
+          'דרך העבודה עוברת בחמישה שלבים: חידוד הצורך והתוצאה, בחירת החלטת מוצר וארכיטקטורה, בניית המערכת, בדיקות ואימות התוצאה החיה, ומסירה עם תיעוד להמשך תחזוקה.',
+          'עקרונות העבודה מחברים כל עמדה לדוגמה אמיתית, חריג או גבול ומקור ציבורי. אפשר להתחיל שיתוף פעולה סביב מוצר או אתר ציבורי, מערכת פנימית או Full Stack, או שיפור מערכת קיימת.'
+        ],
+        links: route.preview.links.map((link) => ({
+          ...link,
+          label: ({
+            Projects: 'פרויקטים',
+            Contact: 'יצירת קשר',
+          })[link.label] ?? link.label
+        }))
+      }
+    };
+  }
+
   if (route.path === '/privacy/') {
     return {
       ...route,
@@ -612,7 +682,9 @@ for (const route of staticRoutes) {
       ...localizedRoute.preview,
       links: localizedRoute.preview.links?.map((link) => ({
         ...link,
-        href: /^https:\/\//u.test(link.href) ? link.href : localizedPath(language, link.href)
+        href: /^https?:\/\//u.test(link.href)
+          ? link.href
+          : `${localizedPath(language, link.href.split('#')[0] || '/')}${link.href.includes('#') ? `#${link.href.split('#')[1]}` : ''}`
       }))
     };
     const html = addLanguageMetadata(buildHtmlForRoute(localizedRoute), route, language);
@@ -736,6 +808,19 @@ for (const route of staticRoutes) {
       ].length;
       if (staticArticleLinkCount < languageEntries.length) {
         throw new Error(`Static blog index ${routePath} exposes ${staticArticleLinkCount}/${languageEntries.length} article links.`);
+      }
+    }
+
+    if (route.path === '/about/') {
+      const personScripts = [...html.matchAll(/id="person-profile-structured-data"/gu)].length;
+      if (personScripts !== 1) {
+        throw new Error(`Expected one Person JSON-LD script in ${routePath}, received ${personScripts}.`);
+      }
+      const scriptMatch = html.match(/<script id="person-profile-structured-data" type="application\/ld\+json">([^<]+)<\/script>/u);
+      const person = JSON.parse(scriptMatch?.[1] ?? '{}');
+      const forbiddenPersonFields = ['employer', 'alumniOf', 'award', 'credential', 'address', 'telephone', 'knowsAbout'];
+      if (person['@type'] !== 'Person' || person.name !== 'Evyatar Hazan' || forbiddenPersonFields.some((field) => field in person)) {
+        throw new Error(`Invalid conservative Person structured data for ${routePath}.`);
       }
     }
   }

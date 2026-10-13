@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -10,14 +10,19 @@ import {
   stripLanguagePrefix,
   switchPathLanguage,
 } from '../routing/portfolioRoutes';
+import type { PortfolioRouteTarget } from '../contracts/portfolio';
 
-const navItems = [
-  { name: 'Home', href: '#home', route: 'home' },
-  { name: 'Projects', href: '/projects', route: 'projects' },
-  { name: 'About', href: '#about', route: 'home' },
-  { name: 'Blog', href: '/blog', route: 'blog' },
-  { name: 'Contact', href: '#contact', route: 'home' },
-] as const;
+const navItems: ReadonlyArray<{
+  name: string;
+  target: PortfolioRouteTarget;
+  hash?: string;
+}> = [
+  { name: 'Home', target: { route: 'home' }, hash: '#home' },
+  { name: 'Projects', target: { route: 'projects' } },
+  { name: 'About', target: { route: 'about' } },
+  { name: 'Blog', target: { route: 'blog' } },
+  { name: 'Contact', target: { route: 'contact' } },
+];
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,6 +30,7 @@ const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
+  const reduceMotion = useReducedMotion();
   const language = i18n.language === 'he' ? 'he' : 'en';
   const contentPath = stripLanguagePrefix(location.pathname);
 
@@ -42,18 +48,18 @@ const Navbar = () => {
 
   const activeItem = contentPath.startsWith('/projects')
     ? 'Projects'
+    : contentPath.startsWith('/about')
+    ? 'About'
     : contentPath.startsWith('/blog')
     ? 'Blog'
-    : navItems.find((item) => item.href === location.hash)?.name ?? 'Home';
+    : contentPath.startsWith('/contact')
+      ? 'Contact'
+      : navItems.find((item) => item.hash === location.hash)?.name ?? 'Home';
   const blogContext = contentPath === '/blog' || contentPath === '/blog/'
     ? (i18n.language === 'he' ? 'ארכיון' : 'Archive')
     : contentPath.startsWith('/blog/')
       ? (i18n.language === 'he' ? 'רשומה' : 'Entry')
       : null;
-
-  const localizedHref = (item: (typeof navItems)[number]) => item.href.startsWith('/')
-    ? localizedPath(language, { route: item.route })
-    : `${localizedPath(language, { route: 'home' })}${item.href}`;
 
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
@@ -62,24 +68,28 @@ const Navbar = () => {
     }
   };
 
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, item: (typeof navItems)[number]) => {
+  const handleClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    target: PortfolioRouteTarget,
+    hash?: string,
+  ) => {
     e.preventDefault();
     setIsOpen(false);
 
-    if (item.href.startsWith('/')) {
-      navigate(localizedPath(language, { route: item.route }));
+    if (!hash) {
+      navigate(localizedPath(language, target));
       window.scrollTo({ top: 0, behavior: 'auto' });
       return;
     }
 
     if (contentPath !== '/') {
-      navigate({ pathname: localizedPath(language, { route: 'home' }), hash: item.href });
-      window.setTimeout(() => scrollToSection(item.href), 50);
+      navigate({ pathname: localizedPath(language, { route: 'home' }), hash });
+      window.setTimeout(() => scrollToSection(hash), 50);
       return;
     }
 
-    navigate({ hash: item.href });
-    scrollToSection(item.href);
+    navigate({ hash });
+    scrollToSection(hash);
   };
 
   const toggleLanguage = async () => {
@@ -94,7 +104,7 @@ const Navbar = () => {
       <div className="system-rail">
         <a 
           href={`${localizedPath(language, { route: 'home' })}#home`}
-          onClick={(e) => handleClick(e, navItems[0])}
+          onClick={(e) => handleClick(e, { route: 'home' }, '#home')}
           className="system-rail-brand"
           aria-label="Go to home section"
           translate="no"
@@ -107,8 +117,8 @@ const Navbar = () => {
           {navItems.map((item) => (
             <a
               key={item.name}
-              href={localizedHref(item)}
-              onClick={(e) => handleClick(e, item)}
+              href={localizedPath(language, item.target)}
+              onClick={(e) => handleClick(e, item.target, item.hash)}
               aria-current={activeItem === item.name ? 'page' : undefined}
               className={`system-rail-link ${activeItem === item.name ? 'is-active' : ''}`}
             >
@@ -171,24 +181,25 @@ const Navbar = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.2 }}
               onClick={() => setIsOpen(false)}
               className="system-rail-backdrop"
             />
             
             <motion.div
               id="mobile-navigation-menu"
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.2 }}
+              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
+              transition={{ duration: reduceMotion ? 0 : 0.2 }}
               className="system-rail-mobile-menu"
             >
               <div className="flex flex-col items-center gap-6 w-full">
                 {navItems.map((item) => (
                   <a
                     key={item.name}
-                    href={localizedHref(item)}
-                    onClick={(e) => handleClick(e, item)}
+                    href={localizedPath(language, item.target)}
+                    onClick={(e) => handleClick(e, item.target, item.hash)}
                     aria-current={activeItem === item.name ? 'page' : undefined}
                     className={`text-2xl font-bold transition-colors ${
                       activeItem === item.name ? 'text-primary-500' : 'text-neutral-600 dark:text-neutral-400'

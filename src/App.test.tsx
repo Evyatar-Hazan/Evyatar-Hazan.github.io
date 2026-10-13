@@ -86,10 +86,79 @@ describe('App', () => {
 
     expect(document.querySelectorAll('h1')).toHaveLength(1);
     expect(document.querySelectorAll('[data-professional-capability]')).toHaveLength(4);
-    expect(document.querySelectorAll('[data-professional-engagement]')).toHaveLength(3);
+    expect(document.querySelectorAll('[data-professional-engagement]')).toHaveLength(0);
     expect(screen.getAllByRole('link', { name: 'nav.Projects' }).some((link) => link.getAttribute('href') === `/${language}/projects/`)).toBe(true);
-    expect(screen.getAllByRole('link', { name: 'nav.About' }).some((link) => link.getAttribute('href') === `/${language}/#about`)).toBe(true);
-    expect(screen.getAllByRole('link', { name: 'nav.Contact' }).some((link) => link.getAttribute('href') === `/${language}/#contact`)).toBe(true);
+    expect(screen.getAllByRole('link', { name: 'nav.About' }).some((link) => link.getAttribute('href') === `/${language}/about/`)).toBe(true);
+    expect(screen.getAllByRole('link', { name: 'nav.Contact' }).some((link) => link.getAttribute('href') === `/${language}/contact/`)).toBe(true);
+    expect(screen.getByRole('link', { name: language === 'he' ? 'לפרופיל המקצועי המלא' : 'Open the full professional profile' })).toHaveAttribute('href', `/${language}/about/`);
+    expect(document.querySelector('#about')).toBeInTheDocument();
+  });
+
+  it.each(['en', 'he'] as const)('renders the evidence-backed About route in %s', async (language) => {
+    currentLanguage = language;
+    renderAt(`/${language}/about/`);
+
+    expect(await screen.findByRole('heading', { level: 1, name: language === 'he' ? 'אביתר חזן' : 'Evyatar Hazan' })).toBeInTheDocument();
+    expect(screen.getByText('Full Stack Developer')).toBeInTheDocument();
+    expect(screen.getAllByRole('link', { name: 'GitHub' }).some((link) => link.getAttribute('href') === 'https://github.com/Evyatar-Hazan')).toBe(true);
+    expect(screen.getAllByRole('link', { name: 'LinkedIn' }).some((link) => link.getAttribute('href') === 'https://www.linkedin.com/in/evyatar-hazan-662235210/')).toBe(true);
+    expect(screen.getByRole('link', { name: language === 'he' ? 'לצפייה בראיות מהפרויקטים' : 'View project evidence' })).toHaveAttribute('href', `/${language}/projects/`);
+    expect(screen.getByRole('link', { name: language === 'he' ? 'להתחיל שיחה' : 'Start a conversation' })).toHaveAttribute('href', `/${language}/contact/`);
+    expect(document.querySelectorAll('[aria-controls="capability-panel"]')).toHaveLength(7);
+    expect(document.querySelector('#delivery-process-title')?.closest('section')?.querySelectorAll('ol > li')).toHaveLength(5);
+    expect(document.querySelectorAll('#working-principles [data-principle-id]')).toHaveLength(4);
+    expect(document.querySelectorAll('#service-engagements > div > ol > li')).toHaveLength(3);
+    expect(document.querySelectorAll('h1')).toHaveLength(1);
+  });
+
+  it('restores capability state from valid and invalid query values and updates browser history', async () => {
+    renderAt('/en/about/?capability=automation&ref=profile#capability-explorer-title');
+
+    await waitFor(() => expect(document.querySelector('#capability-panel')).toHaveAttribute('data-capability-id', 'automation'));
+    expect(screen.getByText(/do not publicly verify every named device-automation tool/i)).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /AI & computer vision/ }));
+    expect(window.location.search).toContain('capability=aiCv');
+    expect(window.location.search).toContain('ref=profile');
+    expect(window.location.hash).toBe('#capability-explorer-title');
+    expect(document.querySelector('#capability-panel')).toHaveAttribute('data-capability-id', 'aiCv');
+    expect(screen.getByText(/No canonical public project or article/i)).toBeInTheDocument();
+
+    window.history.pushState({}, '', '/en/about/?capability=missing');
+    fireEvent.popState(window);
+    await waitFor(() => expect(document.querySelector('#capability-panel')).toHaveAttribute('data-capability-id', 'webMobile'));
+  });
+
+  it('publishes one conservative Person JSON-LD record on About only', async () => {
+    const view = renderAt('/en/about/');
+    await screen.findByRole('heading', { level: 1, name: 'Evyatar Hazan' });
+    const scripts = document.querySelectorAll('#person-profile-structured-data');
+    expect(scripts).toHaveLength(1);
+    const person = JSON.parse(scripts[0].textContent ?? '{}');
+
+    expect(person).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: 'Evyatar Hazan',
+      url: 'https://evyatarhazan.com/en/about/',
+      jobTitle: 'Full Stack Developer',
+      sameAs: [
+        'https://github.com/Evyatar-Hazan',
+        'https://www.linkedin.com/in/evyatar-hazan-662235210/',
+      ],
+    });
+    ['employer', 'alumniOf', 'award', 'credential', 'address', 'telephone', 'knowsAbout'].forEach((field) => expect(person).not.toHaveProperty(field));
+
+    view.unmount();
+    expect(document.querySelector('#person-profile-structured-data')).not.toBeInTheDocument();
+  });
+
+  it('redirects the legacy About route while preserving query and hash', async () => {
+    renderAt('/about/?lang=he&capability=databases#capability-explorer-title');
+
+    await waitFor(() => expect(window.location.pathname).toBe('/he/about/'));
+    expect(window.location.search).toBe('?capability=databases');
+    expect(window.location.hash).toBe('#capability-explorer-title');
   });
 
   it('renders the Nis Boutique Catering project with its live link', async () => {
@@ -256,8 +325,8 @@ describe('App', () => {
   it('marks the active nav item with aria-current', () => {
     render(<App />);
 
-    fireEvent.click(screen.getByRole('link', { name: 'nav.About' }));
-    expect(screen.getByRole('link', { name: 'nav.About' })).toHaveAttribute('aria-current', 'page');
+    fireEvent.click(screen.getAllByRole('link', { name: 'nav.About' })[0]);
+    expect(screen.getAllByRole('link', { name: 'nav.About' }).some((link) => link.getAttribute('aria-current') === 'page')).toBe(true);
   });
 
   it('renders the blog index with posts for the active language', async () => {

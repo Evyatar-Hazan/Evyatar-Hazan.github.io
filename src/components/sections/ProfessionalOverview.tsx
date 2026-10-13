@@ -1,6 +1,5 @@
 import type { LocalizedPathBuilder, PortfolioSlotProps } from '../../contracts/portfolio';
 import { getPortfolioCapabilityGroups } from '../../data/portfolioCapabilities';
-import { getServiceEngagements } from '../../data/serviceEngagements';
 import { getHumanAboutContent } from '../../features/humanAbout/content';
 
 type ProfessionalOverviewProps = PortfolioSlotProps & {
@@ -15,10 +14,7 @@ const copy = {
     valueLabel: 'How I add value',
     capabilitiesLabel: 'Selected capabilities',
     capabilitiesIntro: 'A focused mix for taking a product from interface decisions to a verified release.',
-    engagementLabel: 'Ways to work together',
-    engagementTitle: 'Three useful starting points.',
-    engagementIntro: 'The scope begins with the current need—not a fixed package or a technology checklist.',
-    proofLabel: 'Related case study',
+    fullProfile: 'Open the full professional profile',
     contactLabel: 'Start a project conversation',
   },
   he: {
@@ -28,10 +24,7 @@ const copy = {
     valueLabel: 'הערך שאני מביא',
     capabilitiesLabel: 'יכולות נבחרות',
     capabilitiesIntro: 'שילוב ממוקד שמחבר בין החלטות ממשק לבין שחרור מאומת של המוצר.',
-    engagementLabel: 'איך אפשר לעבוד יחד',
-    engagementTitle: 'שלוש נקודות פתיחה שימושיות.',
-    engagementIntro: 'ההיקף מתחיל בצורך הקיים — לא בחבילה קבועה או ברשימת טכנולוגיות.',
-    proofLabel: 'לקייס סטאדי רלוונטי',
+    fullProfile: 'לפרופיל המקצועי המלא',
     contactLabel: 'להתחיל שיחת פרויקט',
   },
 } as const;
@@ -48,7 +41,6 @@ const ProfessionalOverview = ({
   const capabilities = getPortfolioCapabilityGroups(language).filter(({ id }) =>
     selectedCapabilityIds.includes(id as (typeof selectedCapabilityIds)[number]),
   );
-  const engagements = getServiceEngagements(language);
 
   return (
     <section
@@ -128,52 +120,17 @@ const ProfessionalOverview = ({
           </div>
         </div>
 
-        <div className="pt-10 lg:pt-14">
-          <div className="grid gap-5 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
-            <div>
-              <p className="font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-primary-700 dark:text-primary-400">
-                04 / {ui.engagementLabel}
-              </p>
-              <h3 className="mt-3 text-3xl font-black tracking-[-0.04em] text-neutral-950 dark:text-white sm:text-4xl">
-                {ui.engagementTitle}
-              </h3>
-            </div>
-            <p className="max-w-2xl text-base leading-relaxed text-neutral-600 dark:text-neutral-400 lg:justify-self-end">
-              {ui.engagementIntro}
-            </p>
-          </div>
-
-          <ol className="mt-8 border-t border-neutral-300/80 dark:border-neutral-800">
-            {engagements.map((engagement, index) => (
-              <li
-                key={engagement.id}
-                data-professional-engagement={engagement.id}
-                className="group grid gap-4 border-b border-neutral-300/80 py-6 dark:border-neutral-800 md:grid-cols-[4rem_minmax(12rem,0.7fr)_minmax(16rem,1.3fr)_auto] md:items-center md:gap-6"
-              >
-                <span className="font-mono text-3xl font-black tracking-[-0.08em] text-neutral-300 transition-colors group-hover:text-primary-500 dark:text-neutral-700" aria-hidden="true">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <h4 className="text-xl font-black leading-tight tracking-[-0.025em] text-neutral-950 dark:text-white">
-                  {engagement.title}
-                </h4>
-                <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
-                  {engagement.audience}
-                </p>
-                <a
-                  href={buildPath(language, { route: 'project', id: engagement.proof.projectId })}
-                  aria-label={`${ui.proofLabel}: ${engagement.title}`}
-                  className="inline-flex min-h-11 items-center justify-between gap-3 text-sm font-black text-primary-700 underline decoration-primary-300 underline-offset-4 transition-colors hover:text-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 dark:text-primary-300 dark:decoration-primary-700 dark:focus-visible:ring-offset-neutral-950"
-                >
-                  {ui.proofLabel}
-                  <span aria-hidden="true" className="rtl:-scale-x-100">→</span>
-                </a>
-              </li>
-            ))}
-          </ol>
-
+        <div className="flex flex-col gap-3 pt-10 sm:flex-row lg:pt-14">
           <a
-            href={`${buildPath(language, { route: 'home' })}#contact`}
+            href={buildPath(language, { route: 'about' })}
             className="mt-8 inline-flex min-h-12 items-center gap-4 border border-neutral-950 bg-neutral-950 px-5 py-3 text-sm font-black text-white transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-primary-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 dark:border-white dark:bg-white dark:text-neutral-950 dark:hover:bg-primary-300 dark:focus-visible:ring-offset-neutral-950"
+          >
+            {ui.fullProfile}
+            <span aria-hidden="true" className="rtl:-scale-x-100">→</span>
+          </a>
+          <a
+            href={buildPath(language, { route: 'contact' })}
+            className="mt-3 inline-flex min-h-12 items-center gap-4 border border-neutral-400 px-5 py-3 text-sm font-black text-neutral-950 transition-colors hover:border-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 dark:border-neutral-600 dark:text-white dark:focus-visible:ring-offset-neutral-950 sm:mt-8"
           >
             {ui.contactLabel}
             <span aria-hidden="true" className="rtl:-scale-x-100">→</span>

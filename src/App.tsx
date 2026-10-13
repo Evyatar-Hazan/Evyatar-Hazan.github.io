@@ -26,6 +26,7 @@ const Projects = lazy(() => import('./components/sections/Projects'));
 const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
 const ProfessionalOverview = lazy(() => import('./components/sections/ProfessionalOverview'));
 const BlogPreview = lazy(() => import('./components/sections/BlogPreview'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
 const LabPage = lazy(() => import('./pages/LabPage'));
 
 type SectionFallbackProps = {
@@ -156,6 +157,16 @@ const AppShell = () => {
         <Route path="/:language/blog" element={<LocalizedRoute><BlogIndex /></LocalizedRoute>} />
         <Route path="/:language/blog/:slug" element={<LocalizedRoute><BlogPost /></LocalizedRoute>} />
         <Route path="/:language/contact" element={<LocalizedRoute><ContactPage /></LocalizedRoute>} />
+        <Route
+          path="/:language/about"
+          element={(
+            <LocalizedRoute>
+              <Suspense fallback={<SectionFallback id="about-page" minHeightClassName="min-h-screen" />}>
+                <AboutPage />
+              </Suspense>
+            </LocalizedRoute>
+          )}
+        />
         <Route path="/:language/privacy" element={<LocalizedRoute><PrivacyPage /></LocalizedRoute>} />
         <Route
           path="/:language/lab"
@@ -173,6 +184,7 @@ const AppShell = () => {
         <Route path="/blog" element={<LegacyRedirect />} />
         <Route path="/blog/:slug" element={<LegacyRedirect />} />
         <Route path="/contact" element={<LegacyRedirect />} />
+        <Route path="/about" element={<LegacyRedirect />} />
         <Route path="/privacy" element={<LegacyRedirect />} />
         <Route path="/lab" element={<LegacyRedirect />} />
         <Route path="*" element={<NotFoundPage />} />
