@@ -52,48 +52,51 @@ const ReadingRoutesSection = ({ buildPath, className = '', language }: CuratedRe
   return (
     <section
       aria-labelledby={headingId}
-      className={`border-y border-neutral-200 py-12 dark:border-neutral-800 ${className}`.trim()}
+      className={`reading-routes-section ${className}`.trim()}
       data-portfolio-slot="blog.curatedRoutes"
     >
-      <header className="max-w-3xl">
-        <p className="font-mono text-xs font-extrabold uppercase tracking-[0.16em] text-primary-700 dark:text-primary-300">{copy.eyebrow}</p>
-        <h2 id={headingId} className="mt-3 text-3xl font-black tracking-tight text-neutral-950 dark:text-white md:text-5xl">{copy.heading}</h2>
-        <p className="mt-4 text-base leading-7 text-neutral-600 dark:text-neutral-300">{copy.intro}</p>
+      <header className="reading-routes-header">
+        <div>
+          <p>{copy.eyebrow}</p>
+          <h2 id={headingId}>{copy.heading}</h2>
+        </div>
+        <p>{copy.intro}</p>
       </header>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-3">
+      <div className="reading-routes-grid">
         {curatedReadingRoutes.map((route) => (
           <article
             key={route.id}
-            className="border border-neutral-200 bg-white/70 p-5 dark:border-neutral-800 dark:bg-neutral-950/50"
+            className="reading-route-card"
             data-reading-route={route.id}
           >
-            <h3 className="text-xl font-black text-neutral-950 dark:text-white">{route.title[language]}</h3>
-            <p className="mt-3 text-sm leading-6 text-neutral-600 dark:text-neutral-300">{route.rationale[language]}</p>
-            <ol className="mt-6 grid gap-4">
+            <div className="reading-route-card-heading">
+              <h3>{route.title[language]}</h3>
+              <p>{route.rationale[language]}</p>
+            </div>
+            <ol>
               {route.items.map((item, index) => {
                 const isFirst = index === 0;
                 const isLast = index === route.items.length - 1;
                 const href = buildPath(language, targetForRef(item.ref));
 
                 return (
-                  <li key={`${item.ref.kind}:${item.ref.id}`} className="border-s-2 border-neutral-200 ps-4 dark:border-neutral-700">
-                    <div className="flex flex-wrap items-center gap-2 font-mono text-[0.68rem] font-extrabold uppercase tracking-[0.12em] text-neutral-500">
+                  <li key={`${item.ref.kind}:${item.ref.id}`}>
+                    <div className="reading-route-step-meta">
                       <span>{copy.step} {index + 1}/{route.items.length}</span>
                       <span aria-hidden="true">·</span>
                       <span>{item.ref.kind === 'article' ? copy.article : copy.project}</span>
                       {(isFirst || isLast) && (
-                        <strong className="text-primary-700 dark:text-primary-300">{isFirst ? copy.start : copy.finish}</strong>
+                        <strong>{isFirst ? copy.start : copy.finish}</strong>
                       )}
                     </div>
                     <Link
                       to={href}
-                      className="mt-2 inline-flex min-h-11 items-center text-base font-black leading-6 text-neutral-950 underline decoration-primary-400 decoration-2 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:text-white"
                     >
                       {titleForRef(item.ref)}
                       <span className="sr-only"> — {copy.open}</span>
                     </Link>
-                    <p className="mt-2 text-sm leading-6 text-neutral-600 dark:text-neutral-300">{item.rationale[language]}</p>
+                    <p className="reading-route-step-rationale">{item.rationale[language]}</p>
                   </li>
                 );
               })}

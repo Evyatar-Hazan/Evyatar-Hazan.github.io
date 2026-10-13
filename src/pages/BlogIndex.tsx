@@ -1,12 +1,18 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Clock } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ArrowLeft, ArrowRight, Clock, Search, X } from 'lucide-react';
+import { useState, type FormEvent } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getBlogPosts } from '../content/blog/posts';
 import type { BlogLanguage, BlogPost } from '../content/blog/types';
 import { usePageSeo } from '../hooks/usePageSeo';
 import type { ArticleId } from '../contracts/portfolio';
 import ReadingRoutesSection from '../features/curated-reading-routes/ReadingRoutesSection';
+import {
+  BLOG_LIBRARY_PAGE_SIZE,
+  getPopularBlogTopics,
+  normalizeBlogSearchText,
+} from '../features/blog-library/blogLibrary';
 import { localizedPath } from '../routing/portfolioRoutes';
 
 const languageFromI18n = (language: string): BlogLanguage => (language === 'he' ? 'he' : 'en');
@@ -63,18 +69,19 @@ const ArchiveEntry = ({ post, index, language }: { post: BlogPost; index: number
   const { t } = useTranslation();
   const reduceMotion = useReducedMotion();
   const ArrowIcon = language === 'he' ? ArrowLeft : ArrowRight;
-  const number = String(index + 2).padStart(2, '0');
+  const number = String(index + 1).padStart(2, '0');
 
   return (
     <motion.article
       className="blog-archive-entry"
-      initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+      data-blog-slug={post.slug}
+      initial={reduceMotion ? false : { opacity: 0, y: 12 }}
       whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-8% 0px -8% 0px' }}
-      transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, margin: '-5% 0px -5% 0px' }}
+      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="blog-archive-entry-index" aria-hidden="true">
-        <strong>{number}</strong><span>ENTRY / {number}</span>
+        <strong>{number}</strong><span>NOTE / {number}</span>
       </div>
       <div className="blog-archive-entry-copy">
         <EntryMeta post={post} language={language} />
@@ -97,7 +104,48 @@ const BlogIndex = () => {
   const { t, i18n } = useTranslation();
   const language = languageFromI18n(i18n.language);
   const posts = getBlogPosts(language);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [visibleCount, setVisibleCount] = useState(BLOG_LIBRARY_PAGE_SIZE);
+  const topics = getPopularBlogTopics(posts);
+  const query = searchParams.get('q') ?? '';
+  const requestedTopic = searchParams.get('topic') ?? '';
+  const activeTopic = topics.includes(requestedTopic) ? requestedTopic : '';
+  const normalizedQuery = normalizeBlogSearchText(query, language);
+  const isFiltering = normalizedQuery.length > 0 || activeTopic.length > 0;
   const [featuredPost, ...archivePosts] = posts;
+
+  const filteredPosts = posts.filter((post) => {
+    const matchesTopic = !activeTopic || post.tags.includes(activeTopic);
+    if (!matchesTopic) return false;
+    if (!normalizedQuery) return true;
+
+    const searchableText = normalizeBlogSearchText(
+      [post.title, post.excerpt, ...post.tags].join(' '),
+      language,
+    );
+    return searchableText.includes(normalizedQuery);
+  });
+
+  const listedPosts = isFiltering ? filteredPosts : archivePosts.slice(0, visibleCount);
+  const hasMore = !isFiltering && visibleCount < archivePosts.length;
+
+  const updateParams = (
+    updates: { q?: string; topic?: string },
+    options: { replace?: boolean } = {},
+  ) => {
+    const next = new URLSearchParams(searchParams);
+
+    Object.entries(updates).forEach(([key, value]) => {
+      const cleanValue = value?.trim() ?? '';
+      if (cleanValue) next.set(key, cleanValue);
+      else next.delete(key);
+    });
+
+    setVisibleCount(BLOG_LIBRARY_PAGE_SIZE);
+    setSearchParams(next, options);
+  };
+
+  const resetLibrary = () => updateParams({ q: '', topic: '' });
 
   usePageSeo({
     title: t('blog.seo.indexTitle'),
@@ -111,7 +159,7 @@ const BlogIndex = () => {
       <section className="blog-archive-shell" aria-labelledby="blog-archive-title">
         <header className="blog-archive-header">
           <div>
-            <p className="blog-archive-kicker"><span />WRITING ARCHIVE / {String(posts.length).padStart(2, '0')}</p>
+            <p className="blog-archive-kicker"><span />{t('blog.library.kicker', { count: posts.length })}</p>
             <h1 id="blog-archive-title" tabIndex={-1}>{t('blog.title')}</h1>
           </div>
           <div className="blog-archive-intro">
@@ -120,21 +168,127 @@ const BlogIndex = () => {
           </div>
         </header>
 
-        {featuredPost && <ArchiveFeature post={featuredPost} language={language} />}
+        {!isFiltering && featuredPost && <ArchiveFeature post={featuredPost} language={language} />}
 
-        <ReadingRoutesSection language={language} buildPath={localizedPath} />
+        {!isFiltering && (
+          <ReadingRoutesSection
+            language={language}
+            buildPath={localizedPath}
+            className="blog-reading-routes"
+          />
+        )}
 
-        <div className="blog-archive-ledger">
-          <div className="blog-archive-ledger-heading">
-            <span>FIELD NOTES / {String(archivePosts.length).padStart(2, '0')}</span>
-            <i aria-hidden="true" />
+        <section className="blog-library" aria-labelledby="blog-library-title">
+          <header className="blog-library-heading">
+            <div>
+              <p>{t('blog.library.eyebrow')}</p>
+              <h2 id="blog-library-title">{t('blog.library.title')}</h2>
+            </div>
+            <p>{t('blog.library.description')}</p>
+          </header>
+
+          <form
+            className="blog-library-toolbar"
+            role="search"
+            aria-label={t('blog.library.searchFormLabel')}
+            onSubmit={(event: FormEvent) => event.preventDefault()}
+          >
+            <div className="blog-library-search">
+              <label htmlFor="blog-library-search">{t('blog.library.searchLabel')}</label>
+              <div>
+                <Search aria-hidden="true" />
+                <input
+                  id="blog-library-search"
+                  type="search"
+                  value={query}
+                  onChange={(event) => updateParams({ q: event.target.value }, { replace: true })}
+                  placeholder={t('blog.library.searchPlaceholder')}
+                  autoComplete="off"
+                />
+                {query && (
+                  <button
+                    type="button"
+                    className="blog-library-clear"
+                    onClick={() => updateParams({ q: '' })}
+                    aria-label={t('blog.library.clearSearch')}
+                  >
+                    <X aria-hidden="true" />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="blog-library-filter-group" role="group" aria-label={t('blog.library.filtersLabel')}>
+              <p>{t('blog.library.filtersLabel')}</p>
+              <div className="blog-library-filters">
+                <button
+                  type="button"
+                  aria-pressed={!activeTopic}
+                  onClick={() => updateParams({ topic: '' })}
+                >
+                  {t('blog.library.allTopics')}
+                </button>
+                {topics.map((topic) => (
+                  <button
+                    key={topic}
+                    type="button"
+                    aria-pressed={activeTopic === topic}
+                    onClick={() => updateParams({ topic })}
+                  >
+                    {topic}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </form>
+
+          <div className="blog-library-status">
+            <p
+              aria-live="polite"
+              aria-atomic="true"
+              data-result-count={isFiltering ? filteredPosts.length : posts.length}
+            >
+              {isFiltering
+                ? t('blog.library.resultsCount', { count: filteredPosts.length })
+                : t('blog.library.totalCount', { count: posts.length })}
+            </p>
+            {isFiltering && (
+              <button type="button" onClick={resetLibrary}>{t('blog.library.reset')}</button>
+            )}
           </div>
-          <div className="blog-archive-entry-grid">
-            {archivePosts.map((post, index) => (
-              <ArchiveEntry key={`${post.language}-${post.slug}`} post={post} index={index} language={language} />
-            ))}
-          </div>
-        </div>
+
+          {listedPosts.length > 0 ? (
+            <div className="blog-archive-entry-grid" data-library-results>
+              {listedPosts.map((post, index) => (
+                <ArchiveEntry
+                  key={`${post.language}-${post.slug}`}
+                  post={post}
+                  index={index + (isFiltering ? 0 : 1)}
+                  language={language}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="blog-library-empty" role="status">
+              <span aria-hidden="true">00</span>
+              <h3>{t('blog.library.emptyTitle')}</h3>
+              <p>{t('blog.library.emptyDescription')}</p>
+              <button type="button" onClick={resetLibrary}>{t('blog.library.reset')}</button>
+            </div>
+          )}
+
+          {hasMore && (
+            <div className="blog-library-load-more">
+              <button
+                type="button"
+                onClick={() => setVisibleCount((count) => Math.min(count + BLOG_LIBRARY_PAGE_SIZE, archivePosts.length))}
+              >
+                {t('blog.library.loadMore')}
+                <span>{Math.min(BLOG_LIBRARY_PAGE_SIZE, archivePosts.length - visibleCount)}</span>
+              </button>
+            </div>
+          )}
+        </section>
       </section>
     </main>
   );

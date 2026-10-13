@@ -255,6 +255,25 @@
     "notFoundTitle": "Post not found",
     "notFoundDescription": "The link may have changed, or this post may not exist in the current language yet.",
     "notFoundSeoTitle": "Post not found | Blog",
+    "library": {
+      "kicker": "Knowledge library / {{count}}",
+      "eyebrow": "Field index",
+      "title": "Find the note you need",
+      "description": "Search the full working library or narrow it by the subjects that recur most often.",
+      "searchFormLabel": "Search and filter the knowledge library",
+      "searchLabel": "Search all notes",
+      "searchPlaceholder": "Title, summary, or tag",
+      "clearSearch": "Clear search",
+      "filtersLabel": "Filter by topic",
+      "allTopics": "All",
+      "resultsCount_one": "{{count}} matching note",
+      "resultsCount_other": "{{count}} matching notes",
+      "totalCount": "{{count}} notes in the library",
+      "reset": "Reset library",
+      "emptyTitle": "No notes match this signal",
+      "emptyDescription": "Try a broader phrase, choose another topic, or reset the library.",
+      "loadMore": "Load more notes"
+    },
     "seo": {
       "indexTitle": "Blog | Evyatar Hazan",
       "indexDescription": "Short articles about product engineering, frontend work, live websites, validation, and deployment."

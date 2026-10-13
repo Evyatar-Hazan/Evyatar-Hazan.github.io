@@ -265,13 +265,24 @@ describe('App', () => {
     renderAt('/en/blog/');
 
     expect(await screen.findByRole('heading', { name: 'blog.title' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'How I built a business site around WhatsApp' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'What I learned from building a credible portfolio' })).toBeInTheDocument();
     expect(document.querySelectorAll('.blog-archive-feature')).toHaveLength(1);
     expect(screen.getByRole('heading', { name: 'Choose a deliberate route through the work' })).toBeInTheDocument();
     expect(document.querySelectorAll('[data-reading-route]')).toHaveLength(3);
-    expect(document.querySelectorAll('.blog-archive-entry')).toHaveLength(30);
+    expect(document.querySelectorAll('.blog-archive-entry')).toHaveLength(12);
+    fireEvent.click(screen.getByRole('button', { name: /blog\.library\.loadMore/ }));
+    fireEvent.click(screen.getByRole('button', { name: /blog\.library\.loadMore/ }));
+    expect(screen.getByRole('heading', { name: 'How I built a business site around WhatsApp' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'What I learned from building a credible portfolio' })).toBeInTheDocument();
     expect(screen.getByText('WRITING / Archive')).toBeInTheDocument();
+  });
+
+  it('preserves blog library query state when switching language', async () => {
+    renderAt('/en/blog/?q=frontend&topic=Product&ref=campaign');
+
+    fireEvent.click(screen.getAllByRole('button', { name: /toggle language/i })[0]);
+
+    expect(window.location.pathname).toBe('/he/blog/');
+    expect(window.location.search).toBe('?q=frontend&topic=Product&ref=campaign');
   });
 
   it('publishes self-canonical and reciprocal language metadata', async () => {

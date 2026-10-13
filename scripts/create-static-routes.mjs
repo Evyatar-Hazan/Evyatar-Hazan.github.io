@@ -217,7 +217,11 @@ const staticRoutes = [
       ],
       links: [
         { href: '/', label: 'Home' },
-        { href: '/contact/', label: 'Contact' }
+        { href: '/contact/', label: 'Contact' },
+        ...blogEntries.map((entry) => ({
+          href: `/blog/${entry.slug}/`,
+          label: entry.title
+        }))
       ]
     }
   },
@@ -434,6 +438,16 @@ const localizedSeoForRoute = (route, language) => {
           'הספרייה הזאת הופכת עבודת הנדסה אמיתית להסברים מעשיים על החלטות מוצר, תקלות, בדיקות ותהליכי מסירה.',
           'המאמרים עוסקים במערכות Frontend ו־Backend, אמינות נתונים, נגישות, SEO, פריסה, מערכות הפעלה, Java וגבולות בטוחים למונטיזציה. כל מאמר נכתב כשיעור מלא ולא כסניפט או אוסף כותרות.',
           'הארכיון מתעדכן כאשר עבודה חדשה מספקת ראיות חדשות. כל פוסט מגדיר את הבעיה, מסביר את דרך החשיבה, מציג דוגמאות מייצגות ומסכם עיקרון שאפשר להשתמש בו בפרויקט אחר.'
+        ],
+        links: [
+          { href: '/', label: 'ראשי' },
+          { href: '/contact/', label: 'יצירת קשר' },
+          ...localizedBlogEntries
+            .filter((entry) => entry.language === 'he')
+            .map((entry) => ({
+              href: `/blog/${entry.slug}/`,
+              label: entry.title
+            }))
         ]
       }
     };
@@ -639,6 +653,23 @@ for (const route of staticRoutes) {
       const expectedAlternate = `hreflang="${alternateLanguage}" href="${absoluteUrl(alternatePath)}"`;
       if (!html.includes(expectedAlternate)) {
         throw new Error(`Missing ${alternateLanguage} alternate for ${routePath}.`);
+      }
+    }
+
+    if (route.path === '/blog/') {
+      const languageEntries = localizedBlogEntries.filter((entry) => entry.language === language);
+      for (const entry of languageEntries) {
+        const expectedArticleLink = `href="/${language}/blog/${entry.slug}/"`;
+        if (!html.includes(expectedArticleLink)) {
+          throw new Error(`Missing static article link ${expectedArticleLink} in ${routePath}.`);
+        }
+      }
+
+      const staticArticleLinkCount = [
+        ...html.matchAll(new RegExp(`href="/${language}/blog/[^"/]+/"`, 'gu')),
+      ].length;
+      if (staticArticleLinkCount < languageEntries.length) {
+        throw new Error(`Static blog index ${routePath} exposes ${staticArticleLinkCount}/${languageEntries.length} article links.`);
       }
     }
   }
