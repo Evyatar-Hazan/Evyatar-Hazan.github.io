@@ -241,6 +241,11 @@
     gap: 1rem;
   }
 
+  .heading,
+  .layout[data-language='he'] .heading {
+    font-size: clamp(3.75rem, 4.8vw, 5rem);
+  }
+
   .copy {
     padding-block: 2.5rem;
   }

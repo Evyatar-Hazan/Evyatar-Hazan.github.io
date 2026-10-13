@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import type { LocalizedPathBuilder } from '../../contracts/portfolio';
+import globalStylesheet from '../../index.css?raw';
 import stylesheet from './LocalizedHeroLayout.module.css?raw';
 import {
   LocalizedHeroLayout,
@@ -91,6 +92,20 @@ describe('LocalizedHeroLayout', () => {
 
     expect(darkPreludeRule).toContain('color: var(--color-neutral-400);');
     expect(darkPreludeRule).not.toContain('color: var(--color-neutral-600);');
+  });
+
+  it('scopes the compact heading scale to the desktop hero', () => {
+    const desktopHeroStyles = stylesheet
+      .split('@media (min-width: 1024px) {')[1]
+      ?.split('@media (max-width: 639px) {')[0];
+    const mobileHeroStyles = stylesheet.split('@media (max-width: 639px) {')[1];
+
+    expect(desktopHeroStyles).toMatch(
+      /\.heading,\s*\.layout\[data-language='he'\] \.heading\s*{[^}]*font-size:\s*clamp\(3\.75rem, 4\.8vw, 5rem\);/,
+    );
+    expect(globalStylesheet).toContain('--type-display: clamp(3rem, 6vw, 6rem);');
+    expect(stylesheet.match(/clamp\(3\.75rem, 4\.8vw, 5rem\)/g)).toHaveLength(1);
+    expect(mobileHeroStyles).not.toContain('clamp(3.75rem, 4.8vw, 5rem)');
   });
 
   it('registers the feature in the approved localized hero slot', () => {
