@@ -38,8 +38,10 @@ const targetPath = (target: PortfolioRouteTarget) => {
   switch (target.route) {
     case 'home':
       return '/';
-    case 'projects':
+    case 'homeProjects':
       return '/#projects';
+    case 'projects':
+      return '/projects/';
     case 'project':
       return `/projects/${target.id}/`;
     case 'blog':

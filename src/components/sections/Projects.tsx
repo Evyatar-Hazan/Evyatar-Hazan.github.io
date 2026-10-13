@@ -7,7 +7,6 @@ import { localizedPath } from '../../routing/portfolioRoutes';
 import './Projects.css';
 
 const featuredProjects = projects.filter((project) => project.featured);
-const secondaryProjects = projects.filter((project) => !project.featured);
 
 const previewImages: Partial<Record<Project['visual'], string>> = {
   catering: '/project-nis-boutique.webp',
@@ -163,37 +162,9 @@ const FeaturedProjectCard = ({
   );
 };
 
-const ProjectIndexRow = ({ project }: { project: Project }) => {
-  const { t } = useTranslation();
-
-  return (
-    <li className="grid gap-3 border-t border-neutral-300/80 py-5 first:border-t-0 dark:border-neutral-800 md:grid-cols-[1.25fr_0.8fr_1.15fr_auto] md:items-center">
-      <div>
-        <div className="flex flex-wrap items-center gap-2">
-          <h4 className="text-base font-black text-neutral-950 dark:text-white">{t(`projects.items.${project.id}.title`)}</h4>
-          <span className="border border-neutral-300 px-2 py-0.5 font-mono text-[0.56rem] font-bold uppercase tracking-[0.08em] text-neutral-500 dark:border-neutral-700 dark:text-neutral-400">
-            {t(`projects.statuses.${project.status}`)}
-          </span>
-        </div>
-        <p className="mt-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">{t(`projects.items.${project.id}.description`)}</p>
-      </div>
-      <div className="font-mono text-[0.62rem] font-bold uppercase tracking-[0.08em] text-neutral-500">
-        {t(`projects.categories.${project.category}`)}
-      </div>
-      <div className="flex flex-wrap gap-x-3 gap-y-1.5">
-        {project.tags.slice(0, 4).map((tag) => (
-          <span key={tag} className="font-mono text-[0.58rem] font-bold uppercase tracking-[0.06em] text-neutral-500">
-            <span className="me-1 text-primary-500">+</span>{tag}
-          </span>
-        ))}
-      </div>
-      <ProjectActions project={project} compact />
-    </li>
-  );
-};
-
 const Projects = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const language = i18n.language === 'he' ? 'he' : 'en';
 
   return (
     <section id="projects" className="projects-evidence relative border-b border-neutral-300/70 dark:border-neutral-800/70">
@@ -220,19 +191,19 @@ const Projects = () => {
       </div>
 
       <div className="relative mx-auto w-full max-w-[1480px] px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
-        <div className="border border-neutral-300/80 bg-white/55 p-5 backdrop-blur-sm dark:border-neutral-800 dark:bg-neutral-950/55 md:p-8">
-          <div className="mb-5 grid gap-3 border-b border-neutral-300/80 pb-5 dark:border-neutral-800 md:grid-cols-[0.9fr_1.1fr] md:items-end">
-            <div>
-              <p className="mb-2 font-mono text-[0.6rem] font-black uppercase tracking-[0.16em] text-primary-700 dark:text-primary-400">{t('projects.indexEyebrow')}</p>
-              <h3 className="text-2xl font-black tracking-tight text-neutral-950 dark:text-white">{t('projects.indexTitle')}</h3>
-            </div>
-            <p className="max-w-xl text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">{t('projects.indexSubtitle')}</p>
+        <div className="grid gap-6 border-y border-neutral-300/80 py-8 dark:border-neutral-800 md:grid-cols-[1fr_auto] md:items-center">
+          <div>
+            <p className="font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-primary-700 dark:text-primary-400">{t('projects.viewAllEyebrow')}</p>
+            <h3 className="mt-3 text-2xl font-black tracking-tight text-neutral-950 dark:text-white">{t('projects.viewAllTitle')}</h3>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">{t('projects.viewAllDescription')}</p>
           </div>
-          <ul className="project-secondary-index">
-            {secondaryProjects.map((project) => (
-              <ProjectIndexRow key={project.id} project={project} />
-            ))}
-          </ul>
+          <Link
+            to={localizedPath(language, { route: 'projects' })}
+            className="inline-flex min-h-11 items-center justify-center gap-2 border border-primary-600 bg-primary-600 px-5 text-sm font-black text-white transition-colors hover:bg-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-black"
+          >
+            {t('projects.viewAllCta')}
+            <ExternalLink className="h-4 w-4" />
+          </Link>
         </div>
       </div>
     </section>

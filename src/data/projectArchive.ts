@@ -85,6 +85,7 @@ export type ProjectArchiveEntry = ProjectArchiveMetadata & {
   description: string;
   summary: string;
   role: string;
+  categoryId: Project['category'];
   category: string;
   tags: readonly string[];
   codeUrl: string;
@@ -211,6 +212,7 @@ export const getProjectArchiveEntries = (
     description: copy.description,
     summary: copy.summary,
     role: copy.role,
+    categoryId: project.category,
     category: localeCopy[language].projects.categories[project.category],
     tags: [...project.tags],
     codeUrl: project.githubUrl,

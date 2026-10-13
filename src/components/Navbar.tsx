@@ -12,12 +12,12 @@ import {
 } from '../routing/portfolioRoutes';
 
 const navItems = [
-  { name: 'Home', href: '#home' },
-  { name: 'Projects', href: '#projects' },
-  { name: 'About', href: '#about' },
-  { name: 'Blog', href: '/blog' },
-  { name: 'Contact', href: '#contact' },
-];
+  { name: 'Home', href: '#home', route: 'home' },
+  { name: 'Projects', href: '/projects', route: 'projects' },
+  { name: 'About', href: '#about', route: 'home' },
+  { name: 'Blog', href: '/blog', route: 'blog' },
+  { name: 'Contact', href: '#contact', route: 'home' },
+] as const;
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +40,9 @@ const Navbar = () => {
     };
   }, [isOpen]);
 
-  const activeItem = contentPath.startsWith('/blog')
+  const activeItem = contentPath.startsWith('/projects')
+    ? 'Projects'
+    : contentPath.startsWith('/blog')
     ? 'Blog'
     : navItems.find((item) => item.href === location.hash)?.name ?? 'Home';
   const blogContext = contentPath === '/blog' || contentPath === '/blog/'
@@ -49,9 +51,9 @@ const Navbar = () => {
       ? (i18n.language === 'he' ? 'רשומה' : 'Entry')
       : null;
 
-  const localizedHref = (href: string) => href.startsWith('/')
-    ? localizedPath(language, { route: 'blog' })
-    : `${localizedPath(language, { route: 'home' })}${href}`;
+  const localizedHref = (item: (typeof navItems)[number]) => item.href.startsWith('/')
+    ? localizedPath(language, { route: item.route })
+    : `${localizedPath(language, { route: 'home' })}${item.href}`;
 
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
@@ -60,24 +62,24 @@ const Navbar = () => {
     }
   };
 
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, item: (typeof navItems)[number]) => {
     e.preventDefault();
     setIsOpen(false);
 
-    if (href.startsWith('/')) {
-      navigate(localizedPath(language, { route: 'blog' }));
+    if (item.href.startsWith('/')) {
+      navigate(localizedPath(language, { route: item.route }));
       window.scrollTo({ top: 0, behavior: 'auto' });
       return;
     }
 
     if (contentPath !== '/') {
-      navigate({ pathname: localizedPath(language, { route: 'home' }), hash: href });
-      window.setTimeout(() => scrollToSection(href), 50);
+      navigate({ pathname: localizedPath(language, { route: 'home' }), hash: item.href });
+      window.setTimeout(() => scrollToSection(item.href), 50);
       return;
     }
 
-    navigate({ hash: href });
-    scrollToSection(href);
+    navigate({ hash: item.href });
+    scrollToSection(item.href);
   };
 
   const toggleLanguage = async () => {
@@ -92,7 +94,7 @@ const Navbar = () => {
       <div className="system-rail">
         <a 
           href={`${localizedPath(language, { route: 'home' })}#home`}
-          onClick={(e) => handleClick(e, '#home')}
+          onClick={(e) => handleClick(e, navItems[0])}
           className="system-rail-brand"
           aria-label="Go to home section"
           translate="no"
@@ -105,8 +107,8 @@ const Navbar = () => {
           {navItems.map((item) => (
             <a
               key={item.name}
-              href={localizedHref(item.href)}
-              onClick={(e) => handleClick(e, item.href)}
+              href={localizedHref(item)}
+              onClick={(e) => handleClick(e, item)}
               aria-current={activeItem === item.name ? 'page' : undefined}
               className={`system-rail-link ${activeItem === item.name ? 'is-active' : ''}`}
             >
@@ -185,8 +187,8 @@ const Navbar = () => {
                 {navItems.map((item) => (
                   <a
                     key={item.name}
-                    href={localizedHref(item.href)}
-                    onClick={(e) => handleClick(e, item.href)}
+                    href={localizedHref(item)}
+                    onClick={(e) => handleClick(e, item)}
                     aria-current={activeItem === item.name ? 'page' : undefined}
                     className={`text-2xl font-bold transition-colors ${
                       activeItem === item.name ? 'text-primary-500' : 'text-neutral-600 dark:text-neutral-400'

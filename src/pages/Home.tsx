@@ -43,7 +43,7 @@ const Home = () => {
           }}
           secondaryAction={{
             label: t('home.compiler.workCta'),
-            target: { route: 'projects' },
+            target: { route: 'homeProjects' },
             icon: <ArrowUpRight className="h-5 w-5 rtl:-scale-x-100" />,
           }}
           visual={<ProductCompilerVisual

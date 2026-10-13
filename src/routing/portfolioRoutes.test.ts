@@ -11,7 +11,8 @@ import {
 describe('localized portfolio routes', () => {
   it('builds stable canonical paths from route targets', () => {
     expect(localizedPath('en', { route: 'home' })).toBe('/en/');
-    expect(localizedPath('he', { route: 'projects' })).toBe('/he/#projects');
+    expect(localizedPath('he', { route: 'homeProjects' })).toBe('/he/#projects');
+    expect(localizedPath('he', { route: 'projects' })).toBe('/he/projects/');
     expect(localizedPath('en', { route: 'project', id: 'online_converter' })).toBe('/en/projects/online_converter/');
     expect(localizedPath('he', { route: 'article', id: 'catering-whatsapp' })).toBe('/he/blog/catering-whatsapp/');
     expect(localizedPath('he', { route: 'lab' })).toBe('/he/lab/');

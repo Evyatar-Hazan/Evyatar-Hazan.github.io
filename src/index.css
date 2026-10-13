@@ -4153,6 +4153,12 @@ body {
     display: flex;
   }
 
+  .system-rail-icon,
+  .system-rail-menu-toggle {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
   .contact-node-layer {
     inset-inline-end: 1rem;
     bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px));

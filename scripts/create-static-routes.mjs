@@ -165,12 +165,32 @@ const localizedBlogEntries = [...blogSource.matchAll(/slug:\s*'([^']+)'[\s\S]*?l
   }));
 
 const profileSource = await readFile(path.join(srcDir, 'data', 'profile.ts'), 'utf8');
+const localeByLanguage = {
+  en: JSON.parse(await readFile(path.join(srcDir, 'locales', 'en.json'), 'utf8')),
+  he: JSON.parse(await readFile(path.join(srcDir, 'locales', 'he.json'), 'utf8')),
+};
+const projectsArraySource = profileSource.match(/export const projects: Project\[\] = \[([\s\S]*?)\n\];/u)?.[1] ?? '';
+const projectArchiveIds = [...projectsArraySource.matchAll(/^\s{4}id:\s*'([^']+)'/gmu)].map(([, id]) => id);
+if (projectArchiveIds.length === 0) {
+  throw new Error('Could not derive the canonical project registry from src/data/profile.ts.');
+}
 const projectBlocks = [
   { id: 'nis_boutique', caseKey: 'nis_boutique', name: 'Nis Boutique Catering' },
   { id: 'online_converter', caseKey: 'online_converter', name: 'Online Converter' },
   { id: 'emergency_protocol', caseKey: 'emergency_protocol', name: 'Emergency Protocol Diagram' },
   { id: 'united_hatzalah', caseKey: 'united_hatzalah', name: 'United Hatzalah Shoham Branch' }
 ];
+const projectCaseIds = new Set(projectBlocks.map(({ id }) => id));
+
+const extractProjectUrl = (projectId, field) => {
+  const regex = new RegExp(`id:\\s*'${projectId}'[\\s\\S]*?${field}:\\s*'([^']+)'`, 'm');
+  return profileSource.match(regex)?.[1] ?? '';
+};
+
+const projectHubLinks = (language) => projectArchiveIds.map((id) => ({
+  href: projectCaseIds.has(id) ? `/projects/${id}/` : extractProjectUrl(id, 'githubUrl'),
+  label: localeByLanguage[language].projects.items[id].title,
+}));
 
 const extractCaseStudyValue = (caseKey, field, language = 'en') => {
   const regex = new RegExp(`${caseKey}:\\s*\\{[\\s\\S]*?${field}:\\s*\\{[\\s\\S]*?${language}:\\s*'([^']+)'`, 'm');
@@ -202,6 +222,19 @@ const staticRoutes = [
         { href: '/contact/', label: 'Contact' },
         { href: '/privacy/', label: 'Privacy' }
       ]
+    }
+  },
+  {
+    path: '/projects/',
+    title: 'Projects | Evyatar Hazan',
+    description: 'A bilingual engineering work dossier with seven projects, documented contributions, public artifacts, filters, and project comparison.',
+    preview: {
+      heading: 'Projects',
+      body: [
+        'A working dossier of shipped products, full-stack systems, learning tools, and reusable foundations. Each record identifies the need, the contribution, the technology, and the public evidence without filling gaps with unsupported claims.',
+        'The collection contains all seven canonical projects. Four include complete case studies, while every project remains discoverable through the public artifacts that currently exist.'
+      ],
+      links: projectHubLinks('en')
     }
   },
   {
@@ -453,6 +486,23 @@ const localizedSeoForRoute = (route, language) => {
     };
   }
 
+  if (route.path === '/projects/') {
+    return {
+      ...route,
+      title: 'פרויקטים | אביתר חזן',
+      description: 'תיק עבודות הנדסי דו־לשוני עם שבעה פרויקטים, תרומה מתועדת, נכסים ציבוריים, סינון והשוואת פרויקטים.',
+      preview: {
+        ...route.preview,
+        heading: 'פרויקטים',
+        body: [
+          'תיק עבודה של מוצרים שעלו לאוויר, מערכות Full Stack, כלי למידה ותשתיות לשימוש חוזר. כל רשומה מגדירה את הצורך, התרומה, הטכנולוגיה והראיות הציבוריות בלי למלא פערים בטענות לא נתמכות.',
+          'האוסף כולל את כל שבעת הפרויקטים הקנוניים. לארבעה יש קייס סטאדי מלא, וכל פרויקט נשאר ניתן לגילוי דרך הנכסים הציבוריים שקיימים בפועל.'
+        ],
+        links: projectHubLinks('he')
+      }
+    };
+  }
+
   if (route.path === '/privacy/') {
     return {
       ...route,
@@ -562,7 +612,7 @@ for (const route of staticRoutes) {
       ...localizedRoute.preview,
       links: localizedRoute.preview.links?.map((link) => ({
         ...link,
-        href: localizedPath(language, link.href)
+        href: /^https:\/\//u.test(link.href) ? link.href : localizedPath(language, link.href)
       }))
     };
     const html = addLanguageMetadata(buildHtmlForRoute(localizedRoute), route, language);
@@ -646,6 +696,22 @@ for (const route of staticRoutes) {
     const minimumWords = isArticle ? 350 : route.path === '/' ? 150 : 12;
     if (previewWordCount < minimumWords) {
       throw new Error(`Static preview for ${routePath} has ${previewWordCount} words; expected at least ${minimumWords}.`);
+    }
+
+    if (route.path === '/projects/') {
+      const projectLinks = projectHubLinks(language);
+      const previewLinkCount = [...(previewMatch?.[0] ?? '').matchAll(/<a href=/g)].length;
+      if (previewLinkCount !== projectArchiveIds.length) {
+        throw new Error(`Static project hub for ${routePath} has ${previewLinkCount} links; expected ${projectArchiveIds.length}.`);
+      }
+      for (const projectLink of projectLinks) {
+        const expectedHref = /^https:\/\//u.test(projectLink.href)
+          ? projectLink.href
+          : localizedPath(language, projectLink.href);
+        if (!previewMatch?.[0].includes(`href="${expectedHref}"`)) {
+          throw new Error(`Static project hub for ${routePath} is missing ${projectLink.label}.`);
+        }
+      }
     }
 
     for (const alternateLanguage of [...languages, 'x-default']) {

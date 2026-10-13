@@ -87,7 +87,7 @@ describe('App', () => {
     expect(document.querySelectorAll('h1')).toHaveLength(1);
     expect(document.querySelectorAll('[data-professional-capability]')).toHaveLength(4);
     expect(document.querySelectorAll('[data-professional-engagement]')).toHaveLength(3);
-    expect(screen.getAllByRole('link', { name: 'nav.Projects' }).some((link) => link.getAttribute('href') === `/${language}/#projects`)).toBe(true);
+    expect(screen.getAllByRole('link', { name: 'nav.Projects' }).some((link) => link.getAttribute('href') === `/${language}/projects/`)).toBe(true);
     expect(screen.getAllByRole('link', { name: 'nav.About' }).some((link) => link.getAttribute('href') === `/${language}/#about`)).toBe(true);
     expect(screen.getAllByRole('link', { name: 'nav.Contact' }).some((link) => link.getAttribute('href') === `/${language}/#contact`)).toBe(true);
   });
@@ -103,7 +103,7 @@ describe('App', () => {
       });
   });
 
-  it('renders exactly four featured case-study cards and preserves the public project index', async () => {
+  it('renders exactly four featured case-study cards and links to the standalone project index', async () => {
     render(<App />);
 
     const featuredIds = projects.filter((project) => project.featured).map((project) => project.id);
@@ -114,20 +114,19 @@ describe('App', () => {
       'united_hatzalah',
     ]);
 
-    for (const project of projects) {
+    for (const project of projects.filter((candidate) => candidate.featured)) {
       expect(await screen.findAllByText(`projects.items.${project.id}.title`)).not.toHaveLength(0);
     }
 
-    expect(screen.getByText('projects.indexTitle')).toBeInTheDocument();
+    expect(screen.getByText('projects.viewAllTitle')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'projects.viewAllCta' })).toHaveAttribute('href', '/en/projects/');
     expect(screen.getAllByText('projects.caseStudy').length).toBeGreaterThan(0);
     expect(document.querySelectorAll('[data-featured-project]')).toHaveLength(4);
     featuredIds.forEach((projectId) => {
       expect(document.querySelector(`[data-featured-project="${projectId}"]`)).toBeInTheDocument();
     });
     expect(document.querySelector('.project-scroll-stage')).not.toBeInTheDocument();
-    expect(document.querySelectorAll('#projects .project-secondary-index > li')).toHaveLength(
-      projects.filter((project) => !project.featured).length
-    );
+    expect(document.querySelector('.project-secondary-index')).not.toBeInTheDocument();
     expect(document.querySelector('#project-archive')).not.toBeInTheDocument();
   });
 
@@ -136,7 +135,7 @@ describe('App', () => {
     window.history.pushState({}, '', `/${language}/`);
     render(<App />);
 
-    await screen.findByText('projects.indexTitle');
+    await screen.findByText('projects.viewAllTitle');
 
     projects.filter((project) => project.featured).forEach((project) => {
       const card = document.querySelector<HTMLElement>(`[data-featured-project="${project.id}"]`);
@@ -151,7 +150,7 @@ describe('App', () => {
   it('shows featured live and code links only when their canonical URLs exist', async () => {
     render(<App />);
 
-    await screen.findByText('projects.indexTitle');
+    await screen.findByText('projects.viewAllTitle');
 
     projects.filter((project) => project.featured).forEach((project) => {
       const card = document.querySelector<HTMLElement>(`[data-featured-project="${project.id}"]`);
@@ -200,9 +199,9 @@ describe('App', () => {
   it('only renders live links for projects with a liveUrl', async () => {
     render(<App />);
 
-    await screen.findByText('projects.indexTitle');
+    await screen.findByText('projects.viewAllTitle');
 
-    const expectedLiveActions = projects.filter((project) => project.liveUrl).length;
+    const expectedLiveActions = projects.filter((project) => project.featured && project.liveUrl).length;
     const featuredCoverActions = projects.filter((project) => project.featured && project.liveUrl).length;
     expect(screen.getAllByText('projects.liveDemo')).toHaveLength(expectedLiveActions + featuredCoverActions);
   });
@@ -394,7 +393,7 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'System view' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Outcome and evidence' })).toBeInTheDocument();
     expect(screen.getAllByText('Public evidence not yet verified').length).toBeGreaterThan(0);
-    expect(screen.getByRole('link', { name: 'All projects' })).toHaveAttribute('href', '/en/#projects');
+    expect(screen.getByRole('link', { name: 'All projects' })).toHaveAttribute('href', '/en/projects/');
     expect(screen.getByRole('link', { name: 'View source code' })).toHaveAttribute(
       'href',
       'https://github.com/Evyatar-Hazan/online-converter',

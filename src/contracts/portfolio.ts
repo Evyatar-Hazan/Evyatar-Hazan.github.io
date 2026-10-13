@@ -56,6 +56,7 @@ export const capabilityEvidenceBaseline = {
  */
 export type PortfolioRouteTarget =
   | { route: 'home' }
+  | { route: 'homeProjects' }
   | { route: 'projects' }
   | { route: 'project'; id: ProjectId }
   | { route: 'blog' }

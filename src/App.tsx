@@ -23,6 +23,7 @@ import {
 } from './routing/portfolioRoutes';
 
 const Projects = lazy(() => import('./components/sections/Projects'));
+const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
 const ProfessionalOverview = lazy(() => import('./components/sections/ProfessionalOverview'));
 const BlogPreview = lazy(() => import('./components/sections/BlogPreview'));
 const LabPage = lazy(() => import('./pages/LabPage'));
@@ -141,6 +142,16 @@ const AppShell = () => {
       <ContactNode />
       <Routes>
         <Route path="/:language" element={<LocalizedRoute><PortfolioHome /></LocalizedRoute>} />
+        <Route
+          path="/:language/projects"
+          element={(
+            <LocalizedRoute>
+              <Suspense fallback={<SectionFallback id="projects-hub" minHeightClassName="min-h-screen" />}>
+                <ProjectsPage />
+              </Suspense>
+            </LocalizedRoute>
+          )}
+        />
         <Route path="/:language/projects/:projectId" element={<LocalizedRoute><ProjectCaseStudy /></LocalizedRoute>} />
         <Route path="/:language/blog" element={<LocalizedRoute><BlogIndex /></LocalizedRoute>} />
         <Route path="/:language/blog/:slug" element={<LocalizedRoute><BlogPost /></LocalizedRoute>} />
@@ -157,6 +168,7 @@ const AppShell = () => {
           )}
         />
         <Route path="/" element={<LegacyRedirect />} />
+        <Route path="/projects" element={<LegacyRedirect />} />
         <Route path="/projects/:projectId" element={<LegacyRedirect />} />
         <Route path="/blog" element={<LegacyRedirect />} />
         <Route path="/blog/:slug" element={<LegacyRedirect />} />
