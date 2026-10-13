@@ -11,6 +11,10 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+main > section[id] {
+  scroll-margin-top: 6rem;
+}
+
 @theme {
   /* Foundation shared by the light and dark themes */
   --color-white: #ffffff;

@@ -22,22 +22,10 @@ import {
   localizePath,
 } from './routing/portfolioRoutes';
 
-const About = lazy(() => import('./components/sections/About'));
 const Projects = lazy(() => import('./components/sections/Projects'));
+const ProfessionalOverview = lazy(() => import('./components/sections/ProfessionalOverview'));
 const BlogPreview = lazy(() => import('./components/sections/BlogPreview'));
-const AudienceEntryPaths = lazy(() => import('./components/sections/AudienceEntryPaths'));
-const ServiceEngagements = lazy(() => import('./components/sections/ServiceEngagements'));
-const CurrentFocus = lazy(() => import('./components/sections/CurrentFocus'));
-const FlagshipProjectComparison = lazy(() => import('./components/sections/FlagshipProjectComparison'));
-const HumanAboutSection = lazy(() => import('./features/humanAbout/HumanAboutSection'));
-const WorkingPrinciples = lazy(() => import('./components/sections/WorkingPrinciples'));
-const SignatureInteraction = lazy(() => import('./components/sections/SignatureInteraction'));
-const CapabilityProof = lazy(() => import('./features/capability-proof/CapabilityProof'));
 const LabPage = lazy(() => import('./pages/LabPage'));
-const ProjectArchiveSlot = lazy(async () => {
-  const { createProjectArchiveSlot } = await import('./components/projectArchiveSlot');
-  return { default: createProjectArchiveSlot(localizedPath, 'short').Component };
-});
 
 type SectionFallbackProps = {
   id: string;
@@ -59,51 +47,11 @@ const PortfolioHome = () => {
   return (
     <main>
       <Home />
-      <Suspense fallback={<SectionFallback id="audience-paths" minHeightClassName="min-h-[55vh]" />}>
-        <AudienceEntryPaths language={language} buildPath={localizedPath} />
-      </Suspense>
-      <Suspense fallback={<SectionFallback id="service-engagements" minHeightClassName="min-h-[70vh]" />}>
-        <ServiceEngagements language={language} buildPath={localizedPath} />
-      </Suspense>
-      <Suspense fallback={<SectionFallback id="current-focus" minHeightClassName="min-h-[55vh]" />}>
-        <CurrentFocus language={language} localizedPathBuilder={localizedPath} />
-      </Suspense>
-      <Suspense fallback={<SectionFallback id="human-about" minHeightClassName="min-h-[55vh]" />}>
-        <HumanAboutSection language={language} />
-      </Suspense>
-      <Suspense fallback={<SectionFallback id="about" minHeightClassName="min-h-[70vh]" />}>
-        <About />
-      </Suspense>
-      <Suspense fallback={<SectionFallback id="system-trace" minHeightClassName="min-h-[70vh]" />}>
-        <SignatureInteraction
-          language={language}
-          localizedPath={localizedPath}
-          stableIds={{
-            section: 'system-trace',
-            heading: 'system-trace-heading',
-            detail: 'system-trace-detail',
-            status: 'system-trace-status',
-          }}
-        />
-      </Suspense>
-      <Suspense fallback={<SectionFallback id="working-principles" minHeightClassName="min-h-[70vh]" />}>
-        <WorkingPrinciples language={language} localizedPath={localizedPath} />
-      </Suspense>
-      <Suspense fallback={<SectionFallback id="flagship-comparison" minHeightClassName="min-h-[60vh]" />}>
-        <FlagshipProjectComparison language={language} buildPath={localizedPath} />
-      </Suspense>
       <Suspense fallback={<SectionFallback id="projects" minHeightClassName="min-h-screen" />}>
         <Projects />
       </Suspense>
-      <Suspense fallback={<SectionFallback id="project-archive" minHeightClassName="min-h-[70vh]" />}>
-        <div className="bg-white px-5 py-20 dark:bg-black sm:px-8 lg:px-12">
-          <div className="mx-auto max-w-[92.5rem]">
-            <ProjectArchiveSlot language={language} />
-          </div>
-        </div>
-      </Suspense>
-      <Suspense fallback={<SectionFallback id="capability-proof" minHeightClassName="min-h-[70vh]" />}>
-        <CapabilityProof language={language} buildPath={localizedPath} />
+      <Suspense fallback={<SectionFallback id="about" minHeightClassName="min-h-[70vh]" />}>
+        <ProfessionalOverview language={language} buildPath={localizedPath} />
       </Suspense>
       <Suspense fallback={<SectionFallback id="writing" minHeightClassName="min-h-[60vh]" />}>
         <BlogPreview />

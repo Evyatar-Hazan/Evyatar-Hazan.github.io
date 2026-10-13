@@ -46,17 +46,49 @@ describe('App', () => {
     });
   });
 
-  it('renders the operating system chapter and canonical capability map', async () => {
+  it.each(['en', 'he'] as const)('renders the focused five-section homepage in %s', async (language) => {
+    currentLanguage = language;
+    window.history.pushState({}, '', `/${language}/`);
     render(<App />);
 
-    expect(await screen.findByRole('heading', { name: 'about.systemTitle' }, { timeout: 10_000 })).toBeInTheDocument();
-    expect(await screen.findByRole('heading', { name: 'What I am working to make clearer now.' })).toBeInTheDocument();
-    expect(document.querySelectorAll('[data-focus-id]')).toHaveLength(2);
-    await waitFor(() => expect(screen.getAllByText('Web & mobile products')).toHaveLength(2));
-    expect(document.querySelectorAll('.about-capability-module')).toHaveLength(7);
-    expect(await screen.findByRole('heading', { name: 'Follow one need through the product.' })).toBeInTheDocument();
-    expect(document.querySelector('[data-portfolio-slot="shell.signatureInteraction"]')).toBeInTheDocument();
-    expect(await screen.findByRole('heading', { name: 'Working principles, visible in the work.' })).toBeInTheDocument();
+    const overviewTitle = language === 'he'
+      ? 'עבודת מוצר מקצה לקצה, ממוקדת בתוצאה.'
+      : 'Full-stack product work, shaped around the outcome.';
+    expect(await screen.findByRole('heading', { name: overviewTitle }, { timeout: 10_000 })).toBeInTheDocument();
+    await screen.findByText('PROJECT HANDOFF / 01');
+
+    const mainSections = Array.from(document.querySelectorAll('main > section[id]'));
+    expect(mainSections.map((section) => section.id)).toEqual([
+      'home',
+      'projects',
+      'about',
+      'writing',
+      'contact',
+    ]);
+
+    ['home', 'projects', 'about', 'writing', 'contact'].forEach((id) => {
+      expect(document.querySelectorAll(`#${id}`)).toHaveLength(1);
+    });
+    [
+      'audience-paths',
+      'service-engagements',
+      'current-focus',
+      'human-about',
+      'system-trace',
+      'working-principles',
+      'flagship-comparison',
+      'project-archive',
+      'capability-proof',
+    ].forEach((id) => {
+      expect(document.querySelector(`#${id}`)).not.toBeInTheDocument();
+    });
+
+    expect(document.querySelectorAll('h1')).toHaveLength(1);
+    expect(document.querySelectorAll('[data-professional-capability]')).toHaveLength(4);
+    expect(document.querySelectorAll('[data-professional-engagement]')).toHaveLength(3);
+    expect(screen.getAllByRole('link', { name: 'nav.Projects' }).some((link) => link.getAttribute('href') === `/${language}/#projects`)).toBe(true);
+    expect(screen.getAllByRole('link', { name: 'nav.About' }).some((link) => link.getAttribute('href') === `/${language}/#about`)).toBe(true);
+    expect(screen.getAllByRole('link', { name: 'nav.Contact' }).some((link) => link.getAttribute('href') === `/${language}/#contact`)).toBe(true);
   });
 
   it('renders the Nis Boutique Catering project with its live link', async () => {
@@ -95,7 +127,7 @@ describe('App', () => {
     expect(document.querySelectorAll('#projects .project-secondary-index > li')).toHaveLength(
       projects.filter((project) => !project.featured).length
     );
-    expect(await screen.findByRole('heading', { name: 'Project archive' })).toBeInTheDocument();
+    expect(document.querySelector('#project-archive')).not.toBeInTheDocument();
   });
 
   it.each(['en', 'he'] as const)('uses the correct %s case-study links for all featured cards', async (language) => {
