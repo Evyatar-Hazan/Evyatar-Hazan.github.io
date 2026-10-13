@@ -75,7 +75,7 @@
 }
 
 :global(.dark) .prelude {
-  color: var(--color-neutral-600);
+  color: var(--color-neutral-400);
 }
 
 .headline {

@@ -86,6 +86,13 @@ describe('LocalizedHeroLayout', () => {
     expect(stylesheet).toMatch(/@media \(max-width: 639px\) and \(max-height: 700px\)[\s\S]*?\.heading\s*{[\s\S]*?font-size:/);
   });
 
+  it('keeps the dark hero prelude readable without promoting it to the headline color', () => {
+    const darkPreludeRule = stylesheet.match(/:global\(\.dark\) \.prelude\s*{([^}]*)}/)?.[1];
+
+    expect(darkPreludeRule).toContain('color: var(--color-neutral-400);');
+    expect(darkPreludeRule).not.toContain('color: var(--color-neutral-600);');
+  });
+
   it('registers the feature in the approved localized hero slot', () => {
     const buildPath: LocalizedPathBuilder = (language, target) => `/${language}/${target.route}`;
     const registration = createLocalizedHeroLayoutRegistration({
