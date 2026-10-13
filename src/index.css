@@ -1161,6 +1161,7 @@ body {
     linear-gradient(90deg, var(--effect-compiler-grid-line) 1px, transparent 1px);
   background-position: center;
   background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  opacity: 0.55;
   mask-image: linear-gradient(to bottom, transparent, black 12%, black 86%, transparent);
 }
 
@@ -1529,7 +1530,6 @@ body {
 @media (max-width: 639px) {
   .product-compiler-grid {
     background-size: 96px 96px, 96px 96px, 24px 24px, 24px 24px;
-    opacity: 0.72;
   }
 
   .product-compiler-scene {
