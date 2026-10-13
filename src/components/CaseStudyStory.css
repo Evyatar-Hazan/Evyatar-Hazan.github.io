@@ -833,11 +833,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .case-story *,
-  .case-story *::before,
-  .case-story *::after {
+  html:has(.case-story) *,
+  html:has(.case-story) *::before,
+  html:has(.case-story) *::after {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }
