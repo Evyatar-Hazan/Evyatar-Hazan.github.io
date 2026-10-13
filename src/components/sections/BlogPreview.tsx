@@ -6,6 +6,7 @@ import { getBlogPosts } from '../../content/blog/posts';
 import type { BlogLanguage, BlogPost } from '../../content/blog/types';
 import type { ArticleId } from '../../contracts/portfolio';
 import { localizedPath } from '../../routing/portfolioRoutes';
+import { HomeSectionHeader } from './HomeSectionPrimitives';
 
 const languageFromI18n = (language: string): BlogLanguage => (language === 'he' ? 'he' : 'en');
 
@@ -112,30 +113,25 @@ const BlogPreview = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} id="writing" className="writing-lab">
+    <section ref={sectionRef} id="writing" className="home-section home-section--writing writing-lab">
       <div className="writing-lab-grid" aria-hidden="true" />
       <div className="writing-lab-orbit" aria-hidden="true" />
 
-      <div className="writing-shell">
-        <header className="writing-header">
-          <div>
-            <p className="writing-kicker">
-              <span />
-              {t('blogPreview.eyebrow')}
-            </p>
-            <h2>
-              {t('blogPreview.title1')} <em>{t('blogPreview.title2')}</em>
-            </h2>
-          </div>
-
-          <div className="writing-header-note">
-            <p>{t('blogPreview.subtitle')}</p>
-            <Link to={localizedPath(language, { route: 'blog' })} className="writing-all-link">
-              <span>{t('blogPreview.viewAll')}</span>
-              <ArrowIcon aria-hidden="true" className="h-4 w-4" />
-            </Link>
-          </div>
-        </header>
+      <div className="writing-shell home-section__inner">
+        <HomeSectionHeader
+          index="04"
+          eyebrow={t('blogPreview.eyebrow')}
+          title={<>{t('blogPreview.title1')} <em>{t('blogPreview.title2')}</em></>}
+          description={(
+            <>
+              <p>{t('blogPreview.subtitle')}</p>
+              <Link to={localizedPath(language, { route: 'blog' })} className="writing-all-link">
+                <span>{t('blogPreview.viewAll')}</span>
+                <ArrowIcon aria-hidden="true" className="h-4 w-4" />
+              </Link>
+            </>
+          )}
+        />
 
         <div className="writing-log">
           <div className="writing-progress" aria-hidden="true">

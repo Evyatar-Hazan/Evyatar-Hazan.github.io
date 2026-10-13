@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { projects, type Project } from '../../data/profile';
 import type { ProjectId } from '../../contracts/portfolio';
 import { localizedPath } from '../../routing/portfolioRoutes';
+import { HomeSectionHeader } from './HomeSectionPrimitives';
 import './Projects.css';
 
 const featuredProjects = projects.filter((project) => project.featured);
@@ -18,16 +19,14 @@ const previewImages: Partial<Record<Project['visual'], string>> = {
 const ProjectActions = ({ project, compact = false }: { project: Project; compact?: boolean }) => {
   const { t, i18n } = useTranslation();
   const language = i18n.language === 'he' ? 'he' : 'en';
-  const secondaryClass = compact
-    ? 'inline-flex min-h-9 items-center justify-center gap-2 border border-neutral-300 px-3 text-xs font-bold text-neutral-700 transition-[transform,border-color,color] duration-200 hover:border-primary-500 hover:text-neutral-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:border-neutral-700 dark:text-neutral-300 dark:hover:text-white'
-    : 'inline-flex min-h-11 items-center justify-center gap-2 border border-neutral-300 bg-white/60 px-3.5 text-sm font-bold text-neutral-700 transition-[transform,border-color,color,background-color] duration-200 hover:-translate-y-0.5 hover:border-primary-500 hover:text-neutral-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:border-neutral-700 dark:bg-neutral-950/50 dark:text-neutral-300 dark:hover:text-white';
+  const secondaryClass = `home-action home-action--secondary${compact ? ' home-action--compact' : ''}`;
 
   return (
     <div className={`project-actions flex flex-wrap items-center gap-2 ${compact ? 'project-actions-compact' : ''}`}>
       {project.caseStudy && !compact && (
         <Link
           to={localizedPath(language, { route: 'project', id: project.id as ProjectId })}
-          className="inline-flex min-h-11 items-center justify-center gap-2 border border-primary-600 bg-primary-600 px-4 text-sm font-black text-white transition-[transform,background-color] duration-200 hover:-translate-y-0.5 hover:bg-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 dark:focus-visible:ring-offset-neutral-950"
+          className="home-action home-action--primary"
         >
           {t('projects.caseStudy')}
           <ExternalLink className="h-4 w-4" />
@@ -167,31 +166,25 @@ const Projects = () => {
   const language = i18n.language === 'he' ? 'he' : 'en';
 
   return (
-    <section id="projects" className="projects-evidence relative border-b border-neutral-300/70 dark:border-neutral-800/70">
+    <section id="projects" className="home-section home-section--projects projects-evidence relative">
       <div className="projects-evidence-grid pointer-events-none absolute inset-0" aria-hidden="true" />
-      <header className="relative mx-auto grid w-full max-w-[1480px] gap-6 px-5 pb-12 pt-16 sm:px-8 sm:pb-16 sm:pt-24 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:px-12">
-        <div>
-          <p className="mb-4 flex items-center gap-3 font-mono text-[0.64rem] font-black uppercase tracking-[0.17em] text-primary-700 dark:text-primary-400">
-            <span className="h-px w-8 bg-primary-500" />
-            {t('projects.eyebrow')}
-          </p>
-          <h2 className="max-w-[12ch] text-[clamp(2.7rem,6vw,6rem)] font-black leading-[0.9] tracking-[-0.06em] text-neutral-950 dark:text-white">
-            {t('projects.title1')} <span className="text-primary-600 dark:text-primary-400">{t('projects.title2')}</span>
-          </h2>
-        </div>
-        <p className="max-w-2xl text-base font-medium leading-relaxed text-neutral-600 dark:text-neutral-300 sm:text-lg">
-          {t('projects.subtitle')}
-        </p>
-      </header>
+      <div className="home-section__inner">
+        <HomeSectionHeader
+          index="02"
+          eyebrow={t('projects.eyebrow')}
+          title={<>{t('projects.title1')} <em>{t('projects.title2')}</em></>}
+          description={<p>{t('projects.subtitle')}</p>}
+        />
+      </div>
 
-      <div aria-label={t('projects.featuredLabel')} className="featured-case-grid relative mx-auto w-full max-w-[1480px] px-5 pb-16 sm:px-8 sm:pb-24 lg:px-12">
+      <div aria-label={t('projects.featuredLabel')} className="featured-case-grid home-section__inner relative">
         {featuredProjects.map((project, index) => (
           <FeaturedProjectCard key={project.id} project={project} projectIndex={index} />
         ))}
       </div>
 
-      <div className="relative mx-auto w-full max-w-[1480px] px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
-        <div className="grid gap-6 border-y border-neutral-300/80 py-8 dark:border-neutral-800 md:grid-cols-[1fr_auto] md:items-center">
+      <div className="home-projects-index home-section__inner relative">
+        <div className="home-projects-index__row">
           <div>
             <p className="font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-primary-700 dark:text-primary-400">{t('projects.viewAllEyebrow')}</p>
             <h3 className="mt-3 text-2xl font-black tracking-tight text-neutral-950 dark:text-white">{t('projects.viewAllTitle')}</h3>
@@ -199,7 +192,7 @@ const Projects = () => {
           </div>
           <Link
             to={localizedPath(language, { route: 'projects' })}
-            className="inline-flex min-h-11 items-center justify-center gap-2 border border-primary-600 bg-primary-600 px-5 text-sm font-black text-white transition-colors hover:bg-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-black"
+            className="home-action home-action--primary"
           >
             {t('projects.viewAllCta')}
             <ExternalLink className="h-4 w-4" />

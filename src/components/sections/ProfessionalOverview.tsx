@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import type { LocalizedPathBuilder, PortfolioSlotProps } from '../../contracts/portfolio';
 import { getPortfolioCapabilityGroups } from '../../data/portfolioCapabilities';
 import { getHumanAboutContent } from '../../features/humanAbout/content';
+import { HomeSectionHeader } from './HomeSectionPrimitives';
 
 type ProfessionalOverviewProps = PortfolioSlotProps & {
   buildPath: LocalizedPathBuilder;
@@ -53,91 +54,81 @@ const ProfessionalOverview = ({
     <section
       id="about"
       aria-labelledby="professional-overview-title"
-      className={`professional-overview relative overflow-hidden border-b border-neutral-300/70 bg-[var(--effect-about-surface)] px-5 py-16 dark:border-neutral-800/70 sm:px-8 sm:py-24 lg:px-12 ${className}`.trim()}
+      className={`home-section home-section--overview professional-overview relative overflow-hidden ${className}`.trim()}
     >
       <div className="about-system-grid pointer-events-none absolute inset-0" aria-hidden="true" />
-      <div className="relative mx-auto max-w-[1480px]">
-        <header className="grid gap-8 border-b border-neutral-300/80 pb-10 dark:border-neutral-800 lg:grid-cols-[minmax(0,0.85fr)_minmax(20rem,1.15fr)] lg:items-end">
-          <div>
-            <p className="flex items-center gap-3 font-mono text-[0.68rem] font-bold uppercase tracking-[0.18em] text-primary-700 dark:text-primary-400">
-              <span className="h-px w-9 bg-primary-500" aria-hidden="true" />
-              {ui.eyebrow}
-            </p>
-            <h2
-              id="professional-overview-title"
-              className="mt-5 max-w-[13ch] text-[clamp(2.65rem,5.8vw,5.75rem)] font-black leading-[0.92] tracking-[-0.06em] text-neutral-950 dark:text-white"
-            >
-              {ui.title}
-            </h2>
-          </div>
-          <p className="max-w-2xl border-s-2 border-primary-500 ps-5 text-lg font-medium leading-relaxed text-neutral-700 dark:text-neutral-300 lg:justify-self-end lg:text-xl">
-            {human.introduction}
-          </p>
-        </header>
+      <div className="home-section__inner relative">
+        <HomeSectionHeader
+          index="03"
+          eyebrow={ui.eyebrow}
+          titleId="professional-overview-title"
+          title={ui.title}
+          description={<p>{human.introduction}</p>}
+        />
 
-        <div className="grid gap-10 border-b border-neutral-300/80 py-10 dark:border-neutral-800 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16 lg:py-14">
-          <div className="space-y-8">
+        <div className="professional-overview__body">
+          <div className="professional-overview__profile">
             <div>
-              <p className="font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-primary-700 dark:text-primary-400">
+              <p className="home-detail-label">
                 01 / {ui.profileLabel}
               </p>
-              <p className="mt-4 max-w-2xl text-base leading-relaxed text-neutral-700 dark:text-neutral-300 sm:text-lg">
+              <p>
                 {human.pillars.find(({ id }) => id === 'background')?.body}
               </p>
             </div>
             <div>
-              <p className="font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-primary-700 dark:text-primary-400">
+              <p className="home-detail-label">
                 02 / {ui.valueLabel}
               </p>
-              <p className="mt-4 max-w-2xl text-base leading-relaxed text-neutral-700 dark:text-neutral-300 sm:text-lg">
+              <p>
                 {human.pillars.find(({ id }) => id === 'workingStyle')?.body}
               </p>
             </div>
           </div>
 
-          <div>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div className="professional-overview__capabilities">
+            <div className="professional-overview__capabilities-heading">
               <div>
-                <p className="font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-neutral-500">
+                <p className="home-detail-label">
                   03 / {ui.capabilitiesLabel}
                 </p>
-                <p className="mt-3 max-w-xl text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+                <p>
                   {ui.capabilitiesIntro}
                 </p>
               </div>
-              <span className="font-mono text-[0.58rem] font-bold uppercase tracking-[0.14em] text-primary-700 dark:text-primary-400" aria-hidden="true">
+              <span className="professional-overview__trace" aria-hidden="true">
                 NEED → SYSTEM → PROOF
               </span>
             </div>
-            <ul className="mt-6 border-t border-neutral-300/80 dark:border-neutral-800">
+            <ul className="professional-overview__capability-grid">
               {capabilities.map((capability, index) => (
                 <li
                   key={capability.id}
                   data-professional-capability={capability.id}
-                  className="grid gap-2 border-b border-neutral-300/80 py-4 dark:border-neutral-800 sm:grid-cols-[2.25rem_minmax(10rem,0.7fr)_1.3fr] sm:items-start sm:gap-4"
+                  className="professional-overview__capability"
                 >
-                  <span className="font-mono text-[0.58rem] font-black text-primary-700 dark:text-primary-400" aria-hidden="true">
+                  <span aria-hidden="true">
                     {String(index + 1).padStart(2, '0')}
                   </span>
-                  <h3 className="text-sm font-black text-neutral-950 dark:text-white sm:text-base">{capability.label}</h3>
-                  <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">{capability.description}</p>
+                  <h3>{capability.label}</h3>
+                  <p>{capability.description}</p>
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 pt-10 sm:flex-row lg:pt-14">
+        <div className="home-actions">
           <a
             href={buildPath(language, { route: 'about' })}
-            className="mt-8 inline-flex min-h-12 items-center gap-4 border border-neutral-950 bg-neutral-950 px-5 py-3 text-sm font-black text-white transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-primary-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 dark:border-white dark:bg-white dark:text-neutral-950 dark:hover:bg-primary-300 dark:focus-visible:ring-offset-neutral-950"
+            className="home-action home-action--inverse"
           >
             {ui.fullProfile}
             <span aria-hidden="true" className="rtl:-scale-x-100">→</span>
           </a>
           <a
             href={buildPath(language, { route: 'contact' })}
-            className="mt-3 inline-flex min-h-12 items-center gap-4 border border-neutral-400 px-5 py-3 text-sm font-black text-neutral-950 transition-colors hover:border-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 dark:border-neutral-600 dark:text-white dark:focus-visible:ring-offset-neutral-950 sm:mt-8"
+            className="home-action home-action--secondary"
           >
             {ui.contactLabel}
             <span aria-hidden="true" className="rtl:-scale-x-100">→</span>

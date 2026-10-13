@@ -38,8 +38,14 @@ const SectionFallback = ({ id, minHeightClassName }: SectionFallbackProps) => (
   <section
     id={id}
     aria-busy="true"
-    className={`${minHeightClassName} px-6 py-24 bg-transparent`}
-  />
+    data-home-section-fallback={id}
+    className={`home-section-fallback ${minHeightClassName}`}
+  >
+    <div aria-hidden="true" className="home-section-fallback__rail">
+      <span />
+      <span />
+    </div>
+  </section>
 );
 
 const PageFallback = ({ id, minHeightClassName }: SectionFallbackProps) => (
@@ -53,7 +59,7 @@ const PortfolioHome = () => {
   const language = i18n.language === 'he' ? 'he' : 'en';
 
   return (
-    <main id="main-content" tabIndex={-1}>
+    <main id="main-content" tabIndex={-1} className="home-page">
       <Home />
       <Suspense fallback={<SectionFallback id="projects" minHeightClassName="min-h-screen" />}>
         <Projects />

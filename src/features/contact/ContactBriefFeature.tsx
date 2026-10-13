@@ -11,6 +11,7 @@ import {
   type ContactBriefValues,
   type PreferredContactChannel,
 } from './contactBrief';
+import { HomeSectionHeader } from '../../components/sections/HomeSectionPrimitives';
 
 const formEndpoint = 'https://formsubmit.co/ajax/evyatarhazan3.14@gmail.com';
 
@@ -93,7 +94,7 @@ export type ContactBriefFeatureProps = PortfolioSlotProps & {
 
 const fieldClassName = 'rounded-2xl border border-neutral-200 bg-white/80 p-4 dark:border-neutral-700 dark:bg-neutral-950/70';
 const inputClassName = 'mt-2 min-h-11 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-base text-neutral-950 outline-none transition focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white';
-const actionClassName = 'inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-neutral-300 px-4 py-2 text-sm font-bold text-neutral-900 transition hover:border-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:border-neutral-700 dark:text-white';
+const actionClassName = 'home-action home-action--secondary';
 
 const ContactBriefFeature = ({
   language,
@@ -157,29 +158,39 @@ const ContactBriefFeature = ({
     <section
       id={id}
       aria-labelledby={titleId}
-      className={`relative overflow-hidden bg-[var(--effect-contact-surface)] px-5 py-20 sm:px-8 lg:px-12 ${className}`.trim()}
+      className={`home-section home-section--contact relative overflow-hidden ${className}`.trim()}
     >
-      <div className="mx-auto max-w-6xl">
-        <header className="max-w-3xl">
-          <p className="font-mono text-xs font-bold tracking-[0.18em] text-primary-700 dark:text-primary-300">{ui.eyebrow}</p>
-          <Title id={titleId} className="mt-4 text-4xl font-black tracking-tight text-neutral-950 dark:text-white sm:text-5xl">{ui.title}</Title>
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-neutral-600 dark:text-neutral-300">{ui.description}</p>
-        </header>
+      <div className="home-section__inner">
+        {Title === 'h2' ? (
+          <HomeSectionHeader
+            index="05"
+            eyebrow={ui.eyebrow}
+            titleId={titleId}
+            title={ui.title}
+            description={<p>{ui.description}</p>}
+          />
+        ) : (
+          <header className="home-contact-page-header">
+            <p className="home-section-label">{ui.eyebrow}</p>
+            <Title id={titleId}>{ui.title}</Title>
+            <p>{ui.description}</p>
+          </header>
+        )}
 
-        <div className="mt-10 rounded-[2rem] border border-neutral-200 bg-white/75 p-5 shadow-xl shadow-neutral-950/5 backdrop-blur sm:p-7 dark:border-neutral-800 dark:bg-neutral-950/75">
+        <div className="home-contact-panel">
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <div>
               <h3 className="text-2xl font-bold text-neutral-950 dark:text-white">{ui.directTitle}</h3>
               <p className="mt-2 text-neutral-600 dark:text-neutral-400">{ui.directDescription}</p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <a className={`${actionClassName} border-primary-700 bg-primary-700 text-white hover:bg-primary-800 dark:border-primary-500`} href={whatsappHref} target="_blank" rel="noopener noreferrer">
+              <a className="home-action home-action--primary" href={whatsappHref} target="_blank" rel="noopener noreferrer">
                 <MessageCircle aria-hidden="true" className="h-4 w-4" />{ui.whatsapp}
               </a>
-              <a className={actionClassName} href={emailHref}>
+              <a className="home-action home-action--secondary" href={emailHref}>
                 <Mail aria-hidden="true" className="h-4 w-4" />{ui.email}
               </a>
-              <a className={actionClassName} href={profileLinks.linkedin} target="_blank" rel="noopener noreferrer">
+              <a className="home-action home-action--secondary" href={profileLinks.linkedin} target="_blank" rel="noopener noreferrer">
                 <Linkedin aria-hidden="true" className="h-4 w-4" />{ui.linkedin}
               </a>
             </div>
@@ -188,7 +199,7 @@ const ContactBriefFeature = ({
 
         <button
           type="button"
-          className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-neutral-950 px-5 py-3 text-sm font-bold text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 dark:bg-white dark:text-neutral-950"
+          className="home-contact-disclosure"
           aria-expanded={isBuilderOpen}
           aria-controls={builderId}
           onClick={() => setIsBuilderOpen((open) => !open)}
@@ -260,7 +271,7 @@ const ContactBriefFeature = ({
               </div>
 
               <div className="mt-5 grid gap-3">
-                <button type="submit" disabled={isSubmitting} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-primary-700 px-5 py-3 text-sm font-bold text-white transition hover:bg-primary-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 disabled:cursor-wait disabled:opacity-60">
+                <button type="submit" disabled={isSubmitting} className="home-action home-action--primary disabled:cursor-wait disabled:opacity-60">
                   {isSubmitting ? ui.sending : ui.formAction}<Send aria-hidden="true" className="h-4 w-4" />
                 </button>
                 <a className={actionClassName} href={emailHref}><Mail aria-hidden="true" className="h-4 w-4" />{ui.emailAction}</a>

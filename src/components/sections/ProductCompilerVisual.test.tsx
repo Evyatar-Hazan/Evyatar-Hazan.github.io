@@ -5,7 +5,10 @@ import appSource from '../../App.tsx?raw';
 import homeSource from '../../pages/Home.tsx?raw';
 import navbarSource from '../Navbar.tsx?raw';
 import blogPreviewSource from './BlogPreview.tsx?raw';
+import homeSectionPrimitivesSource from './HomeSectionPrimitives.tsx?raw';
 import professionalOverviewSource from './ProfessionalOverview.tsx?raw';
+import projectsSource from './Projects.tsx?raw';
+import contactBriefSource from '../../features/contact/ContactBriefFeature.tsx?raw';
 import ProductCompilerVisual from './ProductCompilerVisual';
 
 const labels = {
@@ -79,5 +82,27 @@ describe('ProductCompilerVisual', () => {
     expect(navbarSource).not.toContain("behavior: 'smooth'");
     expect(navbarSource).not.toContain('useScroll');
     expect(navbarSource).not.toContain('useMotionValueEvent');
+  });
+
+  it('uses one semantic visual system across every homepage section', () => {
+    [projectsSource, professionalOverviewSource, blogPreviewSource, contactBriefSource].forEach((source) => {
+      expect(source).toContain('HomeSectionHeader');
+      expect(source).toContain('home-section');
+    });
+    expect(homeSectionPrimitivesSource).toContain('home-section-header');
+    expect(appSource).toContain('data-home-section-fallback');
+    [
+      '--home-page-max',
+      '--home-gutter',
+      '--home-section-space',
+      '--home-title',
+      '--home-surface-raised',
+      '--home-border',
+      '--home-radius-control',
+      '--home-shadow-raised',
+    ].forEach((token) => expect(stylesheet).toContain(token));
+    expect(stylesheet).toContain('.home-action--primary');
+    expect(stylesheet).toContain('.home-action--secondary');
+    expect(stylesheet).toContain('.home-section-fallback__rail');
   });
 });

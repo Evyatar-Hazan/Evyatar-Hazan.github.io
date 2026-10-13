@@ -2,7 +2,7 @@
   position: relative;
   display: grid;
   width: 100%;
-  max-width: 92.5rem;
+  max-width: var(--home-page-max);
   min-width: 0;
   align-items: center;
   gap: 2rem;
@@ -13,7 +13,7 @@
   position: relative;
   z-index: 20;
   min-width: 0;
-  max-width: 64rem;
+  max-width: var(--home-reading-max);
 }
 
 .availability {
@@ -45,7 +45,7 @@
   height: 0.5rem;
   flex: none;
   margin-top: 0.18em;
-  border-radius: 999px;
+  border-radius: var(--home-radius-control);
   background: var(--color-success-500);
   box-shadow: var(--effect-success-glow);
 }
@@ -118,7 +118,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  border-radius: 1rem;
+  border-radius: var(--home-radius-control);
   padding: 0.55rem 1rem;
   font-size: var(--type-label);
   font-weight: 700;
@@ -131,7 +131,7 @@
 .primaryAction {
   background: var(--color-primary-700);
   color: var(--color-white);
-  box-shadow: 0 10px 28px color-mix(in srgb, var(--color-primary-700) 20%, transparent);
+  box-shadow: var(--home-shadow-action);
 }
 
 .primaryAction:hover {
@@ -220,7 +220,7 @@
 
   .primaryAction,
   .secondaryAction {
-    border-radius: 999px;
+    border-radius: var(--home-radius-control);
     padding: 0.75rem 1.5rem;
     font-size: var(--type-label);
   }
