@@ -45,6 +45,32 @@ function readImageDimensions(buffer) {
   throw new Error('Unsupported capture image format');
 }
 
+test('typography uses the approved bilingual token scale', async () => {
+  const styles = await read('src/styles.css');
+  const cinema = await read('src/cinema.css');
+
+  for (const contract of [
+    '--font-display: Inter, system-ui, sans-serif',
+    "--font-display: 'Noto Sans Hebrew', Arial, sans-serif",
+    '--type-hero: clamp(4rem, 6vw, 5.75rem)',
+    '--type-chapter: 3.5rem',
+    '--type-h2: 2.5rem',
+    '--type-body-lg: 1.25rem',
+    '--type-body: 1rem',
+    '--type-label: 0.875rem',
+  ]) assert.ok(styles.includes(contract), `missing typography contract: ${contract}`);
+
+  assert.ok(styles.includes('font-size: var(--type-hero)'));
+  assert.ok(styles.includes('font-size: var(--type-chapter)'));
+  assert.ok(styles.includes('font-size: var(--type-h2)'));
+  assert.ok(cinema.includes('--type-hero: clamp(2.75rem, 8vw, 3.625rem)'));
+  assert.ok(cinema.includes('--type-chapter: 2.375rem'));
+  assert.ok(cinema.includes('--type-h2: 1.875rem'));
+  assert.equal(cinema.includes('Helvetica Neue'), false);
+  assert.equal(/font-size:\s*0\.\d+rem/.test(`${styles}\n${cinema}`), false);
+  assert.ok(cinema.includes("[dir='rtl'] .experience-shell :where("));
+});
+
 test('the complete V2 journey has stable route and section contracts', async () => {
   const app = await read('src/App.jsx');
   const shell = await read('src/shell/SiteHeader.jsx');

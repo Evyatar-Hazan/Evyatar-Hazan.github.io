@@ -15,12 +15,6 @@
   --cinema-gutter: clamp(1.25rem, 5vw, 4.5rem);
   --cinema-header: clamp(4.5rem, 7.2vw, 6.5rem);
   --cinema-radius: clamp(1rem, 1.6vw, 1.7rem);
-  --type-hero: clamp(3.25rem, min(4.2vw, 7.3svh), 5.75rem);
-  --type-chapter: 3.5rem;
-  --type-h2: 2.5rem;
-  --type-body-lg: clamp(1.05rem, 1.35vw, 1.25rem);
-  --type-body: 1rem;
-  --type-label: 0.875rem;
 }
 
 html {
@@ -135,16 +129,16 @@ html {
 }
 
 .journey-rail-copy span {
-  font-size: 0.72rem;
+  font-size: var(--type-label);
 }
 
 .journey-rail-copy strong {
   color: rgba(242, 238, 231, 0.86);
-  font-size: 0.72rem;
+  font-size: var(--type-label);
 }
 
 .journey-rail-beat {
-  font-size: 0.65rem;
+  font-size: var(--type-label);
   opacity: 0.56;
 }
 
@@ -200,7 +194,7 @@ html {
 .site-header .brand,
 .site-header .primary-nav,
 .site-header .language-switch {
-  font-size: 0.82rem;
+  font-size: var(--type-label);
   letter-spacing: -0.015em;
 }
 
@@ -450,25 +444,26 @@ html {
 
 .cinema-pin-hero .eyebrow {
   color: var(--cinema-copper-light, #efb174);
-  font-size: clamp(0.64rem, 0.75vw, 0.78rem);
-  letter-spacing: 0.18em;
+  font-size: var(--type-label);
+  font-weight: var(--weight-label);
+  letter-spacing: var(--tracking-label);
 }
 
 .cinema-pin-hero h1 {
   max-width: 15ch;
   margin: 1.35rem 0 1.5rem;
-  font-family: 'Helvetica Neue', Inter, 'Noto Sans Hebrew', sans-serif;
+  font-family: var(--font-display);
   font-size: var(--type-hero);
-  font-weight: 450;
-  line-height: 1.02;
-  letter-spacing: -0.035em;
+  font-weight: var(--weight-display);
+  line-height: var(--leading-hero);
+  letter-spacing: var(--tracking-hero);
   text-wrap: balance;
 }
 
 .cinema-pin-hero .hero-supporting {
   max-width: 39rem;
   font-size: var(--type-body-lg);
-  line-height: 1.5;
+  line-height: var(--leading-body-lg);
   color: rgba(246, 242, 233, 0.84);
 }
 
@@ -492,7 +487,7 @@ html {
   width: max-content;
   margin: 0;
   color: rgba(255, 255, 255, 0.18);
-  font-family: 'Helvetica Neue', Inter, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(3.5rem, 6vw, 6.5rem);
   font-weight: 400;
   line-height: 0.8;
@@ -553,11 +548,11 @@ html {
 .cinema-pin-thesis .forge-beat-copy h2 {
   max-width: 18ch;
   margin: 0;
-  font-family: 'Helvetica Neue', Inter, 'Noto Sans Hebrew', sans-serif;
+  font-family: var(--font-display);
   font-size: var(--type-chapter);
-  font-weight: 450;
-  line-height: 1.04;
-  letter-spacing: -0.035em;
+  font-weight: var(--weight-display);
+  line-height: var(--leading-chapter);
+  letter-spacing: var(--tracking-hero);
   text-wrap: balance;
 }
 
@@ -566,7 +561,7 @@ html {
   margin: 1.35rem 0 0;
   color: rgba(8, 10, 17, 0.78);
   font-size: var(--type-body-lg);
-  line-height: 1.5;
+  line-height: var(--leading-body-lg);
 }
 
 [dir='rtl'] .cinema-pin-thesis .forge-beat-copy > p:last-child { margin-inline: 0; }
@@ -577,7 +572,7 @@ html {
   inset-block-end: -0.19em;
   margin: 0;
   color: transparent;
-  font-family: 'Helvetica Neue', Inter, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(11rem, 25vw, 28rem);
   line-height: 0.75;
   letter-spacing: -0.09em;
@@ -722,7 +717,7 @@ html {
 .cinema-pin-signals .signal-outcome {
   grid-area: outcome;
   color: rgba(247, 243, 236, 0.58);
-  font-size: 0.9rem;
+  font-size: var(--type-body);
   line-height: 1.4;
 }
 
@@ -857,7 +852,7 @@ html {
 
 .cinema-pin-project .chapter-number {
   padding-top: 0.7rem;
-  font-size: 0.72rem;
+  font-size: var(--type-label);
 }
 
 .cinema-pin-project .chapter-intro h2 {
@@ -1171,7 +1166,7 @@ html {
 .archive-card-meta {
   justify-content: space-between;
   color: var(--cinema-copper-light, #efb174);
-  font-size: 0.72rem;
+  font-size: var(--type-label);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -1186,7 +1181,7 @@ html {
 .cinema-pin-more-work .archive-grid article > p {
   margin: 0.8rem 0 1rem;
   color: rgba(247, 243, 236, 0.72);
-  font-size: 0.88rem;
+  font-size: var(--type-body);
   line-height: 1.52;
 }
 
@@ -1201,7 +1196,7 @@ html {
   border-radius: 999px;
   padding: 0.28rem 0.5rem;
   color: rgba(247, 243, 236, 0.68);
-  font-size: 0.68rem;
+  font-size: var(--type-label);
 }
 
 .archive-card-actions a {
@@ -1211,7 +1206,7 @@ html {
   min-height: 2.75rem;
   border-block-end: 1px solid rgba(239, 177, 116, 0.5);
   color: #f7f3ec;
-  font-size: 0.82rem;
+  font-size: var(--type-label);
 }
 
 .archive-card-actions a:focus-visible {
@@ -1372,20 +1367,20 @@ html {
 
 .cinema-pin-capabilities .capabilities-grid article > span {
   color: #aeb7ff;
-  font-size: 0.7rem;
+  font-size: var(--type-label);
   letter-spacing: 0.09em;
 }
 
 .cinema-pin-capabilities .capabilities-grid h3 {
   margin: 0.65rem 0 0;
-  font-size: 1.05rem;
-  line-height: 1.15;
+  font-size: var(--type-body-lg);
+  line-height: var(--leading-body-lg);
 }
 
 .cinema-pin-capabilities .capabilities-grid article > p {
   margin: 0.5rem 0 0.75rem;
   color: rgba(247, 243, 236, 0.68);
-  font-size: 0.82rem;
+  font-size: var(--type-label);
   line-height: 1.45;
 }
 
@@ -1403,7 +1398,7 @@ html {
   border-radius: 999px;
   padding: 0.25rem 0.42rem;
   color: rgba(247, 243, 236, 0.8);
-  font-size: 0.72rem;
+  font-size: var(--type-label);
 }
 
 .capabilities-axis {
@@ -1523,7 +1518,7 @@ html {
 .cinema-pin-lab .lab-grid .lab-note-meta {
   margin: auto 0 0.8rem;
   color: rgba(8, 10, 17, 0.62);
-  font-size: 0.78rem;
+  font-size: var(--type-label);
   line-height: 1.4;
 }
 
@@ -1533,9 +1528,11 @@ html {
 }
 
 .cinema-pin-lab .lab-grid h3 {
-  font-size: clamp(1.35rem, 1.8vw, 1.85rem);
-  line-height: 1.12;
-  letter-spacing: -0.03em;
+  font-family: var(--font-display);
+  font-size: var(--type-h2);
+  font-weight: var(--weight-heading);
+  line-height: var(--leading-h2);
+  letter-spacing: var(--tracking-hero);
 }
 
 .cinema-pin-lab .lab-telemetry {
@@ -1568,7 +1565,7 @@ html {
 
   .cinema-pin-lab .lab-grid h3 {
     margin: clamp(1.25rem, 2.5vh, 1.75rem) 0 auto;
-    font-size: clamp(1.25rem, 1.6vw, 1.65rem);
+    font-size: var(--type-h2);
   }
 
   .cinema-pin-lab .lab-grid .lab-note-meta {
@@ -1634,7 +1631,7 @@ html {
   min-height: 3.65rem;
   border-radius: 999px;
   padding: 0.9rem 1.35rem;
-  font-size: 0.875rem;
+  font-size: var(--type-label);
 }
 
 .cinema-pin-contact .contact-signal {
@@ -1972,7 +1969,7 @@ html {
 
   .case-cinema-pin .journey-board li p {
     margin-block-start: 1.8rem;
-    font-size: 0.78rem;
+    font-size: var(--type-label);
     line-height: 1.5;
   }
 
@@ -2014,7 +2011,7 @@ html {
   .case-cinema-pin .publish-proof li p,
   .case-cinema-pin .project-delivery-flow p {
     margin-block-start: 1.8rem;
-    font-size: 0.78rem;
+    font-size: var(--type-label);
     line-height: 1.5;
   }
 
@@ -2029,7 +2026,7 @@ html {
 
   .case-cinema-pin .tradeoff-grid p {
     margin-block-start: 2rem;
-    font-size: 0.9rem;
+    font-size: var(--type-body);
     line-height: 1.55;
   }
 
@@ -2117,13 +2114,13 @@ html {
   .cinema-pin-more-work .archive-heading h2,
   .cinema-pin-capabilities .capabilities-heading h2,
   .cinema-pin-lab .lab-heading h2 {
-    font-size: clamp(2.25rem, 6.5svh, 3rem);
+    font-size: var(--type-chapter);
   }
 
   .cinema-pin-more-work .archive-heading > p:last-child,
   .cinema-pin-capabilities .capabilities-heading > p:last-child,
   .cinema-pin-lab .lab-heading > p:last-child {
-    font-size: 0.84rem;
+    font-size: var(--type-body);
     line-height: 1.45;
   }
 
@@ -2141,7 +2138,7 @@ html {
 
   .cinema-pin-more-work .archive-grid article > p {
     margin-block: 0.55rem 0.7rem;
-    font-size: 0.78rem;
+    font-size: var(--type-label);
     line-height: 1.4;
   }
 
@@ -2161,7 +2158,7 @@ html {
 
   .cinema-pin-capabilities .capabilities-grid li {
     padding: 0.2rem 0.38rem;
-    font-size: 0.7rem;
+  font-size: var(--type-label);
   }
 
   .cinema-pin-lab .lab-grid {
@@ -2174,7 +2171,7 @@ html {
 
   .cinema-pin-lab .lab-grid h3 {
     margin-top: 1rem;
-    font-size: clamp(1.15rem, 1.5vw, 1.5rem);
+    font-size: var(--type-h2);
   }
 
   .cinema-pin-lab .lab-all-link {
@@ -2693,7 +2690,7 @@ html {
   }
 
   .cinema-pin-signals .signal-outcome {
-    font-size: 0.9rem;
+    font-size: var(--type-body);
   }
 
   .cinema-pin-handoff {
@@ -3182,10 +3179,11 @@ html[data-motion-override='reduce'] .case-cinema-stage-pin {
 .writing-hero-copy h1,
 .writing-post-hero-copy h1 {
   margin: 0;
-  font-size: clamp(3rem, min(5.25vw, 8.2svh), 6.4rem);
-  font-weight: 420;
-  line-height: 0.98;
-  letter-spacing: -0.052em;
+  font-family: var(--font-display);
+  font-size: var(--type-hero);
+  font-weight: var(--weight-display);
+  line-height: var(--leading-hero);
+  letter-spacing: var(--tracking-hero);
   text-wrap: balance;
 }
 
@@ -3194,8 +3192,8 @@ html[data-motion-override='reduce'] .case-cinema-stage-pin {
   max-width: 48rem;
   margin: 1.6rem 0 0;
   color: rgba(247, 243, 236, 0.74);
-  font-size: clamp(1.03rem, 1.45vw, 1.26rem);
-  line-height: 1.68;
+  font-size: var(--type-body-lg);
+  line-height: var(--leading-body-lg);
 }
 
 .writing-hero-actions {
@@ -3262,18 +3260,19 @@ html[data-motion-override='reduce'] .case-cinema-stage-pin {
 .writing-index-heading h2 {
   max-width: 13ch;
   margin: 0;
-  font-size: clamp(2.8rem, 5vw, 5.8rem);
-  font-weight: 430;
-  line-height: 0.98;
-  letter-spacing: -0.05em;
+  font-family: var(--font-display);
+  font-size: var(--type-chapter);
+  font-weight: var(--weight-display);
+  line-height: var(--leading-chapter);
+  letter-spacing: var(--tracking-hero);
   text-wrap: balance;
 }
 
 .writing-index-heading > p {
   margin: 0;
   color: rgba(8, 10, 17, 0.7);
-  font-size: 1.04rem;
-  line-height: 1.7;
+  font-size: var(--type-body);
+  line-height: var(--leading-body);
 }
 
 .writing-card-grid {
@@ -3301,7 +3300,7 @@ html[data-motion-override='reduce'] .case-cinema-stage-pin {
   gap: 0.55rem 1rem;
   align-items: center;
   color: rgba(8, 10, 17, 0.58);
-  font-size: 0.78rem;
+  font-size: var(--type-label);
   letter-spacing: 0.035em;
 }
 
@@ -3318,17 +3317,18 @@ html[data-motion-override='reduce'] .case-cinema-stage-pin {
   border: 1px solid rgba(57, 72, 255, 0.34);
   border-radius: 999px;
   color: #2634d6;
-  font-size: 0.72rem;
+  font-size: var(--type-label);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .writing-card h3 {
   margin: clamp(2.2rem, 5vw, 4.8rem) 0 0;
-  font-size: clamp(1.75rem, 3vw, 3.2rem);
-  font-weight: 440;
-  line-height: 1.03;
-  letter-spacing: -0.043em;
+  font-family: var(--font-display);
+  font-size: var(--type-h2);
+  font-weight: var(--weight-heading);
+  line-height: var(--leading-h2);
+  letter-spacing: var(--tracking-hero);
   text-wrap: balance;
 }
 
@@ -3341,7 +3341,7 @@ html[data-motion-override='reduce'] .case-cinema-stage-pin {
   max-width: 44rem;
   margin: 1.35rem 0 0;
   color: rgba(8, 10, 17, 0.7);
-  font-size: 0.97rem;
+  font-size: var(--type-body);
   line-height: 1.68;
 }
 
@@ -3360,7 +3360,7 @@ html[data-motion-override='reduce'] .case-cinema-stage-pin {
   padding: 0.36rem 0.62rem;
   border: 1px solid rgba(8, 10, 17, 0.19);
   border-radius: 999px;
-  font-size: 0.77rem;
+  font-size: var(--type-label);
 }
 
 .writing-card-action {
@@ -3368,7 +3368,7 @@ html[data-motion-override='reduce'] .case-cinema-stage-pin {
   gap: 0.55rem;
   align-items: center;
   margin: 2rem 0 0;
-  font-size: 0.9rem;
+  font-size: var(--type-body);
   font-weight: 500;
 }
 
@@ -3427,7 +3427,7 @@ html[data-motion-override='reduce'] .case-cinema-stage-pin {
   width: fit-content;
   margin-bottom: clamp(2rem, 5vh, 4rem);
   color: rgba(247, 243, 236, 0.72);
-  font-size: 0.86rem;
+  font-size: var(--type-body);
 }
 
 .writing-back-link:focus-visible,
@@ -3448,7 +3448,7 @@ html[data-motion-override='reduce'] .case-cinema-stage-pin {
   align-items: center;
   margin-top: 1.5rem;
   color: rgba(247, 243, 236, 0.62);
-  font-size: 0.81rem;
+  font-size: var(--type-label);
 }
 
 .writing-post-meta span {
@@ -3476,7 +3476,7 @@ html[data-motion-override='reduce'] .case-cinema-stage-pin {
   align-self: start;
   height: fit-content;
   color: rgba(8, 10, 17, 0.54);
-  font-size: 0.72rem;
+  font-size: var(--type-label);
   letter-spacing: 0.09em;
   text-transform: uppercase;
 }
@@ -3505,8 +3505,8 @@ html[data-motion-override='reduce'] .case-cinema-stage-pin {
 .writing-prose {
   min-width: 0;
   color: rgba(8, 10, 17, 0.88);
-  font-size: clamp(1.02rem, 1.25vw, 1.13rem);
-  line-height: 1.84;
+  font-size: var(--type-body);
+  line-height: var(--leading-body);
 }
 
 .writing-prose > :first-child {
@@ -3525,8 +3525,10 @@ html[data-motion-override='reduce'] .case-cinema-stage-pin {
 
 .writing-prose h2 {
   margin: 4.8rem 0 1.2rem;
-  font-size: clamp(2rem, 3.4vw, 3.35rem);
-  line-height: 1.08;
+  font-family: var(--font-display);
+  font-size: var(--type-h2);
+  font-weight: var(--weight-heading);
+  line-height: var(--leading-h2);
 }
 
 .writing-prose h3 {
@@ -3587,7 +3589,7 @@ html[data-motion-override='reduce'] .case-cinema-stage-pin {
   color: #f7f3ec;
   background: #0a0d15;
   direction: ltr;
-  font-size: 0.86rem;
+  font-size: var(--type-body);
   line-height: 1.65;
   text-align: left;
 }
@@ -3635,7 +3637,7 @@ html[data-motion-override='reduce'] .case-cinema-stage-pin {
 
 .writing-next-note span {
   color: rgba(8, 10, 17, 0.58);
-  font-size: 0.78rem;
+  font-size: var(--type-label);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -3668,10 +3670,11 @@ html[data-motion-override='reduce'] .case-cinema-stage-pin {
 
 .writing-close-copy h2 {
   margin: 0;
-  font-size: clamp(3rem, 6.2vw, 7rem);
-  font-weight: 420;
-  line-height: 0.98;
-  letter-spacing: -0.055em;
+  font-family: var(--font-display);
+  font-size: var(--type-chapter);
+  font-weight: var(--weight-display);
+  line-height: var(--leading-chapter);
+  letter-spacing: var(--tracking-hero);
   text-wrap: balance;
 }
 
@@ -3679,8 +3682,8 @@ html[data-motion-override='reduce'] .case-cinema-stage-pin {
   max-width: 46rem;
   margin: 1.5rem auto 0;
   color: rgba(247, 243, 236, 0.72);
-  font-size: 1.05rem;
-  line-height: 1.7;
+  font-size: var(--type-body-lg);
+  line-height: var(--leading-body-lg);
 }
 
 .writing-close-actions {
@@ -3723,7 +3726,7 @@ html[data-motion-override='reduce'] .case-cinema-stage-pin {
   .writing-hero-copy h1,
   .writing-post-hero-copy h1 {
     max-width: none;
-    font-size: clamp(2.65rem, 10.5vw, 4.2rem);
+    font-size: var(--type-hero);
   }
 
   .writing-hero-count {
@@ -3823,4 +3826,18 @@ html[data-motion-override='reduce'] :is(.writing-card, .writing-hero-copy, .writ
 
 html[data-motion-override='reduce'] :is(.writing-index-track, .writing-reading-track) {
   min-height: 100svh !important;
+}
+
+[dir='rtl'] .experience-shell :where(
+  .eyebrow,
+  [class*='kicker'],
+  [class*='label'],
+  [class*='meta'],
+  .journey-title,
+  .system-proof-label,
+  .forge-beat-coordinate,
+  .signal-name,
+  .signal-project
+) {
+  letter-spacing: 0;
 }
