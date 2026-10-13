@@ -1,8 +1,11 @@
 import { render, screen } from '@testing-library/react';
-import { motionValue } from 'framer-motion';
 import { describe, expect, it } from 'vitest';
 import stylesheet from '../../index.css?raw';
+import appSource from '../../App.tsx?raw';
 import homeSource from '../../pages/Home.tsx?raw';
+import navbarSource from '../Navbar.tsx?raw';
+import blogPreviewSource from './BlogPreview.tsx?raw';
+import professionalOverviewSource from './ProfessionalOverview.tsx?raw';
 import ProductCompilerVisual from './ProductCompilerVisual';
 
 const labels = {
@@ -16,8 +19,6 @@ describe('ProductCompilerVisual', () => {
   it('renders three translated input modules that converge into a complete output', () => {
     render(
       <ProductCompilerVisual
-        progress={motionValue(0)}
-        reduceMotion={false}
         isHebrew={false}
         labels={labels}
       />,
@@ -36,8 +37,6 @@ describe('ProductCompilerVisual', () => {
   it('keeps RTL on the scene only and does not mirror text or icons', () => {
     render(
       <ProductCompilerVisual
-        progress={motionValue(0)}
-        reduceMotion
         isHebrew
         labels={labels}
       />,
@@ -55,12 +54,30 @@ describe('ProductCompilerVisual', () => {
     expect(homeSource).toContain("t('home.compiler.ready')");
   });
 
-  it('defines a stable reduced-motion state and a dedicated overflow-safe mobile composition', () => {
+  it('stays fully rendered without scroll or pointer-driven motion', () => {
+    expect(homeSource).not.toContain('useScroll');
+    expect(homeSource).not.toContain('sticky top-0');
+    expect(homeSource).not.toContain('h-[150svh]');
+    ['product-compiler-flow', 'product-compiler-input', 'product-compiler-output'].forEach((className) => {
+      const rule = stylesheet.match(new RegExp(`\\.${className}\\s*\\{([^}]*)\\}`))?.[1] ?? '';
+      expect(rule).not.toContain('backdrop-filter');
+    });
     expect(stylesheet).toContain('@media (prefers-reduced-motion: reduce)');
-    expect(stylesheet).toMatch(/\.product-compiler-scene,[\s\S]*opacity:\s*1\s*!important;[\s\S]*transform:\s*none\s*!important;/);
     expect(stylesheet).toContain("grid-template-areas:\n      'inputs'\n      'connectors'\n      'output'");
     expect(stylesheet).toContain('.product-compiler-connectors-mobile { display: block;');
     expect(stylesheet).toContain('grid-template-columns: repeat(3, minmax(0, 1fr));');
     expect(stylesheet).toContain('overflow: hidden;');
+  });
+
+  it('keeps home-page content immediate instead of tying visibility to scrolling', () => {
+    [blogPreviewSource, professionalOverviewSource].forEach((source) => {
+      expect(source).not.toContain('whileInView');
+      expect(source).not.toContain('useScroll');
+      expect(source).not.toContain('useTransform');
+    });
+    expect(appSource).not.toContain("behavior: 'smooth'");
+    expect(navbarSource).not.toContain("behavior: 'smooth'");
+    expect(navbarSource).not.toContain('useScroll');
+    expect(navbarSource).not.toContain('useMotionValueEvent');
   });
 });

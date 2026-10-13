@@ -1,4 +1,3 @@
-import { motion, useReducedMotion } from 'framer-motion';
 import type { LocalizedPathBuilder, PortfolioSlotProps } from '../../contracts/portfolio';
 import { getPortfolioCapabilityGroups } from '../../data/portfolioCapabilities';
 import { getServiceEngagements } from '../../data/serviceEngagements';
@@ -44,21 +43,12 @@ const ProfessionalOverview = ({
   buildPath,
   className = '',
 }: ProfessionalOverviewProps) => {
-  const shouldReduceMotion = useReducedMotion();
   const human = getHumanAboutContent(language);
   const ui = copy[language];
   const capabilities = getPortfolioCapabilityGroups(language).filter(({ id }) =>
     selectedCapabilityIds.includes(id as (typeof selectedCapabilityIds)[number]),
   );
   const engagements = getServiceEngagements(language);
-
-  const reveal = shouldReduceMotion
-    ? undefined
-    : {
-        initial: { opacity: 0, y: 20 },
-        whileInView: { opacity: 1, y: 0 },
-        viewport: { once: true, margin: '-80px' },
-      };
 
   return (
     <section
@@ -68,11 +58,7 @@ const ProfessionalOverview = ({
     >
       <div className="about-system-grid pointer-events-none absolute inset-0" aria-hidden="true" />
       <div className="relative mx-auto max-w-[1480px]">
-        <motion.header
-          {...reveal}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="grid gap-8 border-b border-neutral-300/80 pb-10 dark:border-neutral-800 lg:grid-cols-[minmax(0,0.85fr)_minmax(20rem,1.15fr)] lg:items-end"
-        >
+        <header className="grid gap-8 border-b border-neutral-300/80 pb-10 dark:border-neutral-800 lg:grid-cols-[minmax(0,0.85fr)_minmax(20rem,1.15fr)] lg:items-end">
           <div>
             <p className="flex items-center gap-3 font-mono text-[0.68rem] font-bold uppercase tracking-[0.18em] text-primary-700 dark:text-primary-400">
               <span className="h-px w-9 bg-primary-500" aria-hidden="true" />
@@ -88,14 +74,10 @@ const ProfessionalOverview = ({
           <p className="max-w-2xl border-s-2 border-primary-500 ps-5 text-lg font-medium leading-relaxed text-neutral-700 dark:text-neutral-300 lg:justify-self-end lg:text-xl">
             {human.introduction}
           </p>
-        </motion.header>
+        </header>
 
         <div className="grid gap-10 border-b border-neutral-300/80 py-10 dark:border-neutral-800 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16 lg:py-14">
-          <motion.div
-            {...reveal}
-            transition={{ duration: 0.5, delay: shouldReduceMotion ? 0 : 0.05, ease: [0.22, 1, 0.36, 1] }}
-            className="space-y-8"
-          >
+          <div className="space-y-8">
             <div>
               <p className="font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-primary-700 dark:text-primary-400">
                 01 / {ui.profileLabel}
@@ -112,12 +94,9 @@ const ProfessionalOverview = ({
                 {human.pillars.find(({ id }) => id === 'workingStyle')?.body}
               </p>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            {...reveal}
-            transition={{ duration: 0.5, delay: shouldReduceMotion ? 0 : 0.1, ease: [0.22, 1, 0.36, 1] }}
-          >
+          <div>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-neutral-500">
@@ -146,14 +125,10 @@ const ProfessionalOverview = ({
                 </li>
               ))}
             </ul>
-          </motion.div>
+          </div>
         </div>
 
-        <motion.div
-          {...reveal}
-          transition={{ duration: 0.5, delay: shouldReduceMotion ? 0 : 0.08, ease: [0.22, 1, 0.36, 1] }}
-          className="pt-10 lg:pt-14"
-        >
+        <div className="pt-10 lg:pt-14">
           <div className="grid gap-5 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
             <div>
               <p className="font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-primary-700 dark:text-primary-400">
@@ -203,7 +178,7 @@ const ProfessionalOverview = ({
             {ui.contactLabel}
             <span aria-hidden="true" className="rtl:-scale-x-100">→</span>
           </a>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -1,4 +1,4 @@
-import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -20,8 +20,6 @@ const navItems = [
 ];
 
 const Navbar = () => {
-  const { scrollY } = useScroll();
-  const [hiddenOnPath, setHiddenOnPath] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const { t, i18n } = useTranslation();
   const { theme, toggleTheme } = useTheme();
@@ -42,15 +40,6 @@ const Navbar = () => {
     };
   }, [isOpen]);
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    const previous = scrollY.getPrevious() ?? 0;
-    if (latest > previous && latest > 150) {
-      setHiddenOnPath(location.pathname);
-    } else {
-      setHiddenOnPath(null);
-    }
-  });
-
   const activeItem = contentPath.startsWith('/blog')
     ? 'Blog'
     : navItems.find((item) => item.href === location.hash)?.name ?? 'Home';
@@ -67,7 +56,7 @@ const Navbar = () => {
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: 'auto' });
     }
   };
 
@@ -77,7 +66,7 @@ const Navbar = () => {
 
     if (href.startsWith('/')) {
       navigate(localizedPath(language, { route: 'blog' }));
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: 'auto' });
       return;
     }
 
@@ -99,15 +88,7 @@ const Navbar = () => {
   };
 
   return (
-    <motion.nav
-      variants={{
-        visible: { y: 0 },
-        hidden: { y: "-100%" }
-      }}
-      animate={hiddenOnPath === location.pathname && !isOpen ? "hidden" : "visible"}
-      transition={{ duration: 0.35, ease: "easeInOut" }}
-      className="system-rail-nav"
-    >
+    <nav className="system-rail-nav">
       <div className="system-rail">
         <a 
           href={`${localizedPath(language, { route: 'home' })}#home`}
@@ -230,7 +211,7 @@ const Navbar = () => {
           </>
         )}
       </AnimatePresence>
-    </motion.nav>
+    </nav>
   );
 };
 

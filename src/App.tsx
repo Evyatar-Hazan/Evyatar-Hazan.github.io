@@ -117,8 +117,8 @@ const AppShell = () => {
     if (!location.hash) return;
 
     const timeoutId = window.setTimeout(() => {
-      document.querySelector(location.hash)?.scrollIntoView({ behavior: 'smooth' });
-    }, 120);
+      document.querySelector(location.hash)?.scrollIntoView({ behavior: 'auto' });
+    }, 0);
 
     return () => window.clearTimeout(timeoutId);
   }, [location.hash, location.pathname]);

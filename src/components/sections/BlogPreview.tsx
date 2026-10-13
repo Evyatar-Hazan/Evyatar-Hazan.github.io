@@ -1,4 +1,3 @@
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Clock } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
@@ -44,35 +43,17 @@ const ArticleLink = ({ post, language, featured = false, index }: ArticleLinkPro
   const { t } = useTranslation();
   const ArrowIcon = language === 'he' ? ArrowLeft : ArrowRight;
   const issue = String(index + 1).padStart(2, '0');
-  const articleRef = useRef<HTMLElement>(null);
-  const reduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: articleRef,
-    offset: ['start 92%', 'end 8%'],
-  });
-  const entryX = useTransform(scrollYProgress, [0, 0.32, 1], [index % 2 === 0 ? -42 : 42, 0, 0]);
-  const numberY = useTransform(scrollYProgress, [0, 0.55, 1], [24, -4, -16]);
-  const copyY = useTransform(scrollYProgress, [0, 0.55, 1], [28, 0, -18]);
-  const scanY = useTransform(scrollYProgress, [0, 1], [-80, 560]);
-  const scanOpacity = useTransform(scrollYProgress, [0, 0.12, 0.88, 1], [0, 0.75, 0.75, 0]);
-
   return (
-    <motion.article
-      ref={articleRef}
+    <article
       className={featured ? 'writing-feature' : 'writing-entry'}
-      initial={{ opacity: 0, y: 36 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-12% 0px -12%' }}
-      transition={{ duration: 0.65, delay: featured ? 0 : index * 0.05, ease: [0.22, 1, 0.36, 1] }}
-      style={{ x: featured || reduceMotion ? 0 : entryX }}
       data-writing-index={issue}
     >
       <div className="writing-article-index" aria-hidden="true">
-        <motion.span style={{ y: reduceMotion ? 0 : numberY }}>{issue}</motion.span>
+        <span>{issue}</span>
         <span>{featured ? t('blogPreview.latest') : t('blogPreview.note')}</span>
       </div>
 
-      <motion.div className="writing-article-copy" style={{ y: featured && !reduceMotion ? copyY : 0 }}>
+      <div className="writing-article-copy">
         <ArticleMeta post={post} language={language} />
         <h3>
           <Link to={localizedPath(language, { route: 'article', id: post.slug as ArticleId })}>
@@ -93,15 +74,11 @@ const ArticleLink = ({ post, language, featured = false, index }: ArticleLinkPro
             <ArrowIcon aria-hidden="true" className="h-4 w-4" />
           </span>
         </div>
-      </motion.div>
+      </div>
 
       {featured && (
         <>
-          <motion.span
-            className="writing-feature-scan"
-            aria-hidden="true"
-            style={{ y: reduceMotion ? 0 : scanY, opacity: reduceMotion ? 0 : scanOpacity }}
-          />
+          <span className="writing-feature-scan" aria-hidden="true" />
           <div className="writing-signal" aria-hidden="true">
             <span>INPUT</span>
             <div>
@@ -114,7 +91,7 @@ const ArticleLink = ({ post, language, featured = false, index }: ArticleLinkPro
           </div>
         </>
       )}
-    </motion.article>
+    </article>
   );
 };
 
@@ -124,22 +101,12 @@ const BlogPreview = () => {
   const language = languageFromI18n(i18n.language);
   const posts = getBlogPosts(language).slice(0, 3);
   const ArrowIcon = language === 'he' ? ArrowLeft : ArrowRight;
-  const reduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start 72%', 'end 62%'],
-  });
-  const railScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
-  const markerY = useTransform(scrollYProgress, [0, 1], ['0%', '96%']);
-  const orbitY = useTransform(scrollYProgress, [0, 1], [-70, 180]);
-  const orbitRotate = useTransform(scrollYProgress, [0, 1], [-8, 34]);
-
   useEffect(() => {
     if (window.location.hash !== '#writing') return;
 
     const timeoutId = window.setTimeout(() => {
-      sectionRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, 180);
+      sectionRef.current?.scrollIntoView({ behavior: 'auto' });
+    }, 0);
 
     return () => window.clearTimeout(timeoutId);
   }, []);
@@ -147,11 +114,7 @@ const BlogPreview = () => {
   return (
     <section ref={sectionRef} id="writing" className="writing-lab">
       <div className="writing-lab-grid" aria-hidden="true" />
-      <motion.div
-        className="writing-lab-orbit"
-        aria-hidden="true"
-        style={{ y: reduceMotion ? 0 : orbitY, rotate: reduceMotion ? 0 : orbitRotate }}
-      />
+      <div className="writing-lab-orbit" aria-hidden="true" />
 
       <div className="writing-shell">
         <header className="writing-header">
@@ -178,8 +141,8 @@ const BlogPreview = () => {
           <div className="writing-progress" aria-hidden="true">
             <span>READING LOG / {String(posts.length).padStart(2, '0')}</span>
             <div>
-              <motion.i style={{ scaleY: reduceMotion ? 1 : railScale }} />
-              <motion.b style={{ y: reduceMotion ? '96%' : markerY }} />
+              <i />
+              <b />
             </div>
           </div>
 
