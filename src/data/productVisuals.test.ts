@@ -6,18 +6,16 @@ import {
   getProductVisualCollection,
   productVisualsByProject,
 } from './productVisuals';
+import { caseStudyStoryProjectIds } from './caseStudyStories';
 
 describe('public product visual contract', () => {
-  it('provides exactly two approved public visuals for every flagship case study', () => {
-    expect(Object.keys(productVisualsByProject)).toEqual([...flagshipPortfolioProjectIds]);
+  it('provides approved public visuals for all four product stories', () => {
+    expect(Object.keys(productVisualsByProject)).toEqual([...caseStudyStoryProjectIds]);
 
     flagshipPortfolioProjectIds.forEach((projectId) => {
       expect(getProductVisualCollection(projectId)?.visuals).toHaveLength(2);
     });
-  });
-
-  it('leaves the fourth featured story intact without inventing public product visuals', () => {
-    expect(getProductVisualCollection('united_hatzalah')).toBeNull();
+    expect(getProductVisualCollection('united_hatzalah')?.visuals).toHaveLength(1);
   });
 
   it('keeps every visual local, meaningful, traceable, and inside the route budget', () => {
@@ -35,10 +33,8 @@ describe('public product visual contract', () => {
         expect(visual.alt.he.trim().length).toBeGreaterThan(20);
         expect(visual.caption.en.trim()).not.toBe(visual.alt.en.trim());
         expect(visual.caption.he.trim()).not.toBe(visual.alt.he.trim());
-        expect(visual.provenance).toMatchObject({
-          kind: 'public-product-capture',
-          reviewedAt: '2026-10-03',
-        });
+        expect(visual.provenance.kind).toBe('public-product-capture');
+        expect(visual.provenance.reviewedAt).toMatch(/^2026-10-(03|14)$/u);
         expect(new URL(visual.provenance.sourceUrl).protocol).toBe('https:');
 
         expect(visual.byteSize).toBeLessThanOrEqual(PRODUCT_VISUAL_MAX_BYTES);

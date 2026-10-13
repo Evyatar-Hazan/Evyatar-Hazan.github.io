@@ -56,8 +56,8 @@ describe('ProductVisualGallery', () => {
     expect(screen.getAllByRole('link', { name: 'צפייה במוצר הלמידה הציבורי' })).toHaveLength(2);
   });
 
-  it('renders nothing for a featured story without approved public product visuals', () => {
-    const { container } = render(
+  it('renders the existing verified public branch capture without inventing a mobile view', () => {
+    render(
       <ProductVisualGallery
         projectId="united_hatzalah"
         language="en"
@@ -65,6 +65,12 @@ describe('ProductVisualGallery', () => {
       />,
     );
 
-    expect(container).toBeEmptyDOMElement();
+    expect(screen.getByRole('region', { name: 'Public branch product view' })).toBeInTheDocument();
+    expect(screen.getAllByRole('img')).toHaveLength(1);
+    expect(screen.getByRole('img')).toHaveAccessibleName(/public United Hatzalah Shoham branch homepage/i);
+    expect(screen.getByRole('link', { name: 'View the public branch site' })).toHaveAttribute(
+      'href',
+      'https://hatzalah-shoham.evyatarhazan.com/',
+    );
   });
 });

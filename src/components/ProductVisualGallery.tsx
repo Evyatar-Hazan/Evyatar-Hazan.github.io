@@ -26,20 +26,18 @@ const ProductVisualGallery = ({
   return (
     <section
       aria-labelledby={headingId}
-      className={`border-t border-neutral-200 py-12 dark:border-neutral-800 ${className}`.trim()}
+      className={`product-visual-gallery ${className}`.trim()}
       data-project-id={projectId}
       data-project-path={routePath}
     >
-      <h2 id={headingId} className="text-2xl font-bold text-neutral-950 dark:text-white">
-        {collection.heading[language]}
-      </h2>
-      <div className="mt-6 grid gap-6 md:grid-cols-2">
+      <header className="product-visual-heading">
+        <span aria-hidden="true">PROOF / 01</span>
+        <h2 id={headingId}>{collection.heading[language]}</h2>
+      </header>
+      <div className="product-visual-grid" data-visual-count={collection.visuals.length}>
         {collection.visuals.map((visual) => (
-          <figure
-            key={visual.id}
-            className="overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-950/60"
-          >
-            <div className="grid aspect-[16/10] place-items-center overflow-hidden bg-neutral-100 dark:bg-neutral-900">
+          <figure key={visual.id}>
+            <div className="product-visual-frame">
               <img
                 src={visual.src}
                 width={visual.width}
@@ -47,16 +45,14 @@ const ProductVisualGallery = ({
                 alt={visual.alt[language]}
                 loading="lazy"
                 decoding="async"
-                className="h-full w-full object-contain"
               />
             </div>
-            <figcaption className="p-5 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
+            <figcaption>
               <p>{visual.caption[language]}</p>
               <a
                 href={visual.provenance.sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 inline-flex items-center gap-1.5 font-bold text-primary-600 transition-colors hover:text-primary-500 dark:text-primary-300"
               >
                 {collection.sourceLabel[language]}
                 <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />

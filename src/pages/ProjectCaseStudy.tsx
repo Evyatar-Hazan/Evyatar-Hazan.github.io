@@ -1,17 +1,22 @@
 import { ArrowLeft } from 'lucide-react';
+import type { ReactNode } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getProjectById, type LocalizedText } from '../data/profile';
 import { usePageSeo } from '../hooks/usePageSeo';
-import CaseStudyReadingLevels from '../components/CaseStudyReadingLevels';
-import RelatedContentLinks, { type RelatedContentItem } from '../components/RelatedContentLinks';
+import type { RelatedContentItem } from '../components/RelatedContentLinks';
 import { getBlogPostMetadata } from '../content/blog/metadata';
 import { getRelatedArticleIds } from '../data/contentRelations';
 import { localizedPath } from '../routing/portfolioRoutes';
-import { isCaseStudyReadingProjectId } from '../data/caseStudyReadingLevels';
 import AiProvenanceSection from '../features/ai-provenance/AiProvenanceSection';
 import ProductVisualGallery from '../components/ProductVisualGallery';
-import { isPortfolioProjectId } from '../data/portfolioProjects';
+import CaseStudyStory from '../components/CaseStudyStory';
+import {
+  caseStudyStories,
+  getNextCaseStudyProjectId,
+  type CaseStudyStoryProjectId,
+} from '../data/caseStudyStories';
+import { projectById } from '../data/profile';
 
 const pick = (value: LocalizedText, language: string) => (language === 'he' ? value.he : value.en);
 
@@ -49,85 +54,70 @@ const ProjectCaseStudy = () => {
   const title = t(`projects.items.${project.id}.title`);
   const description = t(`projects.items.${project.id}.description`);
   const problem = t(`projects.items.${project.id}.problem`);
-  const solution = t(`projects.items.${project.id}.solution`);
   const impact = t(`projects.items.${project.id}.impact`);
   const role = t(`projects.items.${project.id}.role`);
   const relatedWriting: RelatedContentItem[] = getRelatedArticleIds(project.id).flatMap((articleId) => {
     const article = getBlogPostMetadata(articleId, language);
     return article ? [{ target: { route: 'article', id: articleId }, label: article.title }] : [];
   });
+  const story = project.id in caseStudyStories
+    ? caseStudyStories[project.id as CaseStudyStoryProjectId]
+    : null;
+
+  if (!story) {
+    return (
+      <main className="min-h-[70vh] bg-white px-6 py-24 transition-colors duration-500 dark:bg-black">
+        <div className="mx-auto max-w-3xl text-center">
+          <h1 className="text-3xl font-bold text-neutral-950 dark:text-white">{t('projects.caseStudyNotFoundTitle')}</h1>
+          <p className="mt-4 text-lg text-neutral-600 dark:text-neutral-400">{t('projects.caseStudyNotFoundDescription')}</p>
+        </div>
+      </main>
+    );
+  }
+
+  const storyProjectId = project.id as CaseStudyStoryProjectId;
+  const nextProject = projectById.get(getNextCaseStudyProjectId(storyProjectId));
+
+  if (!nextProject) return null;
+
+  const visualProof = (
+    <ProductVisualGallery
+      language={language}
+      localizedPath={localizedPath}
+      projectId={storyProjectId}
+    />
+  );
+
+  const supplementaryEvidence: ReactNode = project.id === 'nis_boutique' ? (
+    <AiProvenanceSection
+      buildPath={localizedPath}
+      language={language}
+      mode="full"
+    />
+  ) : undefined;
 
   return (
-    <main className="bg-white px-6 py-20 transition-colors duration-500 dark:bg-black">
-      <article className="mx-auto max-w-5xl">
-        <header className="border-b border-neutral-200 pb-10 dark:border-neutral-800">
-          <p className="mb-4 text-sm font-bold uppercase tracking-[0.18em] text-primary-500">
-            {pick(caseStudy.eyebrow, i18n.language)}
-          </p>
-          <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-neutral-950 dark:text-white md:text-5xl">
-            {title}
-          </h1>
-          <p className="mt-4 max-w-3xl text-lg leading-relaxed text-neutral-600 dark:text-neutral-400">
-            {description}
-          </p>
-
-          <div className="mt-6 flex flex-wrap gap-2">
-            <span className="rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-xs font-bold text-primary-700 dark:border-primary-900 dark:bg-primary-950/40 dark:text-primary-300">
-              {t(`projects.categories.${project.category}`)}
-            </span>
-            <span className="rounded-full border border-success-200 bg-success-50 px-3 py-1 text-xs font-bold text-success-700 dark:border-success-900/70 dark:bg-success-950/30 dark:text-success-300">
-              {t(`projects.statuses.${project.status}`)}
-            </span>
-            {project.tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1 text-xs font-medium text-neutral-600 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-300"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </header>
-
-        {isPortfolioProjectId(project.id) && (
-          <ProductVisualGallery
-            language={language}
-            localizedPath={localizedPath}
-            projectId={project.id}
-          />
-        )}
-
-        {isCaseStudyReadingProjectId(project.id) && (
-          <CaseStudyReadingLevels
-            language={language}
-            projectId={project.id}
-            buildLocalizedPath={localizedPath}
-            caseStudy={caseStudy}
-            problem={problem}
-            solution={solution}
-            impact={impact}
-            role={role}
-            githubUrl={project.githubUrl}
-            liveUrl={project.liveUrl ?? undefined}
-          />
-        )}
-
-        {project.id === 'nis_boutique' && (
-          <AiProvenanceSection
-            buildPath={localizedPath}
-            className="my-12"
-            language={language}
-            mode="full"
-          />
-        )}
-
-        <RelatedContentLinks
+    <main className="bg-white px-6 transition-colors duration-500 dark:bg-black">
+      <div className="mx-auto max-w-6xl">
+        <CaseStudyStory
           buildPath={localizedPath}
-          heading={t('projects.caseStudyRelatedWriting')}
-          items={relatedWriting}
+          caseStudy={caseStudy}
+          categoryLabel={t(`projects.categories.${project.category}`)}
+          challenge={problem}
+          description={description}
+          impact={impact}
           language={language}
+          nextProject={nextProject}
+          project={{ ...project, id: storyProjectId }}
+          relatedWriting={relatedWriting}
+          role={role}
+          story={story}
+          supplementaryEvidence={supplementaryEvidence}
+          statusLabel={t(`projects.statuses.${project.status}`)}
+          title={title}
+          visualProof={visualProof}
         />
-      </article>
+      </div>
     </main>
   );
 };

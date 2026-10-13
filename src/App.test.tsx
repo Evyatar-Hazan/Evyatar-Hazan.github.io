@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { projects } from './data/profile';
+import { caseStudyStoryProjectIds } from './data/caseStudyStories';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const changeLanguageMock = vi.fn().mockResolvedValue(undefined);
@@ -376,21 +377,45 @@ describe('App', () => {
     renderAt('/en/projects/online_converter/');
 
     expect(await screen.findByRole('heading', { name: 'projects.items.online_converter.title' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: '30-second overview' })).toBeInTheDocument();
-    const unknownEvidence = screen.getByText('Evidence date and public sources are not yet verified.');
-    expect(unknownEvidence.closest('section')?.querySelector('time')).not.toBeInTheDocument();
-    expect(unknownEvidence.closest('section')?.querySelector('a')).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Back to projects' })).toHaveAttribute('href', '/en/#projects');
-    expect(screen.getByRole('link', { name: 'Source code' })).toHaveAttribute(
+    expect(screen.getByRole('heading', { name: 'The challenge' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'My role' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Product decisions' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'System view' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Outcome and evidence' })).toBeInTheDocument();
+    expect(screen.getAllByText('Public evidence not yet verified').length).toBeGreaterThan(0);
+    expect(screen.getByRole('link', { name: 'All projects' })).toHaveAttribute('href', '/en/#projects');
+    expect(screen.getByRole('link', { name: 'View source code' })).toHaveAttribute(
       'href',
       'https://github.com/Evyatar-Hazan/online-converter',
     );
-    expect(screen.getByRole('link', { name: 'Live product' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'View live product' })).toHaveAttribute(
       'href',
       'https://online-converter.evyatarhazan.com/',
     );
     expect(screen.getByRole('heading', { name: 'Public product views' })).toBeInTheDocument();
     expect(document.querySelectorAll('[data-project-id="online_converter"] figure')).toHaveLength(2);
+  });
+
+  it('uses the shared visible-story template for all four projects and hides only the appendix', async () => {
+    for (const projectId of caseStudyStoryProjectIds) {
+      const view = renderAt(`/en/projects/${projectId}/`);
+      const story = await screen.findByRole('article');
+
+      expect(story).toHaveAttribute('data-case-study-template', 'product-story-v1');
+      expect(within(story).getByRole('heading', { name: 'Product decisions' })).toBeVisible();
+      expect(within(story).getByRole('heading', { name: 'System view' })).toBeVisible();
+      expect(within(story).getByRole('heading', { name: 'Outcome and evidence' })).toBeVisible();
+
+      const appendix = story.querySelector('details');
+      expect(appendix).not.toHaveAttribute('open');
+      expect(story.querySelectorAll('details')).toHaveLength(1);
+      expect(story.querySelector('#challenge')).not.toBe(appendix);
+      expect(story.querySelector('#decisions')).not.toBe(appendix);
+      expect(story.querySelector('#system')).not.toBe(appendix);
+      expect(story.querySelector('#evidence')).not.toBe(appendix);
+
+      view.unmount();
+    }
   });
 
   it('publishes factual AI provenance only on the Nis case study', async () => {

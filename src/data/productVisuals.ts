@@ -24,7 +24,7 @@ export type ProductVisual = {
 type ProductVisualCollection = {
   heading: LocalizedCopy;
   sourceLabel: LocalizedCopy;
-  visuals: readonly [ProductVisual, ProductVisual];
+  visuals: readonly [ProductVisual, ...ProductVisual[]];
 };
 
 export const productVisualsByProject = {
@@ -162,6 +162,32 @@ export const productVisualsByProject = {
           kind: 'public-product-capture',
           sourceUrl: 'https://bls-protocol.evyatarhazan.com/',
           reviewedAt: '2026-10-03',
+        },
+      },
+    ],
+  },
+  united_hatzalah: {
+    heading: { en: 'Public branch product view', he: 'תצוגת מוצר ציבורית של הסניף' },
+    sourceLabel: { en: 'View the public branch site', he: 'צפייה באתר הסניף הציבורי' },
+    visuals: [
+      {
+        id: 'hatzalah-shoham-public-home-desktop',
+        src: '/project-united-hatzalah.webp',
+        width: 1440,
+        height: 900,
+        byteSize: 81_528,
+        alt: {
+          en: 'Desktop view of the public United Hatzalah Shoham branch homepage with local activity, contact actions, and community imagery',
+          he: 'תצוגת דסקטופ של עמוד הבית הציבורי של סניף איחוד הצלה שוהם עם פעילות מקומית, פעולות קשר ותמונות קהילה',
+        },
+        caption: {
+          en: 'The existing public-site capture shows the branch story, activity path, and contact action in one Hebrew-first presentation.',
+          he: 'צילום האתר הציבורי הקיים מציג את סיפור הסניף, נתיב הפעילות ופעולת הקשר בתצוגה עברית אחת.',
+        },
+        provenance: {
+          kind: 'public-product-capture',
+          sourceUrl: 'https://hatzalah-shoham.evyatarhazan.com/',
+          reviewedAt: '2026-10-14',
         },
       },
     ],
