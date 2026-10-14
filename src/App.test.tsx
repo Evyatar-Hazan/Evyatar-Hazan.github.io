@@ -2,6 +2,12 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import { projects } from './data/profile';
 import { caseStudyStoryProjectIds } from './data/caseStudyStories';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { localizedPath } from './routing/portfolioRoutes';
+import {
+  routeQaLanguages,
+  routeQaMatrix,
+  routeQaThemes,
+} from './routing/routeQaMatrix';
 
 const changeLanguageMock = vi.fn().mockResolvedValue(undefined);
 let currentLanguage = 'en';
@@ -30,6 +36,46 @@ beforeEach(() => {
 });
 
 describe('App', () => {
+  const routeQaCases = routeQaMatrix
+    .flatMap(({ id: routeId, samples }) => (
+      samples.map(({ id: sampleId, target, readySelector }) => ({
+        readySelector,
+        routeId,
+        sampleId,
+        target,
+      }))
+    ))
+    .map((sample, index) => ({
+      ...sample,
+      language: routeQaLanguages[index % routeQaLanguages.length],
+      theme: routeQaThemes[index % routeQaThemes.length],
+    }));
+
+  it.each(routeQaCases)(
+    'applies the FIX-003 matrix to $routeId/$sampleId in $language $theme',
+    async ({ language, readySelector, target, theme }) => {
+      currentLanguage = language;
+      window.localStorage.setItem('theme', theme);
+      const expectedPath = localizedPath(language, target);
+
+      renderAt(expectedPath);
+
+      await waitFor(() => expect(document.querySelector(readySelector)).toBeInTheDocument());
+      await waitFor(() => expect(document.documentElement).toHaveClass(theme));
+      expect(window.location.pathname).toBe(expectedPath);
+      expect(document.documentElement).toHaveAttribute('lang', language);
+      expect(document.documentElement).toHaveAttribute('dir', language === 'he' ? 'rtl' : 'ltr');
+      expect(document.querySelectorAll('main')).toHaveLength(1);
+      expect(document.querySelector('#main-content')).toContainElement(document.querySelector(readySelector));
+      expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute(
+        'href',
+        `https://evyatarhazan.com${expectedPath}`,
+      );
+      expect(screen.getAllByRole('button', { name: 'shell.languageSwitch' }).length).toBeGreaterThan(0);
+      expect(screen.getAllByRole('button', { name: theme === 'dark' ? 'shell.theme.useLight' : 'shell.theme.useDark' }).length).toBeGreaterThan(0);
+    },
+  );
+
   it('renders the main navigation and hero section', () => {
     render(<App />);
 
