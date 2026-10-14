@@ -660,6 +660,7 @@ const localizedSeoForRoute = (route, language) => {
 };
 
 const languages = ['en', 'he'];
+const isExternalOrActionHref = (href) => /^(?:https?:|mailto:|tel:)/u.test(href);
 const addLanguageMetadata = (html, route, language) => {
   const alternates = languages.map((alternateLanguage) => (
     `<link rel="alternate" hreflang="${alternateLanguage}" href="${absoluteUrl(localizedPath(alternateLanguage, route.path))}" />`
@@ -686,7 +687,7 @@ for (const route of staticRoutes) {
       ...localizedRoute.preview,
       links: localizedRoute.preview.links?.map((link) => ({
         ...link,
-        href: /^https?:\/\//u.test(link.href)
+        href: isExternalOrActionHref(link.href)
           ? link.href
           : `${localizedPath(language, link.href.split('#')[0] || '/')}${link.href.includes('#') ? `#${link.href.split('#')[1]}` : ''}`
       }))
@@ -788,6 +789,10 @@ for (const route of staticRoutes) {
           throw new Error(`Static project hub for ${routePath} is missing ${projectLink.label}.`);
         }
       }
+    }
+
+    if (route.path === '/contact/' && !previewMatch?.[0].includes('href="mailto:evyatarhazan3.14@gmail.com"')) {
+      throw new Error(`Static contact preview for ${routePath} is missing the direct email action.`);
     }
 
     for (const alternateLanguage of [...languages, 'x-default']) {
