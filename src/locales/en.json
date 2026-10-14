@@ -22,7 +22,9 @@
       "open": "Open navigation menu",
       "close": "Close navigation menu",
       "closeBackdrop": "Close navigation menu backdrop",
-      "label": "Site navigation"
+      "label": "Site navigation",
+      "contextLabel": "Navigation",
+      "current": "Current"
     },
     "context": {
       "project": "Project",

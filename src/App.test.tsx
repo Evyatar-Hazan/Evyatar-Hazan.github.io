@@ -87,21 +87,21 @@ describe('App', () => {
 
     const dialog = screen.getByRole('dialog', { name: 'shell.menu.label' });
     const content = document.querySelector('#site-shell-content');
-    const firstLink = within(dialog).getByRole('link', { name: 'nav.Home' });
-    const languageButton = within(dialog).getByRole('button', { name: 'shell.languageSwitch' });
+    const closeButton = within(dialog).getByRole('button', { name: 'shell.menu.close' });
+    const lastLink = within(dialog).getByRole('link', { name: 'nav.Privacy' });
 
     expect(dialog).toHaveAttribute('aria-modal', 'true');
     expect(content).toHaveAttribute('inert');
     expect(content).toHaveAttribute('aria-hidden', 'true');
     expect(document.body.style.overflow).toBe('hidden');
-    await waitFor(() => expect(document.activeElement).toBe(firstLink));
+    await waitFor(() => expect(document.activeElement).toBe(closeButton));
 
-    languageButton.focus();
+    lastLink.focus();
     fireEvent.keyDown(document, { key: 'Tab' });
-    expect(document.activeElement).toBe(firstLink);
-    firstLink.focus();
+    expect(document.activeElement).toBe(closeButton);
+    closeButton.focus();
     fireEvent.keyDown(document, { key: 'Tab', shiftKey: true });
-    expect(document.activeElement).toBe(languageButton);
+    expect(document.activeElement).toBe(lastLink);
 
     fireEvent.keyDown(document, { key: 'Escape' });
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
@@ -110,6 +110,81 @@ describe('App', () => {
     expect(content).not.toHaveAttribute('aria-hidden');
     expect(document.body.getAttribute('style')).toBe('overflow: clip; color: red;');
     document.body.removeAttribute('style');
+  });
+
+  it('renders the mobile sheet masthead, ordered navigation, Contact CTA, and bottom secondary links', () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'shell.menu.open' }));
+
+    const dialog = screen.getByRole('dialog', { name: 'shell.menu.label' });
+    const primaryLinks = Array.from(dialog.querySelectorAll<HTMLAnchorElement>('.system-rail-mobile-link'));
+
+    expect(dialog.querySelector('.system-rail-mobile-masthead .brand-mark')).toBeInTheDocument();
+    expect(within(dialog).getByRole('button', { name: 'shell.menu.close' })).toBeInTheDocument();
+    expect(primaryLinks.map((link) => link.getAttribute('aria-label'))).toEqual([
+      'nav.Home', 'nav.Projects', 'nav.About', 'nav.Blog', 'nav.Contact',
+    ]);
+    expect(primaryLinks.map((link) => link.querySelector('.system-rail-mobile-index')?.textContent)).toEqual([
+      '01', '02', '03', '04', '05',
+    ]);
+    expect(within(dialog).getByRole('link', { name: 'nav.Contact' })).toHaveClass('is-contact');
+    expect(within(dialog).queryByRole('button', { name: 'shell.languageSwitch' })).not.toBeInTheDocument();
+    expect(dialog.querySelector('.system-rail-mobile-theme')).not.toBeInTheDocument();
+    expect(within(dialog).getByRole('link', { name: 'nav.Lab' })).toBeInTheDocument();
+    expect(within(dialog).getByRole('link', { name: 'nav.Privacy' })).toBeInTheDocument();
+  });
+
+  it('keeps the mobile language and theme controls fixed before, during, and after the sheet', async () => {
+    render(<App />);
+
+    const actions = document.querySelector<HTMLElement>('.system-rail-mobile-actions')!;
+    const themeButton = actions.querySelector<HTMLButtonElement>('.system-rail-icon')!;
+    const languageButton = actions.querySelector<HTMLButtonElement>('.system-rail-mobile-language')!;
+    const readRects = () => [themeButton, languageButton].map((button) => {
+      const rect = button.getBoundingClientRect();
+      return {
+        x: rect.x,
+        y: rect.y,
+        width: rect.width,
+        height: rect.height,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom,
+        left: rect.left,
+      };
+    });
+    const before = readRects();
+
+    fireEvent.click(screen.getByRole('button', { name: 'shell.menu.open' }));
+    expect(readRects()).toEqual(before);
+    expect(themeButton).toBeDisabled();
+    expect(languageButton).toBeDisabled();
+
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'shell.menu.close' }));
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(readRects()).toEqual(before);
+    expect(themeButton).toBeEnabled();
+    expect(languageButton).toBeEnabled();
+  });
+
+  it('keeps modified mobile navigation clicks native', () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'shell.menu.open' }));
+    const blogLink = within(screen.getByRole('dialog')).getByRole('link', { name: 'nav.Blog' });
+    const modifiedClick = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      ctrlKey: true,
+    });
+
+    let preventedByApplication = true;
+    blogLink.addEventListener('click', (event) => {
+      preventedByApplication = event.defaultPrevented;
+      event.preventDefault();
+    }, { once: true });
+
+    blogLink.dispatchEvent(modifiedClick);
+    expect(preventedByApplication).toBe(false);
   });
 
   it('closes the mobile navigation after a route change', async () => {
@@ -401,10 +476,10 @@ describe('App', () => {
     const menuToggle = screen.getByRole('button', { name: 'shell.menu.open' });
     fireEvent.click(menuToggle);
 
-    expect(screen.getByRole('button', { name: 'shell.menu.close' })).toBeInTheDocument();
+    expect(within(screen.getByRole('dialog')).getByRole('button', { name: 'shell.menu.close' })).toBeInTheDocument();
     expect(document.body.style.overflow).toBe('hidden');
 
-    fireEvent.click(screen.getByRole('button', { name: 'shell.menu.close' }));
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'shell.menu.close' }));
     expect(document.body.style.overflow).toBe('clip');
     document.body.removeAttribute('style');
   });
@@ -640,15 +715,17 @@ describe('App', () => {
     expect(document.querySelector('link[rel="alternate"]')).not.toBeInTheDocument();
   });
 
-  it('closes the mobile menu when clicking the backdrop', () => {
+  it('closes the mobile menu from the backdrop and restores focus to the trigger', async () => {
     render(<App />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'shell.menu.open' }));
+    const trigger = screen.getByRole('button', { name: 'shell.menu.open' });
+    fireEvent.click(trigger);
     expect(document.body.style.overflow).toBe('hidden');
 
     fireEvent.click(screen.getByTestId('mobile-menu-backdrop'));
     expect(screen.getByRole('button', { name: 'shell.menu.open' })).toBeInTheDocument();
     expect(document.body.style.overflow).toBe('');
+    await waitFor(() => expect(trigger).toHaveFocus());
   });
 
   it('restores body scroll when app unmounts with mobile menu open', () => {

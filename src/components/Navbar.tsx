@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Menu, Moon, Sun, X } from 'lucide-react';
+import { ArrowRight, Menu, Moon, Sun, X } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -46,7 +46,9 @@ const Navbar = () => {
 
   useEffect(() => {
     if (!isOpen) {
-      if (wasOpenRef.current) menuButtonRef.current?.focus();
+      if (wasOpenRef.current) {
+        window.requestAnimationFrame(() => menuButtonRef.current?.focus());
+      }
       wasOpenRef.current = false;
       return;
     }
@@ -126,17 +128,32 @@ const Navbar = () => {
 
   const themeLabel = theme === 'dark' ? t('shell.theme.useLight') : t('shell.theme.useDark');
 
-  const renderLinks = (mobile = false) => primaryNavigation.map((item) => (
+  const renderLinks = (mobile = false) => primaryNavigation.map((item, index) => (
     <a
       key={item.id}
       href={navigationHref(item, language)}
       onClick={mobile ? closeMenu : undefined}
       aria-current={activeId === item.id ? 'page' : undefined}
+      aria-label={t(item.translationKey)}
       className={mobile
-        ? `system-rail-mobile-link ${activeId === item.id ? 'is-active' : ''}`
+        ? `system-rail-mobile-link ${item.id === 'contact' ? 'is-contact' : ''} ${activeId === item.id ? 'is-active' : ''}`
         : `system-rail-link ${activeId === item.id ? 'is-active' : ''}`}
     >
-      {t(item.translationKey)}
+      {mobile && (
+        <span className="system-rail-mobile-index" aria-hidden="true">
+          {String(index + 1).padStart(2, '0')}
+        </span>
+      )}
+      {mobile
+        ? <span className="system-rail-mobile-label">{t(item.translationKey)}</span>
+        : t(item.translationKey)}
+      {mobile && (
+        <span className="system-rail-mobile-marker" aria-hidden="true">
+          {activeId === item.id
+            ? t('shell.menu.current')
+            : <ArrowRight className="system-rail-mobile-arrow" />}
+        </span>
+      )}
     </a>
   ));
 
@@ -196,10 +213,20 @@ const Navbar = () => {
                 className="system-rail-icon"
                 aria-label={themeLabel}
                 aria-pressed={theme === 'dark'}
+                disabled={isOpen}
               >
                 {theme === 'dark'
                   ? <Sun className="w-5 h-5" aria-hidden="true" />
                   : <Moon className="w-5 h-5" aria-hidden="true" />}
+              </button>
+              <button
+                type="button"
+                onClick={toggleLanguage}
+                className="system-rail-language system-rail-mobile-language"
+                aria-label={t('shell.languageSwitch', { language: language === 'en' ? 'עברית' : 'English' })}
+                disabled={isOpen}
+              >
+                {language === 'en' ? 'עב' : 'EN'}
               </button>
               <button
                 ref={menuButtonRef}
@@ -236,32 +263,47 @@ const Navbar = () => {
                   role="dialog"
                   aria-modal="true"
                   aria-label={t('shell.menu.label')}
-                  initial={reduceMotion ? false : { opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
-                  transition={{ duration: reduceMotion ? 0 : 0.18 }}
+                  initial={reduceMotion ? false : { x: language === 'he' ? '-100%' : '100%' }}
+                  animate={{ x: 0 }}
+                  exit={reduceMotion ? undefined : { x: language === 'he' ? '-100%' : '100%' }}
+                  transition={{ duration: reduceMotion ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] }}
                   className="system-rail-mobile-menu"
                 >
-                  <div className="system-rail-mobile-heading">
-                    <span>{t('shell.menu.label')}</span>
-                    {routeContext && <strong>{routeContext.category} / {routeContext.detail}</strong>}
+                  <div className="system-rail-mobile-masthead">
+                    <div className="system-rail-mobile-identity">
+                      <BrandMark className="system-rail-mobile-brand-mark" />
+                      <div>
+                        <span>{t('shell.menu.contextLabel')}</span>
+                        <strong>{t('shell.menu.label')}</strong>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={closeMenu}
+                      className="system-rail-mobile-close"
+                      aria-label={t('shell.menu.close')}
+                    >
+                      <X aria-hidden="true" />
+                    </button>
                   </div>
-                  <div className="system-rail-mobile-links">{renderLinks(true)}</div>
-                  <div className="system-rail-mobile-secondary">
-                    {secondaryNavigation.map((item) => (
-                      <a key={item.id} href={navigationHref(item, language)} onClick={closeMenu}>
-                        {t(item.translationKey)}
-                      </a>
-                    ))}
+                  <div className="system-rail-mobile-scroll">
+                    {routeContext && (
+                      <p className="system-rail-mobile-context">
+                        <span>{routeContext.category}</span>
+                        <strong>{routeContext.detail}</strong>
+                      </p>
+                    )}
+                    <div className="system-rail-mobile-links">{renderLinks(true)}</div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={toggleLanguage}
-                    className="system-rail-mobile-language"
-                    aria-label={t('shell.languageSwitch', { language: language === 'en' ? 'עברית' : 'English' })}
-                  >
-                    {language === 'en' ? 'עברית (HE)' : 'English (EN)'}
-                  </button>
+                  <div className="system-rail-mobile-footer">
+                    <div className="system-rail-mobile-secondary">
+                      {secondaryNavigation.map((item) => (
+                        <a key={item.id} href={navigationHref(item, language)} onClick={closeMenu}>
+                          {t(item.translationKey)}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
                 </motion.div>
               </>
             )}
