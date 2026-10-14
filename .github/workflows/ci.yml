@@ -53,6 +53,45 @@ jobs:
           path: dist
           if-no-files-found: error
 
+  visual-regression:
+    name: Visual Regression
+    if: github.event_name == 'pull_request'
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build candidate
+        run: npm run build
+
+      - name: Compare candidate with approved production baseline
+        env:
+          PLAYWRIGHT_CHANNEL: chrome
+          VISUAL_BASELINE_URL: https://evyatarhazan.com
+          VISUAL_CHANGE_APPROVED: ${{ contains(github.event.pull_request.labels.*.name, 'visual-change-approved') }}
+        run: npm run test:visual
+
+      - name: Upload visual diff report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-report
+          path: test-results/visual-regression
+          if-no-files-found: error
+          retention-days: 14
+
   github-pages:
     name: Deploy to GitHub Pages
     if: github.event_name == 'push'
