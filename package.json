@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "validate": "npm run lint && npm run test && npm run build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "capture:baseline": "node scripts/capture-visual-baseline.mjs"
   },
   "dependencies": {
     "framer-motion": "^12.34.3",
