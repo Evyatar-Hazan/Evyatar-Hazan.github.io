@@ -359,7 +359,7 @@ describe('App', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Build a short project brief (optional)' }));
     expect(screen.getByLabelText('Name')).toBeRequired();
     expect(screen.getByLabelText('Email address')).toBeRequired();
-    expect(screen.getByLabelText('Message preview')).toHaveAttribute('readonly');
+    expect(screen.getByLabelText('Message review')).toHaveAttribute('readonly');
   });
 
   it('only renders live links for projects with a liveUrl', async () => {

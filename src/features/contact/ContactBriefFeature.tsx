@@ -1,164 +1,291 @@
-import { useId, useMemo, useState, type FormEvent } from 'react';
-import { ArrowUpLeft, ArrowUpRight, CheckCircle2, Linkedin, Mail, MessageCircle, Send, XCircle } from 'lucide-react';
+import {
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+} from 'react';
+import {
+  ArrowUpLeft,
+  ArrowUpRight,
+  CheckCircle2,
+  Linkedin,
+  Mail,
+  MessageCircle,
+  RotateCcw,
+  Send,
+  XCircle,
+} from 'lucide-react';
 import type { LocalizedPathBuilder, PortfolioSlotProps } from '../../contracts/portfolio';
 import { profileLinks } from '../../data/profile';
+import { HomeSectionHeader } from '../../components/sections/HomeSectionPrimitives';
 import {
   buildContactBriefMessage,
   buildContactEmailHref,
   buildContactWhatsappHref,
   contactBriefCopy,
+  contactBriefLimits,
   emptyContactBrief,
   type ContactBriefValues,
   type PreferredContactChannel,
 } from './contactBrief';
-import { HomeSectionHeader } from '../../components/sections/HomeSectionPrimitives';
+import {
+  contactIntentOptions,
+  contactProjectOptions,
+  generalContactContext,
+  getContactContextDetails,
+  type ContactContext,
+  type ContactIntentId,
+} from './contactIntent';
 
-const formEndpoint = 'https://formsubmit.co/ajax/evyatarhazan3.14@gmail.com';
+export const contactFormEndpoint = 'https://formsubmit.co/ajax/evyatarhazan3.14@gmail.com';
+const submissionTimeoutMs = 12_000;
 
 const localizedUi = {
   en: {
     eyebrow: 'PROJECT HANDOFF / 01',
-    title: 'Start with a direct conversation.',
-    description: 'Choose the simplest channel, or prepare a short brief before you reach out.',
+    title: 'Start a project conversation.',
+    description: 'Keep the portfolio context intact, use a direct channel immediately, or shape a short optional brief before you choose how to send it.',
+    contextTitle: 'Conversation context',
+    contextDescription: 'This public context came from the portfolio. No personal details are stored in the URL.',
+    contextLabel: 'Starting point',
+    projectLabel: 'Related project',
+    clearContext: 'Clear context',
     directTitle: 'Direct contact',
     directDescription: 'No brief is required. A short message is enough to begin.',
     whatsapp: 'WhatsApp',
     email: 'Email',
     linkedin: 'LinkedIn',
     builderToggle: 'Build a short project brief (optional)',
-    builderTitle: 'Shape the context before sending',
+    builderTitle: 'Shape the handoff before sending',
     builderDescription: 'Nothing is sent or stored while you write. Blank answers are left out of the message.',
     fields: {
       need: { label: 'What do you need?', placeholder: 'A website, product flow, internal tool…' },
       existingSituation: { label: 'What exists today?', placeholder: 'A short description of the current situation' },
       issue: { label: 'What is not working?', placeholder: 'The main blocker or problem to solve' },
+      desiredOutcome: { label: 'What outcome would make this successful?', placeholder: 'The change you want people or the team to experience' },
       timeframe: { label: 'What is the timeframe?', placeholder: 'For example: exploring, this quarter, flexible' },
       preferredChannel: { label: 'Preferred channel', placeholder: 'No preference' },
     },
-    previewTitle: 'Message preview',
-    previewDescription: 'Review the exact text before choosing where to use it.',
+    previewTitle: 'Message review',
+    previewDescription: 'This exact message is used for the email and WhatsApp drafts.',
+    formIdentityTitle: 'Details used only for form delivery',
     nameLabel: 'Name',
     namePlaceholder: 'Your name',
     emailLabel: 'Email address',
     emailPlaceholder: 'you@example.com',
-    formAction: 'Send with the existing form',
+    requiredHint: 'Required only when sending through the form.',
+    nameRequired: 'Enter your name to send through the form.',
+    emailRequired: 'Enter your email address to send through the form.',
+    emailInvalid: 'Enter a valid email address.',
+    errorSummary: 'Please fix the following fields:',
+    formAction: 'Send with FormSubmit',
     sending: 'Sending…',
     emailAction: 'Open email draft',
     whatsappAction: 'Open WhatsApp draft',
-    privacyPrefix: 'The form is processed by FormSubmit and forwarded by email.',
+    privacyTitle: 'Privacy and recovery',
+    privacyPrefix: 'FormSubmit receives your name, email, and the reviewed message only after you press send. The site does not save the brief locally.',
     privacyLink: 'Read the privacy notice',
-    success: 'Message sent successfully. I will get back to you soon.',
-    error: 'Message delivery failed. You can still use email or WhatsApp.',
+    success: 'FormSubmit confirmed delivery. Your message is on its way.',
+    error: 'Delivery was not confirmed. Your brief is still here; retry or use a draft instead.',
+    timeout: 'The request timed out before delivery was confirmed. Your brief is still here.',
+    retry: 'Retry form delivery',
   },
   he: {
     eyebrow: 'PROJECT HANDOFF / 01',
-    title: 'מתחילים בשיחה ישירה.',
-    description: 'בוחרים את הערוץ הפשוט ביותר, או מכינים תקציר קצר לפני הפנייה.',
+    title: 'פותחים שיחת פרויקט.',
+    description: 'שומרים על ההקשר מהפורטפוליו, פונים מיד בערוץ ישיר או מסדרים תקציר קצר ולא־מחייב לפני שבוחרים איך להשתמש בו.',
+    contextTitle: 'הקשר השיחה',
+    contextDescription: 'זהו הקשר ציבורי שהגיע מהפורטפוליו. פרטים אישיים אינם נשמרים בכתובת.',
+    contextLabel: 'נקודת פתיחה',
+    projectLabel: 'פרויקט קשור',
+    clearContext: 'ניקוי ההקשר',
     directTitle: 'יצירת קשר ישירה',
     directDescription: 'לא חייבים למלא תקציר. הודעה קצרה מספיקה כדי להתחיל.',
     whatsapp: 'WhatsApp',
     email: 'אימייל',
     linkedin: 'LinkedIn',
     builderToggle: 'הכנת תקציר פרויקט קצר (לא חובה)',
-    builderTitle: 'מסדרים את ההקשר לפני השליחה',
+    builderTitle: 'מסדרים את ההעברה לפני השליחה',
     builderDescription: 'בזמן הכתיבה דבר לא נשלח או נשמר. תשובות ריקות לא יופיעו בהודעה.',
     fields: {
       need: { label: 'מה צריך?', placeholder: 'אתר, תהליך מוצר, כלי פנימי…' },
       existingSituation: { label: 'מה קיים היום?', placeholder: 'תיאור קצר של המצב הנוכחי' },
       issue: { label: 'מה לא עובד?', placeholder: 'החסם או הבעיה המרכזית שצריך לפתור' },
+      desiredOutcome: { label: 'מהי התוצאה הרצויה?', placeholder: 'השינוי הרצוי עבור המשתמשים או הצוות' },
       timeframe: { label: 'מה לוח הזמנים?', placeholder: 'לדוגמה: בבדיקה, ברבעון הקרוב, גמיש' },
       preferredChannel: { label: 'ערוץ מועדף', placeholder: 'אין העדפה' },
     },
-    previewTitle: 'תצוגה מקדימה של ההודעה',
-    previewDescription: 'אפשר לבדוק את הטקסט המדויק לפני שבוחרים איפה להשתמש בו.',
+    previewTitle: 'בדיקת ההודעה',
+    previewDescription: 'זהו הטקסט המדויק שישמש בטיוטות האימייל וה־WhatsApp.',
+    formIdentityTitle: 'פרטים שנדרשים רק לשליחה דרך הטופס',
     nameLabel: 'שם',
     namePlaceholder: 'השם שלך',
     emailLabel: 'כתובת אימייל',
     emailPlaceholder: 'you@example.com',
-    formAction: 'שליחה בטופס הקיים',
+    requiredHint: 'נדרש רק עבור שליחה דרך הטופס.',
+    nameRequired: 'יש להזין שם כדי לשלוח דרך הטופס.',
+    emailRequired: 'יש להזין כתובת אימייל כדי לשלוח דרך הטופס.',
+    emailInvalid: 'יש להזין כתובת אימייל תקינה.',
+    errorSummary: 'יש לתקן את השדות הבאים:',
+    formAction: 'שליחה באמצעות FormSubmit',
     sending: 'שולח…',
     emailAction: 'פתיחת טיוטת אימייל',
     whatsappAction: 'פתיחת טיוטת WhatsApp',
-    privacyPrefix: 'הטופס מעובד באמצעות FormSubmit ומועבר באימייל.',
+    privacyTitle: 'פרטיות והתאוששות',
+    privacyPrefix: 'FormSubmit מקבל את השם, האימייל וההודעה שנבדקה רק לאחר לחיצה על שליחה. האתר אינו שומר את התקציר מקומית.',
     privacyLink: 'למידע נוסף בעמוד הפרטיות',
-    success: 'ההודעה נשלחה בהצלחה. אחזור אליך בהקדם.',
-    error: 'שליחת ההודעה נכשלה. עדיין אפשר להשתמש באימייל או ב-WhatsApp.',
+    success: 'FormSubmit אישר את המסירה. ההודעה בדרך.',
+    error: 'המסירה לא אושרה. התקציר נשמר כאן; אפשר לנסות שוב או להשתמש בטיוטה.',
+    timeout: 'הבקשה הסתיימה לפני שהמסירה אושרה. התקציר נשמר כאן.',
+    retry: 'ניסיון שליחה נוסף',
   },
 } as const;
 
+type FormErrors = Partial<Record<'name' | 'email', string>>;
+type FormStatus = 'idle' | 'success' | 'error' | 'timeout';
+
 export type ContactBriefFeatureProps = PortfolioSlotProps & {
   buildLocalizedPath: LocalizedPathBuilder;
+  context?: ContactContext;
   id?: string;
+  onContextChange?: (context: ContactContext) => void;
   titleAs?: 'h1' | 'h2';
 };
 
-const fieldClassName = 'rounded-2xl border border-neutral-200 bg-white/80 p-4 dark:border-neutral-700 dark:bg-neutral-950/70';
-const inputClassName = 'mt-2 min-h-11 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-base text-neutral-950 outline-none transition focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white';
+const fieldClassName = 'contact-workspace-field';
+const inputClassName = 'contact-workspace-input';
 const actionClassName = 'home-action home-action--secondary';
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u;
 
 const ContactBriefFeature = ({
   language,
   className = '',
   buildLocalizedPath,
+  context = generalContactContext,
   id = 'contact',
+  onContextChange,
   titleAs = 'h2',
 }: ContactBriefFeatureProps) => {
   const ui = localizedUi[language];
   const content = contactBriefCopy[language];
   const Title = titleAs;
+  const SectionHeading = titleAs === 'h1' ? 'h2' : 'h3';
   const reactId = useId();
   const builderId = `${reactId}-builder`;
   const titleId = `${reactId}-title`;
   const statusId = `${reactId}-status`;
+  const errorSummaryRef = useRef<HTMLDivElement>(null);
+  const statusRef = useRef<HTMLDivElement>(null);
   const [isBuilderOpen, setIsBuilderOpen] = useState(false);
   const [brief, setBrief] = useState<ContactBriefValues>(emptyContactBrief);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [formStatus, setFormStatus] = useState<FormStatus>('idle');
   const ArrowIcon = language === 'he' ? ArrowUpLeft : ArrowUpRight;
+  const contextDetails = useMemo(
+    () => getContactContextDetails(language, context),
+    [context, language],
+  );
+  const intentOptions = useMemo(() => contactIntentOptions(language), [language]);
+  const projectOptions = useMemo(() => contactProjectOptions(language), [language]);
 
   const message = useMemo(
-    () => buildContactBriefMessage(language, brief),
-    [brief, language],
+    () => buildContactBriefMessage(language, brief, context),
+    [brief, context, language],
   );
   const whatsappHref = buildContactWhatsappHref(profileLinks.whatsapp, message);
-  const emailHref = buildContactEmailHref(profileLinks.email, language, message);
+  const emailHref = buildContactEmailHref(profileLinks.email, language, message, context);
   const privacyHref = buildLocalizedPath(language, { route: 'privacy' });
+
+  useEffect(() => {
+    if (formStatus === 'idle') return;
+    statusRef.current?.focus();
+  }, [formStatus]);
 
   const updateBrief = <Key extends keyof ContactBriefValues>(
     key: Key,
     value: ContactBriefValues[Key],
-  ) => setBrief((current) => ({ ...current, [key]: value }));
+  ) => {
+    setFormStatus('idle');
+    setBrief((current) => ({ ...current, [key]: value }));
+  };
+
+  const updateIntent = (intent: ContactIntentId) => {
+    if (!onContextChange) return;
+    if (intent !== 'project') {
+      onContextChange({ intent });
+      return;
+    }
+
+    onContextChange({
+      intent: 'project',
+      projectId: context.intent === 'project' ? context.projectId : projectOptions[0]!.id,
+    });
+  };
+
+  const validateIdentity = () => {
+    const nextErrors: FormErrors = {};
+    if (!name.trim()) nextErrors.name = ui.nameRequired;
+    if (!email.trim()) nextErrors.email = ui.emailRequired;
+    else if (!emailPattern.test(email.trim())) nextErrors.email = ui.emailInvalid;
+    setErrors(nextErrors);
+    return nextErrors;
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = event.currentTarget;
-    if (!form.checkValidity()) {
-      form.reportValidity();
+    if (isSubmitting) return;
+
+    const nextErrors = validateIdentity();
+    if (Object.keys(nextErrors).length > 0) {
+      window.requestAnimationFrame(() => errorSummaryRef.current?.focus());
       return;
     }
 
     setIsSubmitting(true);
     setFormStatus('idle');
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), submissionTimeoutMs);
+
     try {
-      const response = await fetch(formEndpoint, {
+      const body = new FormData();
+      body.set('name', name.trim());
+      body.set('email', email.trim());
+      body.set('message', message);
+      body.set('_subject', contextDetails.emailSubject);
+
+      const response = await fetch(contactFormEndpoint, {
         method: 'POST',
         headers: { Accept: 'application/json' },
-        body: new FormData(form),
+        body,
+        signal: controller.signal,
       });
-      setFormStatus(response.ok ? 'success' : 'error');
-      if (response.ok) form.reset();
-    } catch {
-      setFormStatus('error');
+      const payload = await response.json().catch(() => null) as { success?: boolean | string } | null;
+      const confirmed = response.ok && (payload?.success === true || payload?.success === 'true');
+      setFormStatus(confirmed ? 'success' : 'error');
+    } catch (error) {
+      setFormStatus(error instanceof DOMException && error.name === 'AbortError' ? 'timeout' : 'error');
     } finally {
+      window.clearTimeout(timeout);
       setIsSubmitting(false);
     }
   };
+
+  const statusMessage = formStatus === 'success'
+    ? ui.success
+    : formStatus === 'timeout'
+      ? ui.timeout
+      : ui.error;
 
   return (
     <section
       id={id}
       aria-labelledby={titleId}
-      className={`home-section home-section--contact relative overflow-hidden ${className}`.trim()}
+      className={`home-section home-section--contact contact-workspace relative overflow-hidden ${className}`.trim()}
     >
       <div className="home-section__inner">
         {Title === 'h2' ? (
@@ -177,10 +304,52 @@ const ContactBriefFeature = ({
           </header>
         )}
 
-        <div className="home-contact-panel">
+        {onContextChange && (
+          <section className="contact-context-card" aria-labelledby={`${reactId}-context-title`}>
+            <div className="contact-context-card__copy">
+              <p className="home-detail-label">{ui.contextTitle}</p>
+              <SectionHeading id={`${reactId}-context-title`}>{contextDetails.title}</SectionHeading>
+              <p>{contextDetails.description}</p>
+              <small>{ui.contextDescription}</small>
+            </div>
+            <fieldset className="contact-context-card__controls">
+              <legend className="sr-only">{ui.contextTitle}</legend>
+              <label htmlFor={`${reactId}-intent`}>{ui.contextLabel}</label>
+              <select
+                id={`${reactId}-intent`}
+                value={context.intent}
+                onChange={(event) => updateIntent(event.target.value as ContactIntentId)}
+              >
+                {intentOptions.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
+              </select>
+              {context.intent === 'project' && (
+                <>
+                  <label htmlFor={`${reactId}-project`}>{ui.projectLabel}</label>
+                  <select
+                    id={`${reactId}-project`}
+                    value={context.projectId}
+                    onChange={(event) => onContextChange({
+                      intent: 'project',
+                      projectId: event.target.value as typeof context.projectId,
+                    })}
+                  >
+                    {projectOptions.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
+                  </select>
+                </>
+              )}
+              {context.intent !== 'general' && (
+                <button type="button" onClick={() => onContextChange(generalContactContext)}>
+                  <RotateCcw aria-hidden="true" />{ui.clearContext}
+                </button>
+              )}
+            </fieldset>
+          </section>
+        )}
+
+        <section className="home-contact-panel" aria-labelledby={`${reactId}-direct-title`}>
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <div>
-              <h3 className="text-2xl font-bold text-neutral-950 dark:text-white">{ui.directTitle}</h3>
+              <SectionHeading id={`${reactId}-direct-title`} className="text-2xl font-bold text-neutral-950 dark:text-white">{ui.directTitle}</SectionHeading>
               <p className="mt-2 text-neutral-600 dark:text-neutral-400">{ui.directDescription}</p>
             </div>
             <div className="flex flex-wrap gap-3">
@@ -195,7 +364,7 @@ const ContactBriefFeature = ({
               </a>
             </div>
           </div>
-        </div>
+        </section>
 
         <button
           type="button"
@@ -208,18 +377,20 @@ const ContactBriefFeature = ({
         </button>
 
         {isBuilderOpen && (
-          <div id={builderId} className="mt-6 grid gap-6 rounded-[2rem] border border-neutral-200 bg-neutral-50/85 p-5 sm:p-7 lg:grid-cols-[1fr_0.9fr] dark:border-neutral-800 dark:bg-neutral-900/75">
-            <div>
-              <h3 className="text-2xl font-bold text-neutral-950 dark:text-white">{ui.builderTitle}</h3>
+          <div id={builderId} className="contact-brief-layout">
+            <section aria-labelledby={`${reactId}-builder-title`}>
+              <SectionHeading id={`${reactId}-builder-title`} className="text-2xl font-bold text-neutral-950 dark:text-white">{ui.builderTitle}</SectionHeading>
               <p className="mt-2 leading-7 text-neutral-600 dark:text-neutral-400">{ui.builderDescription}</p>
 
-              <div className="mt-6 grid gap-4">
-                {(['need', 'existingSituation', 'issue', 'timeframe'] as const).map((key) => (
+              <fieldset className="mt-6 grid gap-4">
+                <legend className="sr-only">{ui.builderTitle}</legend>
+                {(['need', 'existingSituation', 'issue', 'desiredOutcome', 'timeframe'] as const).map((key) => (
                   <div key={key} className={fieldClassName}>
-                    <label htmlFor={`${reactId}-${key}`} className="text-sm font-bold text-neutral-900 dark:text-white">{ui.fields[key].label}</label>
+                    <label htmlFor={`${reactId}-${key}`}>{ui.fields[key].label}</label>
                     <textarea
                       id={`${reactId}-${key}`}
                       rows={key === 'timeframe' ? 2 : 3}
+                      maxLength={contactBriefLimits[key]}
                       value={brief[key]}
                       placeholder={ui.fields[key].placeholder}
                       onChange={(event) => updateBrief(key, event.target.value)}
@@ -229,7 +400,7 @@ const ContactBriefFeature = ({
                 ))}
 
                 <div className={fieldClassName}>
-                  <label htmlFor={`${reactId}-preferred-channel`} className="text-sm font-bold text-neutral-900 dark:text-white">{ui.fields.preferredChannel.label}</label>
+                  <label htmlFor={`${reactId}-preferred-channel`}>{ui.fields.preferredChannel.label}</label>
                   <select
                     id={`${reactId}-preferred-channel`}
                     value={brief.preferredChannel}
@@ -242,33 +413,70 @@ const ContactBriefFeature = ({
                     <option value="whatsapp">{content.channelLabels.whatsapp}</option>
                   </select>
                 </div>
-              </div>
-            </div>
+              </fieldset>
+            </section>
 
-            <form noValidate onSubmit={handleSubmit} className="rounded-[1.5rem] border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-950">
-              <h3 className="text-xl font-bold text-neutral-950 dark:text-white">{ui.previewTitle}</h3>
+            <form noValidate onSubmit={handleSubmit} className="contact-message-review">
+              <SectionHeading className="text-xl font-bold text-neutral-950 dark:text-white">{ui.previewTitle}</SectionHeading>
               <p className="mt-2 text-sm leading-6 text-neutral-600 dark:text-neutral-400">{ui.previewDescription}</p>
               <label htmlFor={`${reactId}-preview`} className="sr-only">{ui.previewTitle}</label>
               <textarea
                 id={`${reactId}-preview`}
-                name="message"
                 value={message}
                 readOnly
                 dir="auto"
-                rows={10}
+                rows={12}
                 className={`${inputClassName} resize-y font-mono text-sm leading-6`}
               />
 
-              <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+              <fieldset className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                <legend className="col-span-full mb-1 text-sm font-black text-neutral-950 dark:text-white">{ui.formIdentityTitle}</legend>
                 <div>
                   <label htmlFor={`${reactId}-name`} className="text-sm font-bold text-neutral-900 dark:text-white">{ui.nameLabel}</label>
-                  <input id={`${reactId}-name`} name="name" required autoComplete="name" placeholder={ui.namePlaceholder} className={inputClassName} />
+                  <input
+                    id={`${reactId}-name`}
+                    name="name"
+                    required
+                    maxLength={100}
+                    autoComplete="name"
+                    placeholder={ui.namePlaceholder}
+                    value={name}
+                    aria-invalid={Boolean(errors.name)}
+                    aria-describedby={`${reactId}-identity-hint${errors.name ? ` ${reactId}-name-error` : ''}`}
+                    onChange={(event) => { setName(event.target.value); setErrors((current) => ({ ...current, name: undefined })); }}
+                    className={inputClassName}
+                  />
+                  {errors.name && <p id={`${reactId}-name-error`} className="contact-field-error">{errors.name}</p>}
                 </div>
                 <div>
                   <label htmlFor={`${reactId}-email`} className="text-sm font-bold text-neutral-900 dark:text-white">{ui.emailLabel}</label>
-                  <input id={`${reactId}-email`} name="email" type="email" required autoComplete="email" placeholder={ui.emailPlaceholder} className={inputClassName} />
+                  <input
+                    id={`${reactId}-email`}
+                    name="email"
+                    type="email"
+                    required
+                    maxLength={254}
+                    autoComplete="email"
+                    inputMode="email"
+                    dir="ltr"
+                    placeholder={ui.emailPlaceholder}
+                    value={email}
+                    aria-invalid={Boolean(errors.email)}
+                    aria-describedby={`${reactId}-identity-hint${errors.email ? ` ${reactId}-email-error` : ''}`}
+                    onChange={(event) => { setEmail(event.target.value); setErrors((current) => ({ ...current, email: undefined })); }}
+                    className={inputClassName}
+                  />
+                  {errors.email && <p id={`${reactId}-email-error`} className="contact-field-error">{errors.email}</p>}
                 </div>
-              </div>
+                <p id={`${reactId}-identity-hint`} className="col-span-full text-xs text-neutral-500 dark:text-neutral-400">{ui.requiredHint}</p>
+              </fieldset>
+
+              {Object.keys(errors).length > 0 && (
+                <div ref={errorSummaryRef} tabIndex={-1} role="alert" className="contact-error-summary">
+                  <strong>{ui.errorSummary}</strong>
+                  <ul>{Object.values(errors).filter(Boolean).map((error) => <li key={error}>{error}</li>)}</ul>
+                </div>
+              )}
 
               <div className="mt-5 grid gap-3">
                 <button type="submit" disabled={isSubmitting} className="home-action home-action--primary disabled:cursor-wait disabled:opacity-60">
@@ -278,13 +486,29 @@ const ContactBriefFeature = ({
                 <a className={actionClassName} href={whatsappHref} target="_blank" rel="noopener noreferrer"><MessageCircle aria-hidden="true" className="h-4 w-4" />{ui.whatsappAction}</a>
               </div>
 
-              <p className="mt-5 text-xs leading-5 text-neutral-500 dark:text-neutral-400">
-                {ui.privacyPrefix}{' '}<a className="font-bold underline underline-offset-2" href={privacyHref}>{ui.privacyLink}</a>
-              </p>
-              <div id={statusId} aria-live="polite" className="mt-3 min-h-6 text-sm font-semibold">
-                {formStatus === 'success' && <p className="flex items-center gap-2 text-success-700 dark:text-success-400"><CheckCircle2 aria-hidden="true" className="h-4 w-4" />{ui.success}</p>}
-                {formStatus === 'error' && <p className="flex items-center gap-2 text-danger-600 dark:text-danger-400"><XCircle aria-hidden="true" className="h-4 w-4" />{ui.error}</p>}
-              </div>
+              <section className="contact-privacy-note" aria-labelledby={`${reactId}-privacy-title`}>
+                <h3 id={`${reactId}-privacy-title`}>{ui.privacyTitle}</h3>
+                <p>{ui.privacyPrefix} <a href={privacyHref}>{ui.privacyLink}</a></p>
+              </section>
+
+              {formStatus !== 'idle' && (
+                <div
+                  ref={statusRef}
+                  id={statusId}
+                  tabIndex={-1}
+                  role="status"
+                  aria-live="polite"
+                  className={`contact-delivery-status is-${formStatus}`}
+                >
+                  {formStatus === 'success'
+                    ? <CheckCircle2 aria-hidden="true" />
+                    : <XCircle aria-hidden="true" />}
+                  <p>{statusMessage}</p>
+                  {formStatus !== 'success' && (
+                    <button type="submit" disabled={isSubmitting}>{ui.retry}</button>
+                  )}
+                </div>
+              )}
             </form>
           </div>
         )}

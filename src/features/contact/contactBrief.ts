@@ -1,4 +1,9 @@
 import type { PortfolioLanguage } from '../../data/portfolioCapabilities';
+import {
+  generalContactContext,
+  getContactContextDetails,
+  type ContactContext,
+} from './contactIntent';
 
 export type PreferredContactChannel = '' | 'form' | 'email' | 'whatsapp';
 
@@ -6,6 +11,7 @@ export type ContactBriefValues = {
   need: string;
   existingSituation: string;
   issue: string;
+  desiredOutcome: string;
   timeframe: string;
   preferredChannel: PreferredContactChannel;
 };
@@ -14,6 +20,7 @@ export const emptyContactBrief: ContactBriefValues = {
   need: '',
   existingSituation: '',
   issue: '',
+  desiredOutcome: '',
   timeframe: '',
   preferredChannel: '',
 };
@@ -37,6 +44,7 @@ export const contactBriefCopy = {
       need: 'What I need',
       existingSituation: 'Existing situation',
       issue: 'Main issue',
+      desiredOutcome: 'Desired outcome',
       timeframe: 'Timeframe',
     },
     preferredChannelLabel: 'Preferred channel',
@@ -55,6 +63,7 @@ export const contactBriefCopy = {
       need: 'מה אני צריך/ה',
       existingSituation: 'המצב הקיים',
       issue: 'הבעיה המרכזית',
+      desiredOutcome: 'התוצאה הרצויה',
       timeframe: 'לוח זמנים',
     },
     preferredChannelLabel: 'ערוץ מועדף',
@@ -67,7 +76,21 @@ export const contactBriefCopy = {
   },
 } as const satisfies Record<PortfolioLanguage, ContactBriefCopy>;
 
-const cleanLine = (value: string) => value.trim().replace(/\s+/g, ' ');
+export const contactBriefLimits = {
+  need: 1200,
+  existingSituation: 1600,
+  issue: 1600,
+  desiredOutcome: 1200,
+  timeframe: 500,
+} as const;
+
+export const normalizeContactBriefText = (value: string) => value
+  .replace(/\r\n?/gu, '\n')
+  .split('\n')
+  .map((line) => line.trim().replace(/[\t ]+/gu, ' '))
+  .join('\n')
+  .replace(/\n{3,}/gu, '\n\n')
+  .trim();
 
 export const hasContactBriefDetails = (values: ContactBriefValues) =>
   Object.values(values).some((value) => value.trim().length > 0);
@@ -75,14 +98,19 @@ export const hasContactBriefDetails = (values: ContactBriefValues) =>
 export const buildContactBriefMessage = (
   language: PortfolioLanguage,
   values: ContactBriefValues,
+  context: ContactContext = generalContactContext,
 ) => {
   const copy = contactBriefCopy[language];
-  if (!hasContactBriefDetails(values)) return copy.defaultMessage;
+  if (!hasContactBriefDetails(values) && context.intent === 'general') return copy.defaultMessage;
 
   const lines = [copy.greeting, copy.introduction, ''];
+  if (context.intent !== 'general') {
+    const contextDetails = getContactContextDetails(language, context);
+    lines.push(`${contextDetails.messageLabel}: ${contextDetails.title}`, '');
+  }
 
-  (['need', 'existingSituation', 'issue', 'timeframe'] as const).forEach((key) => {
-    const value = cleanLine(values[key]);
+  (['need', 'existingSituation', 'issue', 'desiredOutcome', 'timeframe'] as const).forEach((key) => {
+    const value = normalizeContactBriefText(values[key]);
     if (value) lines.push(`${copy.labels[key]}: ${value}`);
   });
 
@@ -92,17 +120,20 @@ export const buildContactBriefMessage = (
     );
   }
 
-  return lines.join('\n');
+  return lines.join('\n').trimEnd();
 };
 
 export const buildContactEmailHref = (
   recipientHref: string,
   language: PortfolioLanguage,
   message: string,
+  context: ContactContext = generalContactContext,
 ) => {
   const separator = recipientHref.includes('?') ? '&' : '?';
   const query = new URLSearchParams({
-    subject: contactBriefCopy[language].emailSubject,
+    subject: context.intent === 'general'
+      ? contactBriefCopy[language].emailSubject
+      : getContactContextDetails(language, context).emailSubject,
     body: message,
   });
 

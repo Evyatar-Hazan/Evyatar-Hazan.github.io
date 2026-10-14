@@ -7,6 +7,7 @@ import { getProjectArchiveEntries } from '../data/projectArchive';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { localizedPath } from '../routing/portfolioRoutes';
 import './ProjectsPage.css';
+import { buildContactUrl } from '../features/contact/contactIntent';
 
 const CATEGORY_PARAM = 'category';
 const CAPABILITY_PARAM = 'capability';
@@ -307,7 +308,7 @@ const ProjectsPage = () => {
 
       <div className="projects-hub-contact">
         <p>{t('projectsHub.contactPrompt')}</p>
-        <Link to={localizedPath(language, { route: 'contact' })}>{t('projectsHub.contactCta')}<ArrowUpRight aria-hidden="true" /></Link>
+        <Link to={buildContactUrl(language, { intent: 'improve-existing' })}>{t('projectsHub.contactCta')}<ArrowUpRight aria-hidden="true" /></Link>
       </div>
     </main>
   );

@@ -12,6 +12,7 @@ import {
 import type { Project, ProjectCaseStudy } from '../data/profile';
 import CaseStudyEvidence from './CaseStudyEvidence';
 import './CaseStudyStory.css';
+import { buildContactUrl } from '../features/contact/contactIntent';
 
 type CaseStudyStoryProps = {
   buildPath: LocalizedPathBuilder;
@@ -304,7 +305,7 @@ const CaseStudyStory = ({
             <ArrowLeft aria-hidden="true" className="rtl:rotate-180" />
             {labels.allProjects}
           </Link>
-          <Link className={linkClassName} to={buildPath(language, { route: 'contact' })}>
+          <Link className={linkClassName} to={buildContactUrl(language, { intent: 'project', projectId: project.id })}>
             {labels.contact}
             <ArrowRight aria-hidden="true" className="rtl:rotate-180" />
           </Link>

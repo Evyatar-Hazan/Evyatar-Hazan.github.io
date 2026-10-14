@@ -306,16 +306,17 @@ const staticRoutes = [
     path: '/contact/',
     excludeAds: true,
     title: 'Contact | Evyatar Hazan',
-    description: 'Direct contact options for Evyatar Hazan, including WhatsApp, email, and LinkedIn for project inquiries and collaboration.',
+    description: 'A context-aware project inquiry workspace with direct WhatsApp, email, and LinkedIn contact plus an optional reviewed brief.',
     preview: {
-      heading: 'Contact Evyatar Hazan',
+      heading: 'Start a project conversation',
       body: [
-        'The clearest way to start is a direct message with the project goal, current state, and what kind of help is needed.',
-        'WhatsApp, email, and LinkedIn are available so the contact path is simple and visible.'
+        'Direct contact is always available. The optional brief helps organize the need, current state, desired outcome, and timeframe before choosing a channel.',
+        'Only public, allowlisted portfolio context belongs in the URL; personal details stay in the message you choose to send.'
       ],
       links: [
-        { href: '/', label: 'Home' },
-        { href: '/blog/', label: 'Writing' }
+        { href: 'https://wa.me/972587127547', label: 'WhatsApp' },
+        { href: 'mailto:evyatarhazan3.14@gmail.com', label: 'Email' },
+        { href: 'https://www.linkedin.com/in/evyatar-hazan-662235210/', label: 'LinkedIn' }
       ]
     }
   },
@@ -590,11 +591,14 @@ const localizedSeoForRoute = (route, language) => {
     return {
       ...route,
       title: 'יצירת קשר | אביתר חזן',
-      description: 'דרכי יצירת קשר ישירות עם אביתר חזן דרך WhatsApp, אימייל ו-LinkedIn עבור פרויקטים, ייעוץ ושיתופי פעולה.',
+      description: 'מרחב פתיחת פרויקט תלוי־הקשר עם WhatsApp, אימייל ו-LinkedIn ישירים ותקציר אופציונלי שנבדק לפני שימוש.',
       preview: {
         ...route.preview,
-        heading: 'בוא נתחיל משיחה ברורה',
-        body: ['אפשר להתחיל מהמטרה, מהמצב הנוכחי ומהעזרה שנדרשת.']
+        heading: 'פותחים שיחת פרויקט',
+        body: [
+          'יצירת קשר ישירה תמיד זמינה. התקציר האופציונלי עוזר לסדר את הצורך, המצב הקיים, התוצאה הרצויה ולוח הזמנים לפני בחירת הערוץ.',
+          'רק הקשר ציבורי ומוגבל מן הפורטפוליו נשמר בכתובת; פרטים אישיים נשארים בהודעה שבוחרים לשלוח.'
+        ]
       }
     };
   }

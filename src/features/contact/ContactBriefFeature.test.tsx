@@ -30,7 +30,7 @@ describe('ContactBriefFeature', () => {
       'href',
       'https://www.linkedin.com/in/evyatar-hazan-662235210/',
     );
-    expect(screen.queryByRole('heading', { name: 'Message preview' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Message review' })).not.toBeInTheDocument();
   });
 
   it('previews synthetic brief data and injects the localized privacy link', () => {
@@ -47,9 +47,14 @@ describe('ContactBriefFeature', () => {
       target: { value: 'whatsapp' },
     });
 
-    const preview = screen.getByLabelText<HTMLTextAreaElement>('Message preview');
+    fireEvent.change(screen.getByLabelText('What outcome would make this successful?'), {
+      target: { value: 'A reliable handoff' },
+    });
+
+    const preview = screen.getByLabelText<HTMLTextAreaElement>('Message review');
     expect(preview.value).toContain('What I need: A synthetic scheduling tool');
     expect(preview.value).toContain('Main issue: The current handoff is manual');
+    expect(preview.value).toContain('Desired outcome: A reliable handoff');
     expect(preview.value).toContain('Preferred channel: WhatsApp');
     expect(screen.getByRole('link', { name: 'Read the privacy notice' })).toHaveAttribute(
       'href',
@@ -74,15 +79,19 @@ describe('ContactBriefFeature', () => {
     render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
     openBuilder();
 
-    fireEvent.submit(screen.getByRole('button', { name: /send with the existing form/i }).closest('form')!);
+    fireEvent.submit(screen.getByRole('button', { name: /send with FormSubmit/i }).closest('form')!);
 
     expect(fetchMock).not.toHaveBeenCalled();
     expect(screen.getByLabelText('Name')).toBeRequired();
     expect(screen.getByLabelText('Email address')).toBeRequired();
+    expect(screen.getByRole('alert')).toHaveTextContent('Enter your name');
   });
 
-  it('submits only the existing name, email, and generated message fields', async () => {
-    const fetchMock = vi.fn().mockResolvedValue({ ok: true });
+  it('submits only the allowlisted delivery fields after an explicit submit', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ success: 'true' }),
+    });
     vi.stubGlobal('fetch', fetchMock);
     render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
     openBuilder();
@@ -94,14 +103,88 @@ describe('ContactBriefFeature', () => {
     fireEvent.change(screen.getByLabelText('Email address'), {
       target: { value: 'visitor@example.test' },
     });
-    fireEvent.submit(screen.getByRole('button', { name: /send with the existing form/i }).closest('form')!);
+    expect(fetchMock).not.toHaveBeenCalled();
+    fireEvent.submit(screen.getByRole('button', { name: /send with FormSubmit/i }).closest('form')!);
 
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
     const [endpoint, init] = fetchMock.mock.calls[0] as [string, RequestInit];
     const body = init.body as FormData;
     expect(endpoint).toBe('https://formsubmit.co/ajax/evyatarhazan3.14@gmail.com');
-    expect([...body.keys()]).toEqual(['message', 'name', 'email']);
+    expect([...body.keys()]).toEqual(['name', 'email', 'message', '_subject']);
     expect(body.get('message')).toContain('Synthetic portfolio fixture');
-    expect(await screen.findByText(/Message sent successfully/i)).toBeInTheDocument();
+    expect([...body.keys()]).not.toContain('intent');
+    expect(await screen.findByText(/confirmed delivery/i)).toBeInTheDocument();
+  });
+
+  it('renders allowlisted project context and clears it through the caller', () => {
+    const onContextChange = vi.fn();
+    render(
+      <ContactBriefFeature
+        language="en"
+        buildLocalizedPath={buildLocalizedPath}
+        context={{ intent: 'project', projectId: 'online_converter' }}
+        onContextChange={onContextChange}
+        titleAs="h1"
+      />,
+    );
+
+    expect(screen.getByRole('heading', { name: 'Online Converter' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'WhatsApp' })).toHaveAttribute(
+      'href',
+      expect.stringContaining('Online%20Converter'),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Clear context' }));
+    expect(onContextChange).toHaveBeenCalledWith({ intent: 'general' });
+  });
+
+  it('protects against double submit and keeps the brief after a rejected request', async () => {
+    let rejectRequest: ((reason?: unknown) => void) | undefined;
+    const fetchMock = vi.fn().mockImplementation(() => new Promise((_, reject) => {
+      rejectRequest = reject;
+    }));
+    vi.stubGlobal('fetch', fetchMock);
+    render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
+    openBuilder();
+
+    fireEvent.change(screen.getByLabelText('What do you need?'), {
+      target: { value: 'Keep this synthetic brief' },
+    });
+    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Test Visitor' } });
+    fireEvent.change(screen.getByLabelText('Email address'), {
+      target: { value: 'visitor@example.test' },
+    });
+    const form = screen.getByRole('button', { name: /send with FormSubmit/i }).closest('form')!;
+    fireEvent.submit(form);
+    fireEvent.submit(form);
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    rejectRequest?.(new Error('synthetic network failure'));
+    expect(await screen.findByText(/Delivery was not confirmed/i)).toBeInTheDocument();
+    expect(screen.getByLabelText<HTMLTextAreaElement>('What do you need?').value).toBe(
+      'Keep this synthetic brief',
+    );
+    expect(screen.getByRole('link', { name: 'Open email draft' })).toHaveAttribute(
+      'href',
+      expect.stringContaining('Keep+this+synthetic+brief'),
+    );
+  });
+
+  it('does not treat an HTTP 200 without provider confirmation as delivered', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ success: false }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
+    openBuilder();
+
+    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Test Visitor' } });
+    fireEvent.change(screen.getByLabelText('Email address'), {
+      target: { value: 'visitor@example.test' },
+    });
+    fireEvent.submit(screen.getByRole('button', { name: /send with FormSubmit/i }).closest('form')!);
+
+    expect(await screen.findByText(/Delivery was not confirmed/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Retry form delivery' })).toBeInTheDocument();
   });
 });

@@ -36,6 +36,7 @@ describe('contact brief message builders', () => {
       need: 'כלי תיאום',
       existingSituation: 'התהליך מתבצע ידנית',
       issue: 'העברת המידע איטית',
+      desiredOutcome: 'תהליך ברור שאפשר למדוד',
       timeframe: 'ברבעון הקרוב',
       preferredChannel: 'form',
     });
@@ -43,8 +44,29 @@ describe('contact brief message builders', () => {
     expect(message).toContain('מה אני צריך/ה: כלי תיאום');
     expect(message).toContain('המצב הקיים: התהליך מתבצע ידנית');
     expect(message).toContain('הבעיה המרכזית: העברת המידע איטית');
+    expect(message).toContain('התוצאה הרצויה: תהליך ברור שאפשר למדוד');
     expect(message).toContain('לוח זמנים: ברבעון הקרוב');
     expect(message).toContain('ערוץ מועדף: טופס באתר');
+  });
+
+  it('preserves meaningful line breaks while normalizing surrounding whitespace', () => {
+    const message = buildContactBriefMessage('en', {
+      ...emptyContactBrief,
+      need: '  First line  \n\n  Second   line  ',
+    });
+
+    expect(message).toContain('What I need: First line\n\nSecond line');
+  });
+
+  it('marks portfolio context as selected context rather than visitor-authored text', () => {
+    const message = buildContactBriefMessage(
+      'en',
+      emptyContactBrief,
+      { intent: 'project', projectId: 'online_converter' },
+    );
+
+    expect(message).toContain('Related project (selected on the portfolio): Online Converter');
+    expect(message).not.toContain('undefined');
   });
 
   it('encodes the same preview into email and WhatsApp drafts', () => {
@@ -55,5 +77,19 @@ describe('contact brief message builders', () => {
     expect(emailHref).toContain('mailto:test@example.com?');
     expect(new URLSearchParams(emailHref.split('?')[1]).get('body')).toBe(message);
     expect(new URL(whatsappHref).searchParams.get('text')).toBe(message);
+  });
+
+  it('uses a contextual email subject without changing the preview body', () => {
+    const message = buildContactBriefMessage('en', emptyContactBrief, { intent: 'new-product' });
+    const emailHref = buildContactEmailHref(
+      'mailto:test@example.com',
+      'en',
+      message,
+      { intent: 'new-product' },
+    );
+    const query = new URLSearchParams(emailHref.split('?')[1]);
+
+    expect(query.get('subject')).toBe('New public product inquiry');
+    expect(query.get('body')).toBe(message);
   });
 });

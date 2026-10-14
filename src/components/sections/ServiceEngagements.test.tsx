@@ -43,12 +43,20 @@ describe('ServiceEngagements', () => {
       'href',
       '/en/projects/online_converter',
     );
-    screen.getAllByRole('link', { name: /^Discuss/ }).forEach((link) => {
-      expect(link).toHaveAttribute('href', '/en/contact');
-    });
+    expect(screen.getByRole('link', { name: 'Discuss a new public product' })).toHaveAttribute(
+      'href',
+      '/en/contact/?intent=new-product',
+    );
+    expect(screen.getByRole('link', { name: 'Discuss a team system' })).toHaveAttribute(
+      'href',
+      '/en/contact/?intent=internal-system',
+    );
+    expect(screen.getByRole('link', { name: 'Discuss an existing system' })).toHaveAttribute(
+      'href',
+      '/en/contact/?intent=improve-existing',
+    );
 
     expect(buildPath).toHaveBeenCalledWith('en', { route: 'project', id: 'nis_boutique' });
-    expect(buildPath).toHaveBeenCalledWith('en', { route: 'contact' });
   });
 
   it('exports the approved t02 slot registration without owning shared routing', () => {

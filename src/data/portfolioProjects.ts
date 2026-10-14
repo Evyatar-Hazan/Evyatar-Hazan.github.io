@@ -63,7 +63,7 @@ const localeCopy: Record<PortfolioLanguage, PortfolioLocale> = {
   he: JSON.parse(heLocaleRaw) as PortfolioLocale,
 };
 
-const getLocalizedPortfolioProject = <ProjectId extends PortfolioProjectId>(
+export const getPortfolioProjectById = <ProjectId extends PortfolioProjectId>(
   id: ProjectId,
   language: PortfolioLanguage,
 ): PortfolioProjectCard<ProjectId> | undefined => {
@@ -94,7 +94,7 @@ const getLocalizedPortfolioProject = <ProjectId extends PortfolioProjectId>(
 export const getFlagshipPortfolioProjects = (
   language: PortfolioLanguage,
 ): FlagshipPortfolioProject[] => flagshipPortfolioProjectIds.map((id) => {
-  const project = getLocalizedPortfolioProject(id, language);
+  const project = getPortfolioProjectById(id, language);
 
   if (!project?.liveUrl) {
     throw new Error(`Missing canonical flagship portfolio project: ${id}`);
@@ -113,6 +113,6 @@ export const getFlagshipPortfolioProjects = (
  */
 export const getRemainingPortfolioProjects = (language: PortfolioLanguage) =>
   remainingPortfolioProjectIds.flatMap((id) => {
-    const project = getLocalizedPortfolioProject(id, language);
+    const project = getPortfolioProjectById(id, language);
     return project ? [project] : [];
   });
