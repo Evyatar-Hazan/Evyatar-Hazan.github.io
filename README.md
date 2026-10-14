@@ -24,6 +24,8 @@ npm run dev
 
 ## Validation
 
+Every pull request starts with a change budget documented before implementation code is edited. Complete both `Scope` and `Out of scope` in the pull request template and check the pre-code confirmation. The `Validate` job rejects missing, placeholder, or duplicated boundaries.
+
 ```bash
 npm run validate
 ```
