@@ -11,7 +11,8 @@
     "test:watch": "vitest",
     "qa:console-network": "node scripts/console-network-gate.mjs",
     "validate": "npm run lint && npm run test && npm run build && npm run qa:console-network",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "capture:baseline": "node scripts/capture-visual-baseline.mjs"
   },
   "dependencies": {
     "framer-motion": "^12.34.3",
