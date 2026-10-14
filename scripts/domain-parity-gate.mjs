@@ -130,6 +130,9 @@ export const parseArguments = (argv) => {
     if (argument === '--origin') options.origins.push(normalizeOrigin(argv[++index]));
     else if (argument === '--route') options.routes.push(argv[++index]);
     else if (argument === '--expected-sha') options.expectedSha = argv[++index]?.trim().toLowerCase();
+    else if (argument.startsWith('--expected-sha=')) {
+      options.expectedSha = argument.slice('--expected-sha='.length).trim().toLowerCase();
+    }
     else if (argument === '--max-attempts') options.maxAttempts = Number(argv[++index]);
     else if (argument === '--delay-ms') options.delayMs = Number(argv[++index]);
     else throw new Error(`Unknown argument: ${argument}`);
