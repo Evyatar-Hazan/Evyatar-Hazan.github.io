@@ -33,6 +33,10 @@ jobs:
           node-version: 24
           cache: npm
 
+      - name: Validate change budget
+        if: github.event_name == 'pull_request'
+        run: node scripts/check-change-budget.mjs
+
       - name: Install dependencies
         run: npm ci
 
@@ -144,6 +148,26 @@ jobs:
             echo "Cloudflare API request failed; retrying in ${delay}s."
             sleep "$delay"
           done
+
+  production-parity:
+    name: Verify production domain parity
+    if: github.event_name == 'push'
+    needs:
+      - github-pages
+      - cloudflare-pages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Verify deployed SHA and assets on both domains
+        run: node scripts/domain-parity-gate.mjs --expected-sha="${GITHUB_SHA}"
 
   experience-v2:
     name: Validate and Deploy Experience V2
