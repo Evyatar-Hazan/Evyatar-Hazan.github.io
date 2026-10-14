@@ -68,6 +68,12 @@ The same workflow independently validates Experience V2 and deploys its separate
 
 The V2 job uses the dedicated `evyatar-portfolio-v2` Pages project. It does not replace the canonical site, its build artifact, or either legacy deployment target.
 
+Production rollback is performed through a reviewed revert commit and the same `Validate and Deploy` workflow—never by rewriting `main` or manually replacing a deployment. See the [rollback runbook](docs/rollback.md). Its Git safety path can be rehearsed locally with:
+
+```bash
+npm run test:rollback
+```
+
 Cloudflare deployment requires these GitHub repository settings:
 
 - Secret: `CLOUDFLARE_API_TOKEN`
