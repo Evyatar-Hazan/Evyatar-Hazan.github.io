@@ -51,13 +51,14 @@ const inspectOverflow = () => {
   };
 };
 
-test.describe.parallel('horizontal overflow gate', () => {
-  for (const width of acceptedWidths) {
-    test(`keeps every sitemap route inside a ${width}px viewport`, async ({ page }) => {
-      await page.setViewportSize({ width, height: 844 });
+test.describe('horizontal overflow gate', () => {
+  for (const route of publicRoutes) {
+    test(`${route} stays inside every accepted mobile viewport`, async ({ page }) => {
+      await page.setViewportSize({ width: acceptedWidths[0], height: 844 });
+      await page.goto(route, { waitUntil: 'domcontentloaded' });
 
-      for (const route of publicRoutes) {
-        await page.goto(route, { waitUntil: 'domcontentloaded' });
+      for (const width of acceptedWidths) {
+        await page.setViewportSize({ width, height: 844 });
         await page.locator('#main-content').waitFor({ state: 'visible' });
         await page.evaluate(async () => {
           await document.fonts.ready;
