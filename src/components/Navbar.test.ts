@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import packageSource from '../../package.json?raw';
 import stylesheet from '../index.css?raw';
 import navbarSource from './Navbar.tsx?raw';
 
@@ -33,5 +34,12 @@ describe('mobile navigation sheet contract', () => {
     expect(navbarSource).toContain("item.id === 'contact' ? 'is-contact'");
     expect(navbarSource).toContain('className="system-rail-language system-rail-mobile-language"');
     expect(navbarSource.match(/className="system-rail-mobile-theme"/g)).toBeNull();
+  });
+
+  it('documents and runs the stable-control gate in every canonical validation', () => {
+    const packageJson = JSON.parse(packageSource);
+
+    expect(packageJson.scripts['test:ui-invariants']).toContain('stable-ui-invariants.pw.mjs');
+    expect(packageJson.scripts.validate).toContain('npm run test:ui-invariants');
   });
 });
