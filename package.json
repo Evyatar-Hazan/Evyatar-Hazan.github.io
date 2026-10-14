@@ -11,6 +11,7 @@
     "test:overflow": "playwright test tests/browser/horizontal-overflow.pw.mjs",
     "test:watch": "vitest",
     "qa:console-network": "node scripts/console-network-gate.mjs",
+    "test:visual": "node scripts/run-visual-regression.mjs",
     "validate": "npm run lint && npm run test && npm run build && npm run qa:console-network && npm run test:overflow",
     "preview": "vite preview",
     "capture:baseline": "node scripts/capture-visual-baseline.mjs"
@@ -43,6 +44,8 @@
     "globals": "^16.5.0",
     "jsdom": "^29.0.2",
     "playwright-core": "^1.64.1",
+    "pixelmatch": "^8.0.0",
+    "pngjs": "^7.0.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.2.0",
     "typescript": "~5.9.3",
