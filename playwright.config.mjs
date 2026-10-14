@@ -1,5 +1,7 @@
 import { defineConfig } from '@playwright/test';
 
+const uiInvariantsBaseUrl = process.env.UI_INVARIANTS_BASE_URL?.replace(/\/$/, '');
+
 export default defineConfig({
   testDir: './tests/browser',
   testMatch: '**/*.pw.mjs',
@@ -10,14 +12,14 @@ export default defineConfig({
   reporter: 'line',
   outputDir: 'output/playwright/test-results',
   use: {
-    baseURL: 'http://127.0.0.1:43104',
+    baseURL: uiInvariantsBaseUrl || 'http://127.0.0.1:43104',
     browserName: 'chromium',
     channel: 'chrome',
     headless: true,
     screenshot: 'only-on-failure',
     trace: 'retain-on-failure',
   },
-  webServer: {
+  webServer: uiInvariantsBaseUrl ? undefined : {
     command: 'npm run preview -- --host 127.0.0.1 --port 43104 --strictPort',
     url: 'http://127.0.0.1:43104/en/',
     reuseExistingServer: false,
