@@ -30,8 +30,13 @@ Every pull request starts with a change budget documented before implementation 
 npm run validate
 ```
 
-This runs linting, tests, a production build, the stable UI invariant checks, and Chrome console/network and overflow gates for the canonical site. The console/network gate loads Home, Projects, About, Blog, and Contact in English and Hebrew across desktop/light and mobile/dark modes. It fails on first-party runtime errors, console errors, failed requests, and HTTP 4xx/5xx responses while keeping third-party diagnostics non-blocking.
+This runs linting, tests, a production build, a strict deep-link gate, the stable UI invariant checks, and Chrome console/network and overflow gates for the canonical site. The deep-link gate reads every public URL from the generated sitemap, requires a matching static HTML document, and verifies a direct HTTP `200` without SPA fallback. The browser gate loads Home, Projects, About, Blog, and Contact in English and Hebrew across desktop/light and mobile/dark modes. It fails on first-party runtime errors, console errors, failed requests, and HTTP 4xx/5xx responses while keeping third-party diagnostics non-blocking.
 
+The post-build deep-link gate can also be run independently:
+
+```bash
+npm run qa:deep-links
+```
 The [stable UI invariant contract](docs/stable-ui-invariants.md) keeps the navbar language and theme controls in their fixed utility area. Its Chrome gate covers English/LTR and Hebrew/RTL, light and dark themes, and mobile widths `320`, `390`, and `430`.
 
 The browser gate can also be run independently after a production build:
