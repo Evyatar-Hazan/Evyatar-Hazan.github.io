@@ -42,6 +42,7 @@ describe('FIX-009 domain parity gate', () => {
 
   it('requires two origins and a full expected SHA', () => {
     expect(parseArguments(['--expected-sha', sourceSha])).toMatchObject({ expectedSha: sourceSha });
+    expect(parseArguments([`--expected-sha=${sourceSha}`])).toMatchObject({ expectedSha: sourceSha });
     expect(() => parseArguments(['--origin', 'https://one.example']))
       .toThrow(/exactly two origins/u);
     expect(() => parseArguments([
