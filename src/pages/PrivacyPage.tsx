@@ -65,7 +65,7 @@ const PrivacyPage = () => {
 
   return (
     <main id="main-content" tabIndex={-1} className="min-h-screen px-6 pb-20 pt-32">
-      <section className="mx-auto max-w-4xl rounded-[2rem] border border-neutral-200 bg-white/80 p-8 shadow-sm backdrop-blur-xl dark:border-neutral-800 dark:bg-neutral-900/70 md:p-10">
+      <section className="mx-auto min-w-0 max-w-4xl rounded-[2rem] border border-neutral-200 bg-white/80 p-8 [overflow-wrap:anywhere] shadow-sm backdrop-blur-xl dark:border-neutral-800 dark:bg-neutral-900/70 md:p-10">
         <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-neutral-50 px-4 py-1.5 text-sm font-semibold text-neutral-700 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-300">
           <ShieldCheck className="h-4 w-4 text-primary-500" />
           {isHebrew ? 'פרטיות' : 'Privacy'}
@@ -82,9 +82,9 @@ const PrivacyPage = () => {
           {isHebrew ? 'עודכן לאחרונה: 14 ביולי 2026' : 'Last updated: July 14, 2026'}
         </p>
 
-        <div className="mt-10 grid gap-5">
+        <div className="mt-10 grid min-w-0 gap-5">
           {sections.map((section) => (
-            <section key={section.title} className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 dark:border-neutral-800 dark:bg-neutral-950/70">
+            <section key={section.title} className="min-w-0 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 dark:border-neutral-800 dark:bg-neutral-950/70">
               <h2 className="text-xl font-bold text-neutral-950 dark:text-white">{section.title}</h2>
               <p className="mt-3 text-base leading-8 text-neutral-700 dark:text-neutral-300">{section.body}</p>
             </section>

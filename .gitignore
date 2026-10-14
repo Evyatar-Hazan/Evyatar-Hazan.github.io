@@ -12,6 +12,7 @@ node_modules
 experiments/portfolio-experience-v2/.npmrc
 dist
 dist-ssr
+output/playwright/
 *.local
 
 # Editor directories and files
