@@ -28,7 +28,9 @@ npm run dev
 npm run validate
 ```
 
-This runs linting, tests, a production build, and a Chrome console/network gate for the canonical site. The browser gate loads Home, Projects, About, Blog, and Contact in English and Hebrew across desktop/light and mobile/dark modes. It fails on first-party runtime errors, console errors, failed requests, and HTTP 4xx/5xx responses while keeping third-party diagnostics non-blocking.
+This runs linting, tests, a production build, the stable UI invariant checks, and Chrome console/network and overflow gates for the canonical site. The console/network gate loads Home, Projects, About, Blog, and Contact in English and Hebrew across desktop/light and mobile/dark modes. It fails on first-party runtime errors, console errors, failed requests, and HTTP 4xx/5xx responses while keeping third-party diagnostics non-blocking.
+
+The [stable UI invariant contract](docs/stable-ui-invariants.md) keeps the navbar language and theme controls in their fixed utility area. Its Chrome gate covers English/LTR and Hebrew/RTL, light and dark themes, and mobile widths `320`, `390`, and `430`.
 
 The browser gate can also be run independently after a production build:
 
