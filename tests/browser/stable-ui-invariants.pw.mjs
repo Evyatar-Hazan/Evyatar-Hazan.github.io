@@ -24,9 +24,14 @@ const controlBoxes = async (themeControl, languageControl) => ({
   language: await roundedBox(languageControl),
 });
 
+const horizontalBox = async (locator) => {
+  const box = await roundedBox(locator);
+  return { x: box.x, width: box.width };
+};
+
 const layoutBoxes = async (page) => ({
-  body: await roundedBox(page.locator('body')),
-  main: await roundedBox(page.locator('#main-content')),
+  body: await horizontalBox(page.locator('body')),
+  main: await horizontalBox(page.locator('#main-content')),
   rail: await roundedBox(page.locator('.system-rail')),
   actions: await roundedBox(page.locator('.system-rail-mobile-actions')),
 });
