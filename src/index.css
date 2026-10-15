@@ -2421,12 +2421,23 @@ body {
   color: var(--color-primary-600);
 }
 
+.system-rail-link[aria-current='page'] {
+  border-radius: 0.2rem;
+  background: color-mix(in srgb, var(--color-primary-500) 9%, transparent);
+  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--color-primary-500) 9%, transparent);
+}
+
 .dark .system-rail-link {
   color: var(--color-neutral-300);
 }
 
 .dark .system-rail-link.is-active {
   color: var(--color-primary-300);
+}
+
+.dark .system-rail-link[aria-current='page'] {
+  background: color-mix(in srgb, var(--color-primary-300) 10%, transparent);
+  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--color-primary-300) 10%, transparent);
 }
 
 .system-rail-link.is-active::after {

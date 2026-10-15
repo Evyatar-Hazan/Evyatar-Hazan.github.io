@@ -548,6 +548,25 @@ describe('App', () => {
     expect(screen.getAllByRole('link', { name: 'nav.About' })[0]).toHaveAttribute('aria-current', 'page');
   });
 
+  it('keeps the parent nav item active on nested project and article routes', () => {
+    const projectView = renderAt('/he/projects/online_converter/');
+
+    const primaryNavigation = screen.getByRole('navigation', { name: 'shell.primaryNavigation' });
+    expect(within(primaryNavigation).getByRole('link', { name: 'nav.Projects' }))
+      .toHaveAttribute('aria-current', 'page');
+
+    fireEvent.click(screen.getByRole('button', { name: 'shell.menu.open' }));
+    expect(within(screen.getByRole('dialog')).getByRole('link', { name: 'nav.Projects' }))
+      .toHaveAttribute('aria-current', 'page');
+
+    projectView.unmount();
+    renderAt('/en/blog/catering-whatsapp/');
+
+    expect(within(screen.getByRole('navigation', { name: 'shell.primaryNavigation' }))
+      .getByRole('link', { name: 'nav.Blog' }))
+      .toHaveAttribute('aria-current', 'page');
+  });
+
   it('renders the blog index with posts for the active language', async () => {
     renderAt('/en/blog/');
 

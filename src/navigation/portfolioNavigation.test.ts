@@ -51,6 +51,13 @@ describe('portfolio navigation registry', () => {
     expect(activeNavigationId('/en/blog/catering-whatsapp/', '')).toBe('blog');
   });
 
+  it('matches route branches only at a segment boundary', () => {
+    expect(activeNavigationId('/en/projects-archive/', '')).toBeNull();
+    expect(activeNavigationId('/he/blogroll/', '')).toBeNull();
+    expect(activeNavigationId('/en/projects/online_converter/evidence/', '')).toBe('projects');
+    expect(activeNavigationId('/he/blog/catering-whatsapp/summary/', '')).toBe('blog');
+  });
+
   it('derives compact route context from canonical project and article data', () => {
     expect(getPortfolioRouteContext('/en/projects/online_converter/', 'en', t)).toEqual({
       category: 'shell.context.project',
