@@ -4,6 +4,7 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from '
 import ContactNode from './components/ContactNode';
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';
+import PortfolioScrollRestoration from './components/PortfolioScrollRestoration';
 import ScrollProgress from './components/animations/ScrollProgress';
 import ContactBriefFeature from './features/contact/ContactBriefFeature';
 import { useTheme } from './hooks/useTheme';
@@ -125,19 +126,9 @@ const AppShell = () => {
     document.documentElement.lang = activeLanguage;
   }, [activeLanguage, dir]);
 
-  useEffect(() => {
-    if (location.hash) return;
-
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-    const focusId = window.requestAnimationFrame(() => {
-      document.querySelector<HTMLElement>('#main-content')?.focus({ preventScroll: true });
-    });
-
-    return () => window.cancelAnimationFrame(focusId);
-  }, [location.pathname, location.hash]);
-
   return (
     <div className={`min-h-screen font-sans ${dir === 'rtl' ? '[&_*]:font-sans-hebrew' : ''}`}>
+      <PortfolioScrollRestoration />
       <ScrollProgress />
       <Navbar />
       <div id="site-shell-content">
