@@ -1,5 +1,5 @@
 .case-story {
-  --case-accent: #0ea5e9;
+  --case-accent: var(--color-primary-500);
   --case-accent-soft: color-mix(in srgb, var(--case-accent) 14%, transparent);
   --case-rule: color-mix(in srgb, currentColor 16%, transparent);
   --case-panel: color-mix(in srgb, var(--color-white) 78%, transparent);
@@ -16,10 +16,10 @@
   color: var(--color-white);
 }
 
-.case-story[data-accent="copper"] { --case-accent: #c26a3b; }
-.case-story[data-accent="cyan"] { --case-accent: #0891b2; }
-.case-story[data-accent="amber"] { --case-accent: #d97706; }
-.case-story[data-accent="orange"] { --case-accent: #ea580c; }
+.case-story[data-accent="copper"] { --case-accent: var(--color-copper-600); }
+.case-story[data-accent="cyan"] { --case-accent: var(--color-cyan-600); }
+.case-story[data-accent="amber"] { --case-accent: var(--color-warning-700); }
+.case-story[data-accent="orange"] { --case-accent: var(--color-orange-600); }
 
 .case-story h1,
 .case-story h2,
@@ -554,11 +554,11 @@
 }
 
 .case-story-evidence-panel > strong[data-evidence-status="unknown"] {
-  color: #b45309;
+  color: var(--color-warning-700);
 }
 
 .dark .case-story-evidence-panel > strong[data-evidence-status="unknown"] {
-  color: #fbbf24;
+  color: var(--color-warning-400);
 }
 
 .case-story-evidence-panel > p {

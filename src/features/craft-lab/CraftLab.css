@@ -207,7 +207,7 @@
 .craft-lab__window-bar span {
   width: 0.48rem;
   height: 0.48rem;
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   background: var(--color-neutral-300);
 }
 

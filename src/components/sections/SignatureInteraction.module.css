@@ -204,7 +204,7 @@
   height: 0.55rem;
   content: '';
   border: 1px solid currentColor;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: transparent;
 }
 
