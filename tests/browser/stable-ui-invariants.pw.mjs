@@ -71,7 +71,9 @@ test.describe('FIX-006 stable navbar controls', () => {
       await expect(dialog.locator('.system-rail-icon, .system-rail-mobile-language')).toHaveCount(0);
       await expect(themeControl).toBeDisabled();
       await expect(languageControl).toBeDisabled();
-      await expect(dialog.locator('.system-rail-mobile-close')).toBeFocused();
+      const closeButton = dialog.locator('.system-rail-mobile-close');
+      await expect(closeButton).toBeFocused();
+      await expect(closeButton).toContainText(entry.language === 'he' ? 'סגירה' : 'Close');
       expect(await controlBoxes(themeControl, languageControl)).toEqual(initial);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 
