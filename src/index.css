@@ -2524,6 +2524,8 @@ body {
 
 .system-rail-mobile-actions {
   display: none;
+  grid-template-columns: repeat(3, 2.75rem);
+  flex: none;
   align-items: center;
   gap: 0.5rem;
 }
@@ -4527,7 +4529,10 @@ body {
     display: none;
   }
 
-  .system-rail-mobile-actions,
+  .system-rail-mobile-actions {
+    display: grid;
+  }
+
   .system-rail-backdrop,
   .system-rail-mobile-menu {
     display: flex;
