@@ -6,6 +6,7 @@ import type { ProjectId } from '../../contracts/portfolio';
 import { localizedPath } from '../../routing/portfolioRoutes';
 import { HomeSectionHeader } from './HomeSectionPrimitives';
 import './Projects.css';
+import { cardSurfaceClassName } from '../cardSurface';
 
 const featuredProjects = projects.filter((project) => project.featured);
 
@@ -76,7 +77,7 @@ const FeaturedProjectCard = ({
 
   return (
     <article
-      className="featured-case-card"
+      className={cardSurfaceClassName('interactive', 'featured-case-card')}
       data-project-visual={project.visual}
       data-featured-project={project.id}
       aria-labelledby={titleId}
@@ -184,7 +185,7 @@ const Projects = () => {
       </div>
 
       <div className="home-projects-index home-section__inner relative">
-        <div className="home-projects-index__row">
+        <div className={cardSurfaceClassName('muted', 'home-projects-index__row')}>
           <div>
             <p className="font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-primary-700 dark:text-primary-400">{t('projects.viewAllEyebrow')}</p>
             <h3 className="mt-3 text-2xl font-black tracking-tight text-neutral-950 dark:text-white">{t('projects.viewAllTitle')}</h3>

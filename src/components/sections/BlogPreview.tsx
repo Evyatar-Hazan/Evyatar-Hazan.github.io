@@ -7,6 +7,7 @@ import type { BlogLanguage, BlogPost } from '../../content/blog/types';
 import type { ArticleId } from '../../contracts/portfolio';
 import { localizedPath } from '../../routing/portfolioRoutes';
 import { HomeSectionHeader } from './HomeSectionPrimitives';
+import { cardSurfaceClassName } from '../cardSurface';
 
 const languageFromI18n = (language: string): BlogLanguage => (language === 'he' ? 'he' : 'en');
 
@@ -46,7 +47,7 @@ const ArticleLink = ({ post, language, featured = false, index }: ArticleLinkPro
   const issue = String(index + 1).padStart(2, '0');
   return (
     <article
-      className={featured ? 'writing-feature' : 'writing-entry'}
+      className={cardSurfaceClassName('interactive', featured ? 'writing-feature' : 'writing-entry')}
       data-writing-index={issue}
     >
       <div className="writing-article-index" aria-hidden="true">

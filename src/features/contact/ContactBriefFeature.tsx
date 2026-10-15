@@ -20,6 +20,7 @@ import {
 import type { LocalizedPathBuilder, PortfolioSlotProps } from '../../contracts/portfolio';
 import { profileLinks } from '../../data/profile';
 import { HomeSectionHeader } from '../../components/sections/HomeSectionPrimitives';
+import { cardSurfaceClassName } from '../../components/cardSurface';
 import {
   buildContactBriefMessage,
   buildContactEmailHref,
@@ -305,7 +306,7 @@ const ContactBriefFeature = ({
         )}
 
         {onContextChange && (
-          <section className="contact-context-card" aria-labelledby={`${reactId}-context-title`}>
+          <section className={cardSurfaceClassName('muted', 'contact-context-card')} aria-labelledby={`${reactId}-context-title`}>
             <div className="contact-context-card__copy">
               <p className="home-detail-label">{ui.contextTitle}</p>
               <SectionHeading id={`${reactId}-context-title`}>{contextDetails.title}</SectionHeading>
@@ -346,7 +347,7 @@ const ContactBriefFeature = ({
           </section>
         )}
 
-        <section className="home-contact-panel" aria-labelledby={`${reactId}-direct-title`}>
+        <section className={cardSurfaceClassName('raised', 'home-contact-panel')} aria-labelledby={`${reactId}-direct-title`}>
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <div>
               <SectionHeading id={`${reactId}-direct-title`} className="text-2xl font-bold text-neutral-950 dark:text-white">{ui.directTitle}</SectionHeading>
@@ -377,7 +378,7 @@ const ContactBriefFeature = ({
         </button>
 
         {isBuilderOpen && (
-          <div id={builderId} className="contact-brief-layout">
+          <div id={builderId} className={cardSurfaceClassName('muted', 'contact-brief-layout')}>
             <section aria-labelledby={`${reactId}-builder-title`}>
               <SectionHeading id={`${reactId}-builder-title`} className="text-2xl font-bold text-neutral-950 dark:text-white">{ui.builderTitle}</SectionHeading>
               <p className="mt-2 leading-7 text-neutral-600 dark:text-neutral-400">{ui.builderDescription}</p>
@@ -416,7 +417,7 @@ const ContactBriefFeature = ({
               </fieldset>
             </section>
 
-            <form noValidate onSubmit={handleSubmit} className="contact-message-review">
+            <form noValidate onSubmit={handleSubmit} className={cardSurfaceClassName('raised', 'contact-message-review')}>
               <SectionHeading className="text-xl font-bold text-neutral-950 dark:text-white">{ui.previewTitle}</SectionHeading>
               <p className="mt-2 text-sm leading-6 text-neutral-600 dark:text-neutral-400">{ui.previewDescription}</p>
               <label htmlFor={`${reactId}-preview`} className="sr-only">{ui.previewTitle}</label>
