@@ -113,3 +113,75 @@ test.describe('FIX-011 animated mobile menu stability', () => {
     });
   }
 });
+
+test.describe('FIX-015 low-height landscape menu', () => {
+  const landscapeCases = [
+    { language: 'en', theme: 'light' },
+    { language: 'he', theme: 'dark' },
+  ];
+
+  for (const entry of landscapeCases) {
+    test(`${entry.language}-${entry.theme} keeps every menu destination accessible in landscape`, async ({ page }) => {
+      await page.setViewportSize({ width: 667, height: 375 });
+      await page.emulateMedia({ colorScheme: entry.theme, reducedMotion: 'reduce' });
+      await page.addInitScript(({ language, theme }) => {
+        localStorage.setItem('i18nextLng', language);
+        localStorage.setItem('theme', theme);
+      }, entry);
+
+      await page.goto(`/${entry.language}/contact/`);
+      await page.locator('#main-content').waitFor({ state: 'visible' });
+
+      const actions = page.locator('.system-rail-mobile-actions');
+      const initialActions = await roundedBox(actions);
+      await actions.locator('.system-rail-menu-toggle').click();
+
+      const dialog = page.getByRole('dialog');
+      const scrollRegion = dialog.locator('.system-rail-mobile-scroll');
+      const primaryLinks = dialog.locator('.system-rail-mobile-link');
+      const secondaryLinks = dialog.locator('.system-rail-mobile-secondary a');
+
+      await expect(dialog).toBeVisible();
+      await expect(primaryLinks).toHaveCount(5);
+      await expect(secondaryLinks).toHaveCount(2);
+      expect(await roundedBox(actions)).toEqual(initialActions);
+
+      const initialScroll = await scrollRegion.evaluate((element) => ({
+        clientHeight: element.clientHeight,
+        scrollHeight: element.scrollHeight,
+      }));
+      expect(initialScroll.scrollHeight).toBeLessThanOrEqual(initialScroll.clientHeight);
+
+      for (const link of await primaryLinks.all()) {
+        await expect(link).toBeInViewport();
+      }
+      for (const link of await secondaryLinks.all()) {
+        await expect(link).toBeInViewport();
+      }
+    });
+  }
+
+  test('keeps the final primary destination keyboard reachable at an extreme low height', async ({ page }) => {
+    await page.setViewportSize({ width: 568, height: 320 });
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+    await page.addInitScript(() => {
+      localStorage.setItem('i18nextLng', 'en');
+      localStorage.setItem('theme', 'light');
+    });
+
+    await page.goto('/en/');
+    await page.locator('#main-content').waitFor({ state: 'visible' });
+    await page.locator('.system-rail-menu-toggle').click();
+
+    const dialog = page.getByRole('dialog');
+    const contact = dialog.getByRole('link', { name: 'Contact' });
+    const footerLinks = dialog.locator('.system-rail-mobile-secondary a');
+
+    await contact.focus();
+    await expect(contact).toBeFocused();
+    await expect(contact).toBeInViewport();
+    for (const link of await footerLinks.all()) {
+      await expect(link).toBeInViewport();
+    }
+  });
+});

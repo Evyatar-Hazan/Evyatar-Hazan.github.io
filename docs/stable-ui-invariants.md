@@ -11,8 +11,14 @@ These invariants protect the portfolio shell during every UI change. They are de
 5. Switching language may mirror the navbar's physical alignment because the document changes between LTR and RTL, but the controls must remain in the same logical navbar utility area and keep their order and behavior.
 6. Both controls remain keyboard reachable, keep their accessible names and state, and continue to work in Hebrew, English, light mode, and dark mode.
 
+## Low-height landscape menu
+
+1. At `667×375`, the five primary destinations and both footer destinations remain visible without scrolling in English/light and Hebrew/dark.
+2. At the more constrained `568×320`, the primary list may scroll internally, but keyboard focus must reveal the final destination while the footer links remain visible.
+3. The sheet uses the dynamic viewport height below the fixed system rail; it must not extend behind mobile browser chrome or move the language and theme controls.
+
 ## Required check for UI work
 
 `npm run validate` is the canonical gate for every UI fix. It includes `npm run test:ui-invariants`, which runs the invariant checks in installed Chrome at mobile widths `320`, `390`, and `430`, for English/LTR and Hebrew/RTL, in light and dark modes.
 
-The gate verifies control ownership, uniqueness, visibility, order, functionality, and stable geometry before, during, and after the mobile menu. An intentional change to one of these invariants requires explicit owner approval and a matching update to this document and its browser test.
+The gate verifies control ownership, uniqueness, visibility, order, functionality, stable geometry before, during, and after the mobile menu, and low-height landscape reachability. An intentional change to one of these invariants requires explicit owner approval and a matching update to this document and its browser test.
