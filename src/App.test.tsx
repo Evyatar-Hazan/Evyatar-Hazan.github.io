@@ -532,6 +532,23 @@ describe('App', () => {
     document.body.removeAttribute('style');
   });
 
+  it('compensates a classic scrollbar before locking scroll and restores the exact body style', () => {
+    const clientWidth = vi.spyOn(document.documentElement, 'clientWidth', 'get').mockReturnValue(window.innerWidth - 15);
+    document.body.setAttribute('style', 'overflow: clip; padding-right: 8px; color: red;');
+    render(<App />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'shell.menu.open' }));
+
+    expect(document.body.style.overflow).toBe('hidden');
+    expect(document.body.style.paddingRight).toBe('23px');
+
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'shell.menu.close' }));
+    expect(document.body.getAttribute('style')).toBe('overflow: clip; padding-right: 8px; color: red;');
+
+    clientWidth.mockRestore();
+    document.body.removeAttribute('style');
+  });
+
   it('updates i18n and localStorage when language toggle is clicked', () => {
     const setItemSpy = vi.spyOn(window.localStorage, 'setItem');
     render(<App />);
