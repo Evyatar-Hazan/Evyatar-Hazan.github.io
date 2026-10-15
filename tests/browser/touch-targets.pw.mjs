@@ -5,7 +5,7 @@ const routes = ['/', '/projects/', '/about/', '/blog/', '/contact/'];
 const languages = ['en', 'he'];
 const minimumTargetSize = 44;
 
-const inspectTouchTargets = () => [...document.querySelectorAll([
+const inspectTouchTargets = (minimumSize) => [...document.querySelectorAll([
   'a[href]:not(.skip-link)',
   'button:not([disabled])',
   'input:not([type="hidden"]):not([disabled])',
@@ -40,7 +40,7 @@ const inspectTouchTargets = () => [...document.querySelectorAll([
     tag: element.tagName.toLowerCase(),
     width: Math.round(box.width * 100) / 100,
   }))
-  .filter(({ height, width }) => height < 44 || width < 44);
+  .filter(({ height, width }) => height < minimumSize || width < minimumSize);
 
 test.describe('FIX-016 minimum touch targets', () => {
   test.describe.configure({ mode: 'serial' });
@@ -58,7 +58,7 @@ test.describe('FIX-016 minimum touch targets', () => {
         await page.goto(`/${language}${route}`);
         await page.locator('#main-content').waitFor({ state: 'visible' });
 
-        const failures = await page.evaluate(inspectTouchTargets);
+        const failures = await page.evaluate(inspectTouchTargets, minimumTargetSize);
         expect(failures, JSON.stringify(failures, null, 2)).toEqual([]);
       });
     }
