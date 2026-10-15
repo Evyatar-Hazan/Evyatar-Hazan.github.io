@@ -1,9 +1,10 @@
 import { ArrowUpLeft, ArrowUpRight, Github, Linkedin, Mail, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { profileLinks } from '../data/profile';
 import BrandMark from './BrandMark';
 import {
+  activeNavigationId,
   navigationHref,
   primaryNavigation,
   secondaryNavigation,
@@ -11,11 +12,13 @@ import {
 
 const Footer = () => {
   const { t, i18n } = useTranslation();
+  const location = useLocation();
   const currentYear = new Date().getFullYear();
   const appVersion = import.meta.env.VITE_APP_VERSION;
   const isHebrew = i18n.language === 'he';
   const language = isHebrew ? 'he' : 'en';
   const ArrowIcon = isHebrew ? ArrowUpLeft : ArrowUpRight;
+  const activeId = activeNavigationId(location.pathname, location.hash);
   
   const socialLinks = [
     { name: 'Github', icon: Github, href: profileLinks.github },
@@ -50,16 +53,34 @@ const Footer = () => {
         <div className="closing-dock-map">
           <div className="closing-dock-links">
             <span>{t('footer.siteMap')}</span>
-            <div className="closing-dock-primary-links">
-              {primaryNavigation.map((item) => (
-                <Link key={item.id} to={navigationHref(item, language)}>{t(item.translationKey)}</Link>
-              ))}
-            </div>
-            <div className="closing-dock-secondary-links" aria-label={t('footer.secondaryNavigation')}>
-              {secondaryNavigation.map((item) => (
-                <Link key={item.id} to={navigationHref(item, language)}>{t(item.translationKey)}</Link>
-              ))}
-            </div>
+            <nav className="closing-dock-navigation" aria-label={t('footer.navigation')}>
+              <div className="closing-dock-primary-links">
+                {primaryNavigation.map((item) => (
+                  <Link
+                    key={item.id}
+                    to={navigationHref(item, language)}
+                    data-navigation-id={item.id}
+                    aria-current={activeId === item.id ? 'page' : undefined}
+                    className={activeId === item.id ? 'is-active' : undefined}
+                  >
+                    {t(item.translationKey)}
+                  </Link>
+                ))}
+              </div>
+              <div className="closing-dock-secondary-links">
+                {secondaryNavigation.map((item) => (
+                  <Link
+                    key={item.id}
+                    to={navigationHref(item, language)}
+                    data-navigation-id={item.id}
+                    aria-current={activeId === item.id ? 'page' : undefined}
+                    className={activeId === item.id ? 'is-active' : undefined}
+                  >
+                    {t(item.translationKey)}
+                  </Link>
+                ))}
+              </div>
+            </nav>
           </div>
 
           <div className="closing-dock-socials">

@@ -79,7 +79,7 @@ describe('App', () => {
   it('renders the main navigation and hero section', () => {
     render(<App />);
 
-    expect(screen.getByRole('navigation')).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: 'shell.primaryNavigation' })).toBeInTheDocument();
     expect(document.querySelector('.system-rail-header')).toBeInTheDocument();
     expect(document.querySelector('#home')).toBeInTheDocument();
     expect(screen.getAllByRole('link', { name: 'nav.Blog' })[0]).toHaveAttribute('href', '/en/blog/');
@@ -669,9 +669,22 @@ describe('App', () => {
     );
     const headerDestinations = Array.from(document.querySelectorAll<HTMLAnchorElement>('.system-rail-links a'))
       .map((link) => link.getAttribute('href'));
-    const footerDestinations = Array.from(document.querySelectorAll<HTMLAnchorElement>('.closing-dock-primary-links a'))
+    const footerNavigation = screen.getByRole('navigation', { name: 'footer.navigation' });
+    const footerDestinations = within(footerNavigation).getAllByRole('link')
       .map((link) => link.getAttribute('href'));
-    expect(footerDestinations).toEqual(headerDestinations);
+    expect(footerDestinations.slice(0, headerDestinations.length)).toEqual(headerDestinations);
+    expect(footerDestinations).toEqual([
+      '/en/',
+      '/en/projects/',
+      '/en/about/',
+      '/en/blog/',
+      '/en/contact/',
+      '/en/lab/',
+      '/en/privacy/',
+    ]);
+    expect(new Set(footerDestinations).size).toBe(footerDestinations.length);
+    expect(within(footerNavigation).getByRole('link', { name: 'nav.Home' }))
+      .toHaveAttribute('aria-current', 'page');
   });
 
   it('shows the contextual WhatsApp node after scrolling and omits it on contact routes', async () => {
