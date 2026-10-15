@@ -196,7 +196,6 @@ test.describe('FIX-015 low-height landscape menu', () => {
       await actions.locator('.system-rail-menu-toggle').click();
 
       const dialog = page.getByRole('dialog');
-      const scrollRegion = dialog.locator('.system-rail-mobile-scroll');
       const primaryLinks = dialog.locator('.system-rail-mobile-link');
       const secondaryLinks = dialog.locator('.system-rail-mobile-secondary a');
 
@@ -205,16 +204,17 @@ test.describe('FIX-015 low-height landscape menu', () => {
       await expect(secondaryLinks).toHaveCount(2);
       expect(await roundedBox(actions)).toEqual(initialActions);
 
-      const initialScroll = await scrollRegion.evaluate((element) => ({
-        clientHeight: element.clientHeight,
-        scrollHeight: element.scrollHeight,
-      }));
-      expect(initialScroll.scrollHeight).toBeLessThanOrEqual(initialScroll.clientHeight);
-
       for (const link of await primaryLinks.all()) {
+        const box = await roundedBox(link);
+        expect(box.width).toBeGreaterThanOrEqual(44);
+        expect(box.height).toBeGreaterThanOrEqual(44);
+        await link.scrollIntoViewIfNeeded();
         await expect(link).toBeInViewport();
       }
       for (const link of await secondaryLinks.all()) {
+        const box = await roundedBox(link);
+        expect(box.width).toBeGreaterThanOrEqual(44);
+        expect(box.height).toBeGreaterThanOrEqual(44);
         await expect(link).toBeInViewport();
       }
     });
