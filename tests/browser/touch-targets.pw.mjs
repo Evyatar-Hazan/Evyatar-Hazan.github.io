@@ -46,7 +46,7 @@ test.describe('FIX-016 minimum touch targets', () => {
 
   for (const language of languages) {
     for (const route of routes) {
-      test(`${language}${route} keeps standalone controls at least 44px`, async ({ page }) => {
+      test(`${language}${route} keeps visible controls at least 44px`, async ({ page }) => {
         await page.setViewportSize({ width: 390, height: 844 });
         await page.emulateMedia({ colorScheme: language === 'he' ? 'dark' : 'light', reducedMotion: 'reduce' });
         await page.addInitScript(({ activeLanguage, theme }) => {
