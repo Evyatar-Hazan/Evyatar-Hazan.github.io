@@ -36,6 +36,14 @@ describe('mobile navigation sheet contract', () => {
     expect(navbarSource.match(/className="system-rail-mobile-theme"/g)).toBeNull();
   });
 
+  it('makes the semantic desktop active state visible without moving controls', () => {
+    const activeRule = stylesheet.match(/\.system-rail-link\[aria-current='page'\]\s*\{([^}]*)\}/)?.[1] ?? '';
+
+    expect(activeRule).toContain('background:');
+    expect(activeRule).toContain('box-shadow:');
+    expect(activeRule).not.toMatch(/margin|padding|transform/);
+  });
+
   it('documents and runs the stable-control gate in every canonical validation', () => {
     const packageJson = JSON.parse(packageSource);
 

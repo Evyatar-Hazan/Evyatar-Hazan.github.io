@@ -28,6 +28,10 @@ const isExactRoute = (contentPath: string, route: string) => (
   contentPath === route || contentPath === `${route}/`
 );
 
+const isRouteBranch = (contentPath: string, route: string) => (
+  isExactRoute(contentPath, route) || contentPath.startsWith(`${route}/`)
+);
+
 export const portfolioNavigation = [
   {
     id: 'home',
@@ -41,7 +45,7 @@ export const portfolioNavigation = [
     translationKey: 'nav.Projects',
     group: 'primary',
     destination: { kind: 'route', target: { route: 'projects' } },
-    active: (contentPath) => contentPath.startsWith('/projects'),
+    active: (contentPath) => isRouteBranch(contentPath, '/projects'),
   },
   {
     id: 'about',
@@ -55,7 +59,7 @@ export const portfolioNavigation = [
     translationKey: 'nav.Blog',
     group: 'primary',
     destination: { kind: 'route', target: { route: 'blog' } },
-    active: (contentPath) => contentPath.startsWith('/blog'),
+    active: (contentPath) => isRouteBranch(contentPath, '/blog'),
   },
   {
     id: 'contact',
