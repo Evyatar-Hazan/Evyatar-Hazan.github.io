@@ -70,7 +70,7 @@ const WorkingPrinciples = ({
   <section
     id="working-principles"
     aria-labelledby="working-principles-title"
-    className={`relative overflow-hidden border-y border-neutral-200/80 bg-neutral-50 px-5 py-20 dark:border-neutral-800/80 dark:bg-neutral-950 sm:px-8 sm:py-28 lg:px-12 ${className}`.trim()}
+    className={`relative overflow-hidden border-y border-neutral-200/80 bg-neutral-50 py-20 dark:border-neutral-800/80 dark:bg-neutral-950 sm:py-28 ${className}`.trim()}
   >
     <div
       aria-hidden="true"
@@ -83,7 +83,7 @@ const WorkingPrinciples = ({
       04
     </span>
 
-    <div className="relative mx-auto max-w-[1480px]">
+    <div className="content-container relative">
       <header className="grid gap-8 border-b border-neutral-300/80 pb-10 dark:border-neutral-800 md:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] md:items-end md:gap-12">
         <div>
           <p className="flex items-center gap-3 font-mono text-[0.68rem] font-black uppercase tracking-[0.18em] text-primary-700 dark:text-primary-400">

@@ -233,7 +233,7 @@ const CraftLab = ({ language, buildPath, className }: CraftLabProps) => {
   return (
     <div className={joinClassNames('craft-lab', className)}>
       <div className="craft-lab__grid" aria-hidden="true" />
-      <header className="craft-lab__intro">
+      <header className="craft-lab__intro content-container">
         <div>
           <p className="craft-lab__eyebrow">{content.eyebrow}</p>
           <h1>{content.title}</h1>
@@ -245,13 +245,13 @@ const CraftLab = ({ language, buildPath, className }: CraftLabProps) => {
         </div>
       </header>
 
-      <section className="craft-lab__experiments" aria-label={content.eyebrow}>
+      <section className="craft-lab__experiments content-container" aria-label={content.eyebrow}>
         <UsefulErrorExperiment language={language} />
         <MediaUploadExperiment language={language} />
         <InteractiveDiagramExperiment language={language} />
       </section>
 
-      <div className="craft-lab__footer">
+      <div className="craft-lab__footer content-container">
         <p>{content.disclosure}</p>
         <nav aria-label={language === 'he' ? 'המשך מהמעבדה' : 'Continue from the lab'}>
           <a className="craft-lab__button craft-lab__button--primary" href={buildPath(language, { route: 'projects' })}>{content.deliveredWork}</a>

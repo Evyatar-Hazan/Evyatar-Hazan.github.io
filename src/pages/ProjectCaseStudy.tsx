@@ -35,8 +35,9 @@ const ProjectCaseStudy = () => {
 
   if (!project || !caseStudy) {
     return (
-      <main id="main-content" tabIndex={-1} className="min-h-[70vh] bg-white px-6 py-24 transition-colors duration-500 dark:bg-black">
-        <div className="mx-auto max-w-3xl text-center">
+      <main id="main-content" tabIndex={-1} className="min-h-[70vh] bg-white py-24 transition-colors duration-500 dark:bg-black">
+        <div className="content-container">
+          <div className="mx-auto max-w-3xl text-center">
           <h1 className="text-3xl font-bold text-neutral-950 dark:text-white">{t('projects.caseStudyNotFoundTitle')}</h1>
           <p className="mt-4 text-lg text-neutral-600 dark:text-neutral-400">{t('projects.caseStudyNotFoundDescription')}</p>
           <Link
@@ -46,6 +47,7 @@ const ProjectCaseStudy = () => {
             <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
             {t('projects.caseStudyBack')}
           </Link>
+          </div>
         </div>
       </main>
     );
@@ -66,10 +68,12 @@ const ProjectCaseStudy = () => {
 
   if (!story) {
     return (
-      <main id="main-content" tabIndex={-1} className="min-h-[70vh] bg-white px-6 py-24 transition-colors duration-500 dark:bg-black">
-        <div className="mx-auto max-w-3xl text-center">
+      <main id="main-content" tabIndex={-1} className="min-h-[70vh] bg-white py-24 transition-colors duration-500 dark:bg-black">
+        <div className="content-container">
+          <div className="mx-auto max-w-3xl text-center">
           <h1 className="text-3xl font-bold text-neutral-950 dark:text-white">{t('projects.caseStudyNotFoundTitle')}</h1>
           <p className="mt-4 text-lg text-neutral-600 dark:text-neutral-400">{t('projects.caseStudyNotFoundDescription')}</p>
+          </div>
         </div>
       </main>
     );
@@ -97,8 +101,9 @@ const ProjectCaseStudy = () => {
   ) : undefined;
 
   return (
-    <main id="main-content" tabIndex={-1} className="bg-white px-6 transition-colors duration-500 dark:bg-black">
-      <div className="mx-auto max-w-6xl">
+    <main id="main-content" tabIndex={-1} className="bg-white transition-colors duration-500 dark:bg-black">
+      <div className="content-container">
+        <div className="mx-auto max-w-6xl">
         <CaseStudyStory
           buildPath={localizedPath}
           caseStudy={caseStudy}
@@ -117,6 +122,7 @@ const ProjectCaseStudy = () => {
           title={title}
           visualProof={visualProof}
         />
+        </div>
       </div>
     </main>
   );

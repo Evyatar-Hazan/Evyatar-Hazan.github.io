@@ -156,7 +156,7 @@ const BlogIndex = () => {
   return (
     <main id="main-content" tabIndex={-1} className="blog-archive">
       <div className="blog-archive-grid" aria-hidden="true" />
-      <section className="blog-archive-shell" aria-labelledby="blog-archive-title">
+      <section className="blog-archive-shell content-container" aria-labelledby="blog-archive-title">
         <header className="blog-archive-header">
           <div>
             <p className="blog-archive-kicker"><span />{t('blog.library.kicker', { count: posts.length })}</p>

@@ -287,7 +287,7 @@ const ContactBriefFeature = ({
       aria-labelledby={titleId}
       className={`home-section home-section--contact contact-workspace relative overflow-hidden ${className}`.trim()}
     >
-      <div className="home-section__inner">
+      <div className="content-container home-section__inner">
         {Title === 'h2' ? (
           <HomeSectionHeader
             index="05"

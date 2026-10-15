@@ -11,7 +11,7 @@
   isolation: isolate;
   min-height: 100svh;
   overflow: clip;
-  padding: clamp(7.5rem, 12vw, 10rem) clamp(1.1rem, 5vw, 5rem) clamp(4rem, 8vw, 7rem);
+  padding-block: clamp(7.5rem, 12vw, 10rem) clamp(4rem, 8vw, 7rem);
   background:
     radial-gradient(circle at 84% 10%, color-mix(in srgb, var(--color-primary-500) 13%, transparent), transparent 25rem),
     var(--lab-bg);
@@ -44,8 +44,7 @@
 .craft-lab__intro,
 .craft-lab__experiments,
 .craft-lab__footer {
-  width: min(100%, 88rem);
-  margin-inline: auto;
+  width: min(100%, var(--content-container-max));
 }
 
 .craft-lab__intro {
@@ -635,10 +634,6 @@
 }
 
 @media (max-width: 560px) {
-  .craft-lab {
-    padding-inline: 1rem;
-  }
-
   .craft-lab__intro h1 {
     font-size: clamp(2.7rem, 14vw, 4rem);
   }

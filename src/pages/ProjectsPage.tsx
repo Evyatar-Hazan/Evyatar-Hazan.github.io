@@ -146,7 +146,7 @@ const ProjectsPage = () => {
   return (
     <main id="main-content" tabIndex={-1} className="projects-hub">
       <div className="projects-hub-grid" aria-hidden="true" />
-      <header className="projects-hub-hero">
+      <header className="content-container projects-hub-hero">
         <div>
           <h1 tabIndex={-1}>{t('projectsHub.title')}</h1>
           <p>{t('projectsHub.introduction')}</p>
@@ -158,7 +158,7 @@ const ProjectsPage = () => {
         </dl>
       </header>
 
-      <section className="projects-hub-section" aria-labelledby="projects-featured-title">
+      <section className="content-container projects-hub-section" aria-labelledby="projects-featured-title">
         <div className="projects-hub-section-heading">
           <div>
             <p>{t('projectsHub.featuredEyebrow')}</p>
@@ -201,7 +201,7 @@ const ProjectsPage = () => {
         </div>
       </section>
 
-      <section className="projects-hub-section projects-hub-archive" aria-labelledby="projects-archive-title">
+      <section className="content-container projects-hub-section projects-hub-archive" aria-labelledby="projects-archive-title">
         <div className="projects-hub-section-heading">
           <div>
             <p>{t('projectsHub.archiveEyebrow')}</p>
@@ -266,7 +266,7 @@ const ProjectsPage = () => {
         )}
       </section>
 
-      <section className="projects-hub-section projects-hub-compare" aria-labelledby="projects-compare-title">
+      <section className="content-container projects-hub-section projects-hub-compare" aria-labelledby="projects-compare-title">
         <div className="projects-hub-compare-heading">
           <div>
             <p>{t('projectsHub.compareEyebrow')}</p>
@@ -306,7 +306,7 @@ const ProjectsPage = () => {
         ) : null}
       </section>
 
-      <div className="projects-hub-contact">
+      <div className="content-container projects-hub-contact">
         <p>{t('projectsHub.contactPrompt')}</p>
         <Link to={buildContactUrl(language, { intent: 'improve-existing' })}>{t('projectsHub.contactCta')}<ArrowUpRight aria-hidden="true" /></Link>
       </div>

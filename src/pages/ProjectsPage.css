@@ -22,8 +22,6 @@
 .projects-hub-section,
 .projects-hub-contact {
   position: relative;
-  width: min(100% - 2.5rem, 1380px);
-  margin-inline: auto;
 }
 
 .projects-hub-hero {
@@ -477,9 +475,6 @@
 
 @media (max-width: 479px) {
   .projects-hub { padding-top: 5.5rem; }
-  .projects-hub-hero,
-  .projects-hub-section,
-  .projects-hub-contact { width: min(100% - 1.5rem, 1380px); }
   .projects-hub-hero dl { grid-template-columns: 1fr; gap: 1rem; }
   .projects-hub-hero dl div { min-height: 64px; }
   .projects-hub-compare-heading { align-items: flex-start; flex-direction: column; }
