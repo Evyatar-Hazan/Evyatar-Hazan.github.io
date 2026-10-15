@@ -24,6 +24,18 @@ const controlBoxes = async (themeControl, languageControl) => ({
   language: await roundedBox(languageControl),
 });
 
+const horizontalBox = async (locator) => {
+  const box = await roundedBox(locator);
+  return { x: box.x, width: box.width };
+};
+
+const layoutBoxes = async (page) => ({
+  body: await horizontalBox(page.locator('body')),
+  main: await horizontalBox(page.locator('#main-content')),
+  rail: await roundedBox(page.locator('.system-rail')),
+  actions: await roundedBox(page.locator('.system-rail-mobile-actions')),
+});
+
 test.describe('FIX-006 stable navbar controls', () => {
   for (const entry of cases) {
     test(`${entry.name} keeps language and theme controls in place`, async ({ page }) => {
@@ -126,6 +138,37 @@ test.describe('FIX-011 animated mobile menu stability', () => {
       expect(await controlBoxes(themeControl, languageControl)).toEqual(initial);
       await expect(dialog).toBeHidden();
       expect(await controlBoxes(themeControl, languageControl)).toEqual(initial);
+    });
+  }
+});
+
+test.describe('FIX-017 scroll-lock layout stability', () => {
+  for (const language of languages) {
+    test(`${language} preserves page width while the mobile menu opens and closes`, async ({ page }) => {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'no-preference' });
+      await page.addInitScript((activeLanguage) => {
+        localStorage.setItem('i18nextLng', activeLanguage);
+        localStorage.setItem('theme', 'light');
+      }, language);
+
+      await page.goto(`/${language}/`);
+      await page.locator('#main-content').waitFor({ state: 'visible' });
+
+      const menuTrigger = page.locator('.system-rail-menu-toggle');
+      const initial = await layoutBoxes(page);
+
+      await menuTrigger.click();
+      const dialog = page.getByRole('dialog');
+      await expect(dialog).toBeVisible();
+      expect(await layoutBoxes(page)).toEqual(initial);
+
+      await page.waitForTimeout(320);
+      expect(await layoutBoxes(page)).toEqual(initial);
+
+      await page.keyboard.press('Escape');
+      await expect(dialog).toBeHidden();
+      expect(await layoutBoxes(page)).toEqual(initial);
     });
   }
 });
