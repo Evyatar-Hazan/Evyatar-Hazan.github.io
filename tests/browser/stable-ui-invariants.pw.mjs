@@ -77,3 +77,39 @@ test.describe('FIX-006 stable navbar controls', () => {
     });
   }
 });
+
+test.describe('FIX-011 animated mobile menu stability', () => {
+  for (const language of languages) {
+    test(`${language} keeps controls anchored throughout the drawer transition`, async ({ page }) => {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'no-preference' });
+      await page.addInitScript((activeLanguage) => {
+        localStorage.setItem('i18nextLng', activeLanguage);
+        localStorage.setItem('theme', 'dark');
+      }, language);
+
+      await page.goto(`/${language}/`);
+      await page.locator('#main-content').waitFor({ state: 'visible' });
+
+      const actions = page.locator('.system-rail-mobile-actions');
+      const themeControl = actions.locator('.system-rail-icon');
+      const languageControl = actions.locator('.system-rail-mobile-language');
+      const menuTrigger = actions.locator('.system-rail-menu-toggle');
+      const initial = await controlBoxes(themeControl, languageControl);
+
+      await menuTrigger.click();
+      const dialog = page.getByRole('dialog');
+      await expect(dialog).toBeVisible();
+      await page.waitForTimeout(140);
+      expect(await controlBoxes(themeControl, languageControl)).toEqual(initial);
+      await page.waitForTimeout(180);
+      expect(await controlBoxes(themeControl, languageControl)).toEqual(initial);
+
+      await page.keyboard.press('Escape');
+      await page.waitForTimeout(140);
+      expect(await controlBoxes(themeControl, languageControl)).toEqual(initial);
+      await expect(dialog).toBeHidden();
+      expect(await controlBoxes(themeControl, languageControl)).toEqual(initial);
+    });
+  }
+});
