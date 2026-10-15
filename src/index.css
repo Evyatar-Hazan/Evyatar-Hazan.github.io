@@ -3073,9 +3073,17 @@ body {
 }
 
 .closing-dock-links {
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   border-inline-end: 1px solid var(--effect-shell-border);
+}
+
+.closing-dock-navigation {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(0.75rem, 1.5vw, 1.25rem);
 }
 
 .closing-dock-primary-links,
@@ -3119,8 +3127,16 @@ body {
   transition: color 180ms ease;
 }
 
+.closing-dock-links a.is-active {
+  color: var(--color-primary-700);
+}
+
 .dark .closing-dock-links a {
   color: var(--color-neutral-300);
+}
+
+.dark .closing-dock-links a.is-active {
+  color: var(--color-primary-300);
 }
 
 .closing-dock-socials {
@@ -4647,16 +4663,52 @@ body {
     grid-column: auto;
   }
 
+  .closing-dock-navigation {
+    display: grid;
+    overflow: hidden;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    border: 1px solid var(--effect-shell-border);
+    border-radius: 0.9rem;
+  }
+
   .closing-dock-primary-links,
   .closing-dock-secondary-links {
-    flex-wrap: wrap;
+    display: contents;
   }
 
   .closing-dock-secondary-links {
-    border-inline-start: 0;
-    border-top: 1px solid var(--effect-shell-border);
-    padding-block-start: 1rem;
-    padding-inline-start: 0;
+    border: 0;
+    padding: 0;
+  }
+
+  .closing-dock-navigation a {
+    display: flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--effect-shell-border);
+    padding: 0.7rem 0.8rem;
+  }
+
+  .closing-dock-primary-links a:nth-child(odd),
+  .closing-dock-secondary-links a:nth-child(even) {
+    border-inline-end: 1px solid var(--effect-shell-border);
+  }
+
+  .closing-dock-secondary-links a:last-child {
+    grid-column: 1 / -1;
+    border-bottom: 0;
+    border-inline-end: 0;
+  }
+
+  .closing-dock-navigation a.is-active::after {
+    width: 0.4rem;
+    height: 0.4rem;
+    flex: none;
+    border-radius: 999px;
+    background: currentColor;
+    content: '';
   }
 
   .closing-dock-socials > div {
