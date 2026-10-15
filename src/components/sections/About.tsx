@@ -112,7 +112,7 @@ const About = () => {
     <section
       ref={sectionRef}
       id="about"
-      className="about-system relative border-y border-neutral-200/70 px-5 py-16 dark:border-neutral-800/70 sm:px-8 sm:py-24 lg:px-12"
+      className="about-system section-space relative border-y border-neutral-200/70 px-5 dark:border-neutral-800/70 sm:px-8 lg:px-12"
     >
       <div className="about-system-grid pointer-events-none absolute inset-0" aria-hidden="true" />
       <span className="pointer-events-none absolute end-3 top-10 font-mono text-[7rem] font-black leading-none tracking-[-0.08em] text-neutral-900/[0.035] dark:text-white/[0.035] sm:end-8 sm:text-[11rem]" aria-hidden="true">
