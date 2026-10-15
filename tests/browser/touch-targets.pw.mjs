@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 
+// Keep this matrix aligned with the portfolio's core-route acceptance checks.
 const routes = ['/', '/projects/', '/about/', '/blog/', '/contact/'];
 const languages = ['en', 'he'];
 const minimumTargetSize = 44;
