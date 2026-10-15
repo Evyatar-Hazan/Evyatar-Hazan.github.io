@@ -23,7 +23,8 @@ describe('mobile navigation sheet contract', () => {
     expect(stylesheet).toContain('overscroll-behavior: contain');
     expect(stylesheet).toContain('@media (max-width: 767px) and (max-height: 620px)');
     expect(stylesheet).toContain('height: calc(100dvh - 5rem)');
-    expect(stylesheet).toContain('min-height: clamp(2.15rem, 9dvh, 2.85rem)');
+    expect(stylesheet).toContain('min-height: 2.75rem');
+    expect(stylesheet).not.toContain('min-height: clamp(2.15rem, 9dvh, 2.85rem)');
     expect(stylesheet).toContain('padding-block: 0.2rem');
     expect(stylesheet).toMatch(/\.system-rail-mobile-context\s*{[^}]*display: none/);
     expect(stylesheet).toContain('@media (prefers-reduced-motion: reduce)');
