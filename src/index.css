@@ -4829,6 +4829,7 @@ body {
 
 @media (max-width: 767px) and (max-height: 620px) {
   .system-rail-mobile-menu {
+    height: calc(100dvh - 5rem);
     padding-block:
       calc(0.65rem + env(safe-area-inset-top, 0px))
       calc(0.65rem + env(safe-area-inset-bottom, 0px));
@@ -4848,6 +4849,7 @@ body {
   }
 
   .system-rail-mobile-context {
+    display: none;
     margin-top: 0.4rem;
   }
 
@@ -4856,7 +4858,8 @@ body {
   }
 
   .system-rail-mobile-link {
-    min-height: 2.85rem;
+    min-height: clamp(2.15rem, 9dvh, 2.85rem);
+    padding-block: 0.2rem;
   }
 
   .system-rail-mobile-label {
