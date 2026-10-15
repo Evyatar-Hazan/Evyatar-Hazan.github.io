@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Menu, Moon, Sun, X } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
@@ -44,7 +44,7 @@ const Navbar = () => {
 
   const closeMenu = useCallback(() => setMenuOpenedAt(null), []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isOpen) {
       if (wasOpenRef.current) {
         window.requestAnimationFrame(() => menuButtonRef.current?.focus());
@@ -58,10 +58,13 @@ const Navbar = () => {
     const content = document.querySelector<HTMLElement>('#site-shell-content');
     const hadInert = content?.hasAttribute('inert') ?? false;
     const previousAriaHidden = content?.getAttribute('aria-hidden');
-    const scrollbarGap = window.innerWidth - document.documentElement.clientWidth;
+    const scrollbarGap = Math.max(0, window.innerWidth - document.documentElement.clientWidth);
+    const bodyPaddingRight = Number.parseFloat(window.getComputedStyle(document.body).paddingRight) || 0;
 
+    if (scrollbarGap > 0) {
+      document.body.style.paddingRight = `${bodyPaddingRight + scrollbarGap}px`;
+    }
     document.body.style.overflow = 'hidden';
-    if (scrollbarGap > 0) document.body.style.paddingRight = `${scrollbarGap}px`;
     if (content) {
       content.inert = true;
       content.setAttribute('inert', '');
