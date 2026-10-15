@@ -2646,14 +2646,20 @@ body {
 }
 
 .system-rail-mobile-close {
-  display: grid;
-  width: 2.75rem;
+  display: inline-flex;
+  min-width: 5.25rem;
   height: 2.75rem;
   flex: none;
-  place-items: center;
-  border: 1px solid var(--effect-shell-border);
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border: 1px solid color-mix(in srgb, var(--color-primary-500) 42%, var(--effect-shell-border));
   border-radius: 0.7rem;
-  color: var(--color-neutral-800);
+  padding-inline: 0.7rem;
+  background: color-mix(in srgb, var(--color-primary-500) 8%, transparent);
+  color: var(--color-primary-800);
+  font-size: 0.72rem;
+  font-weight: 900;
   transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
 }
 
@@ -2663,7 +2669,9 @@ body {
 }
 
 .dark .system-rail-mobile-close {
-  color: var(--color-neutral-100);
+  border-color: color-mix(in srgb, var(--color-primary-300) 48%, var(--effect-shell-border));
+  background: color-mix(in srgb, var(--color-primary-400) 12%, transparent);
+  color: var(--color-primary-100);
 }
 
 .system-rail-mobile-scroll {

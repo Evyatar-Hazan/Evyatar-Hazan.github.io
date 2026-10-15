@@ -284,6 +284,7 @@ const Navbar = () => {
                       aria-label={t('shell.menu.close')}
                     >
                       <X aria-hidden="true" />
+                      <span>{t('shell.menu.closeLabel')}</span>
                     </button>
                   </div>
                   <div className="system-rail-mobile-scroll">

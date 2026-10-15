@@ -166,7 +166,9 @@ describe('App', () => {
     const primaryLinks = Array.from(dialog.querySelectorAll<HTMLAnchorElement>('.system-rail-mobile-link'));
 
     expect(dialog.querySelector('.system-rail-mobile-masthead .brand-mark')).toBeInTheDocument();
-    expect(within(dialog).getByRole('button', { name: 'shell.menu.close' })).toBeInTheDocument();
+    const closeButton = within(dialog).getByRole('button', { name: 'shell.menu.close' });
+    expect(closeButton).toBeInTheDocument();
+    expect(closeButton).toHaveTextContent('shell.menu.closeLabel');
     expect(primaryLinks.map((link) => link.getAttribute('aria-label'))).toEqual([
       'nav.Home', 'nav.Projects', 'nav.About', 'nav.Blog', 'nav.Contact',
     ]);
