@@ -57,20 +57,34 @@ test.describe('FIX-006 stable navbar controls', () => {
       await menuTrigger.click();
       const dialog = page.getByRole('dialog');
       await expect(dialog).toBeVisible();
+      await expect(dialog).toBeInViewport();
+      await expect(dialog.locator('.system-rail-mobile-link')).toHaveCount(5);
+      await expect(dialog.locator('.system-rail-mobile-secondary a')).toHaveCount(2);
+      await expect(dialog.locator('.system-rail-mobile-link.is-active')).toHaveCount(1);
       await expect(dialog.locator('.system-rail-icon, .system-rail-mobile-language')).toHaveCount(0);
       await expect(themeControl).toBeDisabled();
       await expect(languageControl).toBeDisabled();
+      await expect(dialog.locator('.system-rail-mobile-close')).toBeFocused();
       expect(await controlBoxes(themeControl, languageControl)).toEqual(initial);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+
+      const dialogBox = await roundedBox(dialog);
+      expect(dialogBox.x).toBeGreaterThanOrEqual(0);
+      expect(dialogBox.y).toBeGreaterThanOrEqual(0);
+      expect(dialogBox.x + dialogBox.width).toBeLessThanOrEqual(entry.width);
+      expect(dialogBox.y + dialogBox.height).toBeLessThanOrEqual(844);
 
       await page.keyboard.press('Escape');
       await expect(dialog).toBeHidden();
       await expect(themeControl).toBeEnabled();
       await expect(languageControl).toBeEnabled();
+      await expect(menuTrigger).toBeFocused();
       expect(await controlBoxes(themeControl, languageControl)).toEqual(initial);
 
       await languageControl.click();
       const nextLanguage = entry.language === 'en' ? 'he' : 'en';
       await page.waitForURL(new RegExp(`/${nextLanguage}/`));
+      await expect(page.locator('html')).toHaveAttribute('lang', nextLanguage);
       await expect(page.locator('html')).toHaveAttribute('dir', nextLanguage === 'he' ? 'rtl' : 'ltr');
       await expect(page.locator('.system-rail-mobile-actions .system-rail-icon')).toHaveCount(1);
       await expect(page.locator('.system-rail-mobile-actions .system-rail-mobile-language')).toHaveCount(1);
