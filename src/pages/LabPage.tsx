@@ -19,7 +19,7 @@ const LabPage = () => {
   return (
     <main id="main-content" tabIndex={-1}>
       <CraftLab language={language} buildPath={localizedPath} />
-      <div className="mx-auto max-w-[92.5rem] px-5 pb-24 sm:px-8 lg:px-12">
+      <div className="content-container pb-24">
         <DatePresentationDemo language={language} buildLocalizedPath={localizedPath} />
       </div>
     </main>

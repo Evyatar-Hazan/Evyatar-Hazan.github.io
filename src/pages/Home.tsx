@@ -21,7 +21,7 @@ const Home = () => {
 
   return (
     <section id="home" className="home-section home-section--hero product-compiler-hero relative overflow-clip">
-      <div className="product-compiler-sticky relative flex min-h-svh items-start overflow-hidden px-5 pb-10 pt-[7.25rem] sm:items-center sm:px-8 sm:py-28 lg:px-12">
+      <div className="content-container product-compiler-sticky relative flex min-h-svh items-start overflow-hidden pb-10 pt-[7.25rem] sm:items-center sm:py-28">
         <div className="product-compiler-grid pointer-events-none absolute inset-0" aria-hidden="true" />
         <div className="product-compiler-aura pointer-events-none absolute inset-0" aria-hidden="true" />
 

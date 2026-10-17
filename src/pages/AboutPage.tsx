@@ -128,9 +128,9 @@ const AboutPage = () => {
     <main id="main-content" tabIndex={-1} className="about-dossier overflow-x-clip bg-neutral-50 text-neutral-950 dark:bg-neutral-950 dark:text-white">
       <PersonStructuredData language={language} />
 
-      <section className="relative overflow-hidden border-b border-neutral-300/80 px-5 pb-16 pt-28 dark:border-neutral-800 sm:px-8 sm:pb-24 sm:pt-36 lg:px-12">
+      <section className="relative overflow-hidden border-b border-neutral-300/80 pb-16 pt-28 dark:border-neutral-800 sm:pb-24 sm:pt-36">
         <div className="about-system-grid pointer-events-none absolute inset-0" aria-hidden="true" />
-        <div className="relative mx-auto grid max-w-[1480px] gap-12 lg:grid-cols-[minmax(0,1.12fr)_minmax(20rem,0.88fr)] lg:items-end">
+        <div className="content-container relative grid gap-12 lg:grid-cols-[minmax(0,1.12fr)_minmax(20rem,0.88fr)] lg:items-end">
           <div>
             <p className="font-mono text-[0.68rem] font-black uppercase tracking-[0.2em] text-primary-700 dark:text-primary-400">{copy.eyebrow}</p>
             <h1 tabIndex={-1} className="mt-6 max-w-[11ch] text-[clamp(4rem,10vw,9rem)] font-black leading-[0.82] tracking-[-0.075em]">{copy.title}</h1>
@@ -150,8 +150,8 @@ const AboutPage = () => {
         </div>
       </section>
 
-      <section aria-labelledby="about-story-title" className="section-space px-5 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-[1480px]">
+      <section aria-labelledby="about-story-title" className="section-space relative">
+        <div className="content-container">
           <header className="grid gap-6 border-b border-neutral-300/80 pb-10 dark:border-neutral-800 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
             <div><p className="font-mono text-[0.68rem] font-black uppercase tracking-[0.18em] text-primary-700 dark:text-primary-400">{copy.storyEyebrow}</p><h2 id="about-story-title" className="mt-5 max-w-[13ch] text-[clamp(2.6rem,6vw,5.8rem)] font-black leading-[0.92] tracking-[-0.055em]">{copy.storyTitle}</h2></div>
             <p className="max-w-2xl text-lg leading-8 text-neutral-600 dark:text-neutral-300 lg:justify-self-end">{human.introduction}</p>
@@ -162,8 +162,8 @@ const AboutPage = () => {
         </div>
       </section>
 
-      <section aria-labelledby="capability-explorer-title" className="section-space border-y border-neutral-300/80 bg-white px-5 dark:border-neutral-800 dark:bg-neutral-900 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-[1480px]">
+      <section aria-labelledby="capability-explorer-title" className="section-space border-y border-neutral-300/80 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="content-container">
           <header className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
             <div><p className="font-mono text-[0.68rem] font-black uppercase tracking-[0.18em] text-primary-700 dark:text-primary-400">{copy.capabilitiesEyebrow}</p><h2 id="capability-explorer-title" className="mt-5 max-w-[14ch] text-[clamp(2.6rem,6vw,5.8rem)] font-black leading-[0.92] tracking-[-0.055em]">{copy.capabilitiesTitle}</h2></div>
             <p className="max-w-2xl text-base leading-8 text-neutral-600 dark:text-neutral-300 lg:justify-self-end">{copy.capabilitiesIntro}</p>
@@ -185,8 +185,8 @@ const AboutPage = () => {
         </div>
       </section>
 
-      <section aria-labelledby="delivery-process-title" className="section-space px-5 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-[1480px]"><header className="grid gap-6 border-b border-neutral-300/80 pb-10 dark:border-neutral-800 lg:grid-cols-[0.8fr_1.2fr] lg:items-end"><div><p className="font-mono text-[0.68rem] font-black uppercase tracking-[0.18em] text-primary-700 dark:text-primary-400">{copy.processEyebrow}</p><h2 id="delivery-process-title" className="mt-5 max-w-[14ch] text-[clamp(2.6rem,6vw,5.8rem)] font-black leading-[0.92] tracking-[-0.055em]">{copy.processTitle}</h2></div><p className="text-base leading-8 text-neutral-600 dark:text-neutral-400 lg:justify-self-end">{copy.processIntro}</p></header>
+      <section aria-labelledby="delivery-process-title" className="section-space relative">
+        <div className="content-container"><header className="grid gap-6 border-b border-neutral-300/80 pb-10 dark:border-neutral-800 lg:grid-cols-[0.8fr_1.2fr] lg:items-end"><div><p className="font-mono text-[0.68rem] font-black uppercase tracking-[0.18em] text-primary-700 dark:text-primary-400">{copy.processEyebrow}</p><h2 id="delivery-process-title" className="mt-5 max-w-[14ch] text-[clamp(2.6rem,6vw,5.8rem)] font-black leading-[0.92] tracking-[-0.055em]">{copy.processTitle}</h2></div><p className="text-base leading-8 text-neutral-600 dark:text-neutral-400 lg:justify-self-end">{copy.processIntro}</p></header>
           <ol className="divide-y divide-neutral-300/80 dark:divide-neutral-800">{deliverySteps.map((step, index) => <li key={step.title.en} className="grid gap-4 py-7 sm:grid-cols-[4rem_minmax(12rem,0.8fr)_minmax(0,1.2fr)_auto] sm:items-center"><span className="font-mono text-3xl font-black text-primary-600 dark:text-primary-400">{String(index + 1).padStart(2, '0')}</span><h3 className="text-xl font-black">{step.title[language]}</h3><p className="text-sm leading-7 text-neutral-600 dark:text-neutral-400">{step.body[language]}</p>{step.target && <Link aria-label={`${step.title[language]} — ${language === 'he' ? 'לצפייה בדוגמה' : 'View example'}`} to={localizedPath(language, step.target)} className="inline-flex min-h-11 items-center gap-2 text-sm font-black text-primary-700 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500 dark:text-primary-300">{language === 'he' ? 'דוגמה' : 'Example'}<ArrowIcon aria-hidden="true" className="h-4 w-4" /></Link>}</li>)}</ol>
         </div>
       </section>
