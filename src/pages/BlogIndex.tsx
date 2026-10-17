@@ -14,6 +14,7 @@ import {
   normalizeBlogSearchText,
 } from '../features/blog-library/blogLibrary';
 import { localizedPath } from '../routing/portfolioRoutes';
+import { cardSurfaceClassName } from '../components/cardSurface';
 
 const languageFromI18n = (language: string): BlogLanguage => (language === 'he' ? 'he' : 'en');
 
@@ -37,7 +38,7 @@ const ArchiveFeature = ({ post, language }: { post: BlogPost; language: BlogLang
   const ArrowIcon = language === 'he' ? ArrowLeft : ArrowRight;
 
   return (
-    <article className="blog-archive-feature">
+    <article className={cardSurfaceClassName('interactive', 'blog-archive-feature')}>
       <div className="blog-archive-index" aria-hidden="true">
         <strong>01</strong>
         <span>LEAD ENTRY</span>
@@ -73,7 +74,7 @@ const ArchiveEntry = ({ post, index, language }: { post: BlogPost; index: number
 
   return (
     <motion.article
-      className="blog-archive-entry"
+      className={cardSurfaceClassName('interactive', 'blog-archive-entry')}
       data-blog-slug={post.slug}
       initial={reduceMotion ? false : { opacity: 0, y: 12 }}
       whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
