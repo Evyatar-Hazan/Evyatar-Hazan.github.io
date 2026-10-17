@@ -3,6 +3,7 @@ import type { LocalizedPathBuilder, PortfolioSlotProps } from '../../contracts/p
 import { getPortfolioCapabilityGroups } from '../../data/portfolioCapabilities';
 import { getHumanAboutContent } from '../../features/humanAbout/content';
 import { HomeSectionHeader } from './HomeSectionPrimitives';
+import { cardSurfaceClassName } from '../cardSurface';
 
 type ProfessionalOverviewProps = PortfolioSlotProps & {
   buildPath: LocalizedPathBuilder;
@@ -67,7 +68,7 @@ const ProfessionalOverview = ({
         />
 
         <div className="professional-overview__body">
-          <div className="professional-overview__profile">
+          <div className={cardSurfaceClassName('raised', 'professional-overview__profile')}>
             <div>
               <p className="home-detail-label">
                 01 / {ui.profileLabel}
@@ -86,7 +87,7 @@ const ProfessionalOverview = ({
             </div>
           </div>
 
-          <div className="professional-overview__capabilities">
+          <div className={cardSurfaceClassName('raised', 'professional-overview__capabilities')}>
             <div className="professional-overview__capabilities-heading">
               <div>
                 <p className="home-detail-label">

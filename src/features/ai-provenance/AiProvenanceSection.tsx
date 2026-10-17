@@ -5,6 +5,7 @@ import type {
   PortfolioSlotProps,
 } from '../../contracts/portfolio';
 import CaseStudyEvidence from '../../components/CaseStudyEvidence';
+import { cardSurfaceClassName } from '../../components/cardSurface';
 import {
   AI_PROVENANCE_PROJECT_ID,
   AI_PROVENANCE_SLOT_ID,
@@ -43,7 +44,7 @@ const AiProvenanceSection = ({
   return (
     <section
       aria-labelledby="ai-provenance-title"
-      className={`rounded-3xl border border-neutral-200 bg-neutral-50/80 p-6 shadow-sm dark:border-neutral-800 dark:bg-neutral-950/70 md:p-8 ${className}`.trim()}
+      className={cardSurfaceClassName('raised', `p-6 md:p-8 ${className}`)}
       data-portfolio-slot={AI_PROVENANCE_SLOT_ID}
       data-project-id={AI_PROVENANCE_PROJECT_ID}
       data-task-id={AI_PROVENANCE_TASK_ID}
@@ -70,7 +71,7 @@ const AiProvenanceSection = ({
           return (
             <div
               key={item.id}
-              className="rounded-2xl border border-neutral-200 bg-white p-5 dark:border-neutral-800 dark:bg-black/40"
+              className={cardSurfaceClassName('muted', 'p-5')}
               data-provenance-item={item.id}
             >
               <dt className="flex items-center gap-3 text-sm font-bold text-neutral-950 dark:text-white">
@@ -87,7 +88,7 @@ const AiProvenanceSection = ({
         })}
       </dl>
 
-      <div className="mt-6 rounded-2xl border border-neutral-200 bg-white p-5 dark:border-neutral-800 dark:bg-black/40">
+      <div className={cardSurfaceClassName('muted', 'mt-6 p-5')}>
         <CaseStudyEvidence
           evidence={aiProvenanceEvidence}
           language={language}
