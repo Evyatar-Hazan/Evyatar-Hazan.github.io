@@ -8,7 +8,7 @@ const HumanAboutSection = ({ language, className = '' }: PortfolioSlotProps) => 
     <section
       aria-labelledby="human-about-title"
       data-portfolio-slot="home.humanAbout"
-      className={`border-y border-neutral-200/80 py-12 dark:border-neutral-800 sm:py-16 ${className}`.trim()}
+      className={`section-space--compact border-y border-neutral-200/80 dark:border-neutral-800 ${className}`.trim()}
     >
       <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.6fr)] lg:gap-12">
         <header>

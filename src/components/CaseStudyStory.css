@@ -202,12 +202,13 @@
 
 .case-story-section {
   scroll-margin-top: 7rem;
-  padding: clamp(3.5rem, 8vw, 7rem) 0;
+  margin-block: 0;
+  padding-block: var(--space-section);
   border-bottom: 1px solid var(--case-rule);
 }
 
 .case-story-visual-stage {
-  padding-top: clamp(2.75rem, 6vw, 5rem);
+  padding-block-start: var(--space-section-compact);
 }
 
 .case-story-visual-stage > section {

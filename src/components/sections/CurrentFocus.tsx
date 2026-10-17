@@ -62,7 +62,7 @@ const CurrentFocus = ({
       id={currentFocusSectionId}
       aria-labelledby={headingId}
       data-freshness={fresh ? 'current' : 'last-verified'}
-      className={`border-y border-neutral-200/80 bg-white/55 px-5 py-14 dark:border-neutral-800/80 dark:bg-neutral-950/45 sm:px-8 sm:py-18 lg:px-12 ${className}`.trim()}
+      className={`section-space--compact border-y border-neutral-200/80 bg-white/55 px-5 dark:border-neutral-800/80 dark:bg-neutral-950/45 sm:px-8 lg:px-12 ${className}`.trim()}
     >
       <div className="mx-auto max-w-[1480px]">
         <header className="grid gap-6 border-b border-neutral-200 pb-8 dark:border-neutral-800 md:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] md:items-end">
