@@ -8,6 +8,7 @@ import type {
   ProjectId,
 } from '../../contracts/portfolio';
 import { getFlagshipPortfolioProjects } from '../../data/portfolioProjects';
+import { cardSurfaceClassName } from '../../components/cardSurface';
 import { curatedReadingRoutes, type ReadingRouteContentRef } from './curatedReadingRoutes';
 
 export type CuratedReadingRoutesProps = PortfolioSlotProps & {
@@ -67,7 +68,7 @@ const ReadingRoutesSection = ({ buildPath, className = '', language }: CuratedRe
         {curatedReadingRoutes.map((route) => (
           <article
             key={route.id}
-            className="reading-route-card"
+            className={cardSurfaceClassName('interactive', 'reading-route-card')}
             data-reading-route={route.id}
           >
             <div className="reading-route-card-heading">
