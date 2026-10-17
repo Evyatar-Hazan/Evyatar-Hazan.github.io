@@ -8,13 +8,16 @@ const componentStyles = import.meta.glob('./**/*.css', {
 }) as Record<string, string>;
 
 describe('canonical design tokens', () => {
-  it('defines shared color, radius, and shadow foundations', () => {
+  it('defines shared color, spacing, radius, and shadow foundations', () => {
     for (const token of [
       '--color-copper-600',
       '--color-cyan-600',
       '--color-orange-600',
       '--color-warning-400',
       '--color-warning-700',
+      '--space-section-compact',
+      '--space-section',
+      '--space-section-spacious',
       '--radius-xs',
       '--radius-sm',
       '--radius-md',
@@ -54,5 +57,10 @@ describe('canonical design tokens', () => {
   it('keeps compatibility aliases on the canonical radius scale', () => {
     expect(stylesheet).toContain('--home-radius-control: var(--radius-md);');
     expect(stylesheet).toContain('--home-radius-panel: var(--radius-xl);');
+  });
+
+  it('keeps compatibility aliases on the canonical spacing scale', () => {
+    expect(stylesheet).toContain('--home-section-space: var(--space-section-spacious);');
+    expect(stylesheet).toContain('--home-section-space-compact: var(--space-section-compact);');
   });
 });
