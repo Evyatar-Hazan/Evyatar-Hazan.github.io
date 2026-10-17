@@ -77,11 +77,14 @@ main > section[id] {
   --leading-body: 1.65;
   --leading-body-lg: 1.6;
   --leading-heading: 1.1;
+  --space-section-compact: clamp(3.5rem, 5vw, 5rem);
+  --space-section: clamp(4rem, 7vw, 6rem);
+  --space-section-spacious: clamp(4.75rem, 7vw, 7rem);
   --home-page-max: 92.5rem;
   --home-reading-max: 46rem;
   --home-gutter: clamp(1.25rem, 3.4vw, 3rem);
-  --home-section-space: clamp(4.75rem, 7vw, 7rem);
-  --home-section-space-compact: clamp(3.5rem, 5vw, 5rem);
+  --home-section-space: var(--space-section-spacious);
+  --home-section-space-compact: var(--space-section-compact);
   --home-block-space: clamp(1.5rem, 3vw, 3rem);
   --home-title: clamp(2.75rem, 5.5vw, 5.5rem);
   --home-surface-page: #f7f8fa;
@@ -204,6 +207,21 @@ main > section[id] {
 body {
   position: relative;
   @apply bg-neutral-50 dark:bg-black text-neutral-900 dark:text-neutral-100 selection:bg-primary-500/30 font-sans antialiased transition-colors duration-500;
+}
+
+.section-space {
+  margin-block: 0;
+  padding-block: var(--space-section);
+}
+
+.section-space--compact {
+  margin-block: 0;
+  padding-block: var(--space-section-compact);
+}
+
+.section-space--spacious {
+  margin-block: 0;
+  padding-block: var(--space-section-spacious);
 }
 
 /* Custom Scrollbar */
@@ -3278,7 +3296,7 @@ body {
 }
 
 .reading-routes-section {
-  margin-top: clamp(2.5rem, 5vw, 4.5rem);
+  margin-block-start: var(--space-section-compact);
   border-block: 1px solid var(--effect-shell-border);
   padding-block: clamp(1.75rem, 3vw, 2.5rem);
 }
@@ -3440,7 +3458,7 @@ body {
 }
 
 .blog-library {
-  margin-top: clamp(2.5rem, 6vw, 5rem);
+  margin-block-start: var(--space-section);
 }
 
 .blog-library-heading {
@@ -4233,7 +4251,7 @@ body {
   display: grid;
   grid-template-columns: 13rem minmax(0, 1fr);
   gap: clamp(2.5rem, 6vw, 6rem);
-  margin-top: clamp(3rem, 6vw, 5.5rem);
+  margin-block-start: var(--space-section);
 }
 
 .blog-reading-rail {
@@ -4317,7 +4335,7 @@ body {
 }
 
 .blog-article-next {
-  margin-top: clamp(4rem, 8vw, 7rem);
+  margin-block-start: var(--space-section-spacious);
   border-block: 1px solid var(--effect-shell-border);
   padding-block: clamp(2rem, 5vw, 4rem);
 }
@@ -5104,6 +5122,7 @@ body {
 
 .home-section {
   position: relative;
+  margin-block: 0;
   border-bottom: 1px solid var(--home-border);
   background: var(--home-surface-page);
 }

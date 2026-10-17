@@ -70,7 +70,7 @@ const WorkingPrinciples = ({
   <section
     id="working-principles"
     aria-labelledby="working-principles-title"
-    className={`relative overflow-hidden border-y border-neutral-200/80 bg-neutral-50 px-5 py-20 dark:border-neutral-800/80 dark:bg-neutral-950 sm:px-8 sm:py-28 lg:px-12 ${className}`.trim()}
+    className={`section-space--spacious relative overflow-hidden border-y border-neutral-200/80 bg-neutral-50 px-5 dark:border-neutral-800/80 dark:bg-neutral-950 sm:px-8 lg:px-12 ${className}`.trim()}
   >
     <div
       aria-hidden="true"
