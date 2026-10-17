@@ -109,7 +109,7 @@ const BlogPost = () => {
   return (
     <main id="main-content" tabIndex={-1} className="blog-article">
       <div className="blog-article-grid" aria-hidden="true" />
-      <article ref={articleRef} className="blog-article-shell">
+      <article ref={articleRef} className="blog-article-shell content-container">
         <Link to={localizedPath(language, { route: 'blog' })} className="blog-article-back">
           <BackIcon aria-hidden="true" />{t('blog.backToBlog')}
         </Link>
