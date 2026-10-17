@@ -3,6 +3,7 @@ import type {
   PortfolioSlotProps,
 } from '../../contracts/portfolio';
 import { getAudiencePaths } from '../../data/audiencePaths';
+import { cardSurfaceClassName } from '../cardSurface';
 
 export type AudienceEntryPathsProps = PortfolioSlotProps & {
   buildPath: LocalizedPathBuilder;
@@ -41,11 +42,14 @@ export const AudienceEntryPaths = ({
           return (
             <li key={path.id} data-audience-priority={path.priority}>
               <article
-                className={joinClassNames(
-                  'flex h-full flex-col border p-4 sm:p-5',
+                className={cardSurfaceClassName(
+                  'interactive',
+                  joinClassNames(
+                  'flex h-full flex-col p-4 sm:p-5',
                   isPrimary
-                    ? 'border-primary-500/70 bg-primary-500/[0.06] dark:bg-primary-500/[0.09]'
-                    : 'border-neutral-300/80 bg-white/45 dark:border-neutral-800 dark:bg-neutral-950/45',
+                    ? 'audience-entry-card--priority'
+                    : undefined,
+                  ),
                 )}
               >
                 <p className="font-mono text-[0.62rem] font-black uppercase tracking-[0.14em] text-primary-700 dark:text-primary-400">
