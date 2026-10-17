@@ -14,7 +14,7 @@
     linear-gradient(var(--effect-project-grid) 1px, transparent 1px),
     linear-gradient(90deg, var(--effect-project-grid) 1px, transparent 1px);
   background-size: 32px 32px;
-  mask-image: linear-gradient(to bottom, #000 0%, transparent 88%);
+  mask-image: linear-gradient(to bottom, var(--color-black) 0%, transparent 88%);
   opacity: 0.7;
 }
 
@@ -163,7 +163,7 @@
 .projects-hub-evidence > span {
   width: 0.48rem;
   height: 0.48rem;
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   background: var(--color-neutral-400);
 }
 
