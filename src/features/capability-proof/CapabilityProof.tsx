@@ -122,7 +122,7 @@ export const CapabilityProof = ({ language, className = '', buildPath }: Capabil
   return (
     <section
       aria-labelledby="capability-proof-title"
-      className={`bg-neutral-50 px-5 py-16 text-neutral-950 dark:bg-neutral-950 dark:text-white sm:px-8 lg:px-12 ${className}`.trim()}
+      className={`section-space bg-neutral-50 px-5 text-neutral-950 dark:bg-neutral-950 dark:text-white sm:px-8 lg:px-12 ${className}`.trim()}
     >
       <div className="mx-auto max-w-7xl">
         <header className="grid gap-5 border-b border-neutral-300 pb-8 dark:border-neutral-800 lg:grid-cols-[0.7fr_1.3fr] lg:items-end">

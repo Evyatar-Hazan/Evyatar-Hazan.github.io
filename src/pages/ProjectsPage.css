@@ -29,7 +29,7 @@
 .projects-hub-hero {
   display: grid;
   gap: 3rem;
-  padding-block: clamp(3rem, 7vw, 7rem);
+  padding-block: var(--space-section-spacious);
   border-bottom: 1px solid var(--effect-shell-border);
 }
 
@@ -93,7 +93,7 @@
 .dark .projects-hub-hero dd { color: var(--color-white); }
 
 .projects-hub-section {
-  padding-block: clamp(4rem, 8vw, 7.5rem);
+  padding-block: var(--space-section-spacious);
   border-bottom: 1px solid var(--effect-shell-border);
 }
 
@@ -441,7 +441,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding-block: 3rem;
+  padding-block: var(--space-section-compact);
 }
 
 .projects-hub-contact p {

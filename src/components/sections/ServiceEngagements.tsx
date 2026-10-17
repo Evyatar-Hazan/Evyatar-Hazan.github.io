@@ -46,7 +46,7 @@ export const ServiceEngagements = ({
       id="service-engagements"
       aria-labelledby="service-engagements-title"
       className={joinClassNames(
-        'relative overflow-hidden border-b border-neutral-200/80 px-5 py-16 dark:border-neutral-800/80 sm:px-8 sm:py-24 lg:px-12',
+        'section-space relative overflow-hidden border-b border-neutral-200/80 px-5 dark:border-neutral-800/80 sm:px-8 lg:px-12',
         className,
       )}
     >
