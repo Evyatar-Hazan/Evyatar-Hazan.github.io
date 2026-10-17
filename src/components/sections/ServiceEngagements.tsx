@@ -46,11 +46,11 @@ export const ServiceEngagements = ({
       id="service-engagements"
       aria-labelledby="service-engagements-title"
       className={joinClassNames(
-        'section-space relative overflow-hidden border-b border-neutral-200/80 px-5 dark:border-neutral-800/80 sm:px-8 lg:px-12',
+        'section-space relative overflow-hidden border-b border-neutral-200/80 dark:border-neutral-800/80',
         className,
       )}
     >
-      <div className="mx-auto max-w-[1480px]">
+      <div className="content-container">
         <header className="grid gap-5 border-b border-neutral-300/80 pb-8 dark:border-neutral-800 sm:pb-10 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.55fr)] lg:items-end">
           <div>
             <p className="flex items-center gap-3 font-mono text-[0.68rem] font-bold uppercase tracking-[0.18em] text-primary-700 dark:text-primary-400">
