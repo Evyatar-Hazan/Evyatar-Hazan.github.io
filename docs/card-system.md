@@ -19,3 +19,7 @@ Nested controls, fields, status messages, media frames, and code samples are not
 - `interactive`: featured projects, writing entries, blog archive entries, curated reading routes, and audience entry paths.
 
 Project accents may color an internal rule, index, or media frame, but they do not create another card surface variant.
+
+## Verification contract
+
+`src/components/cardSurface.test.ts` must continue to assert that the exported variant tuple contains exactly the three names above. During browser QA, every `.ui-card` must have one and only one `ui-card--*` surface modifier.
