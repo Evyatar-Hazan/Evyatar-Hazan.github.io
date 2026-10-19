@@ -1,0 +1,111 @@
+/*
+ * Canonical responsive type scale.
+ *
+ * The portfolio intentionally uses editorial display type, compact UI labels,
+ * and long-form body copy. These roles share one fluid scale so page-specific
+ * styles can shape weight, colour, and tracking without inventing font sizes.
+ */
+:root {
+  --type-scale-caption: clamp(0.75rem, calc(0.72rem + 0.15vw), 0.8125rem);
+  --type-scale-label: clamp(0.8125rem, calc(0.77rem + 0.2vw), 0.875rem);
+  --type-scale-body-sm: clamp(0.9375rem, calc(0.9rem + 0.2vw), 1rem);
+  --type-scale-body: clamp(1rem, calc(0.94rem + 0.25vw), 1.125rem);
+  --type-scale-body-lg: clamp(1.125rem, calc(1.02rem + 0.4vw), 1.3rem);
+  --type-scale-h4: clamp(1.125rem, calc(1.02rem + 0.55vw), 1.4rem);
+  --type-scale-h3: clamp(1.5rem, calc(1.2rem + 1vw), 2.25rem);
+  --type-scale-h2: clamp(2.1rem, calc(1.25rem + 2.6vw), 4.5rem);
+  --type-scale-h1: clamp(3rem, calc(1rem + 5.4vw), 7.5rem);
+
+  --type-leading-caption: 1.4;
+  --type-leading-label: 1.45;
+  --type-leading-body: 1.7;
+  --type-leading-body-lg: 1.6;
+  --type-leading-h4: 1.3;
+  --type-leading-h3: 1.15;
+  --type-leading-h2: 1;
+  --type-leading-h1: 0.9;
+}
+
+body {
+  font-size: var(--type-scale-body);
+  line-height: var(--type-leading-body);
+}
+
+#root :is(h1, h2, h3, h4, p) {
+  overflow-wrap: anywhere;
+}
+
+#root h1 {
+  font-size: var(--type-scale-h1) !important;
+  line-height: var(--type-leading-h1) !important;
+  text-wrap: balance;
+}
+
+#root h2 {
+  font-size: var(--type-scale-h2) !important;
+  line-height: var(--type-leading-h2) !important;
+  text-wrap: balance;
+}
+
+#root h3 {
+  font-size: var(--type-scale-h3) !important;
+  line-height: var(--type-leading-h3) !important;
+  text-wrap: balance;
+}
+
+#root h4 {
+  font-size: var(--type-scale-h4) !important;
+  line-height: var(--type-leading-h4) !important;
+  text-wrap: balance;
+}
+
+/* Semantic headings used as compact card or panel labels remain headings while
+ * resolving to the same documented scale instead of one-off pixel values. */
+#root :is(h2, h3, h4):is(
+  [class*="text-xs"],
+  [class*="text-sm"],
+  [class*="text-base"],
+  [class*="text-lg"],
+  [class*="text-xl"],
+  [class*="font-mono"],
+  [class*="uppercase"]
+) {
+  font-size: var(--type-scale-h4) !important;
+  line-height: var(--type-leading-h4) !important;
+}
+
+#root :is(h2, h3)[class*="text-2xl"],
+#root :is(h2, h3)[class*="text-3xl"] {
+  font-size: var(--type-scale-h3) !important;
+  line-height: var(--type-leading-h3) !important;
+}
+
+#root p {
+  font-size: var(--type-scale-body) !important;
+  line-height: var(--type-leading-body) !important;
+}
+
+#root p:is([class*="text-sm"], [class*="text-xs"]) {
+  font-size: var(--type-scale-body-sm) !important;
+  line-height: var(--type-leading-body) !important;
+}
+
+#root p:is([class*="text-lg"], [class*="text-xl"]) {
+  font-size: var(--type-scale-body-lg) !important;
+  line-height: var(--type-leading-body-lg) !important;
+}
+
+#root p:is(
+  [class*="font-mono"],
+  [class*="uppercase"],
+  [class*="eyebrow"],
+  [class*="kicker"],
+  [class*="overline"],
+  [class*="meta"],
+  [class*="label"],
+  [class*="status"],
+  [class*="index"]
+) {
+  font-size: var(--type-scale-label) !important;
+  line-height: var(--type-leading-label) !important;
+}
