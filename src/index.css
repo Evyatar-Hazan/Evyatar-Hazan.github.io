@@ -136,7 +136,7 @@ main > section[id] {
   --effect-compiler-grid-line: color-mix(in srgb, var(--color-neutral-900) 9%, transparent);
   --effect-compiler-grid-major: color-mix(in srgb, var(--color-primary-600) 14%, transparent);
   --effect-compiler-aura: color-mix(in srgb, var(--color-primary-400) 22%, transparent);
-  --effect-compiler-layer: color-mix(in srgb, var(--color-white) 76%, transparent);
+  --effect-compiler-layer: color-mix(in srgb, var(--color-white) 88%, var(--color-neutral-50));
   --effect-compiler-layer-border: color-mix(in srgb, var(--color-neutral-900) 18%, transparent);
   --effect-compiler-layer-shadow: 0 24px 70px color-mix(in srgb, var(--color-neutral-950) 14%, transparent);
   --effect-compiler-output: color-mix(in srgb, var(--color-white) 90%, var(--color-primary-50));
@@ -144,26 +144,26 @@ main > section[id] {
   --effect-compiler-copy: color-mix(in srgb, var(--color-neutral-950) 82%, transparent);
   --effect-about-surface: color-mix(in srgb, var(--color-neutral-50) 97%, var(--color-primary-50));
   --effect-about-grid: color-mix(in srgb, var(--color-neutral-900) 6%, transparent);
-  --effect-about-module: color-mix(in srgb, var(--color-white) 44%, transparent);
+  --effect-about-module: color-mix(in srgb, var(--color-white) 86%, var(--color-neutral-100));
   --effect-about-shadow: 0 18px 55px color-mix(in srgb, var(--color-neutral-950) 5%, transparent);
   --effect-project-surface: color-mix(in srgb, var(--color-neutral-50) 96%, var(--color-primary-50));
   --effect-project-grid: color-mix(in srgb, var(--color-neutral-900) 6%, transparent);
-  --effect-project-panel: color-mix(in srgb, var(--color-white) 78%, transparent);
-  --effect-project-panel-muted: color-mix(in srgb, var(--color-neutral-100) 78%, transparent);
+  --effect-project-panel: color-mix(in srgb, var(--color-white) 88%, var(--color-neutral-50));
+  --effect-project-panel-muted: color-mix(in srgb, var(--color-neutral-100) 88%, var(--color-white));
   --effect-project-shadow: 0 24px 70px color-mix(in srgb, var(--color-neutral-950) 9%, transparent);
   --effect-project-preview:
     radial-gradient(circle at 18% 22%, color-mix(in srgb, var(--color-primary-500) 35%, transparent), transparent 32%),
     radial-gradient(circle at 82% 36%, color-mix(in srgb, var(--color-success-500) 18%, transparent), transparent 28%);
   --effect-writing-surface: color-mix(in srgb, var(--color-neutral-50) 96%, var(--color-primary-50));
   --effect-writing-grid: color-mix(in srgb, var(--color-neutral-900) 6%, transparent);
-  --effect-writing-paper: color-mix(in srgb, var(--color-white) 78%, transparent);
-  --effect-writing-paper-muted: color-mix(in srgb, var(--color-neutral-100) 74%, transparent);
+  --effect-writing-paper: color-mix(in srgb, var(--color-white) 90%, var(--color-neutral-50));
+  --effect-writing-paper-muted: color-mix(in srgb, var(--color-neutral-100) 88%, var(--color-white));
   --effect-writing-ink-soft: color-mix(in srgb, var(--color-neutral-950) 7%, transparent);
   --effect-writing-shadow: 0 30px 80px color-mix(in srgb, var(--color-neutral-950) 8%, transparent);
   --effect-contact-surface: color-mix(in srgb, var(--color-neutral-50) 94%, var(--color-primary-50));
   --effect-contact-grid: color-mix(in srgb, var(--color-neutral-900) 7%, transparent);
-  --effect-contact-panel: color-mix(in srgb, var(--color-white) 76%, transparent);
-  --effect-contact-panel-muted: color-mix(in srgb, var(--color-neutral-100) 78%, transparent);
+  --effect-contact-panel: color-mix(in srgb, var(--color-white) 88%, var(--color-neutral-50));
+  --effect-contact-panel-muted: color-mix(in srgb, var(--color-neutral-100) 88%, var(--color-white));
   --effect-contact-shadow: 0 28px 78px color-mix(in srgb, var(--color-neutral-950) 9%, transparent);
   --effect-shell-surface: color-mix(in srgb, var(--color-white) 84%, var(--color-primary-50));
   --effect-shell-surface-strong: color-mix(in srgb, var(--color-white) 94%, var(--color-primary-50));
@@ -172,8 +172,8 @@ main > section[id] {
   --effect-shell-shadow: 0 24px 70px color-mix(in srgb, var(--color-neutral-950) 13%, transparent);
   --effect-blog-surface: color-mix(in srgb, var(--color-neutral-50) 96%, var(--color-primary-50));
   --effect-blog-grid: color-mix(in srgb, var(--color-neutral-950) 6%, transparent);
-  --effect-blog-paper: color-mix(in srgb, var(--color-white) 80%, transparent);
-  --effect-blog-paper-muted: color-mix(in srgb, var(--color-neutral-100) 76%, transparent);
+  --effect-blog-paper: color-mix(in srgb, var(--color-white) 92%, var(--color-neutral-50));
+  --effect-blog-paper-muted: color-mix(in srgb, var(--color-neutral-100) 88%, var(--color-white));
   --effect-blog-shadow: 0 28px 78px color-mix(in srgb, var(--color-neutral-950) 8%, transparent);
 }
 
@@ -201,7 +201,7 @@ svg.lucide {
   --effect-compiler-grid-line: color-mix(in srgb, var(--color-white) 8%, transparent);
   --effect-compiler-grid-major: color-mix(in srgb, var(--color-primary-400) 15%, transparent);
   --effect-compiler-aura: color-mix(in srgb, var(--color-primary-500) 18%, transparent);
-  --effect-compiler-layer: color-mix(in srgb, var(--color-neutral-950) 76%, transparent);
+  --effect-compiler-layer: color-mix(in srgb, var(--color-neutral-950) 90%, var(--color-black));
   --effect-compiler-layer-border: color-mix(in srgb, var(--color-white) 18%, transparent);
   --effect-compiler-layer-shadow: 0 28px 90px color-mix(in srgb, var(--color-black) 72%, transparent);
   --effect-compiler-output: color-mix(in srgb, var(--color-neutral-950) 92%, var(--color-primary-950));
@@ -209,23 +209,23 @@ svg.lucide {
   --effect-compiler-copy: color-mix(in srgb, var(--color-white) 84%, transparent);
   --effect-about-surface: color-mix(in srgb, var(--color-neutral-950) 97%, var(--color-primary-950));
   --effect-about-grid: color-mix(in srgb, var(--color-white) 6%, transparent);
-  --effect-about-module: color-mix(in srgb, var(--color-black) 28%, transparent);
+  --effect-about-module: color-mix(in srgb, var(--color-black) 72%, var(--color-neutral-950));
   --effect-about-shadow: 0 18px 55px color-mix(in srgb, var(--color-black) 32%, transparent);
   --effect-project-surface: color-mix(in srgb, var(--color-black) 96%, var(--color-primary-950));
   --effect-project-grid: color-mix(in srgb, var(--color-white) 6%, transparent);
-  --effect-project-panel: color-mix(in srgb, var(--color-neutral-950) 82%, transparent);
-  --effect-project-panel-muted: color-mix(in srgb, var(--color-black) 72%, transparent);
+  --effect-project-panel: color-mix(in srgb, var(--color-neutral-950) 92%, var(--color-black));
+  --effect-project-panel-muted: color-mix(in srgb, var(--color-black) 82%, var(--color-neutral-900));
   --effect-project-shadow: 0 28px 80px color-mix(in srgb, var(--color-black) 48%, transparent);
   --effect-writing-surface: color-mix(in srgb, var(--color-black) 96%, var(--color-primary-950));
   --effect-writing-grid: color-mix(in srgb, var(--color-white) 6%, transparent);
-  --effect-writing-paper: color-mix(in srgb, var(--color-neutral-950) 82%, transparent);
-  --effect-writing-paper-muted: color-mix(in srgb, var(--color-black) 68%, transparent);
+  --effect-writing-paper: color-mix(in srgb, var(--color-neutral-950) 92%, var(--color-black));
+  --effect-writing-paper-muted: color-mix(in srgb, var(--color-black) 82%, var(--color-neutral-900));
   --effect-writing-ink-soft: color-mix(in srgb, var(--color-white) 6%, transparent);
   --effect-writing-shadow: 0 34px 90px color-mix(in srgb, var(--color-black) 50%, transparent);
   --effect-contact-surface: color-mix(in srgb, var(--color-black) 95%, var(--color-primary-950));
   --effect-contact-grid: color-mix(in srgb, var(--color-white) 7%, transparent);
-  --effect-contact-panel: color-mix(in srgb, var(--color-neutral-950) 82%, transparent);
-  --effect-contact-panel-muted: color-mix(in srgb, var(--color-black) 68%, transparent);
+  --effect-contact-panel: color-mix(in srgb, var(--color-neutral-950) 92%, var(--color-black));
+  --effect-contact-panel-muted: color-mix(in srgb, var(--color-black) 82%, var(--color-neutral-900));
   --effect-contact-shadow: 0 32px 88px color-mix(in srgb, var(--color-black) 54%, transparent);
   --effect-shell-surface: color-mix(in srgb, var(--color-neutral-950) 84%, var(--color-primary-950));
   --effect-shell-surface-strong: color-mix(in srgb, var(--color-neutral-950) 94%, var(--color-primary-950));
@@ -234,8 +234,8 @@ svg.lucide {
   --effect-shell-shadow: 0 28px 82px color-mix(in srgb, var(--color-black) 58%, transparent);
   --effect-blog-surface: color-mix(in srgb, var(--color-black) 96%, var(--color-primary-950));
   --effect-blog-grid: color-mix(in srgb, var(--color-white) 6%, transparent);
-  --effect-blog-paper: color-mix(in srgb, var(--color-neutral-950) 82%, transparent);
-  --effect-blog-paper-muted: color-mix(in srgb, var(--color-black) 70%, transparent);
+  --effect-blog-paper: color-mix(in srgb, var(--color-neutral-950) 92%, var(--color-black));
+  --effect-blog-paper-muted: color-mix(in srgb, var(--color-black) 84%, var(--color-neutral-900));
   --effect-blog-shadow: 0 34px 92px color-mix(in srgb, var(--color-black) 52%, transparent);
 }
 
@@ -2920,7 +2920,6 @@ body {
   background: var(--effect-shell-surface-strong);
   box-shadow: var(--effect-shell-shadow);
   color: var(--color-primary-600);
-  backdrop-filter: blur(18px);
   transition:
     border-color 180ms ease,
     background-color 180ms ease,
@@ -3770,7 +3769,6 @@ body {
   border: 1px solid var(--effect-shell-border);
   background: var(--effect-blog-paper);
   box-shadow: var(--effect-blog-shadow);
-  backdrop-filter: blur(14px);
 }
 
 .blog-archive-feature::before,
@@ -4059,7 +4057,6 @@ body {
   overflow: hidden;
   border: 1px solid var(--effect-shell-border);
   background: var(--effect-blog-paper);
-  backdrop-filter: blur(12px);
 }
 
 .blog-archive-entry-index {
@@ -4140,7 +4137,6 @@ body {
   border: 1px solid var(--effect-shell-border);
   background: var(--effect-blog-paper);
   box-shadow: var(--effect-blog-shadow);
-  backdrop-filter: blur(14px);
 }
 
 .blog-article-number {
