@@ -44,6 +44,7 @@ test.describe('FIX-027 interaction-state system', () => {
     await expect(action).toBeFocused();
     await expect.poll(() => interactionSnapshot(action)).toMatchObject({ outlineStyle: 'solid', outlineWidth: '3px' });
 
+    await page.locator('#main-content').focus();
     const card = page.locator('.featured-case-card').first();
     await card.scrollIntoViewIfNeeded();
     const cardDefault = await interactionSnapshot(card);
