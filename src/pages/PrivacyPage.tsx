@@ -74,7 +74,7 @@ const PrivacyPage = () => {
         <h1 className="mt-6 text-4xl font-bold tracking-tight text-neutral-950 dark:text-white md:text-5xl">
           {isHebrew ? 'פרטיות ושקיפות בסיסית' : 'Basic privacy and transparency'}
         </h1>
-        <p className="mt-5 max-w-3xl text-lg leading-8 text-neutral-600 dark:text-neutral-400">
+        <p className="body-copy mt-5 text-lg leading-8 text-neutral-600 dark:text-neutral-400">
           {isHebrew
             ? 'העמוד הזה נועד להסביר בפשטות איך האתר הזה פועל, אילו נתיבים יש ליצירת קשר, ואיפה עובר הגבול בין שימוש רגיל באתר לבין שיתוף מידע ביוזמתך.'
             : 'This page explains in plain language how the site works, which contact paths exist, and where the boundary sits between normal browsing and information you intentionally choose to share.'}
@@ -87,7 +87,7 @@ const PrivacyPage = () => {
           {sections.map((section) => (
             <section key={section.title} className="min-w-0 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 dark:border-neutral-800 dark:bg-neutral-950/70">
               <h2 className="text-xl font-bold text-neutral-950 dark:text-white">{section.title}</h2>
-              <p className="mt-3 text-base leading-8 text-neutral-700 dark:text-neutral-300">{section.body}</p>
+              <p className="body-copy mt-3 text-base leading-8 text-neutral-700 dark:text-neutral-300">{section.body}</p>
             </section>
           ))}
         </div>
