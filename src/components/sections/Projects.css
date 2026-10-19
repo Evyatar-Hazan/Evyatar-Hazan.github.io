@@ -112,7 +112,7 @@
 .featured-case-card__media::after {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgb(0 0 0 / 0.3), transparent 48%);
+  background: linear-gradient(to top, color-mix(in srgb, var(--color-black) 30%, transparent), transparent 48%);
   content: '';
   pointer-events: none;
 }
@@ -134,8 +134,8 @@
   min-height: 2.25rem;
   align-items: center;
   gap: 0.4rem;
-  border: 1px solid rgb(255 255 255 / 0.34);
-  background: rgb(10 10 12 / 0.8);
+  border: 1px solid color-mix(in srgb, var(--color-white) 34%, transparent);
+  background: color-mix(in srgb, var(--color-neutral-950) 80%, transparent);
   padding: 0.5rem 0.65rem;
   color: white;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
