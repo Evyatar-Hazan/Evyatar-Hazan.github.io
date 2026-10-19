@@ -6,6 +6,26 @@ import type { BlogLanguage, BlogPostMeta } from './types';
  * not pull the article bodies into their bundle.
  */
 const metadata = {
+  'shared-container-is-a-layout-contract:he': {
+      slug: 'shared-container-is-a-layout-contract',
+      language: 'he',
+      title: 'קו יישור אחד לכל האתר',
+      excerpt: 'איך איחוד רוחב ושוליים בפורטפוליו הפך כמה מערכות יישור למעטפת משותפת, ולמה צריך למדוד את התוצאה בדפדפן.',
+      date: '2026-10-19',
+      readTime: '5 דקות קריאה',
+      tags: ['Frontend', 'CSS', 'Testing'],
+      featured: false,
+    },
+  'shared-container-is-a-layout-contract:en': {
+      slug: 'shared-container-is-a-layout-contract',
+      language: 'en',
+      title: 'One alignment system for the whole site',
+      excerpt: 'How unifying portfolio widths and gutters established a shared content shell, and why its boundaries need browser measurements.',
+      date: '2026-10-19',
+      readTime: '5 min read',
+      tags: ['Frontend', 'CSS', 'Testing'],
+      featured: false,
+    },
   'initial-html-should-contain-the-article:he': {
       slug: 'initial-html-should-contain-the-article',
       language: 'he',

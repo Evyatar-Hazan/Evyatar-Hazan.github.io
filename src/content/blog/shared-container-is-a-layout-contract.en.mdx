@@ -1,0 +1,59 @@
+While working on my portfolio recently, I came back to a small question: where does the content begin and end on each page?
+
+The code had several answers. The home page used a maximum width of 1480 pixels. The projects area used 1380 pixels and its own margin calculation. The blog had a `76rem` shell, while an individual article had another rule setting it to `72rem`. Each rule made sense on its own. Together, they gave one site several systems of alignment.
+
+The fix focused on the width and gutters of the content shell. It left room for each page to arrange its content differently.
+
+## The diagnosis: width is only part of the geometry
+
+It is tempting to search for `max-width` and replace a number. But the content edge also depends on padding, parent elements, and rules that apply only on small screens.
+
+The blog, for example, had horizontal padding on the page and a separate width on its inner shell. The projects area calculated its margins by subtracting from the available width, then changed that calculation on mobile. The home page already had shared variables, but their names and ownership were specific to the home page.
+
+Changing one value would leave those competing rules in place. I needed to decide which element owned the outer width, which owned the internal gutters, and which old declarations had to go.
+
+## The fix: give the shared shell a clear job
+
+I introduced two variables and a shared class:
+
+```css
+:root {
+  --content-container-max: 92.5rem;
+  --content-container-gutter: clamp(1.25rem, 3.4vw, 3rem);
+}
+
+.content-container {
+  box-sizing: border-box;
+  width: min(100%, var(--content-container-max));
+  margin-inline: auto;
+  padding-inline: var(--content-container-gutter);
+}
+```
+
+Those values suit this portfolio; they are not a universal page recipe. The useful part is the division of responsibility. The container sets its width, centers itself, and supplies its internal gutters. With `border-box`, that padding stays inside the declared width.
+
+I applied the class to the relevant page shells and removed width and horizontal-padding rules that competed with it. Existing home-page wrappers adopted the same variables without needing their content structure rewritten. Vertical spacing remained a separate responsibility.
+
+## Shared alignment still allows different reading widths
+
+An article, a project card, and a contact form need different internal layouts. The shared container establishes their outer frame. Inside it, a page can retain a reading column, a grid, or a narrower heading.
+
+That distinction kept the change focused. Stretching every paragraph to the edge would solve a different problem and could make the result worse. I wanted predictable outer boundaries while letting each page organize the material within them.
+
+The same distinction helps when reviewing the code. A local layout rule can be legitimate. The question is whether it controls the content inside the shared frame or quietly replaces that frame with another one.
+
+## Measure the edges the browser actually draws
+
+The change also added a browser check that measures visible containers. It reads `getBoundingClientRect()` and computed padding rather than only checking whether a CSS class appears in the DOM.
+
+At a viewport width of 1680 pixels, the check expects a 1480-pixel container, a 100-pixel outer inset on each side, and rounded internal gutters of 48 pixels. At 390 pixels, it expects a full-width container with rounded internal gutters of 20 pixels.
+
+The check visits nine routes in English and Hebrew and also checks for horizontal overflow. English runs in light mode and Hebrew in dark mode. That is focused coverage of the geometry at selected sizes. It does not cover every viewport or every language-and-theme combination, and it does not replace looking at the page.
+
+This makes the assertion useful without asking it to prove too much. A class name establishes intent. A measured rectangle tells me whether the rendered layout follows that intent under the conditions being tested.
+
+## What I will carry forward
+
+When pages seem slightly displaced relative to one another, I now trace who owns their width before adding another local adjustment.
+
+A shared container becomes useful when nearby rules stop competing with it. Browser measurements complete that work: they let me check whether the boundaries described in the CSS become the boundaries a visitor actually sees.

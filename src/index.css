@@ -3933,6 +3933,7 @@ body {
   transition: color 180ms ease, gap 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+.blog-archive-feature h2 > a,
 .blog-archive-entry-copy h2 > a {
   display: inline-flex;
   min-height: 2.75rem;

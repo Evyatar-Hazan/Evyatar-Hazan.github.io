@@ -61,8 +61,8 @@ describe('BlogIndex knowledge library', () => {
       'Product',
       'Java',
       'Operating Systems',
-      'Performance',
       'Testing',
+      'Performance',
       'Data',
       'Reliability',
     ]);
@@ -79,7 +79,7 @@ describe('BlogIndex knowledge library', () => {
     fireEvent.click(screen.getByRole('button', { name: /^Load more notes/ }));
     expect(resultCards()).toHaveLength(24);
     fireEvent.click(screen.getByRole('button', { name: /^Load more notes/ }));
-    expect(resultCards()).toHaveLength(30);
+    expect(resultCards()).toHaveLength(31);
     expect(screen.queryByRole('button', { name: /^Load more notes/ })).not.toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'What I learned from building a credible portfolio' })).toBeInTheDocument();
   });
