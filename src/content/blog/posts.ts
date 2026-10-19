@@ -1,3 +1,5 @@
+import SharedContainerIsALayoutContractEn from './shared-container-is-a-layout-contract.en.mdx';
+import SharedContainerIsALayoutContractHe from './shared-container-is-a-layout-contract.he.mdx';
 import InitialHtmlShouldContainTheArticleEn from './initial-html-should-contain-the-article.en.mdx';
 import InitialHtmlShouldContainTheArticleHe from './initial-html-should-contain-the-article.he.mdx';
 import FailedRenderShouldNotDestroyGoodOutputEn from './failed-render-should-not-destroy-good-output.en.mdx';
@@ -64,6 +66,14 @@ import { blogPostMetadataByKey } from './metadata';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    ...blogPostMetadataByKey['shared-container-is-a-layout-contract:he'],
+    Content: SharedContainerIsALayoutContractHe,
+  },
+  {
+    ...blogPostMetadataByKey['shared-container-is-a-layout-contract:en'],
+    Content: SharedContainerIsALayoutContractEn,
+  },
   {
     ...blogPostMetadataByKey['initial-html-should-contain-the-article:he'],
     Content: InitialHtmlShouldContainTheArticleHe,

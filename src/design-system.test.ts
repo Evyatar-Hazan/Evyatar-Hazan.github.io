@@ -8,7 +8,7 @@ const componentStyles = import.meta.glob('./**/*.css', {
 }) as Record<string, string>;
 
 describe('canonical design tokens', () => {
-  it('defines shared color, spacing, radius, and shadow foundations', () => {
+  it('defines shared color, spacing, measure, radius, and shadow foundations', () => {
     for (const token of [
       '--color-copper-600',
       '--color-cyan-600',
@@ -18,6 +18,7 @@ describe('canonical design tokens', () => {
       '--space-section-compact',
       '--space-section',
       '--space-section-spacious',
+      '--measure-body',
       '--radius-xs',
       '--radius-sm',
       '--radius-md',
@@ -62,5 +63,11 @@ describe('canonical design tokens', () => {
   it('keeps compatibility aliases on the canonical spacing scale', () => {
     expect(stylesheet).toContain('--home-section-space: var(--space-section-spacious);');
     expect(stylesheet).toContain('--home-section-space-compact: var(--space-section-compact);');
+  });
+
+  it('keeps long-form body copy on the canonical readable measure', () => {
+    expect(stylesheet).toContain('--measure-body: 62ch;');
+    expect(stylesheet).toContain('max-inline-size: var(--measure-body);');
+    expect(stylesheet).toMatch(/\.blog-prose\s*{[^}]*max-inline-size:\s*var\(--measure-body\)/s);
   });
 });
