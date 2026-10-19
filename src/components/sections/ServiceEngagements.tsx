@@ -133,7 +133,7 @@ export const ServiceEngagements = ({
 
                   <a
                     href={buildContactUrl(language, contactContextByServiceEngagement[engagement.id])}
-                    className="mt-8 inline-flex min-h-12 w-full items-center justify-between gap-4 border border-neutral-900 px-4 py-3 text-sm font-black text-neutral-950 transition-colors hover:bg-neutral-950 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 dark:border-neutral-200 dark:text-white dark:hover:bg-white dark:hover:text-neutral-950 dark:focus-visible:ring-offset-neutral-950"
+                    className="mt-8 inline-flex min-h-12 w-full items-center justify-between gap-4 border border-neutral-900 px-4 py-3 text-sm font-black text-neutral-950 transition-colors hover:bg-neutral-950 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 dark:border-neutral-200 dark:text-content-primary dark:hover:bg-surface-raised dark:hover:text-content-primary dark:focus-visible:ring-offset-neutral-950"
                   >
                     <span>{engagement.cta.label}</span>
                     <span aria-hidden="true" className="font-mono text-primary-600 dark:text-primary-400 rtl:-scale-x-100">→</span>
