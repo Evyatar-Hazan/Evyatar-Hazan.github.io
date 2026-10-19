@@ -2,7 +2,7 @@
   --case-accent: var(--color-primary-500);
   --case-accent-soft: color-mix(in srgb, var(--case-accent) 14%, transparent);
   --case-rule: color-mix(in srgb, currentColor 16%, transparent);
-  --case-panel: color-mix(in srgb, var(--color-white) 78%, transparent);
+  --case-panel: color-mix(in srgb, var(--color-white) 90%, var(--color-neutral-50));
   --case-panel-strong: color-mix(in srgb, var(--color-white) 92%, var(--case-accent-soft));
   --case-copy: var(--color-neutral-700);
   color: var(--color-neutral-950);
@@ -10,7 +10,7 @@
 
 .dark .case-story {
   --case-rule: color-mix(in srgb, var(--color-white) 16%, transparent);
-  --case-panel: color-mix(in srgb, var(--color-neutral-950) 82%, transparent);
+  --case-panel: color-mix(in srgb, var(--color-neutral-950) 92%, var(--color-black));
   --case-panel-strong: color-mix(in srgb, var(--color-neutral-950) 92%, var(--case-accent-soft));
   --case-copy: var(--color-neutral-300);
   color: var(--color-white);

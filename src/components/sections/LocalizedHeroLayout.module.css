@@ -140,7 +140,7 @@
 
 .secondaryAction {
   border: 1px solid var(--color-neutral-300);
-  background: color-mix(in srgb, var(--color-white) 60%, transparent);
+  background: color-mix(in srgb, var(--color-white) 88%, var(--color-neutral-50));
   color: var(--color-neutral-900);
 }
 
@@ -151,7 +151,7 @@
 
 :global(.dark) .secondaryAction {
   border-color: var(--color-neutral-700);
-  background: color-mix(in srgb, var(--color-neutral-950) 60%, transparent);
+  background: color-mix(in srgb, var(--color-neutral-950) 88%, var(--color-black));
   color: var(--color-white);
 }
 
