@@ -90,7 +90,7 @@ const CaseStudyReadingLevels = ({
 
       <dl className="mt-8 grid gap-px overflow-hidden border border-neutral-200 bg-neutral-200 sm:grid-cols-2 dark:border-neutral-800 dark:bg-neutral-800">
         {summaryItems.map((item) => (
-          <div key={item.label} className="bg-white p-5 dark:bg-black">
+          <div key={item.label} className="bg-surface-base p-5 dark:bg-surface-sunken">
             <dt className="text-xs font-black uppercase tracking-[0.16em] text-primary-600 dark:text-primary-300">
               {item.label}
             </dt>
@@ -150,7 +150,7 @@ const CaseStudyReadingLevels = ({
         </Link>
       </nav>
 
-      <details className="group mt-8 border border-neutral-300 bg-white dark:border-neutral-700 dark:bg-black">
+      <details className="group mt-8 border border-neutral-300 bg-surface-base dark:border-neutral-700 dark:bg-surface-sunken">
         <summary
           aria-controls={detailId}
           className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-5 px-5 py-4 text-start focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-500 [&::-webkit-details-marker]:hidden"
