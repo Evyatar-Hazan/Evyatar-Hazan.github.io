@@ -97,6 +97,12 @@ main > section[id] {
   --leading-body: 1.65;
   --leading-body-lg: 1.6;
   --leading-heading: 1.1;
+  /* Canonical iconography: four optical sizes and one shared Lucide stroke. */
+  --icon-size-xs: 0.875rem;
+  --icon-size-sm: 1rem;
+  --icon-size-md: 1.25rem;
+  --icon-size-lg: 1.5rem;
+  --icon-stroke-width: 1.75;
   --content-container-max: 92.5rem;
   --content-container-gutter: clamp(1.25rem, 3.4vw, 3rem);
   --space-section-compact: clamp(3.5rem, 5vw, 5rem);
@@ -169,6 +175,11 @@ main > section[id] {
   --effect-blog-paper: color-mix(in srgb, var(--color-white) 80%, transparent);
   --effect-blog-paper-muted: color-mix(in srgb, var(--color-neutral-100) 76%, transparent);
   --effect-blog-shadow: 0 28px 78px color-mix(in srgb, var(--color-neutral-950) 8%, transparent);
+}
+
+svg.lucide {
+  flex: none;
+  stroke-width: var(--icon-stroke-width);
 }
 
 .dark {
@@ -429,8 +440,8 @@ body {
 }
 
 .product-compiler-input-icon svg {
-  width: 1rem;
-  height: 1rem;
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
 }
 
 .product-compiler-input strong {
@@ -547,8 +558,8 @@ body {
 .dark .product-compiler-output-status { color: var(--color-success-400); }
 
 .product-compiler-output-status svg {
-  width: 1.05rem;
-  height: 1.05rem;
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
 }
 
 .product-compiler-output-status strong {
@@ -692,7 +703,7 @@ body {
 }
 
 .dark .product-compiler-output-verified { color: var(--color-success-400); }
-.product-compiler-output-verified svg { width: 0.85rem; height: 0.85rem; }
+.product-compiler-output-verified svg { width: var(--icon-size-xs); height: var(--icon-size-xs); }
 
 .about-system {
   background: var(--effect-about-surface);
@@ -890,7 +901,7 @@ body {
   }
 
   .product-compiler-input-icon { width: 1.5rem; height: 1.5rem; }
-  .product-compiler-input-icon svg { width: 0.82rem; height: 0.82rem; }
+  .product-compiler-input-icon svg { width: var(--icon-size-xs); height: var(--icon-size-xs); }
   .product-compiler-input strong { font-size: 0.74rem; }
   .product-compiler-input-number { font-size: 0.66rem; }
   .product-compiler-output { min-height: 260px; }
@@ -947,7 +958,7 @@ body {
 
   .product-compiler-input-heading { width: 100%; }
   .product-compiler-input-icon { width: 1.25rem; height: 1.25rem; border-radius: 0.4rem; }
-  .product-compiler-input-icon svg { width: 0.7rem; height: 0.7rem; }
+  .product-compiler-input-icon svg { width: var(--icon-size-xs); height: var(--icon-size-xs); }
   .product-compiler-input strong { font-size: clamp(0.65rem, 2.8vw, 0.74rem); overflow-wrap: anywhere; }
   .product-compiler-signal { display: none; }
   .product-compiler-connectors-desktop { display: none; }
@@ -2713,8 +2724,8 @@ body {
 }
 
 .system-rail-mobile-close svg {
-  width: 1.2rem;
-  height: 1.2rem;
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
 }
 
 .dark .system-rail-mobile-close {
@@ -2932,9 +2943,8 @@ body {
 }
 
 .contact-node-link svg {
-  width: 1.3rem;
-  height: 1.3rem;
-  stroke-width: 1.8;
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
 }
 
 .contact-node-status {
@@ -3104,8 +3114,8 @@ body {
 }
 
 .closing-dock-cta svg {
-  width: 1rem;
-  height: 1rem;
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
 }
 
 .closing-dock-map {
@@ -3218,8 +3228,8 @@ body {
 }
 
 .closing-dock-socials svg {
-  width: 0.95rem;
-  height: 0.95rem;
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
   flex: none;
 }
 
@@ -3563,8 +3573,8 @@ body {
 .blog-library-search > div > svg {
   position: absolute;
   inset-inline-start: 0.9rem;
-  width: 1rem;
-  height: 1rem;
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
   color: var(--color-primary-600);
   pointer-events: none;
 }
@@ -3603,8 +3613,8 @@ body {
 }
 
 .blog-library-clear svg {
-  width: 1rem;
-  height: 1rem;
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
 }
 
 .blog-library-filters {
@@ -3839,8 +3849,8 @@ body {
 }
 
 .blog-archive-meta svg {
-  width: 0.8rem;
-  height: 0.8rem;
+  width: var(--icon-size-xs);
+  height: var(--icon-size-xs);
 }
 
 .blog-archive-label {
@@ -3943,8 +3953,8 @@ body {
 
 .blog-archive-read svg,
 .blog-archive-entry-footer svg {
-  width: 0.95rem;
-  height: 0.95rem;
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
 }
 
 .blog-archive-signal {
@@ -4117,8 +4127,8 @@ body {
 }
 
 .blog-article-back svg {
-  width: 0.95rem;
-  height: 0.95rem;
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
 }
 
 .blog-article-masthead {
@@ -4192,8 +4202,8 @@ body {
 }
 
 .blog-article-meta svg {
-  width: 0.85rem;
-  height: 0.85rem;
+  width: var(--icon-size-xs);
+  height: var(--icon-size-xs);
   color: var(--color-primary-500);
 }
 
@@ -4430,8 +4440,8 @@ body {
 }
 
 .blog-article-next-grid svg {
-  width: 1.1rem;
-  height: 1.1rem;
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
   color: var(--color-primary-500);
 }
 
@@ -5718,8 +5728,8 @@ body {
 }
 
 .contact-context-card__controls button svg {
-  width: 1rem;
-  height: 1rem;
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
 }
 
 .contact-brief-layout {
@@ -5824,8 +5834,8 @@ textarea.contact-workspace-input {
 }
 
 .contact-delivery-status > svg {
-  width: 1.1rem;
-  height: 1.1rem;
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
 }
 
 .contact-delivery-status.is-success {
