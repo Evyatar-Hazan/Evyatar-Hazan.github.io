@@ -7,6 +7,17 @@ const componentStyles = import.meta.glob('./**/*.css', {
   query: '?raw',
 }) as Record<string, string>;
 
+const luminance = (hex: string) => {
+  const channels = hex.match(/[a-f0-9]{2}/gi)?.map((channel) => Number.parseInt(channel, 16) / 255) ?? [];
+  const [red, green, blue] = channels.map((channel) => (channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+};
+
+const contrastRatio = (foreground: string, background: string) => {
+  const [lighter, darker] = [luminance(foreground), luminance(background)].sort((first, second) => second - first);
+  return (lighter + 0.05) / (darker + 0.05);
+};
+
 describe('canonical design tokens', () => {
   it('defines shared color, spacing, measure, radius, and shadow foundations', () => {
     for (const token of [
@@ -69,5 +80,30 @@ describe('canonical design tokens', () => {
     expect(stylesheet).toContain('--measure-body: 62ch;');
     expect(stylesheet).toContain('max-inline-size: var(--measure-body);');
     expect(stylesheet).toMatch(/\.blog-prose\s*{[^}]*max-inline-size:\s*var\(--measure-body\)/s);
+  });
+
+  it('defines a tailored dark semantic surface palette with readable content contrast', () => {
+    const darkTheme = stylesheet.slice(stylesheet.indexOf('.dark {'), stylesheet.indexOf('\n}\n\nbody'));
+
+    for (const token of [
+      '--color-surface-canvas',
+      '--color-surface-base',
+      '--color-surface-raised',
+      '--color-surface-muted',
+      '--color-surface-sunken',
+      '--color-content-primary',
+      '--color-content-secondary',
+      '--color-content-muted',
+      '--color-border-subtle',
+      '--color-border-strong',
+    ]) {
+      expect(darkTheme, token).toContain(token);
+    }
+
+    expect(darkTheme).toContain('--color-surface-canvas: #0b1220;');
+    expect(stylesheet).toContain('@apply bg-surface-canvas text-content-primary');
+    expect(contrastRatio('f8fafc', '0b1220')).toBeGreaterThanOrEqual(7);
+    expect(contrastRatio('d5deeb', '0b1220')).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio('a8b7cb', '0b1220')).toBeGreaterThanOrEqual(4.5);
   });
 });
