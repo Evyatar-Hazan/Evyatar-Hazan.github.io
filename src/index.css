@@ -1150,7 +1150,13 @@ body {
   min-height: 2.75rem;
   border-bottom: 1px solid var(--color-primary-500);
   padding-block: 0.55rem;
-  transition: color 200ms ease, gap 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: color 200ms ease, gap 220ms cubic-bezier(0.22, 1, 0.36, 1), transform 180ms ease;
+}
+
+.writing-all-link:active,
+.writing-all-link:has(:active) {
+  gap: 0.65rem;
+  transform: scale(0.985);
 }
 
 .writing-log {
@@ -5264,7 +5270,7 @@ body {
   font-weight: 850;
   line-height: 1;
   text-align: center;
-  transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+  transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease, color 180ms ease;
 }
 
 .home-action--compact {
@@ -5297,9 +5303,16 @@ body {
 }
 
 .home-action:focus-visible,
-.home-contact-disclosure:focus-visible {
+.home-contact-disclosure:focus-visible,
+.writing-all-link:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--color-primary-500) 42%, transparent);
   outline-offset: 3px;
+}
+
+.home-action:active,
+.home-action:has(:active) {
+  transform: translateY(0) scale(0.985);
+  box-shadow: none;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -5374,6 +5387,13 @@ body {
 
 .ui-card--interactive:focus-within {
   border-color: color-mix(in srgb, var(--color-primary-500) 58%, var(--home-border));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary-500) 20%, transparent), var(--home-shadow-raised);
+}
+
+.ui-card--interactive:has(:active) {
+  border-color: color-mix(in srgb, var(--color-primary-600) 62%, var(--home-border));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary-500) 16%, transparent), var(--home-shadow-raised);
+  transform: translateY(0) scale(0.997);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -5393,7 +5413,8 @@ body {
     transition: border-color 180ms ease, box-shadow 180ms ease;
   }
 
-  .ui-card--interactive:hover {
+  .ui-card--interactive:hover,
+  .ui-card--interactive:has(:active) {
     transform: none;
   }
 }
