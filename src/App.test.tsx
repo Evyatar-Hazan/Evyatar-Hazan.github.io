@@ -286,6 +286,13 @@ describe('App', () => {
       'writing',
       'contact',
     ]);
+    expect(mainSections.map((section) => section.getAttribute('data-reader-journey-stage'))).toEqual([
+      'value',
+      'proof',
+      'capabilities',
+      'content',
+      'contact',
+    ]);
 
     ['home', 'projects', 'about', 'writing', 'contact'].forEach((id) => {
       expect(document.querySelectorAll(`#${id}`)).toHaveLength(1);
