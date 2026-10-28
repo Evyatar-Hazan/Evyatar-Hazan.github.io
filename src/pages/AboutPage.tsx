@@ -143,8 +143,8 @@ const AboutPage = () => {
               <a href={profileLinks.linkedin} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 border border-neutral-300 px-4 py-2 text-sm font-black hover:border-primary-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:border-neutral-700"><Linkedin aria-hidden="true" className="h-4 w-4" />LinkedIn</a>
             </div>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-              <Link to={localizedPath(language, { route: 'projects' })} className="inline-flex min-h-12 items-center justify-between gap-4 bg-neutral-950 px-5 py-3 text-sm font-black text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:bg-white dark:text-neutral-950">{copy.projects}<ArrowIcon aria-hidden="true" className="h-4 w-4" /></Link>
-              <Link to={localizedPath(language, { route: 'contact' })} className="inline-flex min-h-12 items-center justify-between gap-4 border border-neutral-950 px-5 py-3 text-sm font-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:border-white">{copy.contact}<ArrowIcon aria-hidden="true" className="h-4 w-4" /></Link>
+              <Link to={localizedPath(language, { route: 'projects' })} className="inline-flex min-h-12 items-center justify-between gap-4 bg-neutral-950 px-5 py-3 text-sm font-black text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:bg-surface-raised dark:text-content-primary">{copy.projects}<ArrowIcon aria-hidden="true" className="h-4 w-4" /></Link>
+              <Link to={localizedPath(language, { route: 'contact' })} className="inline-flex min-h-12 items-center justify-between gap-4 border border-neutral-950 px-5 py-3 text-sm font-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:border-content-primary">{copy.contact}<ArrowIcon aria-hidden="true" className="h-4 w-4" /></Link>
             </div>
           </div>
         </div>
