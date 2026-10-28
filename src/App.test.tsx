@@ -307,6 +307,18 @@ describe('App', () => {
     expect(document.querySelectorAll('h1')).toHaveLength(1);
     expect(document.querySelectorAll('[data-professional-capability]')).toHaveLength(4);
     expect(document.querySelectorAll('[data-professional-engagement]')).toHaveLength(0);
+    expect(screen.getByRole('navigation', {
+      name: language === 'he' ? 'מה תרצו למצוא כאן?' : 'What are you here to explore?',
+    })).toBeInTheDocument();
+    expect(screen.getByRole('link', {
+      name: language === 'he' ? 'לדבר על מוצר או מערכת' : 'Discuss a product or system',
+    })).toHaveAttribute('href', `/${language}/contact/`);
+    expect(screen.getByRole('link', {
+      name: language === 'he' ? 'לצפייה בעבודות נבחרות' : 'Review selected work',
+    })).toHaveAttribute('href', `/${language}/projects/`);
+    expect(screen.getByRole('link', {
+      name: language === 'he' ? 'לקריאת הכתיבה הטכנית' : 'Read the technical notes',
+    })).toHaveAttribute('href', `/${language}/blog/`);
     expect(screen.getAllByRole('link', { name: 'nav.Projects' }).some((link) => link.getAttribute('href') === `/${language}/projects/`)).toBe(true);
     expect(screen.getAllByRole('link', { name: 'nav.About' }).some((link) => link.getAttribute('href') === `/${language}/about/`)).toBe(true);
     expect(screen.getAllByRole('link', { name: 'nav.Contact' }).some((link) => link.getAttribute('href') === `/${language}/contact/`)).toBe(true);
