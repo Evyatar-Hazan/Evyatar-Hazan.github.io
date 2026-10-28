@@ -15,7 +15,8 @@ const inspectTouchTargets = (minimumSize) => [...document.querySelectorAll([
   '[role="link"]',
 ].join(','))]
   .map((element) => {
-    const box = element.getBoundingClientRect();
+    const expandedHitArea = element.querySelector(':scope > .absolute.inset-0');
+    const box = (expandedHitArea || element).getBoundingClientRect();
     const style = getComputedStyle(element);
 
     return {
@@ -55,8 +56,12 @@ test.describe('FIX-016 minimum touch targets', () => {
           localStorage.setItem('theme', theme);
         }, { activeLanguage: language, theme: language === 'he' ? 'dark' : 'light' });
 
-        await page.goto(`/${language}${route}`);
+        await page.goto(`/${language}${route}`, { waitUntil: 'networkidle' });
         await page.locator('#main-content').waitFor({ state: 'visible' });
+        await page.evaluate(async () => {
+          await document.fonts.ready;
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        });
 
         const failures = await page.evaluate(inspectTouchTargets, minimumTargetSize);
         expect(failures, JSON.stringify(failures, null, 2)).toEqual([]);
