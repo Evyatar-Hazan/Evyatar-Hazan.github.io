@@ -85,6 +85,12 @@ describe('LocalizedHeroLayout', () => {
     expect(stylesheet).toContain(".layout[data-language='he'] .heading");
     expect(stylesheet).toContain('@media (max-width: 639px) and (max-height: 700px)');
     expect(stylesheet).toMatch(/@media \(max-width: 639px\) and \(max-height: 700px\)[\s\S]*?\.heading\s*{[\s\S]*?font-size:/);
+    expect(stylesheet).toMatch(
+      /@media \(max-width: 639px\)\s*{[\s\S]*?\.layout\s*{[^}]*min-block-size:\s*auto;/,
+    );
+    expect(stylesheet).toMatch(
+      /@media \(max-width: 639px\)\s*{[\s\S]*?\.visual\s*{[^}]*display:\s*none;/,
+    );
   });
 
   it('keeps the dark hero prelude readable without promoting it to the headline color', () => {

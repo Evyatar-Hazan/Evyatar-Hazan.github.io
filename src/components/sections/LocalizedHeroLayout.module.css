@@ -262,8 +262,12 @@
 
 @media (max-width: 639px) {
   .layout {
-    min-block-size: calc(100svh - 8.75rem);
+    min-block-size: auto;
     align-content: start;
+  }
+
+  .visual {
+    display: none;
   }
 
   .copy {
