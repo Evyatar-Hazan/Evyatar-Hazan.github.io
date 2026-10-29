@@ -30,9 +30,26 @@ describe('capability proof data', () => {
     expect(aiGroup?.publicEvidenceGap).toMatch(/No canonical public project or article/);
   });
 
-  it('does not promote demonstrations to measured outcomes while task72 evidence is unknown', () => {
-    getCapabilityProofGroups('en').forEach((group) => {
-      expect(group.measuredOutcomes).toEqual([]);
+  it('promotes only projects with verified public evidence to measured outcomes', () => {
+    const groups = getCapabilityProofGroups('en');
+    const measuredProjectIds = Object.fromEntries(groups.map((group) => [
+      group.id,
+      group.measuredOutcomes.map((outcome) => outcome.projectId),
+    ]));
+
+    expect(measuredProjectIds).toEqual({
+      webMobile: ['nis_boutique', 'online_converter', 'emergency_protocol', 'united_hatzalah'],
+      languages: [],
+      aiCv: [],
+      devops: ['online_converter', 'emergency_protocol', 'united_hatzalah'],
+      databases: ['emergency_protocol', 'united_hatzalah'],
+      automation: ['online_converter'],
+      methodologies: ['nis_boutique', 'online_converter', 'emergency_protocol', 'united_hatzalah'],
+    });
+
+    groups.flatMap((group) => group.measuredOutcomes).forEach((outcome) => {
+      expect(outcome.evidence.evidenceStatus).toBe('verified');
+      expect(outcome.evidence.evidenceLinks.length).toBeGreaterThan(0);
     });
   });
 

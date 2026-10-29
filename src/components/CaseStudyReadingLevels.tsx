@@ -50,7 +50,7 @@ const CaseStudyReadingLevels = ({
   const labels = caseStudyReadingLabels[language];
   const overview = pick(caseStudy.overview, language);
   const decisions = pick(caseStudy.decisions, language);
-  const outcomes = pick(caseStudy.outcomes, language);
+  const outcomes = caseStudy.outcomes.map((outcome) => pick(outcome.statement, language));
   const verificationItems = verification.status === 'documented'
     && caseStudy.evidenceStatus === 'verified'
     ? pick(verification.items, language)

@@ -25,12 +25,13 @@ for (const scenario of scenarios) {
     for (const projectId of projectIds) {
       await page.goto(`/${scenario.language}/projects/${projectId}/`, { waitUntil: 'domcontentloaded' });
 
-      const ownership = page.locator('#role .case-story-role-boundary');
+      const ownership = page.locator('#challenge .case-story-role-boundary');
       await expect(ownership).toBeVisible();
-      await expect(ownership.locator(':scope > div')).toHaveCount(2);
+      await expect(ownership.locator(':scope > div')).toHaveCount(3);
       await expect(ownership.locator('p').nth(0)).not.toHaveText('');
       await expect(ownership.locator('p').nth(1)).not.toHaveText('');
-      await expect(page.locator('#role .case-story-lede')).not.toHaveText('');
+      await expect(ownership.locator('p').nth(2)).not.toHaveText('');
+      await expect(page.locator('#challenge .case-story-lede')).not.toHaveText('');
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth),
         `${scenario.language}/${projectId} must not overflow`,
