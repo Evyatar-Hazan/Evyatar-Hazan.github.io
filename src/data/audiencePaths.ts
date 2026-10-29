@@ -1,7 +1,7 @@
 import type { PortfolioRouteTarget } from '../contracts/portfolio';
 import type { PortfolioLanguage } from './portfolioCapabilities';
 
-export const audiencePathIds = ['product-partner', 'recruiter'] as const;
+export const audiencePathIds = ['product-partner', 'recruiter', 'technical-reader'] as const;
 
 export type AudiencePathId = (typeof audiencePathIds)[number];
 
@@ -9,7 +9,7 @@ type LocalizedText = Record<PortfolioLanguage, string>;
 
 type AudiencePathTarget = Extract<
   PortfolioRouteTarget,
-  { route: 'contact' | 'projects' }
+  { route: 'blog' | 'contact' | 'projects' }
 >;
 
 export type AudiencePath = {
@@ -25,7 +25,7 @@ export type AudiencePath = {
 };
 
 /**
- * Two concise entrances into existing portfolio content. They establish audience
+ * Three concise entrances into existing portfolio content. They establish audience
  * priority without claiming employment availability or duplicating downstream
  * project, capability, or contact content.
  */
@@ -74,6 +74,29 @@ export const audiencePaths: readonly AudiencePath[] = [
         he: 'לצפייה בעבודות נבחרות',
       },
       target: { route: 'projects' },
+    },
+  },
+  {
+    id: 'technical-reader',
+    priority: 'secondary',
+    audience: {
+      en: 'Technical readers & fellow builders',
+      he: 'קוראים טכניים ואנשי פיתוח',
+    },
+    title: {
+      en: 'Follow the decisions behind the finished product.',
+      he: 'קוראים את ההחלטות שמאחורי המוצר המוגמר.',
+    },
+    description: {
+      en: 'Technical notes unpack the trade-offs, tests, and delivery lessons behind the work.',
+      he: 'הכתיבה הטכנית מפרקת את הפשרות, הבדיקות ולקחי המסירה שמאחורי העבודה.',
+    },
+    cta: {
+      label: {
+        en: 'Read the technical notes',
+        he: 'לקריאת הכתיבה הטכנית',
+      },
+      target: { route: 'blog' },
     },
   },
 ] as const;

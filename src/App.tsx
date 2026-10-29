@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import PortfolioScrollRestoration from './components/PortfolioScrollRestoration';
 import ScrollProgress from './components/animations/ScrollProgress';
 import ContactBriefFeature from './features/contact/ContactBriefFeature';
+import AudienceEntryPaths from './components/sections/AudienceEntryPaths';
 import { useTheme } from './hooks/useTheme';
 import BlogIndex from './pages/BlogIndex';
 import BlogPost from './pages/BlogPost';
@@ -62,6 +63,11 @@ const PortfolioHome = () => {
   return (
     <main id="main-content" tabIndex={-1} className="home-page">
       <Home />
+      <div className="home-audience-entry">
+        <div className="home-section__inner">
+          <AudienceEntryPaths language={language} buildPath={localizedPath} />
+        </div>
+      </div>
       <Suspense fallback={<SectionFallback id="projects" minHeightClassName="min-h-screen" />}>
         <Projects />
       </Suspense>
