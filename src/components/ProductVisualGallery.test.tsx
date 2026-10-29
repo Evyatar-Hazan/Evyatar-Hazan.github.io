@@ -29,6 +29,10 @@ describe('ProductVisualGallery', () => {
     expect(figures).toHaveLength(2);
     figures.forEach((figure) => {
       const image = within(figure).getByRole('img');
+      const caption = figure.querySelector('figcaption');
+      expect(caption).toHaveAttribute('id');
+      expect(image).toHaveAttribute('aria-describedby', caption?.id);
+      expect(caption?.textContent).not.toContain(image.getAttribute('alt'));
       expect(image).toHaveAttribute('loading', 'lazy');
       expect(image).toHaveAttribute('decoding', 'async');
       expect(image).toHaveAttribute('width');
