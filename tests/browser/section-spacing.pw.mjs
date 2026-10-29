@@ -84,7 +84,9 @@ test.describe('FIX-025 canonical section spacing', () => {
     expectTokenSpacing(await readSpacing(page, [
       { selector: '#visual-proof', startToken: 'compact', endToken: 'standard' },
       { selector: '#challenge', token: 'standard' },
-      { selector: '#role', token: 'standard' },
+      { selector: '#decisions', token: 'standard' },
+      { selector: '#system', token: 'standard' },
+      { selector: '#evidence', token: 'standard' },
     ]));
   });
 

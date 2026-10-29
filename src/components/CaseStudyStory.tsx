@@ -35,7 +35,7 @@ type CaseStudyStoryProps = {
 
 const pick = <Value,>(value: Record<PortfolioLanguage, Value>, language: PortfolioLanguage) => value[language];
 
-const chapterIds = ['challenge', 'role', 'decisions', 'system', 'evidence', 'appendix', 'next'] as const;
+const coreChapters = ['challenge', 'decisions', 'system', 'evidence'] as const;
 
 const linkClassName = 'case-story-action';
 
@@ -63,20 +63,18 @@ const CaseStudyStory = ({
     ? nextProject.caseStudy?.seoTitle.he.replace(/^קייס סטאדי:\s*/u, '').replace(/\s*\|.*$/u, '') ?? nextProject.id
     : nextProject.caseStudy?.seoTitle.en.replace(/ Case Study \|.*$/u, '') ?? nextProject.id;
 
-  const chapterLabels: Record<(typeof chapterIds)[number], string> = {
-    challenge: labels.challenge,
-    role: labels.role,
-    decisions: labels.decisions,
-    system: labels.system,
+  const chapterLabels: Record<(typeof coreChapters)[number], string> = {
+    challenge: labels.problem,
+    decisions: labels.decision,
+    system: labels.execution,
     evidence: labels.outcome,
-    appendix: labels.appendix,
-    next: labels.next,
   };
 
   return (
     <article
       className="case-story"
       data-case-study-template="product-story-v1"
+      data-case-study-structure="problem-decision-execution-outcome"
       data-project-id={project.id}
       data-accent={story.accent}
     >
@@ -126,7 +124,7 @@ const CaseStudyStory = ({
 
       <nav className="case-story-chapters" aria-label={labels.chapterNavigation}>
         <ol>
-          {chapterIds.map((id, index) => (
+          {coreChapters.map((id, index) => (
             <li key={id}>
               <a href={`#${id}`}>
                 <span>{String(index + 1).padStart(2, '0')}</span>
@@ -137,33 +135,25 @@ const CaseStudyStory = ({
         </ol>
       </nav>
 
-      <section id="challenge" className="case-story-section case-story-split" aria-labelledby="challenge-title">
+      <section id="challenge" className="case-story-section case-story-role" aria-labelledby="challenge-title">
         <div className="case-story-section-label">01</div>
         <div>
-          <h2 id="challenge-title">{labels.challenge}</h2>
+          <h2 id="challenge-title">{labels.problem}</h2>
           <p className="case-story-lede">{challenge}</p>
           <div className="case-story-context">
             {pick(caseStudy.overview, language).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
           </div>
         </div>
-      </section>
-
-      <section id="role" className="case-story-section case-story-role" aria-labelledby="role-title">
-        <div className="case-story-section-label">02</div>
-        <div>
-          <h2 id="role-title">{labels.role}</h2>
-          <p className="case-story-lede">{role}</p>
-        </div>
         <div className="case-story-role-boundary">
-          <span>{labels.heroAudience}</span>
-          <p>{pick(caseStudy.audience, language)}</p>
+          <span>{labels.heroRole}</span>
+          <p>{role}</p>
         </div>
       </section>
 
       <section id="decisions" className="case-story-section" aria-labelledby="decisions-title">
         <div className="case-story-section-heading">
-          <span className="case-story-section-label">03</span>
-          <h2 id="decisions-title">{labels.decisions}</h2>
+          <span className="case-story-section-label">02</span>
+          <h2 id="decisions-title">{labels.decision}</h2>
         </div>
         <ol className="case-story-decisions">
           {story.decisions.map((decision, index) => (
@@ -190,9 +180,9 @@ const CaseStudyStory = ({
 
       <section id="system" className="case-story-section case-story-system" aria-labelledby="system-title">
         <div className="case-story-section-heading">
-          <span className="case-story-section-label">04</span>
+          <span className="case-story-section-label">03</span>
           <div>
-            <h2 id="system-title">{labels.system}</h2>
+            <h2 id="system-title">{labels.execution}</h2>
             <p>{pick(story.system.caption, language)}</p>
           </div>
         </div>
@@ -218,7 +208,7 @@ const CaseStudyStory = ({
       </section>
 
       <section id="evidence" className="case-story-section case-story-evidence" aria-labelledby="evidence-title">
-        <div className="case-story-section-label">05</div>
+        <div className="case-story-section-label">04</div>
         <div>
           <h2 id="evidence-title">{labels.outcome}</h2>
           <p className="case-story-lede">{impact}</p>
@@ -249,7 +239,7 @@ const CaseStudyStory = ({
         <details className="case-story-appendix">
           <summary aria-controls={detailsId}>
             <span>
-              <small>06</small>
+              <small>05</small>
               <strong id="appendix-title" className="case-story-appendix-open">{labels.appendixOpen}</strong>
               <strong className="case-story-appendix-close">{labels.appendixClose}</strong>
               <span>{labels.appendixDescription}</span>
@@ -274,7 +264,7 @@ const CaseStudyStory = ({
 
       <section id="next" className="case-story-section case-story-next" aria-labelledby="next-title">
         <div className="case-story-section-heading">
-          <span className="case-story-section-label">07</span>
+          <span className="case-story-section-label">06</span>
           <h2 id="next-title">{labels.next}</h2>
         </div>
         <div className="case-story-next-grid">
