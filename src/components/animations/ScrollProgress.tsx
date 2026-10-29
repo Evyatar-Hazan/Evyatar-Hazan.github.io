@@ -13,6 +13,8 @@ const ScrollProgress = () => {
 
   return (
     <motion.div
+      data-testid="scroll-progress"
+      aria-hidden="true"
       className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-400 to-primary-600 z-[10000]"
       style={{ scaleX, transformOrigin: '0%' }}
     />
