@@ -67,6 +67,7 @@ const CaseStudyStory = ({
 }: CaseStudyStoryProps) => {
   const labels = caseStudyStoryLabels[language];
   const detailsId = `case-appendix-${project.id}`;
+  const executiveSummaryId = `executive-summary-${project.id}`;
   const projectTitle = (candidate: Project) => language === 'he'
     ? candidate.caseStudy?.seoTitle.he.replace(/^קייס סטאדי:\s*/u, '').replace(/\s*\|.*$/u, '') ?? candidate.id
     : candidate.caseStudy?.seoTitle.en.replace(/ Case Study \|.*$/u, '') ?? candidate.id;
@@ -82,6 +83,12 @@ const CaseStudyStory = ({
     appendix: labels.appendix,
     next: labels.next,
   };
+  const executiveSummary = [
+    { label: labels.summaryProblem, value: challenge },
+    { label: labels.summaryContribution, value: role },
+    { label: labels.summaryResult, value: impact },
+    { label: labels.summaryLimitations, value: pick(story.limitation, language) },
+  ];
 
   return (
     <article
@@ -129,6 +136,25 @@ const CaseStudyStory = ({
           </div>
         </aside>
       </header>
+
+      <section
+        className="case-story-executive-summary"
+        aria-labelledby={executiveSummaryId}
+        data-executive-summary={project.id}
+      >
+        <header>
+          <p>{labels.executiveSummaryDescription}</p>
+          <h2 id={executiveSummaryId}>{labels.executiveSummary}</h2>
+        </header>
+        <dl>
+          {executiveSummary.map((item) => (
+            <div key={item.label}>
+              <dt>{item.label}</dt>
+              <dd>{item.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
 
       <section id="visual-proof" className="case-story-section case-story-visual-stage" aria-label={labels.visualProof}>
         {visualProof}
