@@ -22,7 +22,7 @@ const copy = {
   en: {
     eyebrow: 'Project record / 07',
     title: 'Project archive',
-    description: 'A compact record of seven public projects. Undocumented dates and lifecycle states stay visibly undocumented.',
+    description: 'Current / live means a public runtime was checked on the dated source. Historical means a source-backed record with no current runtime claimed. Neither label promises ongoing availability.',
     featured: 'Flagship story',
     period: 'Period',
     periodUnknown: 'Year not documented',
@@ -37,16 +37,22 @@ const copy = {
     code: 'Code',
     evidence: 'Evidence',
     lifecycle: {
-      active: 'Active',
+      active: 'Current / live',
       maintained: 'Maintained',
       archived: 'Archived',
-      historical: 'Historical',
+      historical: 'Historical / source only',
+    },
+    lifecycleNote: {
+      active: 'Public runtime checked on the verification date; not an uptime or ongoing-maintenance promise.',
+      maintained: 'Maintenance was documented on the verification date; not a promise of future availability.',
+      archived: 'The public source documents an archived state.',
+      historical: 'Source-backed portfolio record; no current public runtime is claimed.',
     },
   },
   he: {
     eyebrow: 'רשומת פרויקטים / 07',
     title: 'ארכיון פרויקטים',
-    description: 'רשומה תמציתית של שבעה פרויקטים ציבוריים. תאריכים ומצבי תחזוקה שלא תועדו נשארים גלויים כלא מתועדים.',
+    description: 'נוכחי / חי פירושו ש־runtime ציבורי נבדק במקור המתוארך. היסטורי פירושו רשומה מבוססת מקור ללא טענה ל־runtime נוכחי. אף תווית אינה מבטיחה זמינות מתמשכת.',
     featured: 'סיפור דגל',
     period: 'תקופה',
     periodUnknown: 'השנה לא תועדה',
@@ -61,10 +67,16 @@ const copy = {
     code: 'קוד',
     evidence: 'ראיה',
     lifecycle: {
-      active: 'פעיל',
+      active: 'נוכחי / חי',
       maintained: 'מתוחזק',
       archived: 'בארכיון',
-      historical: 'היסטורי',
+      historical: 'היסטורי / מקור בלבד',
+    },
+    lifecycleNote: {
+      active: 'ה־runtime הציבורי נבדק בתאריך האימות; אין בכך הבטחה ל־uptime או לתחזוקה מתמשכת.',
+      maintained: 'התחזוקה תועדה בתאריך האימות; אין בכך הבטחה לזמינות עתידית.',
+      archived: 'המקור הציבורי מתעד מצב ארכיון.',
+      historical: 'רשומת פורטפוליו מבוססת מקור; אין טענה ל־runtime ציבורי נוכחי.',
     },
   },
 } as const;
@@ -139,14 +151,21 @@ const ProjectArchiveVerification = ({
   }
 
   const lifecycle = labels.lifecycle[entry.verification.lifecycle as ProjectArchiveLifecycle];
+  const lifecycleNote = labels.lifecycleNote[entry.verification.lifecycle as ProjectArchiveLifecycle];
+  const lifecycleTone = entry.verification.lifecycle === 'historical' || entry.verification.lifecycle === 'archived'
+    ? 'text-neutral-700 dark:text-neutral-300'
+    : 'text-success-800 dark:text-success-300';
 
   return (
     <div className="space-y-2">
-      <p className="text-sm font-black text-success-800 dark:text-success-300">
+      <p className={`text-sm font-black ${lifecycleTone}`}>
         {lifecycle} · {labels.verified}{' '}
         <time dateTime={entry.verification.verifiedAt}>
           {formatVerificationDate(entry.verification.verifiedAt, language)}
         </time>
+      </p>
+      <p className="text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
+        {lifecycleNote}
       </p>
       <div className="flex flex-wrap gap-x-3 gap-y-1">
         {entry.verification.evidenceLinks.map((link) => (

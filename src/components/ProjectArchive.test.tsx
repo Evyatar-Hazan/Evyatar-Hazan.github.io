@@ -23,7 +23,8 @@ describe('ProjectArchive', () => {
     expect(screen.getByRole('heading', { name: 'Project archive' })).toBeInTheDocument();
     expect(document.querySelectorAll('#project-archive [data-project-id]')).toHaveLength(7);
     expect(screen.getAllByText('Year not documented')).toHaveLength(7);
-    expect(screen.getAllByText('Verification undocumented')).toHaveLength(7);
+    expect(screen.getAllByText(/Current \/ live · Verified/)).toHaveLength(5);
+    expect(screen.getAllByText(/Historical \/ source only · Verified/)).toHaveLength(2);
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
     expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
   });
@@ -36,7 +37,8 @@ describe('ProjectArchive', () => {
     const entry = within(nisEntry as HTMLElement);
 
     expect(entry.getByText('Discovery, copy, frontend design, motion, SEO, baseline accessibility, and Vercel deployment.')).toBeInTheDocument();
-    expect(entry.getByText('Verification undocumented')).toBeInTheDocument();
+    expect(entry.getByText(/Current \/ live · Verified/)).toBeInTheDocument();
+    expect(entry.getByText(/not an uptime or ongoing-maintenance promise/i)).toBeInTheDocument();
     expect(entry.getByRole('link', { name: /Case study/i })).toHaveAttribute('href', '/en/projects/nis_boutique/');
     expect(entry.getByRole('link', { name: /Live site/i })).toHaveAttribute('rel', 'noopener noreferrer');
     expect(entry.getByRole('link', { name: /Code/i })).toHaveAttribute('target', '_blank');
@@ -47,7 +49,8 @@ describe('ProjectArchive', () => {
     renderArchive('en', 'full');
 
     expect(screen.getByText('A live business website for a boutique catering brand, guiding visitors from first impression to a WhatsApp conversation.')).toBeInTheDocument();
-    expect(screen.getAllByText('Verification undocumented')).toHaveLength(7);
+    expect(screen.getAllByText(/Current \/ live · Verified/)).toHaveLength(5);
+    expect(screen.getAllByText(/Historical \/ source only · Verified/)).toHaveLength(2);
     expect(screen.getAllByText('React').length).toBeGreaterThan(0);
   });
 
@@ -57,7 +60,8 @@ describe('ProjectArchive', () => {
     const archive = screen.getByRole('heading', { name: 'ארכיון פרויקטים' }).closest('section');
     expect(archive).toHaveAttribute('dir', 'rtl');
     expect(screen.getAllByText('השנה לא תועדה')).toHaveLength(7);
-    expect(screen.getAllByText('האימות לא תועד')).toHaveLength(7);
+    expect(screen.getAllByText(/נוכחי \/ חי · אומת/)).toHaveLength(5);
+    expect(screen.getAllByText(/היסטורי \/ מקור בלבד · אומת/)).toHaveLength(2);
     expect(screen.getByText('אפיון, קופי, עיצוב Frontend, אנימציות, SEO, נגישות בסיסית ופריסה ל-Vercel.')).toBeInTheDocument();
   });
 
