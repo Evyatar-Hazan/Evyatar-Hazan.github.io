@@ -55,6 +55,18 @@ const localizedUi = {
     clearContext: 'Clear context',
     directTitle: 'Direct contact',
     directDescription: 'No brief is required. A short message is enough to begin.',
+    directSteps: [
+      {
+        label: '01 / Send',
+        title: 'The need, the current situation, and the result you want.',
+        description: 'Three concise points are enough. Links or screenshots are welcome when they add useful context.',
+      },
+      {
+        label: '02 / Next',
+        title: 'I will reply with focused questions and a recommended next step.',
+        description: 'If there is a fit, we will turn the conversation into a short scope and a practical work plan.',
+      },
+    ],
     whatsapp: 'WhatsApp',
     email: 'Email',
     linkedin: 'LinkedIn',
@@ -104,6 +116,18 @@ const localizedUi = {
     clearContext: 'ניקוי ההקשר',
     directTitle: 'יצירת קשר ישירה',
     directDescription: 'לא חייבים למלא תקציר. הודעה קצרה מספיקה כדי להתחיל.',
+    directSteps: [
+      {
+        label: '01 / מה שולחים',
+        title: 'את הצורך, המצב הנוכחי והתוצאה שרוצים להשיג.',
+        description: 'שלוש נקודות קצרות מספיקות. אפשר לצרף קישור או צילום מסך אם הם מוסיפים הקשר.',
+      },
+      {
+        label: '02 / מה קורה אחר כך',
+        title: 'אחזור עם שאלות ממוקדות והמלצה לצעד הבא.',
+        description: 'אם יש התאמה, נהפוך את השיחה לאפיון קצר ולתוכנית עבודה מעשית.',
+      },
+    ],
     whatsapp: 'WhatsApp',
     email: 'אימייל',
     linkedin: 'LinkedIn',
@@ -366,6 +390,15 @@ const ContactBriefFeature = ({
               </a>
             </div>
           </div>
+          <ol className="home-contact-steps" aria-label={ui.directTitle}>
+            {ui.directSteps.map((step) => (
+              <li key={step.label}>
+                <span>{step.label}</span>
+                <strong>{step.title}</strong>
+                <p>{step.description}</p>
+              </li>
+            ))}
+          </ol>
         </section>
 
         <button
