@@ -348,16 +348,31 @@
 
   .proofStrip {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin-top: 1.125rem;
+    margin-top: 0.5rem;
   }
 
   .proofItem {
     display: block;
-    padding: 0.65rem 0.5rem;
+    padding: 0.5rem 0.125rem;
   }
 
   .proofItem + .proofItem {
     border-inline-start: 1px solid var(--home-border);
+  }
+
+  .proofItem dt {
+    display: block;
+    overflow: hidden;
+    font-size: clamp(0.55rem, 2.6vw, 0.625rem);
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    text-align: center;
+    text-overflow: clip;
+    white-space: nowrap;
+  }
+
+  .proofItem dt span {
+    display: none;
   }
 
   .proofItem dd {
@@ -414,11 +429,11 @@
   }
 
   .proofStrip {
-    margin-top: 0.75rem;
+    margin-top: 0.5rem;
   }
 
   .proofItem {
-    padding: 0.55rem 0.5rem;
+    padding: 0.45rem 0.125rem;
   }
 
   .actions {
