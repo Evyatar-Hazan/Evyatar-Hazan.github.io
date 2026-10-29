@@ -25,7 +25,7 @@ const Home = () => {
       data-reader-journey-stage="value"
       className="home-section home-section--hero product-compiler-hero relative overflow-clip"
     >
-      <div className="content-container product-compiler-sticky relative flex min-h-0 items-start overflow-hidden pb-6 pt-24 sm:min-h-svh sm:items-center sm:py-28">
+      <div className="content-container product-compiler-sticky relative flex min-h-0 items-start overflow-hidden pb-4 pt-[5.5rem] sm:min-h-svh sm:items-center sm:py-28">
         <div className="product-compiler-grid pointer-events-none absolute inset-0" aria-hidden="true" />
         <div className="product-compiler-aura pointer-events-none absolute inset-0" aria-hidden="true" />
 

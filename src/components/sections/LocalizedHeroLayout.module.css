@@ -271,12 +271,25 @@
   }
 
   .copy {
-    padding-bottom: 1rem;
+    padding-bottom: 0;
+  }
+
+  .availability {
+    margin-bottom: 0.75rem;
+  }
+
+  .headline {
+    margin-top: 0.2em;
+  }
+
+  .description {
+    margin-top: 1rem;
   }
 
   .actions {
     display: grid;
     justify-items: start;
+    margin-top: 1rem;
   }
 
   .primaryAction,
