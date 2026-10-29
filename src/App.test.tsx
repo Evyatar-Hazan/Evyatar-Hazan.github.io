@@ -765,6 +765,9 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'Decision' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Execution' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Outcome' })).toBeInTheDocument();
+    expect(screen.getByText('Ownership model')).toBeInTheDocument();
+    expect(screen.getByText('Collaboration boundary')).toBeInTheDocument();
+    expect(screen.getByText(/Personal project with end-to-end product and technical ownership/)).toBeInTheDocument();
     expect(screen.getByText('140 / 16 / 2')).toBeInTheDocument();
     expect(screen.getByText('Browser-only')).toBeInTheDocument();
     expect(screen.getByText('Not claimed')).toBeInTheDocument();
@@ -794,6 +797,8 @@ describe('App', () => {
       expect(story).toHaveAttribute('data-case-study-structure', 'problem-decision-execution-outcome');
       expect(within(story).getByRole('heading', { name: 'Executive summary' })).toBeVisible();
       expect(story.querySelector(`[data-executive-summary="${projectId}"]`)).toBeInTheDocument();
+      expect(within(story).getByText('Ownership model')).toBeVisible();
+      expect(within(story).getByText('Collaboration boundary')).toBeVisible();
 
       const coreHeadings = within(story)
         .getAllByRole('heading', { level: 2 })
