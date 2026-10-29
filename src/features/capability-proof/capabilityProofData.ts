@@ -60,7 +60,7 @@ export type CapabilityProofGroup = {
 /**
  * Curated links from broad capability claims to canonical public work.
  * A related project or article demonstrates practice; it is never promoted to
- * a measured outcome unless task72 marks that project's evidence as verified.
+ * a measured outcome unless the project's public evidence has been verified.
  */
 export const capabilityProofDefinitions: Record<CapabilityId, CapabilityProofDefinition> = {
   webMobile: {

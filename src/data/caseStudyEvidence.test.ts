@@ -80,21 +80,58 @@ describe('case study evidence contract', () => {
     );
   });
 
-  it('keeps the audited case studies explicitly unknown until Task 42 copy is approved', () => {
-    const auditedIds = ['nis_boutique', 'online_converter', 'emergency_protocol'];
+  it('keeps every published result backed by a metric, source, or explicit boundary', () => {
+    const auditedIds = ['nis_boutique', 'online_converter', 'emergency_protocol', 'united_hatzalah'];
     const auditedEntries: EvidenceContractEntry[] = projects
       .filter((project) => auditedIds.includes(project.id))
       .flatMap((project) => (
-        project.caseStudy ? [{ id: project.id, evidence: project.caseStudy }] : []
+        project.caseStudy
+          ? [{ id: project.id, evidence: project.caseStudy, outcomes: project.caseStudy.outcomes }]
+          : []
       ));
 
-    expect(auditedEntries).toHaveLength(3);
-    auditedEntries.forEach(({ evidence }) => {
-      expect(evidence).toMatchObject({
-        evidenceStatus: 'unknown',
-        verifiedAt: null,
-        evidenceLinks: null,
-      });
+    expect(auditedEntries).toHaveLength(4);
+    expect(() => assertCaseStudyEvidenceContract(
+      auditedEntries,
+      new Date('2026-10-29T12:00:00.000Z'),
+    )).not.toThrow();
+
+    auditedEntries.forEach(({ evidence, outcomes }) => {
+      expect(evidence.evidenceStatus).toBe('verified');
+      expect(outcomes).toHaveLength(3);
+      expect(outcomes?.map(({ support }) => support.kind)).toContain('boundary');
+      expect(outcomes?.every(({ support }) => (
+        support.kind === 'boundary' || support.source.url.startsWith('https://')
+      ))).toBe(true);
     });
+  });
+
+  it('rejects an outcome metric without a number or a trustworthy source URL', () => {
+    const evidenceWithInvalidOutcome: EvidenceContractEntry = {
+      id: 'fixture',
+      evidence: verifiedFixture,
+      outcomes: [
+        {
+          statement: { en: 'Measured result.', he: 'תוצאה מדידה.' },
+          support: {
+            kind: 'metric',
+            value: 'many',
+            label: { en: 'published tools', he: 'כלים מפורסמים' },
+            source: {
+              label: { en: 'Source', he: 'מקור' },
+              url: 'http://example.com/source',
+            },
+          },
+        },
+      ],
+    };
+
+    expect(getCaseStudyEvidenceErrors(
+      [evidenceWithInvalidOutcome],
+      new Date('2026-10-29T12:00:00.000Z'),
+    )).toEqual(expect.arrayContaining([
+      expect.stringContaining('metric must contain a number'),
+      expect.stringContaining('must use an https URL'),
+    ]));
   });
 });
