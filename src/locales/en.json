@@ -153,6 +153,7 @@
     "problem": "Challenge:",
     "solution": "Built:",
     "role": "Contribution:",
+    "statusLabel": "Status:",
     "categories": {
       "business": "Business site",
       "fullstack": "Full-stack system",
