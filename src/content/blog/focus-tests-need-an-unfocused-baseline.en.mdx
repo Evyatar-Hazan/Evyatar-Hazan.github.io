@@ -1,0 +1,55 @@
+In a browser-test fix for my portfolio, the important line moved focus to the main content area. It did not change a color, replace a selector, or increase a timeout.
+
+The test already knew how to focus a link and inspect the computed styles of its surrounding card. What it needed was a starting point outside the state it was trying to measure.
+
+## A card can receive focus feedback through its children
+
+The portfolio has project cards containing links. When a link receives focus, the surrounding card highlights its border and shadow. The link remains the action target; the card provides context about the project that action belongs to.
+
+The CSS uses `:focus-within`, which also matches a container when one of its descendants has focus. That behavior is documented in [MDN's selector reference](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/:focus-within).
+
+That creates an easy trap for a test: a card can already display focus feedback even if the test never called `focus()` on the card itself. Focusing a link inside it is enough.
+
+## The previous step was still active
+
+The test first focuses the primary action and checks its outline. It then takes a style snapshot of the first project card, focuses a link inside that card, and expects the snapshot to change.
+
+But the action from the earlier step belongs to that same card. Without moving focus away, the value named `cardDefault` can already contain the focused appearance.
+
+A variable name does not reset browser state. Scrolling the card into view does not reset focus either. The comparison can therefore become focused versus focused, instead of unfocused versus focused.
+
+This dependency exists between steps inside one test. Starting each test with a fresh browser context would not remove it: the first step creates the condition again.
+
+## Give the comparison an explicit starting point
+
+Before measuring the card, I added a focus move to `#main-content`. That element is outside the card and accepts programmatic focus through `tabIndex={-1}`. The existing comparison then continues:
+
+```javascript
+await page.locator('#main-content').focus();
+
+const card = page.locator('.featured-case-card').first();
+await card.scrollIntoViewIfNeeded();
+const cardDefault = await interactionSnapshot(card);
+
+const cardLink = card.locator('.home-action').first();
+await cardLink.focus();
+
+await expect.poll(() => interactionSnapshot(card))
+  .not.toEqual(cardDefault);
+```
+
+`interactionSnapshot` is a test helper that reads border color, box shadow, outline, and transform through `getComputedStyle`. The fix did not introduce screenshot comparison or change the product styling. It established a precondition for an assertion that was already there.
+
+Polling lets the assertion wait for a computed-style change. It cannot replace that precondition. Waiting longer would not move focus out of the link.
+
+## What the assertion actually covers
+
+The test checks that focusing a card link changes at least one of the measured style properties in its chosen configuration: English, light mode, and a desktop viewport. That is a useful, narrow result.
+
+It does not verify every intended style value, Tab order, screen-reader behavior, or every language and theme. In particular, [calling Playwright's focus method](https://playwright.dev/docs/api/class-locator#locator-focus) does not exercise a complete keyboard navigation journey. A broad test title cannot extend the coverage of the assertions inside it.
+
+## What I will check next time
+
+When a UI test compares “before” and “after,” I want to know which action created each state. Focus, hover, selection, and an open menu can survive an earlier step and turn an apparently neutral measurement into an active-state measurement.
+
+Here, one setup line restored the meaning of the comparison. Before asking a test to detect a transition, give it a starting point that is actually different from the destination.
