@@ -229,7 +229,27 @@ const CaseStudyStory = ({
           <h2 id="evidence-title">{labels.outcome}</h2>
           <p className="case-story-lede">{impact}</p>
           <ul className="case-story-outcomes">
-            {pick(caseStudy.outcomes, language).map((outcome) => <li key={outcome}>{outcome}</li>)}
+            {caseStudy.outcomes.map((outcome) => {
+              const value = outcome.support.kind === 'metric'
+                ? outcome.support.value
+                : pick(outcome.support.value, language);
+
+              return (
+                <li key={`${outcome.support.kind}:${pick(outcome.statement, language)}`} data-outcome-support={outcome.support.kind}>
+                  <div className="case-story-outcome-measure">
+                    <strong>{value}</strong>
+                    <span>{pick(outcome.support.label, language)}</span>
+                  </div>
+                  <p>{pick(outcome.statement, language)}</p>
+                  {outcome.support.kind !== 'boundary' && (
+                    <a href={outcome.support.source.url} target="_blank" rel="noopener noreferrer">
+                      {pick(outcome.support.source.label, language)}
+                      <ExternalLink aria-hidden="true" />
+                    </a>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </div>
         <aside className="case-story-evidence-panel">

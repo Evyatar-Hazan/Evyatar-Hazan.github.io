@@ -11,14 +11,16 @@ const buildPath = vi.fn<LocalizedPathBuilder>((language, target) => {
 });
 
 describe('CapabilityProof', () => {
-  it('renders all groups and separates demonstrations from unpublished outcomes', () => {
+  it('renders all groups and separates demonstrations from verified outcomes', () => {
     const { container } = render(<CapabilityProof language="en" buildPath={buildPath} />);
 
     expect(screen.getByRole('heading', { name: 'Trace the capability to shipped work.' })).toBeInTheDocument();
     expect(container.querySelectorAll('[data-capability-id]')).toHaveLength(7);
     expect(screen.getAllByText('Demonstrated in')).toHaveLength(7);
     expect(screen.getAllByText('Measured outcomes')).toHaveLength(7);
-    expect(screen.getAllByText(/No measured outcome is published/)).toHaveLength(7);
+    expect(screen.getAllByText(/No measured outcome is published/)).toHaveLength(2);
+    expect(screen.getAllByText('October 29, 2026')).toHaveLength(14);
+    expect(screen.getAllByText('Verified on')).toHaveLength(14);
   });
 
   it('uses the localized path helper for internal project and article links', () => {
