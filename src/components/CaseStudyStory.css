@@ -621,31 +621,93 @@
 }
 
 .case-story-outcomes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
   margin: 2rem 0 0;
   padding: 0;
+  border: 1px solid var(--case-rule);
+  background: var(--case-rule);
   list-style: none;
 }
 
 .case-story-outcomes li {
-  padding: 1rem 0 1rem 1.6rem;
-  border-top: 1px solid var(--case-rule);
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--case-panel);
   color: var(--case-copy);
   line-height: 1.6;
 }
 
-[dir="rtl"] .case-story-outcomes li {
-  padding-right: 1.6rem;
-  padding-left: 0;
+.case-story-outcomes li[data-outcome-support="boundary"] {
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 9px,
+      var(--case-accent-soft) 9px,
+      var(--case-accent-soft) 10px
+    ),
+    var(--case-panel);
 }
 
-.case-story-outcomes li::before {
-  display: inline-block;
-  width: 0.65rem;
-  height: 0.65rem;
-  margin-inline-start: -1.6rem;
-  margin-inline-end: 0.95rem;
-  background: var(--case-accent);
-  content: '';
+.case-story-outcome-measure {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.case-story-outcome-measure strong {
+  overflow-wrap: anywhere;
+  color: var(--case-accent);
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.case-story-outcome-measure span {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.case-story-outcomes p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.case-story-outcomes a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: auto;
+  color: var(--case-accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.case-story-outcomes a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.case-story-outcomes a:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--case-accent) 60%, white);
+  outline-offset: 4px;
+}
+
+.case-story-outcomes a svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex: none;
 }
 
 .case-story-supplementary {
@@ -848,6 +910,10 @@
   }
 
   .case-story-decisions dl {
+    grid-template-columns: 1fr;
+  }
+
+  .case-story-outcomes {
     grid-template-columns: 1fr;
   }
 

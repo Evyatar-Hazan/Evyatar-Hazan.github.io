@@ -1,6 +1,7 @@
 import {
   assertCaseStudyEvidenceContract,
   type CaseStudyEvidence,
+  type OutcomeClaim,
 } from './caseStudyEvidence.ts';
 
 export const profileLinks = {
@@ -29,7 +30,7 @@ export type ProjectCaseStudy = {
   audience: LocalizedText;
   proof: LocalizedText;
   decisions: LocalizedList;
-  outcomes: LocalizedList;
+  outcomes: readonly [OutcomeClaim, ...OutcomeClaim[]];
 } & CaseStudyEvidence;
 
 export type Project = {
@@ -75,12 +76,21 @@ const caseStudies = {
       he: 'עסקי שירות קטנים שצריכים נתיב פנייה אחד חזק, ולא אתר תדמית מנופח.'
     },
     proof: {
-      en: 'The live site is deployed on a custom domain, keeps the CTA visible, and frames the business around a direct conversation instead of generic filler.',
-      he: 'האתר החי יושב על דומיין מותאם, שומר על CTA גלוי, ומציג את העסק סביב שיחה ישירה במקום סביב טקסט גנרי.'
+      en: 'The public site and pinned repository document a live custom-domain product plus three distinct surfaces: the website, Content Studio, and private media library.',
+      he: 'האתר הציבורי ומאגר הקוד המקובע מתעדים מוצר חי בדומיין מותאם ושלושה משטחים נפרדים: האתר, Content Studio וספריית מדיה פרטית.'
     },
-    evidenceStatus: 'unknown',
-    verifiedAt: null,
-    evidenceLinks: null,
+    evidenceStatus: 'verified',
+    verifiedAt: '2026-10-29',
+    evidenceLinks: [
+      {
+        label: { en: 'Live catering website', he: 'אתר הקייטרינג החי' },
+        url: 'https://nisboutiquecatering.com/',
+      },
+      {
+        label: { en: 'Pinned source and architecture', he: 'קוד וארכיטקטורה בגרסה מקובעת' },
+        url: 'https://github.com/Evyatar-Hazan/nis-boutique-catering/tree/039f02897190d1e08e16ad7f9f0cbf5e6e3a389f',
+      },
+    ],
     decisions: {
       en: [
         'Kept the content tightly scoped so visitors never need to guess what to do next.',
@@ -93,18 +103,49 @@ const caseStudies = {
         'נמנעתי מעומס של מחירים ופירקתי את העמוד סביב אמון, מסגור השירות ומוכנות ל-WhatsApp.'
       ]
     },
-    outcomes: {
-      en: [
-        'A stronger first impression for referrals and direct traffic.',
-        'A reusable content structure that can grow without rewriting the whole site.',
-        'A clearer conversion story that matches how the business actually closes leads.'
-      ],
-      he: [
-        'רושם ראשוני חזק יותר עבור הפניות ותנועה ישירה.',
-        'מבנה תוכן שניתן להרחיב בלי לכתוב מחדש את כל האתר.',
-        'סיפור המרה ברור יותר שמתאים לאופן שבו העסק באמת סוגר לידים.'
-      ]
-    }
+    outcomes: [
+      {
+        statement: {
+          en: 'One repository now separates the public website, editorial Content Studio, and private source-photo library.',
+          he: 'מאגר אחד מפריד כעת בין האתר הציבורי, Content Studio לעריכה וספריית תמונות מקור פרטית.',
+        },
+        support: {
+          kind: 'metric',
+          value: '3',
+          label: { en: 'documented product surfaces', he: 'משטחי מוצר מתועדים' },
+          source: {
+            label: { en: 'Pinned repository README', he: 'README בגרסה מקובעת' },
+            url: 'https://github.com/Evyatar-Hazan/nis-boutique-catering/tree/039f02897190d1e08e16ad7f9f0cbf5e6e3a389f',
+          },
+        },
+      },
+      {
+        statement: {
+          en: 'The customer-facing product is publicly reachable on its custom domain in Hebrew and English.',
+          he: 'המוצר ללקוחות נגיש לציבור בדומיין המותאם שלו בעברית ובאנגלית.',
+        },
+        support: {
+          kind: 'source',
+          value: { en: 'Live', he: 'חי' },
+          label: { en: 'public product evidence', he: 'ראיית מוצר ציבורית' },
+          source: {
+            label: { en: 'Open live website', he: 'פתיחת האתר החי' },
+            url: 'https://nisboutiquecatering.com/',
+          },
+        },
+      },
+      {
+        statement: {
+          en: 'No lead-volume, conversion-rate, or revenue lift is claimed because comparable business analytics were not provided.',
+          he: 'לא נטענת עלייה בכמות הלידים, בשיעור ההמרה או בהכנסות, משום שלא סופקו נתוני אנליטיקה עסקיים להשוואה.',
+        },
+        support: {
+          kind: 'boundary',
+          value: { en: 'Not claimed', he: 'לא נטען' },
+          label: { en: 'business-performance boundary', he: 'גבול לביצועים עסקיים' },
+        },
+      },
+    ]
   },
   online_converter: {
     eyebrow: {
@@ -134,12 +175,21 @@ const caseStudies = {
       he: 'מפתחים, אנליסטים, צוותי תוכן ומשתמשים טכניים שצריכים המרות מהירות מקומית בלי העלאת מידע.'
     },
     proof: {
-      en: 'The live product now includes a large bilingual converter registry, analytics dashboard, SEO build checks, and production smoke validation.',
-      he: 'המוצר החי כולל היום מאגר ממירים דו-לשוני גדול, דשבורד אנליטיקה, בדיקות SEO בבילד ואימות production רציף.'
+      en: 'The pinned repository records 140 converter definitions, including 16 editorially reviewed tools published in both English and Hebrew; conversion runs locally in the browser.',
+      he: 'מאגר הקוד המקובע מתעד 140 הגדרות ממיר, ובהן 16 כלים שעברו עריכה ופורסמו בעברית ובאנגלית; ההמרה רצה מקומית בדפדפן.'
     },
-    evidenceStatus: 'unknown',
-    verifiedAt: null,
-    evidenceLinks: null,
+    evidenceStatus: 'verified',
+    verifiedAt: '2026-10-29',
+    evidenceLinks: [
+      {
+        label: { en: 'Live converter product', he: 'מוצר ההמרה החי' },
+        url: 'https://online-converter.evyatarhazan.com/',
+      },
+      {
+        label: { en: 'Pinned source and published counts', he: 'קוד וספירות פרסום בגרסה מקובעת' },
+        url: 'https://github.com/Evyatar-Hazan/online-converter/tree/788761e81c4b968bd603b4445d04df9a39eaa6cd',
+      },
+    ],
     decisions: {
       en: [
         'Moved from a small manually managed SPA toward a more content-scalable architecture with registry-driven pages and stronger metadata patterns.',
@@ -152,18 +202,49 @@ const caseStudies = {
         'הוספתי שערי איכות ל-canonical, hreflang, sitemap, קישורים פנימיים וביצועים כדי שסקייל לא יפגע באמון בשקט.'
       ]
     },
-    outcomes: {
-      en: [
-        'A much broader search surface without giving up the fast client-side experience.',
-        'A content model that supports ongoing expansion instead of hand-building each tool page.',
-        'A stronger base for organic traffic and future ad monetization.'
-      ],
-      he: [
-        'משטח חיפוש רחב הרבה יותר בלי לוותר על חוויית client-side מהירה.',
-        'מודל תוכן שמאפשר להרחיב את המוצר לאורך זמן בלי לבנות כל עמוד ידנית.',
-        'בסיס חזק יותר לטראפיק אורגני ולמונטיזציה עתידית מפרסומות.'
-      ]
-    }
+    outcomes: [
+      {
+        statement: {
+          en: 'The registry contains 140 converter definitions; 16 reviewed tools are published as static pages in two languages.',
+          he: 'ה־registry מכיל 140 הגדרות ממיר; 16 כלים שעברו עריכה מפורסמים כעמודים סטטיים בשתי שפות.',
+        },
+        support: {
+          kind: 'metric',
+          value: '140 / 16 / 2',
+          label: { en: 'definitions / published tools / languages', he: 'הגדרות / כלים מפורסמים / שפות' },
+          source: {
+            label: { en: 'Pinned repository README', he: 'README בגרסה מקובעת' },
+            url: 'https://github.com/Evyatar-Hazan/online-converter/tree/788761e81c4b968bd603b4445d04df9a39eaa6cd',
+          },
+        },
+      },
+      {
+        statement: {
+          en: 'Reviewed converters execute in the browser, so pasted input is not uploaded to a conversion server.',
+          he: 'הממירים שפורסמו פועלים בדפדפן, ולכן הקלט המודבק אינו נשלח לשרת המרה.',
+        },
+        support: {
+          kind: 'source',
+          value: { en: 'Browser-only', he: 'בדפדפן בלבד' },
+          label: { en: 'documented processing boundary', he: 'גבול עיבוד מתועד' },
+          source: {
+            label: { en: 'Pinned implementation source', he: 'מקור מימוש מקובע' },
+            url: 'https://github.com/Evyatar-Hazan/online-converter/tree/788761e81c4b968bd603b4445d04df9a39eaa6cd',
+          },
+        },
+      },
+      {
+        statement: {
+          en: 'No organic-traffic, conversion, or advertising-revenue increase is claimed without verified analytics.',
+          he: 'לא נטענת עלייה בטראפיק אורגני, בהמרות או בהכנסות מפרסום ללא נתוני אנליטיקה מאומתים.',
+        },
+        support: {
+          kind: 'boundary',
+          value: { en: 'Not claimed', he: 'לא נטען' },
+          label: { en: 'growth and revenue boundary', he: 'גבול לצמיחה ולהכנסות' },
+        },
+      },
+    ]
   },
   emergency_protocol: {
     eyebrow: {
@@ -193,12 +274,21 @@ const caseStudies = {
       he: 'לומדים שרוצים להכיר מסלול BLS ולדון בו בהקשר של למידה ותרגול.'
     },
     proof: {
-      en: 'The live learning product uses a React client with Cloudflare Pages Functions and D1 for health, authentication, and comments. Express and Prisma remain a local development workspace rather than the production API.',
-      he: 'מוצר הלמידה החי משתמש בלקוח React, ב־Cloudflare Pages Functions וב־D1 עבור בדיקות תקינות, אימות ותגובות. Express ו־Prisma נשארים סביבת פיתוח מקומית ואינם ה־API של הפרודקשן.'
+      en: 'The live health endpoint returned HTTP 200 on October 29, 2026. The pinned source identifies Cloudflare Pages Functions and D1 as production, while Express and Prisma remain local development only.',
+      he: 'נקודת הקצה החיה לבדיקת תקינות החזירה HTTP 200 ב־29 באוקטובר 2026. המקור המקובע מזהה את Cloudflare Pages Functions ו־D1 כפרודקשן, בעוד Express ו־Prisma נשארים לפיתוח מקומי בלבד.'
     },
-    evidenceStatus: 'unknown',
-    verifiedAt: null,
-    evidenceLinks: null,
+    evidenceStatus: 'verified',
+    verifiedAt: '2026-10-29',
+    evidenceLinks: [
+      {
+        label: { en: 'Live health endpoint', he: 'נקודת קצה חיה לבדיקת תקינות' },
+        url: 'https://bls-protocol.evyatarhazan.com/api/health',
+      },
+      {
+        label: { en: 'Pinned production architecture', he: 'ארכיטקטורת פרודקשן בגרסה מקובעת' },
+        url: 'https://github.com/Evyatar-Hazan/emergency-protocol-diagram/tree/36cfc831589f7e4090bd340faa078faae1a67458',
+      },
+    ],
     decisions: {
       en: [
         'Separated client, API, auth, and data responsibilities so future protocol changes do not collapse into one fragile layer.',
@@ -211,18 +301,49 @@ const caseStudies = {
         'הוספתי מבנה backend תחזוקתי כדי שפיצ׳רי שיתוף יישבו על מודלים ברורים ולא על state מאולתר.'
       ]
     },
-    outcomes: {
-      en: [
-        'A step-by-step learning and practice interface for a BLS pathway.',
-        'A system that can support discussion, permissions, and future updates.',
-        'A concrete example of product thinking inside a full-stack workflow.'
-      ],
-      he: [
-        'ממשק למידה ותרגול צעד-אחר-צעד למסלול BLS.',
-        'מערכת שיכולה לתמוך בדיון, הרשאות ועדכונים עתידיים.',
-        'דוגמה מוחשית לחשיבה מוצרית בתוך workflow של Full Stack.'
-      ]
-    }
+    outcomes: [
+      {
+        statement: {
+          en: 'The production health endpoint responded successfully during the evidence check on October 29, 2026.',
+          he: 'נקודת הקצה של הפרודקשן לבדיקת תקינות הגיבה בהצלחה בבדיקת הראיות ב־29 באוקטובר 2026.',
+        },
+        support: {
+          kind: 'metric',
+          value: 'HTTP 200',
+          label: { en: 'live health response', he: 'תגובת תקינות חיה' },
+          source: {
+            label: { en: 'Open health endpoint', he: 'פתיחת נקודת התקינות' },
+            url: 'https://bls-protocol.evyatarhazan.com/api/health',
+          },
+        },
+      },
+      {
+        statement: {
+          en: 'The deployed data path is documented as Pages Functions plus D1; Express and Prisma are explicitly excluded from the production claim.',
+          he: 'נתיב הנתונים הפרוס מתועד כ־Pages Functions יחד עם D1; ‏Express ו־Prisma מוחרגים במפורש מטענת הפרודקשן.',
+        },
+        support: {
+          kind: 'metric',
+          value: '2',
+          label: { en: 'documented production backend layers', he: 'שכבות Backend מתועדות בפרודקשן' },
+          source: {
+            label: { en: 'Pinned architecture source', he: 'מקור ארכיטקטורה מקובע' },
+            url: 'https://github.com/Evyatar-Hazan/emergency-protocol-diagram/tree/36cfc831589f7e4090bd340faa078faae1a67458',
+          },
+        },
+      },
+      {
+        statement: {
+          en: 'No clinical effectiveness, emergency-response, or medical-validation outcome is claimed; the product is for learning and review only.',
+          he: 'לא נטענת תוצאה של יעילות קלינית, תגובת חירום או אימות רפואי; המוצר מיועד ללמידה ולחזרה בלבד.',
+        },
+        support: {
+          kind: 'boundary',
+          value: { en: 'Not a clinical claim', he: 'לא טענה קלינית' },
+          label: { en: 'medical-use boundary', he: 'גבול לשימוש רפואי' },
+        },
+      },
+    ]
   },
   united_hatzalah: {
     eyebrow: {
@@ -252,12 +373,21 @@ const caseStudies = {
       he: 'עמותות מקומיות וצוותים תפעוליים שצריכים נוכחות ציבורית אמינה בלי להפוך כל שינוי לפריסת קוד.'
     },
     proof: {
-      en: 'The project combines React, Express, Prisma, Cloudinary, and structured deployment so the public layer and admin layer can move together.',
-      he: 'הפרויקט משלב React, Express, Prisma, Cloudinary ופריסה מסודרת, כך שהשכבה הציבורית והשכבה הניהולית יכולות להתקדם יחד.'
+      en: 'The pinned repository documents three product surfaces—a public website, admin panel, and backend API—inside one full-stack monorepo.',
+      he: 'מאגר הקוד המקובע מתעד שלושה משטחי מוצר—אתר ציבורי, פאנל ניהול ו־Backend API—בתוך מונוריפו Full Stack אחד.'
     },
-    evidenceStatus: 'unknown',
-    verifiedAt: null,
-    evidenceLinks: null,
+    evidenceStatus: 'verified',
+    verifiedAt: '2026-10-29',
+    evidenceLinks: [
+      {
+        label: { en: 'Live branch website', he: 'אתר הסניף החי' },
+        url: 'https://hatzalah-shoham.evyatarhazan.com/',
+      },
+      {
+        label: { en: 'Pinned source and product surfaces', he: 'קוד ומשטחי מוצר בגרסה מקובעת' },
+        url: 'https://github.com/Evyatar-Hazan/united-hatzalah-shoham-branch/tree/8b373a20d40e0dd80721e43d5fff9fe4ac78a5d3',
+      },
+    ],
     decisions: {
       en: [
         'Built the content and media workflow so routine updates do not require touching the codebase.',
@@ -270,23 +400,54 @@ const caseStudies = {
         'התייחסתי לאמון הציבורי כחלק מהמוצר, לא רק לפיצ׳רי הניהול.'
       ]
     },
-    outcomes: {
-      en: [
-        'A more maintainable branch website and admin flow.',
-        'Less dependency on developers for simple operational updates.',
-        'A stronger foundation for future branch content and media growth.'
-      ],
-      he: [
-        'אתר סניף וזרימת ניהול תחזוקתיים יותר.',
-        'פחות תלות במפתחים עבור עדכונים תפעוליים פשוטים.',
-        'בסיס חזק יותר לצמיחה עתידית של תוכן ומדיה בסניף.'
-      ]
-    }
+    outcomes: [
+      {
+        statement: {
+          en: 'The repository separates the public website, administrative editing, and backend operations into explicit product surfaces.',
+          he: 'המאגר מפריד בין האתר הציבורי, עריכת הניהול ופעולות ה־Backend למשטחי מוצר מפורשים.',
+        },
+        support: {
+          kind: 'metric',
+          value: '3',
+          label: { en: 'documented product surfaces', he: 'משטחי מוצר מתועדים' },
+          source: {
+            label: { en: 'Pinned repository README', he: 'README בגרסה מקובעת' },
+            url: 'https://github.com/Evyatar-Hazan/united-hatzalah-shoham-branch/tree/8b373a20d40e0dd80721e43d5fff9fe4ac78a5d3',
+          },
+        },
+      },
+      {
+        statement: {
+          en: 'The public branch website is reachable independently from the administrative workflow described in the source.',
+          he: 'אתר הסניף הציבורי נגיש בנפרד מזרימת הניהול המתוארת בקוד המקור.',
+        },
+        support: {
+          kind: 'source',
+          value: { en: 'Live', he: 'חי' },
+          label: { en: 'public website evidence', he: 'ראיית אתר ציבורי' },
+          source: {
+            label: { en: 'Open live website', he: 'פתיחת האתר החי' },
+            url: 'https://hatzalah-shoham.evyatarhazan.com/',
+          },
+        },
+      },
+      {
+        statement: {
+          en: 'No adoption, response-time, fundraising, or developer-time reduction is claimed because those operational metrics were not verified.',
+          he: 'לא נטענת ירידה בזמן תגובה או בזמן מפתח, ולא נטען שיפור באימוץ או בגיוס תרומות, משום שמדדים תפעוליים אלה לא אומתו.',
+        },
+        support: {
+          kind: 'boundary',
+          value: { en: 'Not measured', he: 'לא נמדד' },
+          label: { en: 'operational-impact boundary', he: 'גבול להשפעה תפעולית' },
+        },
+      },
+    ]
   }
 } satisfies Record<string, ProjectCaseStudy>;
 
 assertCaseStudyEvidenceContract(
-  Object.entries(caseStudies).map(([id, evidence]) => ({ id, evidence })),
+  Object.entries(caseStudies).map(([id, evidence]) => ({ id, evidence, outcomes: evidence.outcomes })),
 );
 
 export const projects: Project[] = [

@@ -6,6 +6,46 @@ export type EvidenceLink = {
   url: string;
 };
 
+export type OutcomeClaim = {
+  statement: {
+    en: string;
+    he: string;
+  };
+  support:
+    | {
+        kind: 'metric';
+        value: string;
+        label: {
+          en: string;
+          he: string;
+        };
+        source: EvidenceLink;
+      }
+    | {
+        kind: 'source';
+        value: {
+          en: string;
+          he: string;
+        };
+        label: {
+          en: string;
+          he: string;
+        };
+        source: EvidenceLink;
+      }
+    | {
+        kind: 'boundary';
+        value: {
+          en: string;
+          he: string;
+        };
+        label: {
+          en: string;
+          he: string;
+        };
+      };
+};
+
 export type CaseStudyEvidence =
   | {
       evidenceStatus: 'verified';
@@ -21,6 +61,7 @@ export type CaseStudyEvidence =
 export type EvidenceContractEntry = {
   id: string;
   evidence: CaseStudyEvidence;
+  outcomes?: readonly OutcomeClaim[];
 };
 
 const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
@@ -40,6 +81,24 @@ const isHttpsUrl = (value: string) => {
   }
 };
 
+const isLocalizedTextComplete = (value: { en: string; he: string }) => (
+  value.en.trim().length > 0 && value.he.trim().length > 0
+);
+
+const getEvidenceLinkErrors = (id: string, link: EvidenceLink, label: string) => {
+  const errors: string[] = [];
+
+  if (!isLocalizedTextComplete(link.label)) {
+    errors.push(`${id}: ${label} requires English and Hebrew labels.`);
+  }
+
+  if (!isHttpsUrl(link.url)) {
+    errors.push(`${id}: ${label} must use an https URL.`);
+  }
+
+  return errors;
+};
+
 export const getCaseStudyEvidenceErrors = (
   entries: readonly EvidenceContractEntry[],
   today = new Date(),
@@ -47,7 +106,37 @@ export const getCaseStudyEvidenceErrors = (
   const errors: string[] = [];
   const todayIso = today.toISOString().slice(0, 10);
 
-  for (const { id, evidence } of entries) {
+  for (const { id, evidence, outcomes } of entries) {
+    outcomes?.forEach((outcome, index) => {
+      const outcomeId = `outcome ${index + 1}`;
+
+      if (!isLocalizedTextComplete(outcome.statement)) {
+        errors.push(`${id}: ${outcomeId} requires an English and Hebrew statement.`);
+      }
+
+      if (!isLocalizedTextComplete(outcome.support.label)) {
+        errors.push(`${id}: ${outcomeId} requires an English and Hebrew support label.`);
+      }
+
+      if (outcome.support.kind === 'metric') {
+        if (!/\d/u.test(outcome.support.value)) {
+          errors.push(`${id}: ${outcomeId} metric must contain a number.`);
+        }
+        errors.push(...getEvidenceLinkErrors(id, outcome.support.source, `${outcomeId} source`));
+      }
+
+      if (outcome.support.kind === 'source') {
+        if (!isLocalizedTextComplete(outcome.support.value)) {
+          errors.push(`${id}: ${outcomeId} requires an English and Hebrew source value.`);
+        }
+        errors.push(...getEvidenceLinkErrors(id, outcome.support.source, `${outcomeId} source`));
+      }
+
+      if (outcome.support.kind === 'boundary' && !isLocalizedTextComplete(outcome.support.value)) {
+        errors.push(`${id}: ${outcomeId} requires an English and Hebrew boundary value.`);
+      }
+    });
+
     if (evidence.evidenceStatus === 'unknown') {
       if (evidence.verifiedAt !== null || evidence.evidenceLinks !== null) {
         errors.push(`${id}: unknown evidence must use null for verifiedAt and evidenceLinks.`);
@@ -66,13 +155,7 @@ export const getCaseStudyEvidenceErrors = (
     }
 
     evidence.evidenceLinks.forEach((link, index) => {
-      if (!link.label.en.trim() || !link.label.he.trim()) {
-        errors.push(`${id}: evidence link ${index + 1} requires English and Hebrew labels.`);
-      }
-
-      if (!isHttpsUrl(link.url)) {
-        errors.push(`${id}: evidence link ${index + 1} must use an https URL.`);
-      }
+      errors.push(...getEvidenceLinkErrors(id, link, `evidence link ${index + 1}`));
     });
   }
 
