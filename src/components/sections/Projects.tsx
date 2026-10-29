@@ -9,6 +9,13 @@ import './Projects.css';
 import { cardSurfaceClassName } from '../cardSurface';
 
 const featuredProjects = projects.filter((project) => project.featured);
+const flagshipProjectId = 'nis_boutique';
+const flagshipProject = featuredProjects.find((project) => project.id === flagshipProjectId);
+const supportingProjects = featuredProjects.filter((project) => project.id !== flagshipProjectId);
+
+if (!flagshipProject) {
+  throw new Error(`Missing flagship project: ${flagshipProjectId}`);
+}
 
 const previewImages: Partial<Record<Project['visual'], string>> = {
   catering: '/project-nis-boutique.webp',
@@ -24,10 +31,10 @@ const ProjectActions = ({ project, compact = false }: { project: Project; compac
 
   return (
     <div className={`project-actions flex flex-wrap items-center gap-2 ${compact ? 'project-actions-compact' : ''}`}>
-      {project.caseStudy && !compact && (
+      {project.caseStudy && (
         <Link
           to={localizedPath(language, { route: 'project', id: project.id as ProjectId })}
-          className="home-action home-action--primary"
+          className={compact ? secondaryClass : 'home-action home-action--primary'}
         >
           {t('projects.caseStudy')}
           <ExternalLink className="h-4 w-4" />
@@ -61,10 +68,8 @@ const ProjectActions = ({ project, compact = false }: { project: Project; compac
 
 const FeaturedProjectCard = ({
   project,
-  projectIndex,
 }: {
   project: Project;
-  projectIndex: number;
 }) => {
   const { t, i18n } = useTranslation();
   const isHebrew = i18n.language === 'he';
@@ -84,11 +89,9 @@ const FeaturedProjectCard = ({
     >
       <div className="featured-case-card__masthead">
         <span className="featured-case-card__index" aria-hidden="true">
-          {String(projectIndex + 1).padStart(2, '0')}
+          01
         </span>
-        <p>
-          PROJECT {String(projectIndex + 1).padStart(2, '0')} / {String(featuredProjects.length).padStart(2, '0')}
-        </p>
+        <p>{t('projects.flagshipLabel')}</p>
         <div className="featured-case-card__meta">
           <span>{t(`projects.statuses.${project.status}`)}</span>
           <span>{t(`projects.categories.${project.category}`)}</span>
@@ -162,6 +165,75 @@ const FeaturedProjectCard = ({
   );
 };
 
+const SupportingProjectCard = ({
+  project,
+  projectIndex,
+}: {
+  project: Project;
+  projectIndex: number;
+}) => {
+  const { t } = useTranslation();
+  const titleId = `supporting-project-${project.id}`;
+  const projectTitle = t(`projects.items.${project.id}.title`);
+  const previewImage = previewImages[project.visual];
+
+  return (
+    <article
+      className={cardSurfaceClassName('interactive', 'supporting-project-card')}
+      data-project-visual={project.visual}
+      data-supporting-project={project.id}
+      aria-labelledby={titleId}
+    >
+      <div className="supporting-project-card__masthead">
+        <span aria-hidden="true">{String(projectIndex + 2).padStart(2, '0')}</span>
+        <p>PROJECT {String(projectIndex + 2).padStart(2, '0')}</p>
+        <small>{t(`projects.statuses.${project.status}`)}</small>
+      </div>
+
+      {previewImage && (
+        project.liveUrl ? (
+          <a
+            href={project.liveUrl}
+            className="supporting-project-card__media-link"
+            aria-label={`${t('projects.openLivePreview')} ${projectTitle}`}
+          >
+            <img
+              src={previewImage}
+              alt={t(`projects.items.${project.id}.previewTitle`)}
+              width="1440"
+              height="900"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        ) : (
+          <img
+            className="supporting-project-card__media"
+            src={previewImage}
+            alt={t(`projects.items.${project.id}.previewTitle`)}
+            width="1440"
+            height="900"
+            loading="lazy"
+            decoding="async"
+          />
+        )
+      )}
+
+      <div className="supporting-project-card__body">
+        <div>
+          <h3 id={titleId}>{projectTitle}</h3>
+          <p>{t(project.summaryKey)}</p>
+        </div>
+        <div className="supporting-project-card__result">
+          <span>{t('projects.storyResult')}</span>
+          <p>{t(project.impactKey)}</p>
+        </div>
+        <ProjectActions project={project} compact />
+      </div>
+    </article>
+  );
+};
+
 const Projects = () => {
   const { t, i18n } = useTranslation();
   const language = i18n.language === 'he' ? 'he' : 'en';
@@ -183,9 +255,19 @@ const Projects = () => {
       </div>
 
       <div aria-label={t('projects.featuredLabel')} className="featured-case-grid home-section__inner relative">
-        {featuredProjects.map((project, index) => (
-          <FeaturedProjectCard key={project.id} project={project} projectIndex={index} />
-        ))}
+        <FeaturedProjectCard project={flagshipProject} />
+      </div>
+
+      <div className="supporting-projects home-section__inner relative">
+        <div className="supporting-projects__header">
+          <p>{t('projects.supportingEyebrow')}</p>
+          <h3>{t('projects.supportingTitle')}</h3>
+        </div>
+        <div aria-label={t('projects.supportingLabel')} className="supporting-projects__grid">
+          {supportingProjects.map((project, index) => (
+            <SupportingProjectCard key={project.id} project={project} projectIndex={index} />
+          ))}
+        </div>
       </div>
 
       <div className="home-projects-index home-section__inner relative">

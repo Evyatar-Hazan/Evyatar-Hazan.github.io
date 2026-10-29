@@ -58,7 +58,10 @@ const ArticleLink = ({ post, language, featured = false, index }: ArticleLinkPro
       <div className="writing-article-copy">
         <ArticleMeta post={post} language={language} />
         <h3>
-          <Link to={localizedPath(language, { route: 'article', id: post.slug as ArticleId })}>
+          <Link
+            to={localizedPath(language, { route: 'article', id: post.slug as ArticleId })}
+            className="writing-article-title-link"
+          >
             <span className="absolute inset-0" aria-hidden="true" />
             {post.title}
           </Link>
