@@ -24,6 +24,11 @@ type CaseStudyStoryProps = {
   language: PortfolioLanguage;
   nextProject: Project;
   project: Project & { id: CaseStudyStoryProjectId };
+  relatedCapabilities: readonly {
+    id: string;
+    label: string;
+    reason: string;
+  }[];
   relatedWriting: readonly RelatedContentItem[];
   role: string;
   story: CaseStudyStoryData;
@@ -49,6 +54,7 @@ const CaseStudyStory = ({
   language,
   nextProject,
   project,
+  relatedCapabilities,
   relatedWriting,
   role,
   story,
@@ -268,18 +274,32 @@ const CaseStudyStory = ({
           <h2 id="next-title">{labels.next}</h2>
         </div>
         <div className="case-story-next-grid">
-          <div>
+          <div data-related-content="project-context">
             <h3>{labels.relatedWriting}</h3>
             {relatedWriting.length > 0 ? (
               <ul>
                 {relatedWriting.map((item) => (
-                  <li key={`${item.target.route}:${item.target.id}`}>
+                  <li key={`${item.target.route}:${item.target.id}`} data-related-reason={item.reason}>
                     <Link to={buildPath(language, item.target)}>{item.label}<ArrowRight aria-hidden="true" className="rtl:rotate-180" /></Link>
+                    <p>{item.reason}</p>
                   </li>
                 ))}
               </ul>
             ) : (
               <Link className={linkClassName} to={buildPath(language, { route: 'blog' })}>{labels.relatedWriting}</Link>
+            )}
+            {relatedCapabilities.length > 0 && (
+              <div className="case-story-related-capabilities" data-related-capabilities>
+                <h3>{labels.relatedCapabilities}</h3>
+                <ul>
+                  {relatedCapabilities.map((capability) => (
+                    <li key={capability.id}>
+                      <strong>{capability.label}</strong>
+                      <p>{capability.reason}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
           </div>
           <div>
