@@ -754,6 +754,13 @@ describe('App', () => {
     renderAt('/en/projects/online_converter/');
 
     expect(await screen.findByRole('heading', { name: 'projects.items.online_converter.title' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Executive summary' })).toBeInTheDocument();
+    expect(screen.getByText('Contribution')).toBeInTheDocument();
+    expect(screen.getByText('Result')).toBeInTheDocument();
+    expect(screen.getByText('Limitations')).toBeInTheDocument();
+    const executiveSummary = document.querySelector('[data-executive-summary="online_converter"]');
+    expect(executiveSummary).not.toBeNull();
+    expect(within(executiveSummary as HTMLElement).getByText(/do not prove traffic, adoption, or revenue/i)).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Problem' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Decision' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Execution' })).toBeInTheDocument();
@@ -779,6 +786,8 @@ describe('App', () => {
 
       expect(story).toHaveAttribute('data-case-study-template', 'product-story-v1');
       expect(story).toHaveAttribute('data-case-study-structure', 'problem-decision-execution-outcome');
+      expect(within(story).getByRole('heading', { name: 'Executive summary' })).toBeVisible();
+      expect(story.querySelector(`[data-executive-summary="${projectId}"]`)).toBeInTheDocument();
 
       const coreHeadings = within(story)
         .getAllByRole('heading', { level: 2 })
