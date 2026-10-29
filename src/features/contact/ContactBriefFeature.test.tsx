@@ -33,6 +33,24 @@ describe('ContactBriefFeature', () => {
     expect(screen.queryByRole('heading', { name: 'Message review' })).not.toBeInTheDocument();
   });
 
+  it.each([
+    {
+      language: 'en' as const,
+      send: 'The need, the current situation, and the result you want.',
+      next: 'I will reply with focused questions and a recommended next step.',
+    },
+    {
+      language: 'he' as const,
+      send: 'את הצורך, המצב הנוכחי והתוצאה שרוצים להשיג.',
+      next: 'אחזור עם שאלות ממוקדות והמלצה לצעד הבא.',
+    },
+  ])('explains what to send and what happens next in $language', ({ language, send, next }) => {
+    render(<ContactBriefFeature language={language} buildLocalizedPath={buildLocalizedPath} />);
+
+    expect(screen.getByText(send)).toBeVisible();
+    expect(screen.getByText(next)).toBeVisible();
+  });
+
   it('previews synthetic brief data and injects the localized privacy link', () => {
     render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
     openBuilder();
