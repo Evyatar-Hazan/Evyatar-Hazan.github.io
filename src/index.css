@@ -66,6 +66,20 @@ main > section[id] {
   --color-warning-700: #b45309;
   --color-danger-400: #f87171;
   --color-danger-600: #dc2626;
+
+  /* Semantic surfaces and content roles. These are intentionally themeable. */
+  --color-surface-canvas: #f7f8fa;
+  --color-surface-base: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-muted: #f1f5f9;
+  --color-surface-sunken: #e8eef6;
+  --color-surface-accent: #eff8ff;
+  --color-content-primary: #0f172a;
+  --color-content-secondary: #334155;
+  --color-content-muted: #475569;
+  --color-content-inverse: #ffffff;
+  --color-border-subtle: #dbe3ee;
+  --color-border-strong: #94a3b8;
 }
 
 :root {
@@ -116,12 +130,12 @@ main > section[id] {
   --home-section-space-compact: var(--space-section-compact);
   --home-block-space: clamp(1.5rem, 3vw, 3rem);
   --home-title: clamp(2.75rem, 5.5vw, 5.5rem);
-  --home-surface-page: #f7f8fa;
-  --home-surface-muted: color-mix(in srgb, var(--color-white) 76%, var(--color-neutral-100));
-  --home-surface-raised: color-mix(in srgb, var(--color-white) 92%, var(--color-primary-50));
-  --home-surface-strong: var(--color-neutral-950);
-  --home-border: color-mix(in srgb, var(--color-neutral-950) 16%, transparent);
-  --home-border-strong: color-mix(in srgb, var(--color-neutral-950) 30%, transparent);
+  --home-surface-page: var(--color-surface-canvas);
+  --home-surface-muted: var(--color-surface-muted);
+  --home-surface-raised: var(--color-surface-raised);
+  --home-surface-strong: var(--color-content-primary);
+  --home-border: var(--color-border-subtle);
+  --home-border-strong: var(--color-border-strong);
   --home-radius-control: var(--radius-md);
   --home-radius-panel: var(--radius-xl);
   --home-shadow-raised: 0 18px 48px color-mix(in srgb, var(--color-neutral-950) 8%, transparent);
@@ -185,14 +199,38 @@ svg.lucide {
 
 .dark {
   color-scheme: dark;
+  /* A deliberately layered midnight palette, not a light palette inversion. */
+  --color-surface-canvas: #0b1220;
+  --color-surface-base: #101827;
+  --color-surface-raised: #172136;
+  --color-surface-muted: #1c2941;
+  --color-surface-sunken: #080d18;
+  --color-surface-accent: #102b45;
+  --color-content-primary: #f8fafc;
+  --color-content-secondary: #d5deeb;
+  --color-content-muted: #a8b7cb;
+  --color-content-inverse: #0b1220;
+  --color-border-subtle: #2a3b56;
+  --color-border-strong: #526885;
+  --color-neutral-50: #f8fafc;
+  --color-neutral-100: #e8eef6;
+  --color-neutral-200: #d5deeb;
+  --color-neutral-300: #b6c3d6;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #7c8da5;
+  --color-neutral-600: #64748b;
+  --color-neutral-700: #475569;
+  --color-neutral-800: #283952;
+  --color-neutral-900: #17243a;
+  --color-neutral-950: #0d1626;
   --shadow-drawer-start: -24px 0 80px color-mix(in srgb, var(--color-black) 72%, transparent);
   --shadow-drawer-end: 24px 0 80px color-mix(in srgb, var(--color-black) 72%, transparent);
-  --home-surface-page: #08090b;
-  --home-surface-muted: color-mix(in srgb, var(--color-neutral-950) 82%, var(--color-neutral-900));
-  --home-surface-raised: color-mix(in srgb, var(--color-neutral-950) 92%, var(--color-primary-950));
-  --home-surface-strong: var(--color-white);
-  --home-border: color-mix(in srgb, var(--color-white) 16%, transparent);
-  --home-border-strong: color-mix(in srgb, var(--color-white) 30%, transparent);
+  --home-surface-page: var(--color-surface-canvas);
+  --home-surface-muted: var(--color-surface-muted);
+  --home-surface-raised: var(--color-surface-raised);
+  --home-surface-strong: var(--color-content-primary);
+  --home-border: var(--color-border-subtle);
+  --home-border-strong: var(--color-border-strong);
   --home-shadow-raised: 0 20px 58px color-mix(in srgb, var(--color-black) 48%, transparent);
   --home-shadow-action: 0 8px 26px color-mix(in srgb, var(--color-primary-500) 18%, transparent);
   --effect-primary-hover: color-mix(in srgb, var(--color-primary-400) 14%, transparent);
@@ -242,7 +280,7 @@ svg.lucide {
 
 body {
   position: relative;
-  @apply bg-neutral-50 dark:bg-black text-neutral-900 dark:text-neutral-100 selection:bg-primary-500/30 font-sans antialiased transition-colors duration-500;
+  @apply bg-surface-canvas text-content-primary selection:bg-primary-500/30 font-sans antialiased transition-colors duration-500;
 }
 
 .content-container {
@@ -277,11 +315,11 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-neutral-100 dark:bg-black;
+  @apply bg-surface-muted;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-neutral-300 dark:bg-neutral-800 border-2 border-neutral-100 dark:border-black rounded-full hover:bg-neutral-400 dark:hover:bg-neutral-700 transition-colors;
+  @apply bg-neutral-300 dark:bg-neutral-800 border-2 border-surface-muted rounded-full hover:bg-neutral-400 dark:hover:bg-neutral-700 transition-colors;
 }
 
 @media (max-width: 767px) {
