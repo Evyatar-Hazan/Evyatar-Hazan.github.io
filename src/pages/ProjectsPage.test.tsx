@@ -40,6 +40,10 @@ describe('ProjectsPage', () => {
     expect(document.querySelectorAll('h1')).toHaveLength(1);
     expect(document.querySelectorAll('[data-hub-featured-project]')).toHaveLength(4);
     expect(document.querySelectorAll('[data-project-id]')).toHaveLength(7);
+    expect(document.querySelectorAll('[data-lifecycle="active"]')).toHaveLength(9);
+    expect(document.querySelectorAll('[data-lifecycle="historical"]')).toHaveLength(2);
+    expect(within(archiveRow('password_gen')).getByLabelText(/projectsHub\.lifecycleNote\.historical/)).toHaveTextContent('projectsHub.lifecycle.historical');
+    expect(within(archiveRow('nis_boutique')).getByLabelText(/projectsHub\.lifecycleNote\.active/)).toHaveTextContent('projectsHub.lifecycle.active');
     expect(screen.getAllByRole('link', { name: 'nav.Projects' })[0]).toHaveAttribute('aria-current', 'page');
     expect(screen.getAllByRole('link', { name: 'nav.Projects' }).some((link) => link.getAttribute('href') === `/${language}/projects/`)).toBe(true);
   });

@@ -42,15 +42,23 @@ const ProjectLinks = ({ entry, compact = false }: { entry: ProjectArchiveEntry; 
   );
 };
 
-const EvidenceStatus = ({ entry }: { entry: ProjectArchiveEntry }) => {
+const LifecycleStatus = ({ entry }: { entry: ProjectArchiveEntry }) => {
   const { t } = useTranslation();
+  const lifecycle = entry.verification.status === 'verified'
+    ? entry.verification.lifecycle
+    : 'undocumented';
+  const label = t(`projectsHub.lifecycle.${lifecycle}`);
+  const qualifier = t(`projectsHub.lifecycleNote.${lifecycle}`);
 
   return (
-    <span className="projects-hub-evidence">
+    <span
+      className="projects-hub-lifecycle"
+      data-lifecycle={lifecycle}
+      title={qualifier}
+      aria-label={`${label}. ${qualifier}`}
+    >
       <span aria-hidden="true" />
-      {entry.verification.status === 'verified'
-        ? t('projectsHub.evidenceVerified')
-        : t('projectsHub.evidenceUndocumented')}
+      {label}
     </span>
   );
 };
@@ -172,7 +180,7 @@ const ProjectsPage = () => {
               <div className="projects-hub-featured-main">
                 <div className="projects-hub-project-meta">
                   <span>{entry.category}</span>
-                  <EvidenceStatus entry={entry} />
+                  <LifecycleStatus entry={entry} />
                 </div>
                 <h3>{entry.title}</h3>
                 <p className="projects-hub-problem">{entry.description}</p>
@@ -235,7 +243,7 @@ const ProjectsPage = () => {
               <li key={entry.id} data-project-id={entry.id}>
                 <span className="projects-hub-list-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
                 <div className="projects-hub-list-copy">
-                  <div className="projects-hub-project-meta"><span>{entry.category}</span><EvidenceStatus entry={entry} /></div>
+                  <div className="projects-hub-project-meta"><span>{entry.category}</span><LifecycleStatus entry={entry} /></div>
                   <h3>{entry.title}</h3>
                   <p>{entry.summary}</p>
                 </div>
@@ -284,7 +292,7 @@ const ProjectsPage = () => {
           <div className="projects-hub-comparison-grid">
             {comparedEntries.map((entry) => (
               <article key={entry.id}>
-                <div className="projects-hub-project-meta"><span>{entry.category}</span><EvidenceStatus entry={entry} /></div>
+                <div className="projects-hub-project-meta"><span>{entry.category}</span><LifecycleStatus entry={entry} /></div>
                 <h3>{entry.title}</h3>
                 <dl>
                   <div><dt>{t('projectsHub.need')}</dt><dd>{entry.description}</dd></div>
@@ -293,7 +301,7 @@ const ProjectsPage = () => {
                   <div><dt>{t('projectsHub.caseStudyAvailable')}</dt><dd>{entry.caseStudyUrl ? t('projectsHub.yes') : t('projectsHub.no')}</dd></div>
                   <div><dt>{t('projectsHub.liveProductAvailable')}</dt><dd>{entry.liveUrl ? t('projectsHub.yes') : t('projectsHub.no')}</dd></div>
                   <div><dt>{t('projectsHub.publicCodeAvailable')}</dt><dd>{entry.codeUrl ? t('projectsHub.yes') : t('projectsHub.no')}</dd></div>
-                  <div><dt>{t('projectsHub.evidenceStatus')}</dt><dd>{entry.verification.status === 'verified' ? t('projectsHub.evidenceVerified') : t('projectsHub.evidenceUndocumented')}</dd></div>
+                  <div><dt>{t('projectsHub.lifecycleStatus')}</dt><dd><LifecycleStatus entry={entry} /></dd></div>
                 </dl>
                 <ProjectLinks entry={entry} compact />
                 <button type="button" className="projects-hub-remove" onClick={() => toggleComparison(entry.id)}>

@@ -320,6 +320,21 @@
     "caseStudyAvailable": "קייס סטאדי",
     "liveProductAvailable": "מוצר חי",
     "publicCodeAvailable": "קוד ציבורי",
+    "lifecycleStatus": "מצב הפרויקט",
+    "lifecycle": {
+      "active": "נוכחי / חי",
+      "maintained": "מתוחזק",
+      "archived": "בארכיון",
+      "historical": "היסטורי / מקור בלבד",
+      "undocumented": "המצב לא תועד"
+    },
+    "lifecycleNote": {
+      "active": "ה־runtime הציבורי נבדק בתאריך האימות; אין בכך הבטחה ל־uptime או לתחזוקה מתמשכת.",
+      "maintained": "התחזוקה תועדה בתאריך האימות; אין בכך הבטחה לזמינות עתידית.",
+      "archived": "המקור הציבורי מתעד מצב ארכיון.",
+      "historical": "רשומת פורטפוליו מבוססת מקור; אין טענה ל־runtime ציבורי נוכחי.",
+      "undocumented": "לא נמצא מקור מאומת למצב מחזור החיים."
+    },
     "evidenceStatus": "מצב ראיות",
     "evidenceVerified": "ראיות מתועדות",
     "evidenceUndocumented": "ראיות לא מתועדות",
