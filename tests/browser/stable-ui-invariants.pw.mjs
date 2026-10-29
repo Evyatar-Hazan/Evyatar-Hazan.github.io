@@ -229,13 +229,16 @@ test.describe('FIX-015 low-height landscape menu', () => {
     });
 
     await page.goto('/en/');
-    await page.locator('#main-content').waitFor({ state: 'visible' });
+    const mainContent = page.locator('#main-content');
+    await mainContent.waitFor({ state: 'visible' });
+    await expect(mainContent).toBeFocused();
     await page.locator('.system-rail-menu-toggle').click();
 
     const dialog = page.getByRole('dialog');
     const contact = dialog.getByRole('link', { name: 'Contact' });
     const footerLinks = dialog.locator('.system-rail-mobile-secondary a');
 
+    await expect(dialog.getByRole('button', { name: 'Close navigation menu' })).toBeFocused();
     await contact.focus();
     await expect(contact).toBeFocused();
     await expect(contact).toBeInViewport();

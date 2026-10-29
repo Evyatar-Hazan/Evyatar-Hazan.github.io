@@ -262,17 +262,34 @@
 
 @media (max-width: 639px) {
   .layout {
-    min-block-size: calc(100svh - 8.75rem);
+    min-block-size: auto;
     align-content: start;
   }
 
+  .visual {
+    display: none;
+  }
+
   .copy {
-    padding-bottom: 1rem;
+    padding-bottom: 0;
+  }
+
+  .availability {
+    margin-bottom: 0.75rem;
+  }
+
+  .headline {
+    margin-top: 0.2em;
+  }
+
+  .description {
+    margin-top: 1rem;
   }
 
   .actions {
     display: grid;
     justify-items: start;
+    margin-top: 1rem;
   }
 
   .primaryAction,
