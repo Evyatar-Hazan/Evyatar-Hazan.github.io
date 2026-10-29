@@ -212,6 +212,11 @@
   border-top: 1px solid color-mix(in srgb, var(--project-accent) 22%, var(--color-neutral-300));
 }
 
+.featured-case-card .project-card-facts,
+.supporting-project-card .project-card-facts {
+  margin-top: 0;
+}
+
 .featured-case-card__story section {
   position: relative;
   display: grid;
@@ -408,33 +413,17 @@
   color: white;
 }
 
-.supporting-project-card__body > div:first-child > p,
-.supporting-project-card__result p {
+.supporting-project-card__body > div:first-child > p {
   margin-top: 0.55rem;
   color: var(--color-neutral-600);
   font-size: 0.8rem;
   line-height: 1.55;
 }
 
-.dark .supporting-project-card__body > div:first-child > p,
-.dark .supporting-project-card__result p {
+.dark .supporting-project-card__body > div:first-child > p {
   color: var(--color-neutral-300);
 }
 
-.supporting-project-card__result {
-  margin-top: auto;
-  padding-inline-start: 0.7rem;
-  border-inline-start: 2px solid var(--project-accent);
-}
-
-.supporting-project-card__result > span {
-  color: var(--project-accent);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.58rem;
-  font-weight: 900;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
 
 @media (hover: hover) and (pointer: fine) {
   .featured-case-card:hover {

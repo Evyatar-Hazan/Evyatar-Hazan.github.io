@@ -7,6 +7,7 @@ import { localizedPath } from '../../routing/portfolioRoutes';
 import { HomeSectionHeader } from './HomeSectionPrimitives';
 import './Projects.css';
 import { cardSurfaceClassName } from '../cardSurface';
+import ProjectCardFacts from '../ProjectCardFacts';
 
 const featuredProjects = projects.filter((project) => project.featured);
 const flagshipProjectId = 'nis_boutique';
@@ -85,6 +86,7 @@ const FeaturedProjectCard = ({
       className={cardSurfaceClassName('interactive', 'featured-case-card')}
       data-project-visual={project.visual}
       data-featured-project={project.id}
+      data-project-card={project.id}
       aria-labelledby={titleId}
     >
       <div className="featured-case-card__masthead">
@@ -135,6 +137,13 @@ const FeaturedProjectCard = ({
           <p>{t(project.summaryKey)}</p>
         </div>
 
+        <ProjectCardFacts
+          role={t(`projects.items.${project.id}.role`)}
+          problem={t(`projects.items.${project.id}.problem`)}
+          result={t(project.impactKey)}
+          status={t(`projects.statuses.${project.status}`)}
+        />
+
         <div className="featured-case-card__story">
           <section>
             <span>01</span>
@@ -182,6 +191,7 @@ const SupportingProjectCard = ({
       className={cardSurfaceClassName('interactive', 'supporting-project-card')}
       data-project-visual={project.visual}
       data-supporting-project={project.id}
+      data-project-card={project.id}
       aria-labelledby={titleId}
     >
       <div className="supporting-project-card__masthead">
@@ -224,10 +234,12 @@ const SupportingProjectCard = ({
           <h3 id={titleId}>{projectTitle}</h3>
           <p>{t(project.summaryKey)}</p>
         </div>
-        <div className="supporting-project-card__result">
-          <span>{t('projects.storyResult')}</span>
-          <p>{t(project.impactKey)}</p>
-        </div>
+        <ProjectCardFacts
+          role={t(`projects.items.${project.id}.role`)}
+          problem={t(`projects.items.${project.id}.problem`)}
+          result={t(project.impactKey)}
+          status={t(`projects.statuses.${project.status}`)}
+        />
         <ProjectActions project={project} compact />
       </div>
     </article>

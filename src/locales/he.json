@@ -153,6 +153,7 @@
     "problem": "האתגר:",
     "solution": "מה נבנה:",
     "role": "התרומה שלי:",
+    "statusLabel": "סטטוס:",
     "categories": {
       "business": "אתר עסקי",
       "fullstack": "מערכת Full Stack",
