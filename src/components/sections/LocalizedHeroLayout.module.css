@@ -348,12 +348,12 @@
 
   .proofStrip {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
   }
 
   .proofItem {
     display: block;
-    padding: 0.5rem 0.125rem;
+    padding: 0.25rem 0.125rem;
   }
 
   .proofItem + .proofItem {
@@ -388,7 +388,7 @@
   .actions {
     display: grid;
     justify-items: start;
-    margin-top: 1rem;
+    margin-top: 0.75rem;
   }
 
   .primaryAction,
@@ -429,18 +429,18 @@
   }
 
   .proofStrip {
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
   }
 
   .proofItem {
-    padding: 0.45rem 0.125rem;
+    padding: 0.25rem 0.125rem;
   }
 
   .actions {
     width: 100%;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: stretch;
-    margin-top: 0.9rem;
+    margin-top: 0.75rem;
   }
 
   .primaryAction,
