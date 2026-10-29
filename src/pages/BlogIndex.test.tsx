@@ -60,8 +60,8 @@ describe('BlogIndex knowledge library', () => {
       'Frontend',
       'Product',
       'Java',
-      'Operating Systems',
       'Testing',
+      'Operating Systems',
       'Performance',
       'Data',
       'Reliability',
@@ -79,13 +79,13 @@ describe('BlogIndex knowledge library', () => {
     fireEvent.click(screen.getByRole('button', { name: /^Load more notes/ }));
     expect(resultCards()).toHaveLength(24);
     fireEvent.click(screen.getByRole('button', { name: /^Load more notes/ }));
-    expect(resultCards()).toHaveLength(31);
+    expect(resultCards()).toHaveLength(32);
     expect(screen.queryByRole('button', { name: /^Load more notes/ })).not.toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'What I learned from building a credible portfolio' })).toBeInTheDocument();
   });
 
   it.each([
-    ['title, including the lead note', 'initial html', 'The initial HTML should contain the article'],
+    ['title, including the lead note', 'unfocused baseline', 'A focus test needs an unfocused baseline'],
     ['summary', 'atomic promotion', 'A failed render should not destroy good output'],
     ['tag', 'monetization', 'Monetization needs product guardrails'],
   ])('searches by %s without requiring submission', (_field, query, expectedTitle) => {

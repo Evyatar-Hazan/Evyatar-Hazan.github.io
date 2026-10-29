@@ -471,7 +471,7 @@ describe('App', () => {
 
     expect(await screen.findByText('blogPreview.eyebrow')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /blogPreview.viewAll/i })).toHaveAttribute('href', '/en/blog/');
-    expect(screen.getByRole('heading', { name: 'One alignment system for the whole site' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'A focus test needs an unfocused baseline' })).toBeInTheDocument();
     expect(document.querySelectorAll('#writing article')).toHaveLength(3);
     expect(document.querySelectorAll('#writing .writing-feature')).toHaveLength(1);
     expect(document.querySelectorAll('#writing .writing-entry')).toHaveLength(2);

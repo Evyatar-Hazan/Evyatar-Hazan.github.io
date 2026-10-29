@@ -35,7 +35,7 @@ const ProjectCaseStudy = () => {
 
   if (!project || !caseStudy) {
     return (
-      <main id="main-content" tabIndex={-1} className="min-h-[70vh] bg-white py-24 transition-colors duration-500 dark:bg-black">
+      <main id="main-content" tabIndex={-1} className="min-h-[70vh] bg-surface-canvas py-24 transition-colors duration-500">
         <div className="content-container">
           <div className="mx-auto max-w-3xl text-center">
           <h1 className="text-3xl font-bold text-neutral-950 dark:text-white">{t('projects.caseStudyNotFoundTitle')}</h1>
@@ -68,7 +68,7 @@ const ProjectCaseStudy = () => {
 
   if (!story) {
     return (
-      <main id="main-content" tabIndex={-1} className="min-h-[70vh] bg-white py-24 transition-colors duration-500 dark:bg-black">
+      <main id="main-content" tabIndex={-1} className="min-h-[70vh] bg-surface-canvas py-24 transition-colors duration-500">
         <div className="content-container">
           <div className="mx-auto max-w-3xl text-center">
           <h1 className="text-3xl font-bold text-neutral-950 dark:text-white">{t('projects.caseStudyNotFoundTitle')}</h1>
@@ -101,7 +101,7 @@ const ProjectCaseStudy = () => {
   ) : undefined;
 
   return (
-    <main id="main-content" tabIndex={-1} className="bg-white transition-colors duration-500 dark:bg-black">
+    <main id="main-content" tabIndex={-1} className="bg-surface-canvas transition-colors duration-500">
       <div className="content-container">
         <div className="mx-auto max-w-6xl">
         <CaseStudyStory
