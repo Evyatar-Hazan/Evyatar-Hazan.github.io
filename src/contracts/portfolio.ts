@@ -23,6 +23,18 @@ export const homepageFeaturedProjectIds = [
   'united_hatzalah',
 ] as const satisfies readonly ProjectId[];
 
+/**
+ * Each homepage section owns one step in the reader journey. Keep the roles
+ * distinct so positioning, proof, thinking, and conversion do not repeat one
+ * another under different headings.
+ */
+export const homepageSectionPurposes = [
+  { id: 'home', role: 'positioning', purpose: 'State the product promise and primary next step.' },
+  { id: 'projects', role: 'proof', purpose: 'Show delivered work and public evidence.' },
+  { id: 'writing', role: 'thinking', purpose: 'Expose the decisions and lessons behind the work.' },
+  { id: 'contact', role: 'conversion', purpose: 'Offer direct contact and an optional project brief.' },
+] as const;
+
 export type PortfolioContentRef =
   | { kind: 'project'; id: ProjectId }
   | { kind: 'article'; id: ArticleId }

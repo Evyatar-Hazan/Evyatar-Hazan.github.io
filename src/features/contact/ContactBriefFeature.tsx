@@ -316,7 +316,7 @@ const ContactBriefFeature = ({
       <div className="content-container home-section__inner">
         {Title === 'h2' ? (
           <HomeSectionHeader
-            index="05"
+            index="04"
             eyebrow={ui.eyebrow}
             titleId={titleId}
             title={ui.title}

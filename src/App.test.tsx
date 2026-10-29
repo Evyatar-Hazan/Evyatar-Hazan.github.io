@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { projects } from './data/profile';
 import { caseStudyStoryProjectIds } from './data/caseStudyStories';
+import { homepageSectionPurposes } from './contracts/portfolio';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { localizedPath } from './routing/portfolioRoutes';
 import {
@@ -267,37 +268,29 @@ describe('App', () => {
     });
   });
 
-  it.each(['en', 'he'] as const)('renders the focused five-section homepage in %s', async (language) => {
+  it.each(['en', 'he'] as const)('renders the focused four-section homepage in %s', async (language) => {
     currentLanguage = language;
     window.history.pushState({}, '', `/${language}/`);
     render(<App />);
 
-    const overviewTitle = language === 'he'
-      ? 'עבודת מוצר מקצה לקצה, ממוקדת בתוצאה.'
-      : 'Full-stack product work, shaped around the outcome.';
-    expect(await screen.findByRole('heading', { name: overviewTitle }, { timeout: 10_000 })).toBeInTheDocument();
+    await screen.findByRole('heading', { name: 'blogPreview.title1 blogPreview.title2' }, { timeout: 10_000 });
     await screen.findByText('PROJECT HANDOFF / 01');
 
     const mainSections = Array.from(document.querySelectorAll('main > section[id]'));
-    expect(mainSections.map((section) => section.id)).toEqual([
-      'home',
-      'projects',
-      'about',
-      'writing',
-      'contact',
-    ]);
+    expect(mainSections.map((section) => section.id)).toEqual(
+      homepageSectionPurposes.map(({ id }) => id),
+    );
     await waitFor(() => {
       const journeySections = Array.from(document.querySelectorAll('main > section[id]'));
       expect(journeySections.map((section) => section.getAttribute('data-reader-journey-stage'))).toEqual([
         'value',
         'proof',
-        'capabilities',
         'content',
         'contact',
       ]);
     });
 
-    ['home', 'projects', 'about', 'writing', 'contact'].forEach((id) => {
+    homepageSectionPurposes.forEach(({ id }) => {
       expect(document.querySelectorAll(`#${id}`)).toHaveLength(1);
     });
     [
@@ -315,7 +308,7 @@ describe('App', () => {
     });
 
     expect(document.querySelectorAll('h1')).toHaveLength(1);
-    expect(document.querySelectorAll('[data-professional-capability]')).toHaveLength(4);
+    expect(document.querySelectorAll('[data-professional-capability]')).toHaveLength(0);
     expect(document.querySelectorAll('[data-professional-engagement]')).toHaveLength(0);
     expect(screen.getByRole('navigation', {
       name: language === 'he' ? 'מה תרצו למצוא כאן?' : 'What are you here to explore?',
@@ -332,8 +325,7 @@ describe('App', () => {
     expect(screen.getAllByRole('link', { name: 'nav.Projects' }).some((link) => link.getAttribute('href') === `/${language}/projects/`)).toBe(true);
     expect(screen.getAllByRole('link', { name: 'nav.About' }).some((link) => link.getAttribute('href') === `/${language}/about/`)).toBe(true);
     expect(screen.getAllByRole('link', { name: 'nav.Contact' }).some((link) => link.getAttribute('href') === `/${language}/contact/`)).toBe(true);
-    expect(screen.getByRole('link', { name: language === 'he' ? 'לפרופיל המקצועי המלא' : 'Open the full professional profile' })).toHaveAttribute('href', `/${language}/about/`);
-    expect(document.querySelector('#about')).toBeInTheDocument();
+    expect(document.querySelector('#about')).not.toBeInTheDocument();
   });
 
   it.each(['en', 'he'] as const)('renders the evidence-backed About route in %s', async (language) => {
@@ -414,7 +406,7 @@ describe('App', () => {
       });
   });
 
-  it('renders exactly four featured case-study cards and links to the standalone project index', async () => {
+  it('renders one flagship, three supporting projects, and the standalone project index', async () => {
     render(<App />);
 
     const featuredIds = projects.filter((project) => project.featured).map((project) => project.id);
@@ -432,9 +424,11 @@ describe('App', () => {
     expect(screen.getByText('projects.viewAllTitle')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'projects.viewAllCta' })).toHaveAttribute('href', '/en/projects/');
     expect(screen.getAllByText('projects.caseStudy').length).toBeGreaterThan(0);
-    expect(document.querySelectorAll('[data-featured-project]')).toHaveLength(4);
-    featuredIds.forEach((projectId) => {
-      expect(document.querySelector(`[data-featured-project="${projectId}"]`)).toBeInTheDocument();
+    expect(document.querySelectorAll('[data-featured-project]')).toHaveLength(1);
+    expect(document.querySelector('[data-featured-project="nis_boutique"]')).toBeInTheDocument();
+    expect(document.querySelectorAll('[data-supporting-project]')).toHaveLength(3);
+    featuredIds.slice(1).forEach((projectId) => {
+      expect(document.querySelector(`[data-supporting-project="${projectId}"]`)).toBeInTheDocument();
     });
     expect(document.querySelector('.project-scroll-stage')).not.toBeInTheDocument();
     expect(document.querySelector('.project-secondary-index')).not.toBeInTheDocument();
@@ -449,7 +443,9 @@ describe('App', () => {
     await screen.findByText('projects.viewAllTitle');
 
     projects.filter((project) => project.featured).forEach((project) => {
-      const card = document.querySelector<HTMLElement>(`[data-featured-project="${project.id}"]`);
+      const card = document.querySelector<HTMLElement>(
+        `[data-featured-project="${project.id}"], [data-supporting-project="${project.id}"]`,
+      );
       expect(card).not.toBeNull();
       expect(within(card!).getByRole('link', { name: 'projects.caseStudy' })).toHaveAttribute(
         'href',
@@ -464,7 +460,9 @@ describe('App', () => {
     await screen.findByText('projects.viewAllTitle');
 
     projects.filter((project) => project.featured).forEach((project) => {
-      const card = document.querySelector<HTMLElement>(`[data-featured-project="${project.id}"]`);
+      const card = document.querySelector<HTMLElement>(
+        `[data-featured-project="${project.id}"], [data-supporting-project="${project.id}"]`,
+      );
       expect(card).not.toBeNull();
       const cardQueries = within(card!);
 
@@ -513,7 +511,9 @@ describe('App', () => {
     await screen.findByText('projects.viewAllTitle');
 
     const expectedLiveActions = projects.filter((project) => project.featured && project.liveUrl).length;
-    const featuredCoverActions = projects.filter((project) => project.featured && project.liveUrl).length;
+    const featuredCoverActions = document.querySelectorAll(
+      '[data-featured-project] .featured-case-card__media > span',
+    ).length;
     expect(screen.getAllByText('projects.liveDemo')).toHaveLength(expectedLiveActions + featuredCoverActions);
   });
 

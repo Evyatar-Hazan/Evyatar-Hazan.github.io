@@ -90,13 +90,13 @@ test.describe('FIX-025 canonical section spacing', () => {
 
   test('keeps homepage boundaries margin-free in RTL', async ({ page }) => {
     await page.goto('/he/');
-    await expect(page.locator('main > .home-section')).toHaveCount(5);
+    await expect(page.locator('main > .home-section')).toHaveCount(4);
     const margins = await page.locator('main > .home-section').evaluateAll((sections) => sections.map((section) => {
       const style = getComputedStyle(section);
       return [style.marginBlockStart, style.marginBlockEnd];
     }));
 
-    expect(margins.length).toBeGreaterThanOrEqual(5);
+    expect(margins.length).toBe(4);
     expect(margins.every(([start, end]) => start === '0px' && end === '0px')).toBe(true);
   });
 });

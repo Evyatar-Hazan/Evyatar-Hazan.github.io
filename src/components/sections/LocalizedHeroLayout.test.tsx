@@ -85,6 +85,18 @@ describe('LocalizedHeroLayout', () => {
     expect(stylesheet).toContain(".layout[data-language='he'] .heading");
     expect(stylesheet).toContain('@media (max-width: 639px) and (max-height: 700px)');
     expect(stylesheet).toMatch(/@media \(max-width: 639px\) and \(max-height: 700px\)[\s\S]*?\.heading\s*{[\s\S]*?font-size:/);
+    expect(stylesheet).toMatch(
+      /@media \(max-width: 639px\)\s*{[\s\S]*?\.layout\s*{[^}]*min-block-size:\s*auto;/,
+    );
+    expect(stylesheet).toMatch(
+      /@media \(max-width: 639px\)\s*{[\s\S]*?\.visual\s*{[^}]*display:\s*none;/,
+    );
+    expect(stylesheet).toMatch(
+      /@media \(max-width: 639px\)\s*{[\s\S]*?\.availability\s*{[^}]*margin-bottom:\s*0\.75rem;/,
+    );
+    expect(stylesheet).toMatch(
+      /@media \(max-width: 639px\)\s*{[\s\S]*?\.description\s*{[^}]*margin-top:\s*1rem;/,
+    );
   });
 
   it('keeps one visually primary hero CTA and presents the secondary action as a quiet text link', () => {

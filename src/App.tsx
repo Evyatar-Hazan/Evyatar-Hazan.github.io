@@ -26,7 +26,6 @@ import {
 
 const Projects = lazy(() => import('./components/sections/Projects'));
 const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
-const ProfessionalOverview = lazy(() => import('./components/sections/ProfessionalOverview'));
 const BlogPreview = lazy(() => import('./components/sections/BlogPreview'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const LabPage = lazy(() => import('./pages/LabPage'));
@@ -70,9 +69,6 @@ const PortfolioHome = () => {
       </div>
       <Suspense fallback={<SectionFallback id="projects" minHeightClassName="min-h-screen" />}>
         <Projects />
-      </Suspense>
-      <Suspense fallback={<SectionFallback id="about" minHeightClassName="min-h-[70vh]" />}>
-        <ProfessionalOverview language={language} buildPath={localizedPath} />
       </Suspense>
       <Suspense fallback={<SectionFallback id="writing" minHeightClassName="min-h-[60vh]" />}>
         <BlogPreview />
