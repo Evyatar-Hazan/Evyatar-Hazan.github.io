@@ -776,6 +776,8 @@ describe('App', () => {
       'https://github.com/Evyatar-Hazan/online-converter/tree/788761e81c4b968bd603b4445d04df9a39eaa6cd',
     );
     expect(screen.getByRole('link', { name: 'All projects' })).toHaveAttribute('href', '/en/projects/');
+    expect(document.querySelector('a[href="/en/projects/nis_boutique/"]')).toBeInTheDocument();
+    expect(document.querySelector('a[href="/en/projects/emergency_protocol/"]')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'View source code' })).toHaveAttribute(
       'href',
       'https://github.com/Evyatar-Hazan/online-converter',

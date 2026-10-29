@@ -389,6 +389,7 @@ export const caseStudyStoryLabels = {
     verificationUnknown: 'Public test and verification details are not documented yet.',
     next: 'Next step',
     relatedWriting: 'Related writing',
+    previousProject: 'Previous project',
     relatedCapabilities: 'Relevant capabilities',
     nextProject: 'Next project',
     allProjects: 'All projects',
@@ -432,6 +433,7 @@ export const caseStudyStoryLabels = {
     verificationUnknown: 'פרטי בדיקות ואימות ציבוריים עדיין לא תועדו.',
     next: 'הצעד הבא',
     relatedWriting: 'כתיבה קשורה',
+    previousProject: 'הפרויקט הקודם',
     relatedCapabilities: 'יכולות רלוונטיות',
     nextProject: 'הפרויקט הבא',
     allProjects: 'כל הפרויקטים',
@@ -442,4 +444,11 @@ export const caseStudyStoryLabels = {
 export const getNextCaseStudyProjectId = (projectId: CaseStudyStoryProjectId) => {
   const index = caseStudyStoryProjectIds.indexOf(projectId);
   return caseStudyStoryProjectIds[(index + 1) % caseStudyStoryProjectIds.length];
+};
+
+export const getPreviousCaseStudyProjectId = (projectId: CaseStudyStoryProjectId) => {
+  const index = caseStudyStoryProjectIds.indexOf(projectId);
+  return caseStudyStoryProjectIds[
+    (index - 1 + caseStudyStoryProjectIds.length) % caseStudyStoryProjectIds.length
+  ];
 };

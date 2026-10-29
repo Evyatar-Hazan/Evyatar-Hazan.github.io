@@ -807,7 +807,7 @@
 
 .case-story-next-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1.2fr) repeat(2, minmax(0, 0.9fr));
   gap: 1px;
   border: 1px solid var(--case-rule);
   background: var(--case-rule);
