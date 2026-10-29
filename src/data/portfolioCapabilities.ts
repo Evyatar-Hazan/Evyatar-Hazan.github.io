@@ -9,6 +9,8 @@ export type PortfolioCapabilityGroup = {
   skills: readonly string[];
 };
 
+export type PortfolioCapabilityId = PortfolioCapabilityGroup['id'];
+
 /**
  * The canonical, UI-agnostic capability inventory shared by portfolio surfaces.
  * It preserves the factual stack already presented by the legacy About section,
@@ -108,3 +110,9 @@ export const getPortfolioCapabilityGroups = (language: PortfolioLanguage) =>
     description: group.description[language],
     skills: group.skills,
   }));
+
+export const getPortfolioCapabilityIdsForSkills = (
+  skills: readonly string[],
+): PortfolioCapabilityId[] => portfolioCapabilityGroups
+  .filter((group) => group.skills.some((skill) => skills.includes(skill)))
+  .map((group) => group.id);

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router-dom';
 import type { ProjectArchiveEntry } from '../data/projectArchive';
 import { getProjectArchiveEntries } from '../data/projectArchive';
+import { getPortfolioCapabilityGroups } from '../data/portfolioCapabilities';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { localizedPath } from '../routing/portfolioRoutes';
 import './ProjectsPage.css';
@@ -76,15 +77,13 @@ const ProjectsPage = () => {
     entries.forEach((entry) => seen.set(entry.categoryId, entry.category));
     return [...seen.entries()].map(([id, label]) => ({ id, label }));
   }, [entries]);
-  const capabilities = useMemo(
-    () => [...new Set(entries.flatMap((entry) => entry.tags))].sort((a, b) => a.localeCompare(b)),
-    [entries],
-  );
+  const capabilities = useMemo(() => getPortfolioCapabilityGroups(language)
+    .filter((group) => entries.some((entry) => entry.capabilityIds.includes(group.id))), [entries, language]);
   const validIds = useMemo(() => new Set(entries.map((entry) => entry.id)), [entries]);
   const rawCategory = searchParams.get(CATEGORY_PARAM) ?? '';
   const rawCapability = searchParams.get(CAPABILITY_PARAM) ?? '';
   const category = categories.some((item) => item.id === rawCategory) ? rawCategory : '';
-  const capability = capabilities.includes(rawCapability) ? rawCapability : '';
+  const capability = capabilities.find((item) => item.id === rawCapability)?.id ?? '';
   const rawCompareIds = (searchParams.get(COMPARE_PARAM) ?? '').split(',').filter(Boolean);
   const compareIds = [...new Set(rawCompareIds.filter((id) => validIds.has(id as ProjectArchiveEntry['id'])))].slice(0, MAX_COMPARISON);
   const comparedEntries = compareIds.flatMap((id) => {
@@ -93,7 +92,7 @@ const ProjectsPage = () => {
   });
   const filteredEntries = entries.filter((entry) => (
     (!category || entry.categoryId === category)
-    && (!capability || entry.tags.includes(capability))
+    && (!capability || entry.capabilityIds.includes(capability))
   ));
   const featuredEntries = entries.filter((entry) => entry.featured);
   const caseStudyCount = entries.filter((entry) => entry.caseStudyUrl).length;
@@ -230,7 +229,7 @@ const ProjectsPage = () => {
             <span>{t('projectsHub.capabilityFilter')}</span>
             <select value={capability} onChange={(event) => updateParam(CAPABILITY_PARAM, event.target.value)}>
               <option value="">{t('projectsHub.all')}</option>
-              {capabilities.map((item) => <option key={item} value={item}>{item}</option>)}
+              {capabilities.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
             </select>
           </label>
           <p className="projects-hub-result-count" aria-live="polite">
