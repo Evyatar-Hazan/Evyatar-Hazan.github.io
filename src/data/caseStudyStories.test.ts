@@ -41,6 +41,18 @@ describe('case study product story contract', () => {
 
   it('keeps bilingual labels parallel and avoids fabricated numerical metrics', () => {
     expect(Object.keys(caseStudyStoryLabels.en)).toEqual(Object.keys(caseStudyStoryLabels.he));
+    expect([
+      caseStudyStoryLabels.en.problem,
+      caseStudyStoryLabels.en.decision,
+      caseStudyStoryLabels.en.execution,
+      caseStudyStoryLabels.en.outcome,
+    ]).toEqual(['Problem', 'Decision', 'Execution', 'Outcome']);
+    expect([
+      caseStudyStoryLabels.he.problem,
+      caseStudyStoryLabels.he.decision,
+      caseStudyStoryLabels.he.execution,
+      caseStudyStoryLabels.he.outcome,
+    ]).toEqual(['בעיה', 'החלטה', 'ביצוע', 'תוצאה']);
     const serialized = JSON.stringify(caseStudyStories);
     expect(serialized).not.toMatch(/\b\d+(?:\.\d+)?%\b/u);
     expect(serialized).not.toMatch(/\b\d+x (?:faster|growth|conversion)\b/iu);

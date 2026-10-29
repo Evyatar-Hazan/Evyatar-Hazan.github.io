@@ -755,18 +755,16 @@ describe('App', () => {
 
     expect(await screen.findByRole('heading', { name: 'projects.items.online_converter.title' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Executive summary' })).toBeInTheDocument();
-    expect(screen.getByText('Problem')).toBeInTheDocument();
     expect(screen.getByText('Contribution')).toBeInTheDocument();
     expect(screen.getByText('Result')).toBeInTheDocument();
     expect(screen.getByText('Limitations')).toBeInTheDocument();
     const executiveSummary = document.querySelector('[data-executive-summary="online_converter"]');
     expect(executiveSummary).not.toBeNull();
     expect(within(executiveSummary as HTMLElement).getByText(/do not prove traffic, adoption, or revenue/i)).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'The challenge' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'My role' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Product decisions' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'System view' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Outcome and evidence' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Problem' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Decision' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Execution' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Outcome' })).toBeInTheDocument();
     expect(screen.getByText('140 / 16 / 2')).toBeInTheDocument();
     expect(screen.getByText('Browser-only')).toBeInTheDocument();
     expect(screen.getByText('Not claimed')).toBeInTheDocument();
@@ -789,17 +787,26 @@ describe('App', () => {
     expect(document.querySelectorAll('[data-project-id="online_converter"] figure')).toHaveLength(2);
   });
 
-  it('uses the shared visible-story template for all four projects and hides only the appendix', async () => {
+  it('uses the same problem-decision-execution-outcome structure for all four projects', async () => {
     for (const projectId of caseStudyStoryProjectIds) {
       const view = renderAt(`/en/projects/${projectId}/`);
       const story = await screen.findByRole('article');
 
       expect(story).toHaveAttribute('data-case-study-template', 'product-story-v1');
+      expect(story).toHaveAttribute('data-case-study-structure', 'problem-decision-execution-outcome');
       expect(within(story).getByRole('heading', { name: 'Executive summary' })).toBeVisible();
       expect(story.querySelector(`[data-executive-summary="${projectId}"]`)).toBeInTheDocument();
-      expect(within(story).getByRole('heading', { name: 'Product decisions' })).toBeVisible();
-      expect(within(story).getByRole('heading', { name: 'System view' })).toBeVisible();
-      expect(within(story).getByRole('heading', { name: 'Outcome and evidence' })).toBeVisible();
+
+      const coreHeadings = within(story)
+        .getAllByRole('heading', { level: 2 })
+        .filter((heading) => ['Problem', 'Decision', 'Execution', 'Outcome'].includes(heading.textContent ?? ''));
+      expect(coreHeadings.map((heading) => heading.textContent)).toEqual([
+        'Problem',
+        'Decision',
+        'Execution',
+        'Outcome',
+      ]);
+      coreHeadings.forEach((heading) => expect(heading).toBeVisible());
 
       const appendix = story.querySelector('details');
       expect(appendix).not.toHaveAttribute('open');
