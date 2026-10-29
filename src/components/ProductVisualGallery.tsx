@@ -10,6 +10,10 @@ type ProductVisualGalleryProps = {
   className?: string;
 };
 
+const captionIdFor = (projectId: ProjectId, visualId: string) => (
+  `product-visual-caption-${projectId}-${visualId}`
+);
+
 const ProductVisualGallery = ({
   projectId,
   language,
@@ -43,11 +47,12 @@ const ProductVisualGallery = ({
                 width={visual.width}
                 height={visual.height}
                 alt={visual.alt[language]}
+                aria-describedby={captionIdFor(projectId, visual.id)}
                 loading="lazy"
                 decoding="async"
               />
             </div>
-            <figcaption>
+            <figcaption id={captionIdFor(projectId, visual.id)}>
               <p>{visual.caption[language]}</p>
               <a
                 href={visual.provenance.sourceUrl}
