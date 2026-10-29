@@ -714,6 +714,13 @@
   margin-top: 0.75rem;
 }
 
+.case-story-next-grid li p {
+  margin-top: 0.4rem;
+  color: var(--case-copy);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
 .case-story-next-grid a {
   display: flex;
   align-items: center;
@@ -726,6 +733,21 @@
 
 .case-story-next-grid a:hover {
   color: var(--case-accent);
+}
+
+.case-story-related-capabilities {
+  margin-top: 2.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--case-rule);
+}
+
+.case-story-related-capabilities li {
+  padding: 0.85rem 0;
+}
+
+.case-story-related-capabilities strong {
+  color: var(--case-ink);
+  font-size: 0.95rem;
 }
 
 .case-story-next-project {

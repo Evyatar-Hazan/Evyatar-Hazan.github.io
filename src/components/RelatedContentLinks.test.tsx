@@ -22,10 +22,16 @@ const renderLinks = (
           label: language === 'he'
             ? 'איך בניתי אתר עסקי שמוביל ל-WhatsApp'
             : 'How I built a business site around WhatsApp',
+          reason: language === 'he'
+            ? 'מסביר את החלטת ההמרה של הפרויקט.'
+            : 'Explains the project conversion decision.',
         },
         {
           target: { route: 'project', id: 'nis_boutique' },
           label: 'Nis Boutique Catering',
+          reason: language === 'he'
+            ? 'הפרויקט מיישם את ההחלטה שבמאמר.'
+            : 'The project applies the decision discussed in the article.',
         },
       ]}
       language={language}
@@ -66,6 +72,7 @@ describe('RelatedContentLinks', () => {
     expect(section).not.toBeNull();
     expect(within(section as HTMLElement).getByRole('list').tagName).toBe('UL');
     expect(within(section as HTMLElement).getAllByRole('link')).toHaveLength(2);
+    expect(within(section as HTMLElement).getByText('Explains the project conversion decision.')).toBeVisible();
   });
 
   it('renders nothing when no factual relation exists', () => {

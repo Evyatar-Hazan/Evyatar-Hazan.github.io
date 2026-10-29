@@ -9,7 +9,7 @@ import { usePageSeo } from '../hooks/usePageSeo';
 import type { ArticleId } from '../contracts/portfolio';
 import { localizedPath } from '../routing/portfolioRoutes';
 import RelatedContentLinks, { type RelatedContentItem } from '../components/RelatedContentLinks';
-import { getRelatedProjectIds } from '../data/contentRelations';
+import { getRelatedProjectRelations } from '../data/contentRelations';
 import { getProjectById } from '../data/profile';
 
 type ArticleHeading = { id: string; label: string; level: number };
@@ -97,11 +97,12 @@ const BlogPost = () => {
 
   const Content = post.Content;
   const articleNumber = String(postIndex + 1).padStart(2, '0');
-  const relatedProjects: RelatedContentItem[] = getRelatedProjectIds(post.slug).flatMap((projectId) => (
-    getProjectById(projectId)
+  const relatedProjects: RelatedContentItem[] = getRelatedProjectRelations(post.slug).flatMap((relation) => (
+    getProjectById(relation.projectId)
       ? [{
-          target: { route: 'project', id: projectId },
-          label: t(`projects.items.${projectId}.title`),
+          target: { route: 'project', id: relation.projectId },
+          label: t(`projects.items.${relation.projectId}.title`),
+          reason: relation.reason[language],
         }]
       : []
   ));
