@@ -27,6 +27,10 @@ export type ProjectCaseStudy = {
   seoDescription: LocalizedText;
   overview: LocalizedList;
   audience: LocalizedText;
+  ownership: {
+    model: LocalizedText;
+    collaboration: LocalizedText;
+  };
   proof: LocalizedText;
   decisions: LocalizedList;
   outcomes: LocalizedList;
@@ -73,6 +77,16 @@ const caseStudies = {
     audience: {
       en: 'Small service businesses that need one strong inquiry path instead of a bloated brochure site.',
       he: 'עסקי שירות קטנים שצריכים נתיב פנייה אחד חזק, ולא אתר תדמית מנופח.'
+    },
+    ownership: {
+      model: {
+        en: 'Independent technical ownership.',
+        he: 'אחריות טכנית אישית.'
+      },
+      collaboration: {
+        en: 'The business owner supplied the service context and business direction. I do not claim ownership of the catering business or its operations.',
+        he: 'בעלת העסק סיפקה את הקשר השירותי ואת הכיוון העסקי. איני מייחס לעצמי בעלות על עסק הקייטרינג או על פעילותו.'
+      }
     },
     proof: {
       en: 'The live site is deployed on a custom domain, keeps the CTA visible, and frames the business around a direct conversation instead of generic filler.',
@@ -133,6 +147,16 @@ const caseStudies = {
       en: 'Developers, analysts, content teams, and technical users who need quick local transformations without uploading data.',
       he: 'מפתחים, אנליסטים, צוותי תוכן ומשתמשים טכניים שצריכים המרות מהירות מקומית בלי העלאת מידע.'
     },
+    ownership: {
+      model: {
+        en: 'Personal project with end-to-end product and technical ownership.',
+        he: 'פרויקט אישי עם אחריות מלאה על המוצר ועל המימוש.'
+      },
+      collaboration: {
+        en: 'No team delivery is claimed; this case study describes my individual product and engineering work.',
+        he: 'לא מיוחסת כאן תרומה של צוות; הקייס סטאדי מתאר את עבודת המוצר והפיתוח האישית שלי.'
+      }
+    },
     proof: {
       en: 'The live product now includes a large bilingual converter registry, analytics dashboard, SEO build checks, and production smoke validation.',
       he: 'המוצר החי כולל היום מאגר ממירים דו-לשוני גדול, דשבורד אנליטיקה, בדיקות SEO בבילד ואימות production רציף.'
@@ -192,6 +216,16 @@ const caseStudies = {
       en: 'Learners who want to explore and discuss a BLS pathway in a learning and practice context.',
       he: 'לומדים שרוצים להכיר מסלול BLS ולדון בו בהקשר של למידה ותרגול.'
     },
+    ownership: {
+      model: {
+        en: 'Personal project with end-to-end technical ownership.',
+        he: 'פרויקט אישי עם אחריות טכנית מלאה.'
+      },
+      collaboration: {
+        en: 'No clinical or organizational authorship is claimed; medical review and source approval remain outside my technical contribution.',
+        he: 'איני מייחס לעצמי סמכות קלינית או ארגונית; בדיקה רפואית ואישור מקורות נשארים מחוץ לתרומה הטכנית שלי.'
+      }
+    },
     proof: {
       en: 'The live learning product uses a React client with Cloudflare Pages Functions and D1 for health, authentication, and comments. Express and Prisma remain a local development workspace rather than the production API.',
       he: 'מוצר הלמידה החי משתמש בלקוח React, ב־Cloudflare Pages Functions וב־D1 עבור בדיקות תקינות, אימות ותגובות. Express ו־Prisma נשארים סביבת פיתוח מקומית ואינם ה־API של הפרודקשן.'
@@ -250,6 +284,16 @@ const caseStudies = {
     audience: {
       en: 'Local nonprofits and operational teams that need a reliable public presence without turning every change into a code deployment.',
       he: 'עמותות מקומיות וצוותים תפעוליים שצריכים נוכחות ציבורית אמינה בלי להפוך כל שינוי לפריסת קוד.'
+    },
+    ownership: {
+      model: {
+        en: 'Independent software implementation within an organizational project.',
+        he: 'מימוש תוכנה אישי בתוך פרויקט ארגוני.'
+      },
+      collaboration: {
+        en: 'Branch stakeholders supplied the operational context and content priorities. I do not claim their organizational or volunteer work.',
+        he: 'בעלי העניין בסניף סיפקו את ההקשר התפעולי ואת סדרי העדיפות לתוכן. איני מייחס לעצמי את עבודתם הארגונית או ההתנדבותית.'
+      }
     },
     proof: {
       en: 'The project combines React, Express, Prisma, Cloudinary, and structured deployment so the public layer and admin layer can move together.',

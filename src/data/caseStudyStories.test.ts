@@ -5,6 +5,7 @@ import {
   caseStudyStoryProjectIds,
   getNextCaseStudyProjectId,
 } from './caseStudyStories';
+import { projects } from './profile';
 
 describe('case study product story contract', () => {
   it('covers all four requested projects with decisions and a system view', () => {
@@ -50,5 +51,17 @@ describe('case study product story contract', () => {
       'united_hatzalah',
       'nis_boutique',
     ]);
+  });
+
+  it('states ownership and collaboration boundaries for every published case study', () => {
+    const publishedCaseStudies = projects.filter(({ caseStudy }) => Boolean(caseStudy));
+
+    expect(publishedCaseStudies.map(({ id }) => id)).toEqual([...caseStudyStoryProjectIds]);
+    publishedCaseStudies.forEach(({ caseStudy }) => {
+      expect(caseStudy?.ownership.model.en.trim()).not.toBe('');
+      expect(caseStudy?.ownership.model.he.trim()).not.toBe('');
+      expect(caseStudy?.ownership.collaboration.en.trim()).not.toBe('');
+      expect(caseStudy?.ownership.collaboration.he.trim()).not.toBe('');
+    });
   });
 });

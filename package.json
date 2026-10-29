@@ -10,7 +10,7 @@
     "test": "vitest run",
     "test:rollback": "node scripts/test-rollback-procedure.mjs",
     "test:overflow": "playwright test tests/browser/horizontal-overflow.pw.mjs",
-    "test:ui-invariants": "playwright test tests/browser/stable-ui-invariants.pw.mjs tests/browser/drawer-direction.pw.mjs tests/browser/footer-navigation.pw.mjs tests/browser/section-spacing.pw.mjs tests/browser/content-container.pw.mjs tests/browser/typography-scale.pw.mjs tests/browser/surface-opacity.pw.mjs tests/browser/readable-body-copy.pw.mjs tests/browser/iconography.pw.mjs tests/browser/interaction-states.pw.mjs tests/browser/dark-theme-tokens.pw.mjs tests/browser/reader-journey.pw.mjs tests/browser/audience-entry-paths.pw.mjs tests/browser/motion-focus.pw.mjs tests/browser/mobile-hero-height.pw.mjs tests/browser/hero-proof-strip.pw.mjs",
+    "test:ui-invariants": "playwright test tests/browser/stable-ui-invariants.pw.mjs tests/browser/drawer-direction.pw.mjs tests/browser/footer-navigation.pw.mjs tests/browser/section-spacing.pw.mjs tests/browser/content-container.pw.mjs tests/browser/typography-scale.pw.mjs tests/browser/surface-opacity.pw.mjs tests/browser/readable-body-copy.pw.mjs tests/browser/iconography.pw.mjs tests/browser/interaction-states.pw.mjs tests/browser/dark-theme-tokens.pw.mjs tests/browser/reader-journey.pw.mjs tests/browser/audience-entry-paths.pw.mjs tests/browser/motion-focus.pw.mjs tests/browser/mobile-hero-height.pw.mjs tests/browser/hero-proof-strip.pw.mjs tests/browser/case-study-ownership.pw.mjs",
     "test:touch-targets": "playwright test tests/browser/touch-targets.pw.mjs",
     "test:watch": "vitest",
     "qa:deep-links": "node scripts/deep-link-gate.mjs",

@@ -756,6 +756,9 @@ describe('App', () => {
     expect(await screen.findByRole('heading', { name: 'projects.items.online_converter.title' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'The challenge' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'My role' })).toBeInTheDocument();
+    expect(screen.getByText('Ownership model')).toBeInTheDocument();
+    expect(screen.getByText('Collaboration boundary')).toBeInTheDocument();
+    expect(screen.getByText(/Personal project with end-to-end product and technical ownership/)).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Product decisions' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'System view' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Outcome and evidence' })).toBeInTheDocument();
@@ -782,6 +785,8 @@ describe('App', () => {
       expect(within(story).getByRole('heading', { name: 'Product decisions' })).toBeVisible();
       expect(within(story).getByRole('heading', { name: 'System view' })).toBeVisible();
       expect(within(story).getByRole('heading', { name: 'Outcome and evidence' })).toBeVisible();
+      expect(within(story).getByText('Ownership model')).toBeVisible();
+      expect(within(story).getByText('Collaboration boundary')).toBeVisible();
 
       const appendix = story.querySelector('details');
       expect(appendix).not.toHaveAttribute('open');

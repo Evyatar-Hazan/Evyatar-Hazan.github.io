@@ -155,8 +155,14 @@ const CaseStudyStory = ({
           <p className="case-story-lede">{role}</p>
         </div>
         <div className="case-story-role-boundary">
-          <span>{labels.heroAudience}</span>
-          <p>{pick(caseStudy.audience, language)}</p>
+          <div>
+            <span>{labels.ownership}</span>
+            <p>{pick(caseStudy.ownership.model, language)}</p>
+          </div>
+          <div>
+            <span>{labels.collaboration}</span>
+            <p>{pick(caseStudy.ownership.collaboration, language)}</p>
+          </div>
         </div>
       </section>
 

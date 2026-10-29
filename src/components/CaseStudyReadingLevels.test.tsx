@@ -14,6 +14,10 @@ const caseStudy: ProjectCaseStudy = {
     he: ['הקשר מלא בעברית.'],
   },
   audience: { en: 'Product teams', he: 'צוותי מוצר' },
+  ownership: {
+    model: { en: 'Personal technical ownership.', he: 'אחריות טכנית אישית.' },
+    collaboration: { en: 'No team delivery is claimed.', he: 'לא מיוחסת תרומת צוות.' },
+  },
   proof: { en: 'Proof stays visible.', he: 'הראיה נשארת גלויה.' },
   decisions: {
     en: ['Use a typed registry.'],
