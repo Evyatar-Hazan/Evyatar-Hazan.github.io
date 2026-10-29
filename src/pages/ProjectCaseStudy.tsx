@@ -14,6 +14,7 @@ import CaseStudyStory from '../components/CaseStudyStory';
 import {
   caseStudyStories,
   getNextCaseStudyProjectId,
+  getPreviousCaseStudyProjectId,
   type CaseStudyStoryProjectId,
 } from '../data/caseStudyStories';
 import { projectById } from '../data/profile';
@@ -80,9 +81,10 @@ const ProjectCaseStudy = () => {
   }
 
   const storyProjectId = project.id as CaseStudyStoryProjectId;
+  const previousProject = projectById.get(getPreviousCaseStudyProjectId(storyProjectId));
   const nextProject = projectById.get(getNextCaseStudyProjectId(storyProjectId));
 
-  if (!nextProject) return null;
+  if (!previousProject || !nextProject) return null;
 
   const visualProof = (
     <ProductVisualGallery
@@ -113,6 +115,7 @@ const ProjectCaseStudy = () => {
           impact={impact}
           language={language}
           nextProject={nextProject}
+          previousProject={previousProject}
           project={{ ...project, id: storyProjectId }}
           relatedWriting={relatedWriting}
           role={role}

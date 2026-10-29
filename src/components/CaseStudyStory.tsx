@@ -23,6 +23,7 @@ type CaseStudyStoryProps = {
   impact: string;
   language: PortfolioLanguage;
   nextProject: Project;
+  previousProject: Project;
   project: Project & { id: CaseStudyStoryProjectId };
   relatedWriting: readonly RelatedContentItem[];
   role: string;
@@ -48,6 +49,7 @@ const CaseStudyStory = ({
   impact,
   language,
   nextProject,
+  previousProject,
   project,
   relatedWriting,
   role,
@@ -59,9 +61,11 @@ const CaseStudyStory = ({
 }: CaseStudyStoryProps) => {
   const labels = caseStudyStoryLabels[language];
   const detailsId = `case-appendix-${project.id}`;
-  const nextProjectTitle = language === 'he'
-    ? nextProject.caseStudy?.seoTitle.he.replace(/^קייס סטאדי:\s*/u, '').replace(/\s*\|.*$/u, '') ?? nextProject.id
-    : nextProject.caseStudy?.seoTitle.en.replace(/ Case Study \|.*$/u, '') ?? nextProject.id;
+  const projectTitle = (candidate: Project) => language === 'he'
+    ? candidate.caseStudy?.seoTitle.he.replace(/^קייס סטאדי:\s*/u, '').replace(/\s*\|.*$/u, '') ?? candidate.id
+    : candidate.caseStudy?.seoTitle.en.replace(/ Case Study \|.*$/u, '') ?? candidate.id;
+  const previousProjectTitle = projectTitle(previousProject);
+  const nextProjectTitle = projectTitle(nextProject);
 
   const chapterLabels: Record<(typeof chapterIds)[number], string> = {
     challenge: labels.challenge,
@@ -291,6 +295,13 @@ const CaseStudyStory = ({
             ) : (
               <Link className={linkClassName} to={buildPath(language, { route: 'blog' })}>{labels.relatedWriting}</Link>
             )}
+          </div>
+          <div>
+            <h3>{labels.previousProject}</h3>
+            <Link className="case-story-next-project" to={buildPath(language, { route: 'project', id: previousProject.id as CaseStudyStoryProjectId })}>
+              <ArrowLeft aria-hidden="true" className="rtl:rotate-180" />
+              <span>{previousProjectTitle}</span>
+            </Link>
           </div>
           <div>
             <h3>{labels.nextProject}</h3>

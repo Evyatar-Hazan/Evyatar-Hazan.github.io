@@ -761,6 +761,8 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'Outcome and evidence' })).toBeInTheDocument();
     expect(screen.getAllByText('Public evidence not yet verified').length).toBeGreaterThan(0);
     expect(screen.getByRole('link', { name: 'All projects' })).toHaveAttribute('href', '/en/projects/');
+    expect(document.querySelector('a[href="/en/projects/nis_boutique/"]')).toBeInTheDocument();
+    expect(document.querySelector('a[href="/en/projects/emergency_protocol/"]')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'View source code' })).toHaveAttribute(
       'href',
       'https://github.com/Evyatar-Hazan/online-converter',

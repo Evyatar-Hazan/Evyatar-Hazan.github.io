@@ -4,6 +4,7 @@ import {
   caseStudyStoryLabels,
   caseStudyStoryProjectIds,
   getNextCaseStudyProjectId,
+  getPreviousCaseStudyProjectId,
 } from './caseStudyStories';
 
 describe('case study product story contract', () => {
@@ -49,6 +50,13 @@ describe('case study product story contract', () => {
       'emergency_protocol',
       'united_hatzalah',
       'nis_boutique',
+    ]);
+
+    expect(caseStudyStoryProjectIds.map(getPreviousCaseStudyProjectId)).toEqual([
+      'united_hatzalah',
+      'nis_boutique',
+      'online_converter',
+      'emergency_protocol',
     ]);
   });
 });
