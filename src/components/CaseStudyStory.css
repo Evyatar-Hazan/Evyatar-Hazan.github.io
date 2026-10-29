@@ -124,6 +124,59 @@
   border-bottom: 2px solid;
 }
 
+.case-story-executive-summary {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.55fr) minmax(0, 1.45fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  padding-block: var(--space-section-compact);
+  border-bottom: 1px solid var(--case-rule);
+}
+
+.case-story-executive-summary > header p {
+  max-inline-size: 30rem;
+  color: var(--case-copy);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.case-story-executive-summary h2 {
+  margin: 0.65rem 0 0;
+  font-size: clamp(1.8rem, 3.4vw, 3.2rem);
+  line-height: 1;
+}
+
+.case-story-executive-summary dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  border: 1px solid var(--case-rule);
+  background: var(--case-rule);
+}
+
+.case-story-executive-summary dl > div {
+  min-width: 0;
+  padding: clamp(1rem, 2.4vw, 1.5rem);
+  background: var(--case-panel);
+}
+
+.case-story-executive-summary dt {
+  color: var(--case-accent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.case-story-executive-summary dd {
+  margin: 0.8rem 0 0;
+  color: var(--case-copy);
+  font-size: clamp(0.95rem, 1.35vw, 1.08rem);
+  line-height: 1.65;
+}
+
 .case-story-status-line {
   display: flex;
   gap: 0.5rem;
@@ -739,6 +792,10 @@
 }
 
 @media (max-width: 900px) {
+  .case-story-executive-summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .case-story-hero {
     grid-template-columns: 1fr;
     min-height: 0;
@@ -782,6 +839,10 @@
 }
 
 @media (max-width: 640px) {
+  .case-story-executive-summary dl {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .case-story-hero h1 {
     font-size: clamp(2.8rem, 14vw, 4.25rem);
   }
