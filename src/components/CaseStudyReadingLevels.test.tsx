@@ -19,10 +19,19 @@ const caseStudy: ProjectCaseStudy = {
     en: ['Use a typed registry.'],
     he: ['להשתמש ב־registry טיפוסי.'],
   },
-  outcomes: {
-    en: ['A maintainable content model.'],
-    he: ['מודל תוכן תחזוקתי.'],
-  },
+  outcomes: [
+    {
+      statement: {
+        en: 'A maintainable content model.',
+        he: 'מודל תוכן תחזוקתי.',
+      },
+      support: {
+        kind: 'boundary',
+        value: { en: 'Not measured', he: 'לא נמדד' },
+        label: { en: 'fixture boundary', he: 'גבול בדיקה' },
+      },
+    },
+  ],
   evidenceStatus: 'unknown',
   verifiedAt: null,
   evidenceLinks: null,

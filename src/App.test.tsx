@@ -767,7 +767,13 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'Product decisions' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'System view' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Outcome and evidence' })).toBeInTheDocument();
-    expect(screen.getAllByText('Public evidence not yet verified').length).toBeGreaterThan(0);
+    expect(screen.getByText('140 / 16 / 2')).toBeInTheDocument();
+    expect(screen.getByText('Browser-only')).toBeInTheDocument();
+    expect(screen.getByText('Not claimed')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Pinned repository README/i })).toHaveAttribute(
+      'href',
+      'https://github.com/Evyatar-Hazan/online-converter/tree/788761e81c4b968bd603b4445d04df9a39eaa6cd',
+    );
     expect(screen.getByRole('link', { name: 'All projects' })).toHaveAttribute('href', '/en/projects/');
     expect(screen.getByRole('link', { name: 'View source code' })).toHaveAttribute(
       'href',
