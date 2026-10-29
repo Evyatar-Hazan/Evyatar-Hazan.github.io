@@ -64,6 +64,7 @@
       }
     },
     "proof": {
+      "label": "At-a-glance proof",
       "repos": {
         "title": "7 selected projects",
         "description": "Live websites, monorepos, and public tools across React, TypeScript, backend, and mobile."

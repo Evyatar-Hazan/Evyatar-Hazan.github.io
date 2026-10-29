@@ -33,6 +33,21 @@ const renderHero = (
     language={language}
     buildPath={buildPath}
     copy={copy}
+    proofLabel={language === 'he' ? 'הוכחות במבט אחד' : 'At-a-glance proof'}
+    proofs={[
+      {
+        title: language === 'he' ? '7 פרויקטים נבחרים' : '7 selected projects',
+        description: language === 'he' ? 'עבודה ציבורית נבחרת' : 'Selected public work',
+      },
+      {
+        title: language === 'he' ? 'תהליך מסירה מסודר' : 'Structured delivery',
+        description: language === 'he' ? 'מבנייה ועד אימות' : 'From build to verification',
+      },
+      {
+        title: language === 'he' ? 'טווח מוצרי רחב' : 'Broad product range',
+        description: language === 'he' ? 'Web, מובייל ומערכות' : 'Web, mobile, and systems',
+      },
+    ]}
     primaryAction={{
       label: language === 'he' ? 'בואו נדבר' : 'Start a conversation',
       href: 'https://wa.me/972587127547',
@@ -64,6 +79,8 @@ describe('LocalizedHeroLayout', () => {
     expect(screen.getByRole('link', { name: 'See projects' })).toHaveAttribute('href', '/en/projects');
     expect(buildPath).toHaveBeenCalledWith('en', { route: 'projects' });
     expect(screen.getByTestId('hero-visual')).toBeInTheDocument();
+    expect(screen.getByTestId('hero-proof-strip')).toHaveAccessibleName('At-a-glance proof');
+    expect(screen.getAllByRole('term')).toHaveLength(3);
   });
 
   it('keeps Hebrew content and localized destinations explicit', () => {

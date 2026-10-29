@@ -64,6 +64,7 @@
       }
     },
     "proof": {
+      "label": "הוכחות במבט אחד",
       "repos": {
         "title": "7 פרויקטים נבחרים",
         "description": "אתרים חיים, מונוריפוז וכלים ציבוריים עם React, TypeScript, Backend ומובייל."

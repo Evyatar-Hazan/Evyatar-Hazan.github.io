@@ -18,6 +18,11 @@ export type LocalizedHeroCopy = {
   signature?: string;
 };
 
+export type LocalizedHeroProof = {
+  title: string;
+  description: string;
+};
+
 type LocalizedHeroActionBase = {
   label: string;
   ariaLabel?: string;
@@ -42,6 +47,8 @@ export type LocalizedHeroLayoutProps = {
   language: PortfolioLanguage;
   buildPath: LocalizedPathBuilder;
   copy: LocalizedHeroCopy;
+  proofLabel?: string;
+  proofs?: LocalizedHeroProof[];
   primaryAction: LocalizedHeroAction;
   secondaryAction: LocalizedHeroAction;
   visual?: ReactNode;
@@ -97,6 +104,8 @@ export const LocalizedHeroLayout = ({
   language,
   buildPath,
   copy,
+  proofLabel,
+  proofs = [],
   primaryAction,
   secondaryAction,
   visual,
@@ -121,6 +130,20 @@ export const LocalizedHeroLayout = ({
       </h1>
 
       <p className={styles.description}>{copy.description}</p>
+
+      {proofs.length > 0 && (
+        <dl className={styles.proofStrip} aria-label={proofLabel} data-testid="hero-proof-strip">
+          {proofs.map((proof, index) => (
+            <div className={styles.proofItem} key={proof.title}>
+              <dt>
+                <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                {proof.title}
+              </dt>
+              <dd>{proof.description}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
 
       <div className={styles.actions} data-testid="localized-hero-actions">
         <HeroAction

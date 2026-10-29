@@ -39,6 +39,11 @@ const Home = () => {
             description: t('home.compiler.description'),
             signature: 'EVYATAR HAZAN / PRODUCT ENGINEER',
           }}
+          proofLabel={t('home.proof.label')}
+          proofs={(['repos', 'delivery', 'systems'] as const).map((proof) => ({
+            title: t(`home.proof.${proof}.title`),
+            description: t(`home.proof.${proof}.description`),
+          }))}
           primaryAction={{
             label: t('home.compiler.buildCta'),
             href: `${profileLinks.whatsapp}?text=${encodeURIComponent(t('home.whatsappText'))}`,
