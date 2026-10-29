@@ -310,6 +310,7 @@ const ContactBriefFeature = ({
     <section
       id={id}
       aria-labelledby={titleId}
+      data-reader-journey-stage="contact"
       className={`home-section home-section--contact contact-workspace relative overflow-hidden ${className}`.trim()}
     >
       <div className="content-container home-section__inner">
