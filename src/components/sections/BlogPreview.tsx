@@ -128,7 +128,7 @@ const BlogPreview = () => {
 
       <div className="writing-shell home-section__inner">
         <HomeSectionHeader
-          index="04"
+          index="03"
           eyebrow={t('blogPreview.eyebrow')}
           title={<>{t('blogPreview.title1')} <em>{t('blogPreview.title2')}</em></>}
           description={(
