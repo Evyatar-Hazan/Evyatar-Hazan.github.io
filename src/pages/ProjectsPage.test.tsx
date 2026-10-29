@@ -56,6 +56,21 @@ describe('ProjectsPage', () => {
     }
   });
 
+  it.each(['en', 'he'] as const)('shows role, problem, result, and status on every %s project card', async (language) => {
+    currentLanguage = language;
+    renderAt(`/${language}/projects/`);
+    await screen.findByRole('heading', { level: 1, name: 'projectsHub.title' });
+
+    const cards = document.querySelectorAll<HTMLElement>('[data-project-card]');
+    expect(cards).toHaveLength(11);
+    cards.forEach((card) => {
+      expect(card.querySelectorAll('[data-project-fact="role"]')).toHaveLength(1);
+      expect(card.querySelectorAll('[data-project-fact="problem"]')).toHaveLength(1);
+      expect(card.querySelectorAll('[data-project-fact="result"]')).toHaveLength(1);
+      expect(card.querySelectorAll('[data-project-fact="status"]')).toHaveLength(1);
+    });
+  });
+
   it('filters by category, capability, and their combination while preserving unrelated query state', async () => {
     renderAt('/en/projects/?ref=portfolio');
     await screen.findByRole('heading', { level: 1, name: 'projectsHub.title' });
@@ -98,6 +113,7 @@ describe('ProjectsPage', () => {
     expect(screen.getByText('projectsHub.compareOne')).toBeInTheDocument();
     select('online_converter');
     expect(document.querySelectorAll('.projects-hub-comparison-grid > article')).toHaveLength(2);
+    expect(document.querySelectorAll('.projects-hub-comparison-grid [data-project-card-facts]')).toHaveLength(2);
     select('emergency_protocol');
     expect(document.querySelectorAll('.projects-hub-comparison-grid > article')).toHaveLength(3);
     select('united_hatzalah');

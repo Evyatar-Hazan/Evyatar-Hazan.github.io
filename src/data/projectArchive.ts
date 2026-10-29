@@ -64,7 +64,10 @@ type ProjectLocaleCopy = {
   title: string;
   description: string;
   summary: string;
+  impact: string;
+  problem: string;
   role: string;
+  status: string;
 };
 
 type ProjectArchiveLocale = {
@@ -84,7 +87,10 @@ export type ProjectArchiveEntry = ProjectArchiveMetadata & {
   title: string;
   description: string;
   summary: string;
+  problem: string;
+  result: string;
   role: string;
+  status: string;
   categoryId: Project['category'];
   category: string;
   tags: readonly string[];
@@ -211,7 +217,10 @@ export const getProjectArchiveEntries = (
     title: copy.title,
     description: copy.description,
     summary: copy.summary,
+    problem: copy.problem,
+    result: copy.impact,
     role: copy.role,
+    status: copy.status,
     categoryId: project.category,
     category: localeCopy[language].projects.categories[project.category],
     tags: [...project.tags],

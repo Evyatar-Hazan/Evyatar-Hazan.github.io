@@ -8,6 +8,7 @@ import { usePageSeo } from '../hooks/usePageSeo';
 import { localizedPath } from '../routing/portfolioRoutes';
 import './ProjectsPage.css';
 import { buildContactUrl } from '../features/contact/contactIntent';
+import ProjectCardFacts from '../components/ProjectCardFacts';
 
 const CATEGORY_PARAM = 'category';
 const CAPABILITY_PARAM = 'capability';
@@ -168,7 +169,7 @@ const ProjectsPage = () => {
         </div>
         <div className="projects-hub-featured">
           {featuredEntries.map((entry, index) => (
-            <article key={entry.id} data-hub-featured-project={entry.id}>
+            <article key={entry.id} data-hub-featured-project={entry.id} data-project-card={entry.id}>
               <div className="projects-hub-featured-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</div>
               <div className="projects-hub-featured-main">
                 <div className="projects-hub-project-meta">
@@ -176,11 +177,13 @@ const ProjectsPage = () => {
                   <EvidenceStatus entry={entry} />
                 </div>
                 <h3>{entry.title}</h3>
-                <p className="projects-hub-problem">{entry.description}</p>
-                <div className="projects-hub-contribution">
-                  <strong>{t('projectsHub.contribution')}</strong>
-                  <span>{entry.role}</span>
-                </div>
+                <p className="projects-hub-summary">{entry.summary}</p>
+                <ProjectCardFacts
+                  role={entry.role}
+                  problem={entry.problem}
+                  result={entry.result}
+                  status={entry.status}
+                />
                 <ul aria-label={t('projects.technologiesLabel')}>
                   {entry.tags.map((tag) => <li key={tag}>{tag}</li>)}
                 </ul>
@@ -233,12 +236,18 @@ const ProjectsPage = () => {
         {filteredEntries.length ? (
           <ol className="projects-hub-list">
             {filteredEntries.map((entry, index) => (
-              <li key={entry.id} data-project-id={entry.id}>
+              <li key={entry.id} data-project-id={entry.id} data-project-card={entry.id}>
                 <span className="projects-hub-list-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
                 <div className="projects-hub-list-copy">
                   <div className="projects-hub-project-meta"><span>{entry.category}</span><EvidenceStatus entry={entry} /></div>
                   <h3>{entry.title}</h3>
                   <p>{entry.summary}</p>
+                  <ProjectCardFacts
+                    role={entry.role}
+                    problem={entry.problem}
+                    result={entry.result}
+                    status={entry.status}
+                  />
                 </div>
                 <ul aria-label={t('projects.technologiesLabel')}>
                   {entry.tags.map((tag) => <li key={tag}>{tag}</li>)}
@@ -284,12 +293,16 @@ const ProjectsPage = () => {
         {comparedEntries.length >= 2 ? (
           <div className="projects-hub-comparison-grid">
             {comparedEntries.map((entry) => (
-              <article key={entry.id}>
+              <article key={entry.id} data-project-card={`comparison-${entry.id}`}>
                 <div className="projects-hub-project-meta"><span>{entry.category}</span><EvidenceStatus entry={entry} /></div>
                 <h3>{entry.title}</h3>
+                <ProjectCardFacts
+                  role={entry.role}
+                  problem={entry.problem}
+                  result={entry.result}
+                  status={entry.status}
+                />
                 <dl>
-                  <div><dt>{t('projectsHub.need')}</dt><dd>{entry.description}</dd></div>
-                  <div><dt>{t('projectsHub.contribution')}</dt><dd>{entry.role}</dd></div>
                   <div><dt>{t('projectsHub.technologies')}</dt><dd>{entry.tags.join(' · ')}</dd></div>
                   <div><dt>{t('projectsHub.caseStudyAvailable')}</dt><dd>{entry.caseStudyUrl ? t('projectsHub.yes') : t('projectsHub.no')}</dd></div>
                   <div><dt>{t('projectsHub.liveProductAvailable')}</dt><dd>{entry.liveUrl ? t('projectsHub.yes') : t('projectsHub.no')}</dd></div>

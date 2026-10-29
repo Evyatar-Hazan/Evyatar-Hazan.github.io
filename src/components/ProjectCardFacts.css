@@ -1,0 +1,64 @@
+.project-card-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin-top: 1.25rem;
+  border-block: 1px solid var(--effect-shell-border);
+}
+
+.project-card-facts > div {
+  min-width: 0;
+  padding: 0.9rem 0;
+}
+
+.project-card-facts > div:nth-child(odd) {
+  padding-inline-end: 0.9rem;
+}
+
+.project-card-facts > div:nth-child(even) {
+  padding-inline-start: 0.9rem;
+  border-inline-start: 1px solid var(--effect-shell-border);
+}
+
+.project-card-facts > div:nth-child(n + 3) {
+  border-top: 1px solid var(--effect-shell-border);
+}
+
+.project-card-facts dt {
+  color: var(--color-neutral-500);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.project-card-facts dd {
+  margin-top: 0.35rem;
+  color: var(--color-neutral-700);
+  font-size: 0.78rem;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.dark .project-card-facts dd {
+  color: var(--color-neutral-300);
+}
+
+@media (max-width: 479px) {
+  .project-card-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .project-card-facts > div,
+  .project-card-facts > div:nth-child(odd),
+  .project-card-facts > div:nth-child(even) {
+    padding-inline: 0;
+    border-inline-start: 0;
+  }
+
+  .project-card-facts > div:nth-child(n + 2) {
+    border-top: 1px solid var(--effect-shell-border);
+  }
+}

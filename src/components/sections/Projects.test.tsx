@@ -39,4 +39,18 @@ describe('Projects flagship hierarchy', () => {
       '/en/projects/nis_boutique/',
     );
   });
+
+  it.each(['en', 'he'] as const)('uses the same four project facts on every %s home card', async (language) => {
+    await i18n.changeLanguage(language);
+    const { container } = renderProjects();
+    const cards = container.querySelectorAll<HTMLElement>('[data-project-card]');
+
+    expect(cards).toHaveLength(4);
+    cards.forEach((card) => {
+      expect(card.querySelectorAll('[data-project-fact="role"]')).toHaveLength(1);
+      expect(card.querySelectorAll('[data-project-fact="problem"]')).toHaveLength(1);
+      expect(card.querySelectorAll('[data-project-fact="result"]')).toHaveLength(1);
+      expect(card.querySelectorAll('[data-project-fact="status"]')).toHaveLength(1);
+    });
+  });
 });

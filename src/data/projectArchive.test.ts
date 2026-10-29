@@ -70,6 +70,9 @@ describe('project archive data', () => {
       expect(entry.title.trim()).not.toBe('');
       expect(entry.category.trim()).not.toBe('');
       expect(entry.role.trim()).not.toBe('');
+      expect(entry.problem.trim()).not.toBe('');
+      expect(entry.result.trim()).not.toBe('');
+      expect(entry.status.trim()).not.toBe('');
     });
   });
 
