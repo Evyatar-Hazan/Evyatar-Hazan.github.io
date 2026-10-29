@@ -1,3 +1,5 @@
+import FocusTestsNeedAnUnfocusedBaselineEn from './focus-tests-need-an-unfocused-baseline.en.mdx';
+import FocusTestsNeedAnUnfocusedBaselineHe from './focus-tests-need-an-unfocused-baseline.he.mdx';
 import SharedContainerIsALayoutContractEn from './shared-container-is-a-layout-contract.en.mdx';
 import SharedContainerIsALayoutContractHe from './shared-container-is-a-layout-contract.he.mdx';
 import InitialHtmlShouldContainTheArticleEn from './initial-html-should-contain-the-article.en.mdx';
@@ -66,6 +68,14 @@ import { blogPostMetadataByKey } from './metadata';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    ...blogPostMetadataByKey['focus-tests-need-an-unfocused-baseline:he'],
+    Content: FocusTestsNeedAnUnfocusedBaselineHe,
+  },
+  {
+    ...blogPostMetadataByKey['focus-tests-need-an-unfocused-baseline:en'],
+    Content: FocusTestsNeedAnUnfocusedBaselineEn,
+  },
   {
     ...blogPostMetadataByKey['shared-container-is-a-layout-contract:he'],
     Content: SharedContainerIsALayoutContractHe,

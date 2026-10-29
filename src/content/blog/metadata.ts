@@ -6,6 +6,26 @@ import type { BlogLanguage, BlogPostMeta } from './types';
  * not pull the article bodies into their bundle.
  */
 const metadata = {
+  'focus-tests-need-an-unfocused-baseline:he': {
+      slug: 'focus-tests-need-an-unfocused-baseline',
+      language: 'he',
+      title: 'לפני שבודקים פוקוס, צריך לצאת ממנו',
+      excerpt: 'איך העברת פוקוס אחת תיקנה את נקודת הייחוס בבדיקת כרטיס בפורטפוליו, ומה השוואת סגנונות מחושבים באמת יכולה להוכיח.',
+      date: '2026-10-28',
+      readTime: '4 דקות קריאה',
+      tags: ['Frontend', 'Testing', 'Accessibility'],
+      featured: false,
+    },
+  'focus-tests-need-an-unfocused-baseline:en': {
+      slug: 'focus-tests-need-an-unfocused-baseline',
+      language: 'en',
+      title: 'A focus test needs an unfocused baseline',
+      excerpt: 'How one focus move repaired a portfolio card test baseline, and what a computed-style comparison can actually prove.',
+      date: '2026-10-28',
+      readTime: '4 min read',
+      tags: ['Frontend', 'Testing', 'Accessibility'],
+      featured: false,
+    },
   'shared-container-is-a-layout-contract:he': {
       slug: 'shared-container-is-a-layout-contract',
       language: 'he',
