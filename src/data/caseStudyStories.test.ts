@@ -15,6 +15,8 @@ describe('case study product story contract', () => {
       expect(story.decisions.length).toBeGreaterThanOrEqual(2);
       expect(story.decisions.length).toBeLessThanOrEqual(4);
       expect(story.system.nodes.length).toBeGreaterThanOrEqual(3);
+      expect(story.limitation.en.trim()).not.toBe('');
+      expect(story.limitation.he.trim()).not.toBe('');
       story.decisions.forEach((decision) => {
         expect(decision.need.en.trim()).not.toBe('');
         expect(decision.need.he.trim()).not.toBe('');
@@ -38,9 +40,28 @@ describe('case study product story contract', () => {
 
   it('keeps bilingual labels parallel and avoids fabricated numerical metrics', () => {
     expect(Object.keys(caseStudyStoryLabels.en)).toEqual(Object.keys(caseStudyStoryLabels.he));
+    expect([
+      caseStudyStoryLabels.en.problem,
+      caseStudyStoryLabels.en.decision,
+      caseStudyStoryLabels.en.execution,
+      caseStudyStoryLabels.en.outcome,
+    ]).toEqual(['Problem', 'Decision', 'Execution', 'Outcome']);
+    expect([
+      caseStudyStoryLabels.he.problem,
+      caseStudyStoryLabels.he.decision,
+      caseStudyStoryLabels.he.execution,
+      caseStudyStoryLabels.he.outcome,
+    ]).toEqual(['בעיה', 'החלטה', 'ביצוע', 'תוצאה']);
     const serialized = JSON.stringify(caseStudyStories);
     expect(serialized).not.toMatch(/\b\d+(?:\.\d+)?%\b/u);
     expect(serialized).not.toMatch(/\b\d+x (?:faster|growth|conversion)\b/iu);
+  });
+
+  it('keeps every executive summary limitation explicit and evidence-bounded', () => {
+    expect(caseStudyStories.nis_boutique.limitation.en).toMatch(/does not currently include/i);
+    expect(caseStudyStories.online_converter.limitation.en).toMatch(/do not prove/i);
+    expect(caseStudyStories.emergency_protocol.limitation.en).toMatch(/not an emergency tool/i);
+    expect(caseStudyStories.united_hatzalah.limitation.en).toMatch(/no .* metric is claimed/i);
   });
 
   it('cycles deterministically through the four case studies', () => {

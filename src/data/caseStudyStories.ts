@@ -26,6 +26,7 @@ export type CaseStudySystemNode = {
 
 export type CaseStudyStory = {
   accent: CaseStudyAccent;
+  limitation: LocalizedText;
   decisions: readonly [CaseStudyDecision, ...CaseStudyDecision[]];
   system: {
     caption: LocalizedText;
@@ -52,6 +53,10 @@ const node = (
 export const caseStudyStories = {
   nis_boutique: {
     accent: 'copper',
+    limitation: {
+      en: 'Public evidence does not currently include conversion or inquiry metrics.',
+      he: 'הראיות הציבוריות אינן כוללות כרגע מדדי המרה או פניות.',
+    },
     decisions: [
       {
         need: {
@@ -120,6 +125,10 @@ export const caseStudyStories = {
   },
   online_converter: {
     accent: 'cyan',
+    limitation: {
+      en: 'Delivery checks support quality, but they do not prove traffic, adoption, or revenue.',
+      he: 'בדיקות המסירה תומכות באיכות, אך אינן מוכיחות טראפיק, אימוץ או הכנסה.',
+    },
     decisions: [
       {
         need: {
@@ -189,6 +198,10 @@ export const caseStudyStories = {
   },
   emergency_protocol: {
     accent: 'amber',
+    limitation: {
+      en: 'This is a learning and practice product—not an emergency tool or clinically validated protocol.',
+      he: 'זהו מוצר למידה ותרגול — לא כלי לשעת חירום ולא פרוטוקול שעבר אימות קליני.',
+    },
     decisions: [
       {
         need: {
@@ -263,6 +276,10 @@ export const caseStudyStories = {
   },
   united_hatzalah: {
     accent: 'orange',
+    limitation: {
+      en: 'No adoption, response-time, fundraising, or operational-efficiency metric is claimed.',
+      he: 'לא נטען מדד של אימוץ, זמן תגובה, גיוס תרומות או יעילות תפעולית.',
+    },
     decisions: [
       {
         need: {
@@ -335,24 +352,29 @@ export const caseStudyStories = {
 
 export const caseStudyStoryLabels = {
   en: {
+    executiveSummary: 'Executive summary',
+    executiveSummaryDescription: 'The problem, contribution, result, and limits in under 30 seconds.',
+    summaryProblem: 'Problem',
+    summaryContribution: 'Contribution',
+    summaryResult: 'Result',
+    summaryLimitations: 'Limitations',
     heroAudience: 'Product and audience',
     heroRole: 'My role',
     liveProduct: 'View live product',
     sourceCode: 'View source code',
     chapterNavigation: 'Case study chapters',
     visualProof: 'Visual proof',
-    challenge: 'The challenge',
-    role: 'My role',
-    decisions: 'Product decisions',
+    problem: 'Problem',
+    decision: 'Decision',
     decisionNeed: 'Need',
     decisionChoice: 'Choice',
     decisionImpact: 'Impact',
-    system: 'System view',
+    execution: 'Execution',
     systemLegend: 'System boundary legend',
     publicBoundary: 'Public interaction',
     productionBoundary: 'Production component',
     localBoundary: 'Local workspace',
-    outcome: 'Outcome and evidence',
+    outcome: 'Outcome',
     evidenceStatus: 'Evidence status',
     verified: 'Verified public evidence',
     unverified: 'Public evidence not yet verified',
@@ -371,24 +393,29 @@ export const caseStudyStoryLabels = {
     contact: 'Start a conversation',
   },
   he: {
+    executiveSummary: 'תקציר מנהלים',
+    executiveSummaryDescription: 'הבעיה, התרומה, התוצאה והמגבלות בפחות מ־30 שניות.',
+    summaryProblem: 'בעיה',
+    summaryContribution: 'תרומה',
+    summaryResult: 'תוצאה',
+    summaryLimitations: 'מגבלות',
     heroAudience: 'המוצר והקהל',
     heroRole: 'התפקיד שלי',
     liveProduct: 'צפייה במוצר החי',
     sourceCode: 'צפייה בקוד המקור',
     chapterNavigation: 'פרקי הקייס סטאדי',
     visualProof: 'הוכחה חזותית',
-    challenge: 'האתגר',
-    role: 'התפקיד שלי',
-    decisions: 'החלטות מוצר',
+    problem: 'בעיה',
+    decision: 'החלטה',
     decisionNeed: 'הצורך',
     decisionChoice: 'הבחירה',
     decisionImpact: 'ההשפעה',
-    system: 'מבט מערכת',
+    execution: 'ביצוע',
     systemLegend: 'מקרא גבולות המערכת',
     publicBoundary: 'אינטראקציה ציבורית',
     productionBoundary: 'רכיב Production',
     localBoundary: 'סביבה מקומית',
-    outcome: 'תוצאה וראיות',
+    outcome: 'תוצאה',
     evidenceStatus: 'מצב הראיות',
     verified: 'ראיה ציבורית מאומתת',
     unverified: 'הראיה הציבורית עדיין לא אומתה',

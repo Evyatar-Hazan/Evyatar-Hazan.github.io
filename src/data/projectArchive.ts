@@ -2,7 +2,11 @@ import enLocaleRaw from '../locales/en.json?raw';
 import heLocaleRaw from '../locales/he.json?raw';
 import type { LocalizedPathBuilder, ProjectId } from '../contracts/portfolio';
 import type { EvidenceLink } from './caseStudyEvidence';
-import type { PortfolioLanguage } from './portfolioCapabilities';
+import {
+  getPortfolioCapabilityIdsForSkills,
+  type PortfolioCapabilityId,
+  type PortfolioLanguage,
+} from './portfolioCapabilities';
 import { projectById, type Project } from './profile';
 
 export const projectArchiveIds = [
@@ -42,23 +46,106 @@ export type ProjectArchiveMetadata = {
   verification: ProjectArchiveVerification;
 };
 
-const undocumentedVerification = {
-  status: 'undocumented',
-  lifecycle: null,
-  verifiedAt: null,
-  evidenceLinks: null,
-} as const satisfies ProjectArchiveVerification;
-
 /**
- * Public portfolio copy does not currently document reliable project years or
- * lifecycle verification. Keep those fields explicitly unknown until dated,
- * public provenance is approved; existing Live/Code links are not status proof.
+ * Lifecycle labels describe the public portfolio surface, not an ongoing
+ * maintenance commitment. `active` means a linked public runtime returned a
+ * successful response on the dated verification pass. `historical` means the
+ * portfolio exposes a public source record but claims no current runtime.
+ * Project years remain unknown until a dated source documents them.
  */
-export const projectArchiveMetadata = projectArchiveIds.map((id) => ({
-  id,
-  period: null,
-  verification: undocumentedVerification,
-})) satisfies readonly ProjectArchiveMetadata[];
+export const projectArchiveMetadata = [
+  {
+    id: 'nis_boutique',
+    period: null,
+    verification: {
+      status: 'verified',
+      lifecycle: 'active',
+      verifiedAt: '2026-10-29',
+      evidenceLinks: [{
+        label: { en: 'Live product checked', he: 'המוצר החי נבדק' },
+        url: 'https://nisboutiquecatering.com/',
+      }],
+    },
+  },
+  {
+    id: 'online_converter',
+    period: null,
+    verification: {
+      status: 'verified',
+      lifecycle: 'active',
+      verifiedAt: '2026-10-29',
+      evidenceLinks: [{
+        label: { en: 'Live product checked', he: 'המוצר החי נבדק' },
+        url: 'https://online-converter.evyatarhazan.com/',
+      }],
+    },
+  },
+  {
+    id: 'emergency_protocol',
+    period: null,
+    verification: {
+      status: 'verified',
+      lifecycle: 'active',
+      verifiedAt: '2026-10-29',
+      evidenceLinks: [{
+        label: { en: 'Live learning product checked', he: 'מוצר הלמידה החי נבדק' },
+        url: 'https://bls-protocol.evyatarhazan.com/',
+      }],
+    },
+  },
+  {
+    id: 'lev_chedva',
+    period: null,
+    verification: {
+      status: 'verified',
+      lifecycle: 'active',
+      verifiedAt: '2026-10-29',
+      evidenceLinks: [{
+        label: { en: 'Live project checked', he: 'הפרויקט החי נבדק' },
+        url: 'https://lev-chedva.evyatarhazan.com/',
+      }],
+    },
+  },
+  {
+    id: 'password_gen',
+    period: null,
+    verification: {
+      status: 'verified',
+      lifecycle: 'historical',
+      verifiedAt: '2026-10-29',
+      evidenceLinks: [{
+        label: { en: 'Public source record', he: 'רשומת מקור ציבורית' },
+        url: 'https://github.com/Evyatar-Hazan/password-generator',
+      }],
+    },
+  },
+  {
+    id: 'test_yourself',
+    period: null,
+    verification: {
+      status: 'verified',
+      lifecycle: 'historical',
+      verifiedAt: '2026-10-29',
+      evidenceLinks: [{
+        label: { en: 'Public source record', he: 'רשומת מקור ציבורית' },
+        url: 'https://github.com/Evyatar-Hazan/test-yourself',
+      }],
+    },
+  },
+  {
+    id: 'united_hatzalah',
+    period: null,
+    verification: {
+      status: 'verified',
+      lifecycle: 'active',
+      verifiedAt: '2026-10-29',
+      evidenceLinks: [{
+        label: { en: 'Live project checked', he: 'הפרויקט החי נבדק' },
+        url: 'https://hatzalah-shoham.evyatarhazan.com/',
+      }],
+    },
+  },
+] as const satisfies readonly ProjectArchiveMetadata[];
 
 type ProjectLocaleCopy = {
   title: string;
@@ -93,6 +180,7 @@ export type ProjectArchiveEntry = ProjectArchiveMetadata & {
   status: string;
   categoryId: Project['category'];
   category: string;
+  capabilityIds: readonly PortfolioCapabilityId[];
   tags: readonly string[];
   codeUrl: string;
   liveUrl: string | null;
@@ -223,6 +311,7 @@ export const getProjectArchiveEntries = (
     status: copy.status,
     categoryId: project.category,
     category: localeCopy[language].projects.categories[project.category],
+    capabilityIds: getPortfolioCapabilityIdsForSkills(project.tags),
     tags: [...project.tags],
     codeUrl: project.githubUrl,
     liveUrl: project.liveUrl ?? null,

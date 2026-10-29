@@ -40,6 +40,10 @@ describe('ProjectsPage', () => {
     expect(document.querySelectorAll('h1')).toHaveLength(1);
     expect(document.querySelectorAll('[data-hub-featured-project]')).toHaveLength(4);
     expect(document.querySelectorAll('[data-project-id]')).toHaveLength(7);
+    expect(document.querySelectorAll('[data-lifecycle="active"]')).toHaveLength(9);
+    expect(document.querySelectorAll('[data-lifecycle="historical"]')).toHaveLength(2);
+    expect(within(archiveRow('password_gen')).getByLabelText(/projectsHub\.lifecycleNote\.historical/)).toHaveTextContent('projectsHub.lifecycle.historical');
+    expect(within(archiveRow('nis_boutique')).getByLabelText(/projectsHub\.lifecycleNote\.active/)).toHaveTextContent('projectsHub.lifecycle.active');
     expect(screen.getAllByRole('link', { name: 'nav.Projects' })[0]).toHaveAttribute('aria-current', 'page');
     expect(screen.getAllByRole('link', { name: 'nav.Projects' }).some((link) => link.getAttribute('href') === `/${language}/projects/`)).toBe(true);
   });
@@ -75,15 +79,22 @@ describe('ProjectsPage', () => {
     renderAt('/en/projects/?ref=portfolio');
     await screen.findByRole('heading', { level: 1, name: 'projectsHub.title' });
 
+    const capabilityOptions = within(screen.getByLabelText('projectsHub.capabilityFilter'))
+      .getAllByRole('option')
+      .map((option) => option.getAttribute('value'));
+    expect(capabilityOptions).toEqual(['', 'webMobile', 'languages', 'devops', 'databases', 'methodologies']);
+    expect(capabilityOptions).not.toContain('React');
+
     fireEvent.change(screen.getByLabelText('projectsHub.categoryFilter'), { target: { value: 'fullstack' } });
     expect(document.querySelectorAll('[data-project-id]')).toHaveLength(2);
     expect(window.location.search).toContain('ref=portfolio');
     expect(window.location.search).toContain('category=fullstack');
 
-    fireEvent.change(screen.getByLabelText('projectsHub.capabilityFilter'), { target: { value: 'React' } });
-    expect(document.querySelectorAll('[data-project-id]')).toHaveLength(2);
+    fireEvent.change(screen.getByLabelText('projectsHub.capabilityFilter'), { target: { value: 'languages' } });
+    expect(document.querySelectorAll('[data-project-id]')).toHaveLength(1);
+    expect(window.location.search).toContain('capability=languages');
 
-    fireEvent.change(screen.getByLabelText('projectsHub.capabilityFilter'), { target: { value: 'React Native' } });
+    fireEvent.change(screen.getByLabelText('projectsHub.capabilityFilter'), { target: { value: 'databases' } });
     expect(screen.getByRole('heading', { name: 'projectsHub.emptyTitle' })).toBeInTheDocument();
     expect(screen.getByText('projectsHub.resultCount')).toHaveAttribute('aria-live', 'polite');
 

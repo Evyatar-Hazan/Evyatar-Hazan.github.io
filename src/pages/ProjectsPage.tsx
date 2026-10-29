@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router-dom';
 import type { ProjectArchiveEntry } from '../data/projectArchive';
 import { getProjectArchiveEntries } from '../data/projectArchive';
+import { getPortfolioCapabilityGroups } from '../data/portfolioCapabilities';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { localizedPath } from '../routing/portfolioRoutes';
 import './ProjectsPage.css';
@@ -42,15 +43,23 @@ const ProjectLinks = ({ entry, compact = false }: { entry: ProjectArchiveEntry; 
   );
 };
 
-const EvidenceStatus = ({ entry }: { entry: ProjectArchiveEntry }) => {
+const LifecycleStatus = ({ entry }: { entry: ProjectArchiveEntry }) => {
   const { t } = useTranslation();
+  const lifecycle = entry.verification.status === 'verified'
+    ? entry.verification.lifecycle
+    : 'undocumented';
+  const label = t(`projectsHub.lifecycle.${lifecycle}`);
+  const qualifier = t(`projectsHub.lifecycleNote.${lifecycle}`);
 
   return (
-    <span className="projects-hub-evidence">
+    <span
+      className="projects-hub-lifecycle"
+      data-lifecycle={lifecycle}
+      title={qualifier}
+      aria-label={`${label}. ${qualifier}`}
+    >
       <span aria-hidden="true" />
-      {entry.verification.status === 'verified'
-        ? t('projectsHub.evidenceVerified')
-        : t('projectsHub.evidenceUndocumented')}
+      {label}
     </span>
   );
 };
@@ -69,15 +78,13 @@ const ProjectsPage = () => {
     entries.forEach((entry) => seen.set(entry.categoryId, entry.category));
     return [...seen.entries()].map(([id, label]) => ({ id, label }));
   }, [entries]);
-  const capabilities = useMemo(
-    () => [...new Set(entries.flatMap((entry) => entry.tags))].sort((a, b) => a.localeCompare(b)),
-    [entries],
-  );
+  const capabilities = useMemo(() => getPortfolioCapabilityGroups(language)
+    .filter((group) => entries.some((entry) => entry.capabilityIds.includes(group.id))), [entries, language]);
   const validIds = useMemo(() => new Set(entries.map((entry) => entry.id)), [entries]);
   const rawCategory = searchParams.get(CATEGORY_PARAM) ?? '';
   const rawCapability = searchParams.get(CAPABILITY_PARAM) ?? '';
   const category = categories.some((item) => item.id === rawCategory) ? rawCategory : '';
-  const capability = capabilities.includes(rawCapability) ? rawCapability : '';
+  const capability = capabilities.find((item) => item.id === rawCapability)?.id ?? '';
   const rawCompareIds = (searchParams.get(COMPARE_PARAM) ?? '').split(',').filter(Boolean);
   const compareIds = [...new Set(rawCompareIds.filter((id) => validIds.has(id as ProjectArchiveEntry['id'])))].slice(0, MAX_COMPARISON);
   const comparedEntries = compareIds.flatMap((id) => {
@@ -86,7 +93,7 @@ const ProjectsPage = () => {
   });
   const filteredEntries = entries.filter((entry) => (
     (!category || entry.categoryId === category)
-    && (!capability || entry.tags.includes(capability))
+    && (!capability || entry.capabilityIds.includes(capability))
   ));
   const featuredEntries = entries.filter((entry) => entry.featured);
   const caseStudyCount = entries.filter((entry) => entry.caseStudyUrl).length;
@@ -174,7 +181,7 @@ const ProjectsPage = () => {
               <div className="projects-hub-featured-main">
                 <div className="projects-hub-project-meta">
                   <span>{entry.category}</span>
-                  <EvidenceStatus entry={entry} />
+                  <LifecycleStatus entry={entry} />
                 </div>
                 <h3>{entry.title}</h3>
                 <p className="projects-hub-summary">{entry.summary}</p>
@@ -225,7 +232,7 @@ const ProjectsPage = () => {
             <span>{t('projectsHub.capabilityFilter')}</span>
             <select value={capability} onChange={(event) => updateParam(CAPABILITY_PARAM, event.target.value)}>
               <option value="">{t('projectsHub.all')}</option>
-              {capabilities.map((item) => <option key={item} value={item}>{item}</option>)}
+              {capabilities.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
             </select>
           </label>
           <p className="projects-hub-result-count" aria-live="polite">
@@ -239,7 +246,7 @@ const ProjectsPage = () => {
               <li key={entry.id} data-project-id={entry.id} data-project-card={entry.id}>
                 <span className="projects-hub-list-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
                 <div className="projects-hub-list-copy">
-                  <div className="projects-hub-project-meta"><span>{entry.category}</span><EvidenceStatus entry={entry} /></div>
+                  <div className="projects-hub-project-meta"><span>{entry.category}</span><LifecycleStatus entry={entry} /></div>
                   <h3>{entry.title}</h3>
                   <p>{entry.summary}</p>
                   <ProjectCardFacts
@@ -294,7 +301,7 @@ const ProjectsPage = () => {
           <div className="projects-hub-comparison-grid">
             {comparedEntries.map((entry) => (
               <article key={entry.id} data-project-card={`comparison-${entry.id}`}>
-                <div className="projects-hub-project-meta"><span>{entry.category}</span><EvidenceStatus entry={entry} /></div>
+                <div className="projects-hub-project-meta"><span>{entry.category}</span><LifecycleStatus entry={entry} /></div>
                 <h3>{entry.title}</h3>
                 <ProjectCardFacts
                   role={entry.role}
@@ -307,7 +314,7 @@ const ProjectsPage = () => {
                   <div><dt>{t('projectsHub.caseStudyAvailable')}</dt><dd>{entry.caseStudyUrl ? t('projectsHub.yes') : t('projectsHub.no')}</dd></div>
                   <div><dt>{t('projectsHub.liveProductAvailable')}</dt><dd>{entry.liveUrl ? t('projectsHub.yes') : t('projectsHub.no')}</dd></div>
                   <div><dt>{t('projectsHub.publicCodeAvailable')}</dt><dd>{entry.codeUrl ? t('projectsHub.yes') : t('projectsHub.no')}</dd></div>
-                  <div><dt>{t('projectsHub.evidenceStatus')}</dt><dd>{entry.verification.status === 'verified' ? t('projectsHub.evidenceVerified') : t('projectsHub.evidenceUndocumented')}</dd></div>
+                  <div><dt>{t('projectsHub.lifecycleStatus')}</dt><dd><LifecycleStatus entry={entry} /></dd></div>
                 </dl>
                 <ProjectLinks entry={entry} compact />
                 <button type="button" className="projects-hub-remove" onClick={() => toggleComparison(entry.id)}>

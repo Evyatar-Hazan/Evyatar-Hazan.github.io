@@ -124,6 +124,59 @@
   border-bottom: 2px solid;
 }
 
+.case-story-executive-summary {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.55fr) minmax(0, 1.45fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  padding-block: var(--space-section-compact);
+  border-bottom: 1px solid var(--case-rule);
+}
+
+.case-story-executive-summary > header p {
+  max-inline-size: 30rem;
+  color: var(--case-copy);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.case-story-executive-summary h2 {
+  margin: 0.65rem 0 0;
+  font-size: clamp(1.8rem, 3.4vw, 3.2rem);
+  line-height: 1;
+}
+
+.case-story-executive-summary dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  border: 1px solid var(--case-rule);
+  background: var(--case-rule);
+}
+
+.case-story-executive-summary dl > div {
+  min-width: 0;
+  padding: clamp(1rem, 2.4vw, 1.5rem);
+  background: var(--case-panel);
+}
+
+.case-story-executive-summary dt {
+  color: var(--case-accent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.case-story-executive-summary dd {
+  margin: 0.8rem 0 0;
+  color: var(--case-copy);
+  font-size: clamp(0.95rem, 1.35vw, 1.08rem);
+  line-height: 1.65;
+}
+
 .case-story-status-line {
   display: flex;
   gap: 0.5rem;
@@ -568,31 +621,93 @@
 }
 
 .case-story-outcomes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
   margin: 2rem 0 0;
   padding: 0;
+  border: 1px solid var(--case-rule);
+  background: var(--case-rule);
   list-style: none;
 }
 
 .case-story-outcomes li {
-  padding: 1rem 0 1rem 1.6rem;
-  border-top: 1px solid var(--case-rule);
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--case-panel);
   color: var(--case-copy);
   line-height: 1.6;
 }
 
-[dir="rtl"] .case-story-outcomes li {
-  padding-right: 1.6rem;
-  padding-left: 0;
+.case-story-outcomes li[data-outcome-support="boundary"] {
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 9px,
+      var(--case-accent-soft) 9px,
+      var(--case-accent-soft) 10px
+    ),
+    var(--case-panel);
 }
 
-.case-story-outcomes li::before {
-  display: inline-block;
-  width: 0.65rem;
-  height: 0.65rem;
-  margin-inline-start: -1.6rem;
-  margin-inline-end: 0.95rem;
-  background: var(--case-accent);
-  content: '';
+.case-story-outcome-measure {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.case-story-outcome-measure strong {
+  overflow-wrap: anywhere;
+  color: var(--case-accent);
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.case-story-outcome-measure span {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.case-story-outcomes p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.case-story-outcomes a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: auto;
+  color: var(--case-accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.case-story-outcomes a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.case-story-outcomes a:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--case-accent) 60%, white);
+  outline-offset: 4px;
+}
+
+.case-story-outcomes a svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex: none;
 }
 
 .case-story-supplementary {
@@ -761,6 +876,10 @@
 }
 
 @media (max-width: 900px) {
+  .case-story-executive-summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .case-story-hero {
     grid-template-columns: 1fr;
     min-height: 0;
@@ -794,6 +913,10 @@
     grid-template-columns: 1fr;
   }
 
+  .case-story-outcomes {
+    grid-template-columns: 1fr;
+  }
+
   .case-story-system-flow {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -804,6 +927,10 @@
 }
 
 @media (max-width: 640px) {
+  .case-story-executive-summary dl {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .case-story-hero h1 {
     font-size: clamp(2.8rem, 14vw, 4.25rem);
   }

@@ -30,7 +30,7 @@ const verifiedRecord: ProjectArchiveMetadata = {
 };
 
 describe('project archive data', () => {
-  it('keeps a complete, stable seven-project record without inventing dates or lifecycle states', () => {
+  it('keeps a complete, stable seven-project record with dated, bounded lifecycle claims', () => {
     expect(projectArchiveIds).toEqual([
       'nis_boutique',
       'online_converter',
@@ -43,13 +43,15 @@ describe('project archive data', () => {
     expect(projectArchiveMetadata).toHaveLength(7);
     expect(new Set(projectArchiveMetadata.map(({ id }) => id)).size).toBe(7);
     expect(projectArchiveMetadata.every(({ period }) => period === null)).toBe(true);
+    expect(projectArchiveMetadata.map(({ verification }) => (
+      verification.status === 'verified' ? verification.lifecycle : null
+    ))).toEqual(['active', 'active', 'active', 'active', 'historical', 'historical', 'active']);
     expect(projectArchiveMetadata.every(({ verification }) => (
-      verification.status === 'undocumented'
-      && verification.lifecycle === null
-      && verification.verifiedAt === null
-      && verification.evidenceLinks === null
+      verification.status === 'verified'
+      && verification.verifiedAt === '2026-10-29'
+      && verification.evidenceLinks.length > 0
     ))).toBe(true);
-    expect(getProjectArchiveErrors(projectArchiveMetadata, new Date('2026-10-03T00:00:00.000Z'))).toEqual([]);
+    expect(getProjectArchiveErrors(projectArchiveMetadata, new Date('2026-10-29T00:00:00.000Z'))).toEqual([]);
   });
 
   it.each(['en', 'he'] as const)('adapts canonical public copy and localized project routes in %s', (language) => {
