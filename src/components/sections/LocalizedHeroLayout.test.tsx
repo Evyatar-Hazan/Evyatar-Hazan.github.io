@@ -87,6 +87,16 @@ describe('LocalizedHeroLayout', () => {
     expect(stylesheet).toMatch(/@media \(max-width: 639px\) and \(max-height: 700px\)[\s\S]*?\.heading\s*{[\s\S]*?font-size:/);
   });
 
+  it('keeps one visually primary hero CTA and presents the secondary action as a quiet text link', () => {
+    expect(stylesheet).toMatch(
+      /\.primaryAction\s*{[^}]*background:\s*var\(--color-primary-700\);[^}]*box-shadow:\s*var\(--home-shadow-action\);/,
+    );
+    expect(stylesheet).toMatch(
+      /\.secondaryAction\s*{\s*border:\s*1px solid transparent;[^}]*background:\s*transparent;[^}]*color:\s*var\(--color-neutral-600\);/,
+    );
+    expect(stylesheet).not.toMatch(/\.secondaryAction\s*{\s*[^}]*box-shadow:/);
+  });
+
   it('keeps the dark hero prelude readable without promoting it to the headline color', () => {
     const darkPreludeRule = stylesheet.match(/:global\(\.dark\) \.prelude\s*{([^}]*)}/)?.[1];
 

@@ -48,8 +48,7 @@ describe('FIX-026 opaque surface contract', () => {
   it('keeps page-specific reading panels opaque', () => {
     expect(caseStudyStylesheet.match(/--case-panel:[^;]+;/g)).toHaveLength(2);
     expect(caseStudyStylesheet.match(/--case-panel:[^;]+;/g)?.every((value) => !value.includes('transparent'))).toBe(true);
-    expect(heroStylesheet).toContain('background: color-mix(in srgb, var(--color-white) 88%, var(--color-neutral-50));');
-    expect(heroStylesheet).toContain('background: color-mix(in srgb, var(--color-neutral-950) 88%, var(--color-black));');
+    expect(heroStylesheet).toContain('background: var(--color-primary-700);');
     expect(projectsStylesheet).toContain('var(--color-neutral-950) 88%, var(--color-black)');
     expect(retryDemoStylesheet).toContain('background: var(--effect-blog-paper);');
   });
