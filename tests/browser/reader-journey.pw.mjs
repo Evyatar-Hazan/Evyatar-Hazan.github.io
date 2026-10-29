@@ -3,7 +3,6 @@ import { expect, test } from '@playwright/test';
 const expectedJourney = [
   { id: 'home', stage: 'value' },
   { id: 'projects', stage: 'proof' },
-  { id: 'about', stage: 'capabilities' },
   { id: 'writing', stage: 'content' },
   { id: 'contact', stage: 'contact' },
 ];
