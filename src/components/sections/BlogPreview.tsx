@@ -117,7 +117,12 @@ const BlogPreview = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} id="writing" className="home-section home-section--writing writing-lab">
+    <section
+      ref={sectionRef}
+      id="writing"
+      data-reader-journey-stage="content"
+      className="home-section home-section--writing writing-lab"
+    >
       <div className="writing-lab-grid" aria-hidden="true" />
       <div className="writing-lab-orbit" aria-hidden="true" />
 

@@ -55,6 +55,7 @@ const ProfessionalOverview = ({
     <section
       id="about"
       aria-labelledby="professional-overview-title"
+      data-reader-journey-stage="capabilities"
       className={`home-section home-section--overview professional-overview relative overflow-hidden ${className}`.trim()}
     >
       <div className="about-system-grid pointer-events-none absolute inset-0" aria-hidden="true" />
