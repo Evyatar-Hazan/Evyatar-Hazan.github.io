@@ -20,7 +20,11 @@ const Home = () => {
   });
 
   return (
-    <section id="home" className="home-section home-section--hero product-compiler-hero relative overflow-clip">
+    <section
+      id="home"
+      data-reader-journey-stage="value"
+      className="home-section home-section--hero product-compiler-hero relative overflow-clip"
+    >
       <div className="content-container product-compiler-sticky relative flex min-h-svh items-start overflow-hidden pb-10 pt-[7.25rem] sm:items-center sm:py-28">
         <div className="product-compiler-grid pointer-events-none absolute inset-0" aria-hidden="true" />
         <div className="product-compiler-aura pointer-events-none absolute inset-0" aria-hidden="true" />

@@ -167,7 +167,11 @@ const Projects = () => {
   const language = i18n.language === 'he' ? 'he' : 'en';
 
   return (
-    <section id="projects" className="home-section home-section--projects projects-evidence relative">
+    <section
+      id="projects"
+      data-reader-journey-stage="proof"
+      className="home-section home-section--projects projects-evidence relative"
+    >
       <div className="projects-evidence-grid pointer-events-none absolute inset-0" aria-hidden="true" />
       <div className="home-section__inner">
         <HomeSectionHeader
