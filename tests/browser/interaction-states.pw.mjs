@@ -39,7 +39,7 @@ test.describe('FIX-027 interaction-state system', () => {
     expect(selectors).toContain('.writing-all-link:hover');
     expect(selectors).toContain('.writing-all-link:active');
 
-    const action = page.locator('.home-action--primary').first();
+    const action = page.locator('.featured-case-card .home-action--primary').first();
     await action.focus();
     await expect(action).toBeFocused();
     await expect.poll(() => interactionSnapshot(action)).toMatchObject({ outlineStyle: 'solid', outlineWidth: '3px' });
