@@ -6,7 +6,11 @@ import { getProjectById, type LocalizedText } from '../data/profile';
 import { usePageSeo } from '../hooks/usePageSeo';
 import type { RelatedContentItem } from '../components/RelatedContentLinks';
 import { getBlogPostMetadata } from '../content/blog/metadata';
-import { getRelatedArticleIds } from '../data/contentRelations';
+import {
+  getRelatedArticleRelations,
+  getRelatedCapabilityRelations,
+} from '../data/contentRelations';
+import { getPortfolioCapabilityGroups } from '../data/portfolioCapabilities';
 import { localizedPath } from '../routing/portfolioRoutes';
 import AiProvenanceSection from '../features/ai-provenance/AiProvenanceSection';
 import ProductVisualGallery from '../components/ProductVisualGallery';
@@ -59,9 +63,22 @@ const ProjectCaseStudy = () => {
   const problem = t(`projects.items.${project.id}.problem`);
   const impact = t(`projects.items.${project.id}.impact`);
   const role = t(`projects.items.${project.id}.role`);
-  const relatedWriting: RelatedContentItem[] = getRelatedArticleIds(project.id).flatMap((articleId) => {
-    const article = getBlogPostMetadata(articleId, language);
-    return article ? [{ target: { route: 'article', id: articleId }, label: article.title }] : [];
+  const relatedWriting: RelatedContentItem[] = getRelatedArticleRelations(project.id).flatMap((relation) => {
+    const article = getBlogPostMetadata(relation.articleId, language);
+    return article ? [{
+      target: { route: 'article', id: relation.articleId },
+      label: article.title,
+      reason: relation.reason[language],
+    }] : [];
+  });
+  const capabilityById = new Map(getPortfolioCapabilityGroups(language).map((capability) => [capability.id, capability]));
+  const relatedCapabilities = getRelatedCapabilityRelations(project.id).flatMap((relation) => {
+    const capability = capabilityById.get(relation.capabilityId);
+    return capability ? [{
+      id: relation.capabilityId,
+      label: capability.label,
+      reason: relation.reason[language],
+    }] : [];
   });
   const story = project.id in caseStudyStories
     ? caseStudyStories[project.id as CaseStudyStoryProjectId]
@@ -118,6 +135,7 @@ const ProjectCaseStudy = () => {
           previousProject={previousProject}
           project={{ ...project, id: storyProjectId }}
           relatedWriting={relatedWriting}
+          relatedCapabilities={relatedCapabilities}
           role={role}
           story={story}
           supplementaryEvidence={supplementaryEvidence}
