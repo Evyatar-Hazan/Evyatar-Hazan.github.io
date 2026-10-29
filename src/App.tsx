@@ -118,6 +118,7 @@ const AppShell = () => {
     ? i18n.language
     : defaultPortfolioLanguage);
   const dir = activeLanguage === 'he' ? 'rtl' : 'ltr';
+  const isPortfolioHome = /^\/(?:en|he)\/?$/.test(location.pathname);
 
   useTheme();
 
@@ -133,9 +134,12 @@ const AppShell = () => {
   }, [activeLanguage, dir]);
 
   return (
-    <div className={`min-h-screen font-sans ${dir === 'rtl' ? '[&_*]:font-sans-hebrew' : ''}`}>
+    <div
+      className={`min-h-screen font-sans ${dir === 'rtl' ? '[&_*]:font-sans-hebrew' : ''}`}
+      data-motion-focus={isPortfolioHome ? 'single' : 'scroll-progress'}
+    >
       <PortfolioScrollRestoration />
-      <ScrollProgress />
+      {!isPortfolioHome && <ScrollProgress />}
       <Navbar />
       <div id="site-shell-content">
         <ContactNode />
