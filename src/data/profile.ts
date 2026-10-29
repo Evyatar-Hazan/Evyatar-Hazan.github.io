@@ -28,6 +28,10 @@ export type ProjectCaseStudy = {
   seoDescription: LocalizedText;
   overview: LocalizedList;
   audience: LocalizedText;
+  ownership: {
+    model: LocalizedText;
+    collaboration: LocalizedText;
+  };
   proof: LocalizedText;
   decisions: LocalizedList;
   outcomes: readonly [OutcomeClaim, ...OutcomeClaim[]];
@@ -74,6 +78,16 @@ const caseStudies = {
     audience: {
       en: 'Small service businesses that need one strong inquiry path instead of a bloated brochure site.',
       he: 'עסקי שירות קטנים שצריכים נתיב פנייה אחד חזק, ולא אתר תדמית מנופח.'
+    },
+    ownership: {
+      model: {
+        en: 'Independent technical ownership.',
+        he: 'אחריות טכנית אישית.'
+      },
+      collaboration: {
+        en: 'The business owner supplied the service context and business direction. I do not claim ownership of the catering business or its operations.',
+        he: 'בעלת העסק סיפקה את הקשר השירותי ואת הכיוון העסקי. איני מייחס לעצמי בעלות על עסק הקייטרינג או על פעילותו.'
+      }
     },
     proof: {
       en: 'The public site and pinned repository document a live custom-domain product plus three distinct surfaces: the website, Content Studio, and private media library.',
@@ -174,6 +188,16 @@ const caseStudies = {
       en: 'Developers, analysts, content teams, and technical users who need quick local transformations without uploading data.',
       he: 'מפתחים, אנליסטים, צוותי תוכן ומשתמשים טכניים שצריכים המרות מהירות מקומית בלי העלאת מידע.'
     },
+    ownership: {
+      model: {
+        en: 'Personal project with end-to-end product and technical ownership.',
+        he: 'פרויקט אישי עם אחריות מלאה על המוצר ועל המימוש.'
+      },
+      collaboration: {
+        en: 'No team delivery is claimed; this case study describes my individual product and engineering work.',
+        he: 'לא מיוחסת כאן תרומה של צוות; הקייס סטאדי מתאר את עבודת המוצר והפיתוח האישית שלי.'
+      }
+    },
     proof: {
       en: 'The pinned repository records 140 converter definitions, including 16 editorially reviewed tools published in both English and Hebrew; conversion runs locally in the browser.',
       he: 'מאגר הקוד המקובע מתעד 140 הגדרות ממיר, ובהן 16 כלים שעברו עריכה ופורסמו בעברית ובאנגלית; ההמרה רצה מקומית בדפדפן.'
@@ -273,6 +297,16 @@ const caseStudies = {
       en: 'Learners who want to explore and discuss a BLS pathway in a learning and practice context.',
       he: 'לומדים שרוצים להכיר מסלול BLS ולדון בו בהקשר של למידה ותרגול.'
     },
+    ownership: {
+      model: {
+        en: 'Personal project with end-to-end technical ownership.',
+        he: 'פרויקט אישי עם אחריות טכנית מלאה.'
+      },
+      collaboration: {
+        en: 'No clinical or organizational authorship is claimed; medical review and source approval remain outside my technical contribution.',
+        he: 'איני מייחס לעצמי סמכות קלינית או ארגונית; בדיקה רפואית ואישור מקורות נשארים מחוץ לתרומה הטכנית שלי.'
+      }
+    },
     proof: {
       en: 'The live health endpoint returned HTTP 200 on October 29, 2026. The pinned source identifies Cloudflare Pages Functions and D1 as production, while Express and Prisma remain local development only.',
       he: 'נקודת הקצה החיה לבדיקת תקינות החזירה HTTP 200 ב־29 באוקטובר 2026. המקור המקובע מזהה את Cloudflare Pages Functions ו־D1 כפרודקשן, בעוד Express ו־Prisma נשארים לפיתוח מקומי בלבד.'
@@ -371,6 +405,16 @@ const caseStudies = {
     audience: {
       en: 'Local nonprofits and operational teams that need a reliable public presence without turning every change into a code deployment.',
       he: 'עמותות מקומיות וצוותים תפעוליים שצריכים נוכחות ציבורית אמינה בלי להפוך כל שינוי לפריסת קוד.'
+    },
+    ownership: {
+      model: {
+        en: 'Independent software implementation within an organizational project.',
+        he: 'מימוש תוכנה אישי בתוך פרויקט ארגוני.'
+      },
+      collaboration: {
+        en: 'Branch stakeholders supplied the operational context and content priorities. I do not claim their organizational or volunteer work.',
+        he: 'בעלי העניין בסניף סיפקו את ההקשר התפעולי ואת סדרי העדיפות לתוכן. איני מייחס לעצמי את עבודתם הארגונית או ההתנדבותית.'
+      }
     },
     proof: {
       en: 'The pinned repository documents three product surfaces—a public website, admin panel, and backend API—inside one full-stack monorepo.',

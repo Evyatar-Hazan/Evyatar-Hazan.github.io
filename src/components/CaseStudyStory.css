@@ -43,7 +43,7 @@
 .case-story-section-heading > span,
 .case-story-hero-facts span,
 .case-story-evidence-panel > span,
-.case-story-role-boundary > span {
+.case-story-role-boundary span {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 0.72rem;
   font-weight: 800;
@@ -433,10 +433,17 @@
 }
 
 .case-story-role-boundary {
+  display: grid;
+  gap: 1.25rem;
   align-self: start;
   padding: 1.5rem;
   border: 1px solid var(--case-rule);
   background: var(--case-panel);
+}
+
+.case-story-role-boundary > div {
+  padding-inline-start: 1rem;
+  border-inline-start: 2px solid var(--case-accent);
 }
 
 .case-story-role-boundary p {
