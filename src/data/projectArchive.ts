@@ -2,7 +2,11 @@ import enLocaleRaw from '../locales/en.json?raw';
 import heLocaleRaw from '../locales/he.json?raw';
 import type { LocalizedPathBuilder, ProjectId } from '../contracts/portfolio';
 import type { EvidenceLink } from './caseStudyEvidence';
-import type { PortfolioLanguage } from './portfolioCapabilities';
+import {
+  getPortfolioCapabilityIdsForSkills,
+  type PortfolioCapabilityId,
+  type PortfolioLanguage,
+} from './portfolioCapabilities';
 import { projectById, type Project } from './profile';
 
 export const projectArchiveIds = [
@@ -170,6 +174,7 @@ export type ProjectArchiveEntry = ProjectArchiveMetadata & {
   role: string;
   categoryId: Project['category'];
   category: string;
+  capabilityIds: readonly PortfolioCapabilityId[];
   tags: readonly string[];
   codeUrl: string;
   liveUrl: string | null;
@@ -297,6 +302,7 @@ export const getProjectArchiveEntries = (
     role: copy.role,
     categoryId: project.category,
     category: localeCopy[language].projects.categories[project.category],
+    capabilityIds: getPortfolioCapabilityIdsForSkills(project.tags),
     tags: [...project.tags],
     codeUrl: project.githubUrl,
     liveUrl: project.liveUrl ?? null,
