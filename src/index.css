@@ -1345,6 +1345,12 @@ body {
   line-height: 0.95;
 }
 
+.writing-article-title-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+}
+
 .dark .writing-article-copy h3 {
   color: var(--color-white);
 }
