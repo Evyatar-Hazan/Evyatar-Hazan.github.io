@@ -320,6 +320,21 @@
     "caseStudyAvailable": "Case study",
     "liveProductAvailable": "Live product",
     "publicCodeAvailable": "Public code",
+    "lifecycleStatus": "Project status",
+    "lifecycle": {
+      "active": "Current / live",
+      "maintained": "Maintained",
+      "archived": "Archived",
+      "historical": "Historical / source only",
+      "undocumented": "Status not documented"
+    },
+    "lifecycleNote": {
+      "active": "Public runtime checked on the verification date; not an uptime or ongoing-maintenance promise.",
+      "maintained": "Maintenance was documented on the verification date; not a promise of future availability.",
+      "archived": "The public source documents an archived state.",
+      "historical": "Source-backed portfolio record; no current public runtime is claimed.",
+      "undocumented": "No verified lifecycle source is available."
+    },
     "evidenceStatus": "Evidence status",
     "evidenceVerified": "Documented evidence",
     "evidenceUndocumented": "Evidence not documented",

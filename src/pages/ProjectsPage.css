@@ -154,17 +154,27 @@
   text-transform: uppercase;
 }
 
-.projects-hub-evidence {
+.projects-hub-lifecycle {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
 }
 
-.projects-hub-evidence > span {
+.projects-hub-lifecycle > span {
   width: 0.48rem;
   height: 0.48rem;
   border-radius: var(--radius-circle);
   background: var(--color-neutral-400);
+}
+
+.projects-hub-lifecycle[data-lifecycle='active'] > span,
+.projects-hub-lifecycle[data-lifecycle='maintained'] > span {
+  background: var(--color-success-600);
+}
+
+.projects-hub-lifecycle[data-lifecycle='historical'] > span,
+.projects-hub-lifecycle[data-lifecycle='archived'] > span {
+  background: var(--color-warning-600);
 }
 
 .projects-hub-featured h3,
