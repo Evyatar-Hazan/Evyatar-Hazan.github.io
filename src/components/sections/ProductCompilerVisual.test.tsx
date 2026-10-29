@@ -6,7 +6,6 @@ import homeSource from '../../pages/Home.tsx?raw';
 import navbarSource from '../Navbar.tsx?raw';
 import blogPreviewSource from './BlogPreview.tsx?raw';
 import homeSectionPrimitivesSource from './HomeSectionPrimitives.tsx?raw';
-import professionalOverviewSource from './ProfessionalOverview.tsx?raw';
 import projectsSource from './Projects.tsx?raw';
 import contactBriefSource from '../../features/contact/ContactBriefFeature.tsx?raw';
 import ProductCompilerVisual from './ProductCompilerVisual';
@@ -73,7 +72,7 @@ describe('ProductCompilerVisual', () => {
   });
 
   it('keeps home-page content immediate instead of tying visibility to scrolling', () => {
-    [blogPreviewSource, professionalOverviewSource].forEach((source) => {
+    [blogPreviewSource].forEach((source) => {
       expect(source).not.toContain('whileInView');
       expect(source).not.toContain('useScroll');
       expect(source).not.toContain('useTransform');
@@ -85,7 +84,7 @@ describe('ProductCompilerVisual', () => {
   });
 
   it('uses one semantic visual system across every homepage section', () => {
-    [projectsSource, professionalOverviewSource, blogPreviewSource, contactBriefSource].forEach((source) => {
+    [projectsSource, blogPreviewSource, contactBriefSource].forEach((source) => {
       expect(source).toContain('HomeSectionHeader');
       expect(source).toContain('home-section');
     });
