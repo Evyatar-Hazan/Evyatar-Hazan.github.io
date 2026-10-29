@@ -2,10 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { audiencePaths, getAudiencePaths } from './audiencePaths';
 
 describe('audience paths', () => {
-  it('keeps product-seeking visitors first and recruiters second', () => {
+  it('keeps product-seeking visitors first, followed by recruiters and readers', () => {
     expect(audiencePaths.map(({ id, priority }) => ({ id, priority }))).toEqual([
       { id: 'product-partner', priority: 'primary' },
       { id: 'recruiter', priority: 'secondary' },
+      { id: 'technical-reader', priority: 'secondary' },
     ]);
   });
 
@@ -13,6 +14,7 @@ describe('audience paths', () => {
     expect(audiencePaths.map(({ cta }) => cta.target)).toEqual([
       { route: 'contact' },
       { route: 'projects' },
+      { route: 'blog' },
     ]);
   });
 
@@ -20,7 +22,7 @@ describe('audience paths', () => {
     for (const language of ['en', 'he'] as const) {
       const localizedPaths = getAudiencePaths(language);
 
-      expect(localizedPaths).toHaveLength(2);
+      expect(localizedPaths).toHaveLength(3);
       localizedPaths.forEach((path) => {
         expect(path.audience).not.toHaveLength(0);
         expect(path.title).not.toHaveLength(0);

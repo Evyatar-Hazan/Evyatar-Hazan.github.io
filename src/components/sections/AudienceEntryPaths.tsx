@@ -11,11 +11,15 @@ export type AudienceEntryPathsProps = PortfolioSlotProps & {
 
 const sectionCopy = {
   en: {
-    label: 'Choose the path that fits your visit',
+    eyebrow: 'Choose your starting point',
+    title: 'What are you here to explore?',
+    description: 'Pick the route that matches your visit. Each one opens an existing, focused part of the portfolio.',
     marker: 'Audience path',
   },
   he: {
-    label: 'בחרו את המסלול שמתאים לביקור שלכם',
+    eyebrow: 'בחרו נקודת פתיחה',
+    title: 'מה תרצו למצוא כאן?',
+    description: 'בחרו את המסלול שמתאים לביקור שלכם. כל אחד מוביל לחלק קיים וממוקד באתר.',
     marker: 'מסלול קהל',
   },
 } as const;
@@ -32,10 +36,16 @@ export const AudienceEntryPaths = ({
 
   return (
     <nav
-      aria-label={copy.label}
+      aria-labelledby="audience-entry-paths-title"
       className={joinClassNames('audience-entry-paths', className)}
     >
-      <ol className="grid gap-3 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
+      <header className="audience-entry-paths__header">
+        <p className="home-section-label">{copy.eyebrow}</p>
+        <h2 id="audience-entry-paths-title">{copy.title}</h2>
+        <p>{copy.description}</p>
+      </header>
+
+      <ol className="grid gap-3 lg:grid-cols-3">
         {paths.map((path, index) => {
           const isPrimary = path.priority === 'primary';
 
