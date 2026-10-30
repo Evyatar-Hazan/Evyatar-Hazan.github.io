@@ -4,12 +4,16 @@ import { ArrowLeft, ArrowRight, CalendarDays, Clock } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getBlogPost, getBlogPosts } from '../content/blog/posts';
+import { getBlogPostMetadata } from '../content/blog/metadata';
 import type { BlogLanguage } from '../content/blog/types';
 import { usePageSeo } from '../hooks/usePageSeo';
 import type { ArticleId } from '../contracts/portfolio';
 import { localizedPath } from '../routing/portfolioRoutes';
 import RelatedContentLinks, { type RelatedContentItem } from '../components/RelatedContentLinks';
-import { getRelatedProjectRelations } from '../data/contentRelations';
+import {
+  getRelatedBlogArticleRelations,
+  getRelatedProjectRelations,
+} from '../data/contentRelations';
 import { getProjectById } from '../data/profile';
 
 type ArticleHeading = { id: string; label: string; level: number };
@@ -106,6 +110,17 @@ const BlogPost = () => {
         }]
       : []
   ));
+  const relatedArticles: RelatedContentItem[] = getRelatedBlogArticleRelations(post.slug).flatMap((relation) => {
+    const relatedPost = getBlogPostMetadata(relation.articleId, language);
+
+    return relatedPost
+      ? [{
+          target: { route: 'article', id: relation.articleId },
+          label: relatedPost.title,
+          reason: relation.reason[language],
+        }]
+      : [];
+  });
 
   return (
     <main id="main-content" tabIndex={-1} className="blog-article">
@@ -164,6 +179,13 @@ const BlogPost = () => {
             <Content />
           </div>
         </div>
+
+        <RelatedContentLinks
+          buildPath={localizedPath}
+          heading={language === 'he' ? 'מאמרים קשורים' : 'Related articles'}
+          items={relatedArticles}
+          language={language}
+        />
 
         <RelatedContentLinks
           buildPath={localizedPath}
