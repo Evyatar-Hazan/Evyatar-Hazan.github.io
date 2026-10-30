@@ -17,6 +17,9 @@ const sectionCopy = {
     eyebrow: '03 / Ways to work together',
     title: 'Choose the starting point that fits the need.',
     intro: 'A new product, an internal system, or an existing product that needs to improve.',
+    availabilityLabel: 'Availability / practical fit',
+    availabilityTitle: 'Open to relevant conversations.',
+    availabilityBody: 'I consider new project and product-team opportunities when the scope, ownership, and intended outcome are clear. Availability and timing are confirmed for each opportunity after an initial conversation.',
     audience: 'A good fit for',
     deliverables: 'What the work can include',
     proof: 'Relevant example',
@@ -25,6 +28,9 @@ const sectionCopy = {
     eyebrow: '03 / דרכים לעבוד יחד',
     title: 'בוחרים את נקודת הפתיחה שמתאימה לצורך.',
     intro: 'מוצר חדש, מערכת פנימית או מוצר קיים שצריך להשתפר.',
+    availabilityLabel: 'זמינות / התאמה מעשית',
+    availabilityTitle: 'פתוח לשיחות רלוונטיות.',
+    availabilityBody: 'אני בוחן הזדמנויות לפרויקטים חדשים ולעבודה עם צוותי מוצר כשההיקף, האחריות והתוצאה הרצויה ברורים. זמינות ולוחות זמנים מאושרים לכל הזדמנות לאחר שיחת היכרות.',
     audience: 'למי זה מתאים',
     deliverables: 'מה העבודה יכולה לכלול',
     proof: 'דוגמה רלוונטית',
@@ -68,6 +74,23 @@ export const ServiceEngagements = ({
             {copy.intro}
           </p>
         </header>
+
+        <aside
+          aria-label={copy.availabilityLabel}
+          className="mt-8 grid gap-4 border-s-2 border-primary-500 bg-white px-5 py-6 dark:bg-neutral-900 sm:grid-cols-[minmax(12rem,0.42fr)_minmax(0,1fr)] sm:items-start sm:px-7"
+        >
+          <div>
+            <p className="font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-primary-700 dark:text-primary-400">
+              {copy.availabilityLabel}
+            </p>
+            <h3 className="mt-3 text-2xl font-black leading-tight tracking-[-0.025em] text-neutral-950 dark:text-white">
+              {copy.availabilityTitle}
+            </h3>
+          </div>
+          <p className="max-w-[64ch] text-sm leading-7 text-neutral-700 dark:text-neutral-300 sm:text-base sm:justify-self-end">
+            {copy.availabilityBody}
+          </p>
+        </aside>
 
         <ol className="mt-8 grid border-t border-neutral-300/80 dark:border-neutral-800 lg:grid-cols-3">
           {engagements.map((engagement, index) => {

@@ -18,6 +18,7 @@ import { getCapabilityProofGroups } from '../features/capability-proof/capabilit
 import { getHumanAboutContent } from '../features/humanAbout/content';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { localizedPath } from '../routing/portfolioRoutes';
+import { getProfessionalTimeline } from '../data/professionalTimeline';
 
 const pageCopy = {
   en: {
@@ -117,6 +118,7 @@ const AboutPage = () => {
   const language = i18n.language === 'he' ? 'he' : 'en';
   const copy = pageCopy[language];
   const human = getHumanAboutContent(language);
+  const timeline = getProfessionalTimeline(language);
   const groups = getCapabilityProofGroups(language);
   const location = useLocation();
   const navigate = useNavigate();
@@ -181,7 +183,26 @@ const AboutPage = () => {
           <div className="grid divide-y divide-neutral-300/80 dark:divide-neutral-800 lg:grid-cols-3 lg:divide-x lg:divide-y-0 rtl:lg:divide-x-reverse">
             {human.pillars.map((pillar, index) => <article key={pillar.id} className="py-8 lg:px-8 lg:py-12 lg:first:ps-0"><p className="font-mono text-xs font-black text-primary-700 dark:text-primary-400">0{index + 1}</p><h3 className="mt-4 text-2xl font-black">{pillar.title}</h3><p className="mt-4 text-base leading-8 text-neutral-600 dark:text-neutral-400">{pillar.body}</p></article>)}
           </div>
-          <aside aria-labelledby="human-note-title" className="grid gap-4 border-t border-neutral-300/80 pt-8 dark:border-neutral-800 sm:grid-cols-[minmax(8rem,0.28fr)_minmax(0,1fr)] sm:items-start sm:gap-8">
+          <div className="border-t border-neutral-300/80 pt-10 dark:border-neutral-800 lg:pt-14">
+            <header className="grid gap-5 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+              <div>
+                <p className="font-mono text-[0.68rem] font-black uppercase tracking-[0.18em] text-primary-700 dark:text-primary-400">{timeline.eyebrow}</p>
+                <h3 id="professional-timeline-title" className="mt-4 max-w-[18ch] text-3xl font-black leading-tight tracking-[-0.04em] sm:text-5xl">{timeline.title}</h3>
+              </div>
+              <p className="max-w-2xl text-base leading-8 text-neutral-600 dark:text-neutral-400 lg:justify-self-end">{timeline.introduction}</p>
+            </header>
+            <ol aria-labelledby="professional-timeline-title" className="mt-9 grid gap-0" data-professional-timeline>
+              {timeline.entries.map((entry, index) => (
+                <li key={entry.id} data-timeline-entry={entry.id} className="relative grid gap-3 border-s-2 border-neutral-300 py-7 ps-7 dark:border-neutral-700 sm:grid-cols-[8rem_minmax(12rem,0.75fr)_minmax(0,1.25fr)] sm:items-start sm:gap-6 sm:ps-9">
+                  <span aria-hidden="true" className="absolute -start-[0.48rem] top-8 h-3.5 w-3.5 rounded-full border-[3px] border-neutral-50 bg-primary-600 ring-1 ring-primary-600 dark:border-neutral-950 dark:bg-primary-400 dark:ring-primary-400" />
+                  <p className="font-mono text-sm font-black text-primary-700 dark:text-primary-400"><span className="sr-only">{language === 'he' ? `שלב ${index + 1}: ` : `Stage ${index + 1}: `}</span>{entry.period}</p>
+                  <h4 className="text-xl font-black leading-snug">{entry.role}</h4>
+                  <p className="max-w-3xl text-sm leading-7 text-neutral-600 dark:text-neutral-400 sm:text-base">{entry.impact}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <aside aria-labelledby="human-note-title" className="mt-10 grid gap-4 border-t border-neutral-300/80 pt-8 dark:border-neutral-800 sm:grid-cols-[minmax(8rem,0.28fr)_minmax(0,1fr)] sm:items-start sm:gap-8">
             <p className="font-mono text-[0.68rem] font-black uppercase tracking-[0.18em] text-primary-700 dark:text-primary-400">{copy.humanNoteEyebrow}</p>
             <div className="max-w-3xl">
               <h3 id="human-note-title" className="text-2xl font-black tracking-tight sm:text-3xl">{copy.humanNoteTitle}</h3>
