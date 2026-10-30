@@ -1,4 +1,4 @@
-import type { BlogLanguage, BlogPostMeta } from '../../content/blog/types';
+import { blogDepths, type BlogLanguage, type BlogPostMeta } from '../../content/blog/types';
 
 export const BLOG_LIBRARY_PAGE_SIZE = 12;
 export const BLOG_LIBRARY_TOPIC_LIMIT = 8;
@@ -25,4 +25,9 @@ export const getPopularBlogTopics = (
     ))
     .slice(0, limit)
     .map(([tag]) => tag);
+};
+
+export const getAvailableBlogDepths = (posts: BlogPostMeta[]) => {
+  const available = new Set(posts.map((post) => post.depth));
+  return blogDepths.filter((depth) => available.has(depth));
 };

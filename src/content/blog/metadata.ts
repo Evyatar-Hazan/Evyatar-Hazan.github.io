@@ -1,4 +1,4 @@
-import type { BlogLanguage, BlogPostMeta } from './types';
+import type { BlogDepth, BlogLanguage, BlogPostMeta } from './types';
 
 /**
  * Lower values appear first. Keep the rank language-neutral so the Hebrew and
@@ -46,7 +46,7 @@ export const editorialRankBySlug = {
  * posts.ts only binds each record to its MDX component so metadata consumers do
  * not pull the article bodies into their bundle.
  */
-const metadata = {
+const metadataBase = {
   'focus-tests-need-an-unfocused-baseline:he': {
       slug: 'focus-tests-need-an-unfocused-baseline',
       language: 'he',
@@ -707,7 +707,61 @@ const metadata = {
       tags: ['Portfolio', 'Product', 'Credibility'],
       featured: false,
     },
-} as const satisfies Record<string, Omit<BlogPostMeta, 'editorialRank'>>;
+} as const satisfies Record<string, Omit<BlogPostMeta, 'depth' | 'editorialRank'>>;
+
+type BlogSlug = (typeof metadataBase)[keyof typeof metadataBase]['slug'];
+
+/**
+ * One language-neutral taxonomy entry per article. The Record contract makes a
+ * newly added article fail TypeScript validation until it receives exactly one
+ * depth, while both localized versions inherit the same classification.
+ */
+export const blogDepthBySlug = {
+  'focus-tests-need-an-unfocused-baseline': 'applied',
+  'shared-container-is-a-layout-contract': 'applied',
+  'initial-html-should-contain-the-article': 'applied',
+  'failed-render-should-not-destroy-good-output': 'deep-dive',
+  'one-bad-date-should-not-blank-a-screen': 'applied',
+  'retries-should-not-duplicate-data': 'deep-dive',
+  'monetization-needs-product-guardrails': 'applied',
+  'tests-need-honest-environments': 'applied',
+  'accessibility-contrast-is-product-quality': 'applied',
+  'data-types-java-typescript-python': 'foundation',
+  'what-variable-stores': 'foundation',
+  'java-program-execution': 'foundation',
+  'virtualization-virtual-machines': 'deep-dive',
+  'processes-threads-concurrency': 'deep-dive',
+  'file-permissions-user-access': 'foundation',
+  'files-folders-paths': 'foundation',
+  'boot-process-power-button': 'foundation',
+  'operating-system-under-apps': 'foundation',
+  'hardware-input-output-devices': 'foundation',
+  'java-unicode-string-length': 'applied',
+  'binary-bitwise-java': 'deep-dive',
+  'performance-optimizations-need-product-verification': 'deep-dive',
+  'what-is-inside-a-file': 'foundation',
+  'ram-vs-storage': 'foundation',
+  'what-the-cpu-really-does': 'foundation',
+  'spa-routes-need-real-http': 'applied',
+  'seo-discovery-is-product-work': 'applied',
+  'privacy-safe-product-analytics': 'applied',
+  'google-translate-name-bug': 'applied',
+  'small-project-architecture': 'applied',
+  'deployment-is-product': 'applied',
+  'catering-whatsapp': 'applied',
+  'credible-portfolio': 'foundation',
+} as const satisfies Record<BlogSlug, BlogDepth>;
+
+type MetadataWithDepth<T extends Record<string, Omit<BlogPostMeta, 'depth' | 'editorialRank'>>> = {
+  [Key in keyof T]: T[Key] & { depth: BlogDepth };
+};
+
+const metadata = Object.fromEntries(
+  Object.entries(metadataBase).map(([key, post]) => [
+    key,
+    { ...post, depth: blogDepthBySlug[post.slug] },
+  ]),
+) as MetadataWithDepth<typeof metadataBase>;
 
 type BlogMetadataKey = keyof typeof metadata;
 
