@@ -4,13 +4,13 @@ const scenarios = [
   {
     language: 'en',
     viewport: { width: 1440, height: 900 },
-    toggle: 'Build a short project brief (optional)',
+    toggle: 'Send a short message',
     disclosure: 'A hidden honeypot filters automated submissions without tracking or a CAPTCHA.',
   },
   {
     language: 'he',
     viewport: { width: 390, height: 844 },
-    toggle: 'הכנת תקציר פרויקט קצר (לא חובה)',
+    toggle: 'שליחת הודעה קצרה',
     disclosure: 'שדה מלכודת מוסתר מסנן שליחות אוטומטיות בלי מעקב ובלי CAPTCHA.',
   },
 ];

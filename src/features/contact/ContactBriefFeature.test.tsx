@@ -7,7 +7,7 @@ const buildLocalizedPath: LocalizedPathBuilder = (language, target) =>
   `/${language}/${target.route}/`;
 
 const openBuilder = () => {
-  fireEvent.click(screen.getByRole('button', { name: /project brief/i }));
+  fireEvent.click(screen.getByRole('button', { name: /short message/i }));
 };
 
 afterEach(() => {
@@ -54,11 +54,11 @@ describe('ContactBriefFeature', () => {
     expect(screen.getByText(next)).toBeVisible();
   });
 
-  it('previews synthetic brief data and injects the localized privacy link', () => {
+  it('builds drafts from synthetic brief data and injects the localized privacy link', () => {
     render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
     openBuilder();
 
-    fireEvent.change(screen.getByLabelText('What do you need?'), {
+    fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'A synthetic scheduling tool' },
     });
     fireEvent.change(screen.getByLabelText('What is not working?'), {
@@ -72,11 +72,6 @@ describe('ContactBriefFeature', () => {
       target: { value: 'A reliable handoff' },
     });
 
-    const preview = screen.getByLabelText<HTMLTextAreaElement>('Message review');
-    expect(preview.value).toContain('What I need: A synthetic scheduling tool');
-    expect(preview.value).toContain('Main issue: The current handoff is manual');
-    expect(preview.value).toContain('Desired outcome: A reliable handoff');
-    expect(preview.value).toContain('Preferred channel: WhatsApp');
     expect(screen.getByRole('link', { name: 'Read the privacy notice' })).toHaveAttribute(
       'href',
       '/en/privacy/',
@@ -91,6 +86,9 @@ describe('ContactBriefFeature', () => {
       'text',
     );
     expect(emailBody).toContain('A synthetic scheduling tool');
+    expect(emailBody).toContain('Main issue: The current handoff is manual');
+    expect(emailBody).toContain('Desired outcome: A reliable handoff');
+    expect(emailBody).toContain('Preferred channel: WhatsApp');
     expect(whatsappBody).toContain('A synthetic scheduling tool');
     expect(screen.getByRole('link', { name: 'evyatarhazan3.14@gmail.com' })).toHaveAttribute(
       'href',
@@ -98,7 +96,19 @@ describe('ContactBriefFeature', () => {
     );
   });
 
-  it('does not contact the provider when required form identity fields are missing', () => {
+  it('keeps the short form to exactly three required fields', () => {
+    render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
+    openBuilder();
+
+    const requiredFields = screen.getAllByRole('textbox').filter((field) => field.hasAttribute('required'));
+    expect(requiredFields).toHaveLength(3);
+    expect(screen.getByLabelText('Message')).toBeRequired();
+    expect(screen.getByLabelText('Name')).toBeRequired();
+    expect(screen.getByLabelText('Email address')).toBeRequired();
+    expect(screen.getByLabelText('What exists today?')).not.toBeRequired();
+  });
+
+  it('does not contact the provider when required short-form fields are missing', () => {
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
     render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
@@ -109,7 +119,7 @@ describe('ContactBriefFeature', () => {
     expect(fetchMock).not.toHaveBeenCalled();
     expect(screen.getByLabelText('Name')).toBeRequired();
     expect(screen.getByLabelText('Email address')).toBeRequired();
-    expect(screen.getByRole('alert')).toHaveTextContent('Enter your name');
+    expect(screen.getByRole('alert')).toHaveTextContent('Enter a short message');
   });
 
   it('submits only the allowlisted delivery fields after an explicit submit', async () => {
@@ -121,7 +131,7 @@ describe('ContactBriefFeature', () => {
     render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
     openBuilder();
 
-    fireEvent.change(screen.getByLabelText('What do you need?'), {
+    fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'Synthetic portfolio fixture' },
     });
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Test Visitor' } });
@@ -158,11 +168,14 @@ describe('ContactBriefFeature', () => {
     });
     vi.stubGlobal('fetch', fetchMock);
     render(<ContactBriefFeature language="he" buildLocalizedPath={buildLocalizedPath} />);
-    fireEvent.click(screen.getByRole('button', { name: /תקציר פרויקט קצר/i }));
+    fireEvent.click(screen.getByRole('button', { name: /שליחת הודעה קצרה/i }));
 
     expect(screen.queryByText('מה קורה עכשיו')).not.toBeInTheDocument();
     expect(screen.queryByText(/אין כאן התחייבות לזמן תגובה קבוע/i)).not.toBeInTheDocument();
 
+    fireEvent.change(screen.getByLabelText('הודעה'), {
+      target: { value: 'בדיקה סינתטית של הצעד הבא' },
+    });
     fireEvent.change(screen.getByLabelText('שם'), { target: { value: 'מבקר בדיקה' } });
     fireEvent.change(screen.getByLabelText('כתובת אימייל'), {
       target: { value: 'visitor@example.test' },
@@ -190,6 +203,9 @@ describe('ContactBriefFeature', () => {
     );
     openBuilder();
 
+    fireEvent.change(screen.getByLabelText('Message'), {
+      target: { value: 'Synthetic case-study context check' },
+    });
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Test Visitor' } });
     fireEvent.change(screen.getByLabelText('Email address'), {
       target: { value: 'visitor@example.test' },
@@ -224,6 +240,9 @@ describe('ContactBriefFeature', () => {
     expect(document.querySelector('iframe[src*="recaptcha"], script[src*="recaptcha"]')).toBeNull();
 
     fireEvent.change(honeypot!, { target: { value: 'synthetic bot payload' } });
+    fireEvent.change(screen.getByLabelText('Message'), {
+      target: { value: 'Synthetic spam-protection integration check' },
+    });
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Synthetic Bot' } });
     fireEvent.change(screen.getByLabelText('Email address'), {
       target: { value: 'bot@example.test' },
@@ -271,7 +290,7 @@ describe('ContactBriefFeature', () => {
     render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
     openBuilder();
 
-    fireEvent.change(screen.getByLabelText('What do you need?'), {
+    fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'Keep this synthetic brief' },
     });
     fireEvent.change(screen.getByLabelText('What exists today?'), {
@@ -299,8 +318,10 @@ describe('ContactBriefFeature', () => {
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     rejectRequest?.(new Error('synthetic network failure'));
-    expect(await screen.findByText(/Every field is still here/i)).toBeInTheDocument();
-    expect(screen.getByLabelText('What do you need?')).toHaveValue('Keep this synthetic brief');
+    expect(await screen.findByText(/Delivery was not confirmed/i)).toBeInTheDocument();
+    expect(screen.getByLabelText<HTMLTextAreaElement>('Message').value).toBe(
+      'Keep this synthetic brief',
+    );
     expect(screen.getByLabelText('What exists today?')).toHaveValue('A complete synthetic fixture');
     expect(screen.getByLabelText('What is not working?')).toHaveValue('The provider request fails');
     expect(screen.getByLabelText('What outcome would make this successful?')).toHaveValue('Retry without retyping anything');
@@ -340,6 +361,9 @@ describe('ContactBriefFeature', () => {
     render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
     openBuilder();
 
+    fireEvent.change(screen.getByLabelText('Message'), {
+      target: { value: 'Synthetic provider confirmation check' },
+    });
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Test Visitor' } });
     fireEvent.change(screen.getByLabelText('Email address'), {
       target: { value: 'visitor@example.test' },
@@ -354,19 +378,23 @@ describe('ContactBriefFeature', () => {
   it('links every inline error to its field, announces the summary, and lets keyboard users return to the field', async () => {
     render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Build a short project brief (optional)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Send a short message' }));
     fireEvent.click(screen.getByRole('button', { name: 'Send with FormSubmit' }));
 
+    const messageField = screen.getByRole('textbox', { name: 'Message' });
     const nameField = screen.getByRole('textbox', { name: 'Name' });
     const emailField = screen.getByRole('textbox', { name: 'Email address' });
     const alert = screen.getByRole('alert');
+    const messageErrorId = messageField.getAttribute('aria-errormessage');
     const nameErrorId = nameField.getAttribute('aria-errormessage');
     const emailErrorId = emailField.getAttribute('aria-errormessage');
     const nameError = document.getElementById(nameErrorId!);
     const emailError = document.getElementById(emailErrorId!);
 
+    expect(messageField).toHaveAttribute('aria-invalid', 'true');
     expect(nameField).toHaveAttribute('aria-invalid', 'true');
     expect(emailField).toHaveAttribute('aria-invalid', 'true');
+    expect(document.getElementById(messageErrorId!)).toHaveTextContent('Enter a short message to send through the form.');
     expect(nameError).toHaveTextContent('Enter your name to send through the form.');
     expect(emailError).toHaveTextContent('Enter your email address to send through the form.');
     await waitFor(() => expect(alert).toHaveFocus());
@@ -378,7 +406,7 @@ describe('ContactBriefFeature', () => {
   it('uses the same accessible inline-error contract in Hebrew and clears a corrected field error', () => {
     render(<ContactBriefFeature language="he" buildLocalizedPath={buildLocalizedPath} />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'הכנת תקציר פרויקט קצר (לא חובה)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'שליחת הודעה קצרה' }));
     fireEvent.click(screen.getByRole('button', { name: 'שליחה באמצעות FormSubmit' }));
 
     const nameField = screen.getByRole('textbox', { name: 'שם' });
