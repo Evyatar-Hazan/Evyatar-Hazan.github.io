@@ -29,6 +29,9 @@ const pageCopy = {
     contact: 'Start a conversation',
     storyEyebrow: '01 / Professional story',
     storyTitle: 'A practical end-to-end view of product work.',
+    humanNoteEyebrow: 'A human note',
+    humanNoteTitle: 'Curiosity is part of the work.',
+    humanNoteBody: 'I enjoy turning complexity into clarity—in an interface, a system, or a short article that captures something new I learned. That process is what keeps me curious from one project to the next.',
     capabilitiesEyebrow: '02 / Capability explorer',
     capabilitiesTitle: 'Select a field. Follow the evidence.',
     capabilitiesIntro: 'Skills describe the working surface. Projects and articles show where the practice is public. Measured outcomes stay separate and appear only with verified evidence.',
@@ -51,6 +54,9 @@ const pageCopy = {
     contact: 'להתחיל שיחה',
     storyEyebrow: '01 / הסיפור המקצועי',
     storyTitle: 'מבט מעשי מקצה לקצה על עבודת מוצר.',
+    humanNoteEyebrow: 'הערה אישית',
+    humanNoteTitle: 'סקרנות היא חלק מהעבודה.',
+    humanNoteBody: 'אני נהנה להפוך מורכבות לבהירות — בממשק, במערכת או במאמר קצר שמסכם משהו חדש שלמדתי. התהליך הזה הוא מה ששומר על הסקרנות שלי מפרויקט לפרויקט.',
     capabilitiesEyebrow: '02 / מפת יכולות',
     capabilitiesTitle: 'בוחרים תחום ועוקבים אחרי הראיות.',
     capabilitiesIntro: 'המיומנויות מתארות את מרחב העבודה. פרויקטים ומאמרים מראים היכן קיימת הדגמה ציבורית. תוצאות מדידות נשארות נפרדות ומופיעות רק עם ראיה מאומתת.',
@@ -159,6 +165,13 @@ const AboutPage = () => {
           <div className="grid divide-y divide-neutral-300/80 dark:divide-neutral-800 lg:grid-cols-3 lg:divide-x lg:divide-y-0 rtl:lg:divide-x-reverse">
             {human.pillars.map((pillar, index) => <article key={pillar.id} className="py-8 lg:px-8 lg:py-12 lg:first:ps-0"><p className="font-mono text-xs font-black text-primary-700 dark:text-primary-400">0{index + 1}</p><h3 className="mt-4 text-2xl font-black">{pillar.title}</h3><p className="mt-4 text-base leading-8 text-neutral-600 dark:text-neutral-400">{pillar.body}</p></article>)}
           </div>
+          <aside aria-labelledby="human-note-title" className="grid gap-4 border-t border-neutral-300/80 pt-8 dark:border-neutral-800 sm:grid-cols-[minmax(8rem,0.28fr)_minmax(0,1fr)] sm:items-start sm:gap-8">
+            <p className="font-mono text-[0.68rem] font-black uppercase tracking-[0.18em] text-primary-700 dark:text-primary-400">{copy.humanNoteEyebrow}</p>
+            <div className="max-w-3xl">
+              <h3 id="human-note-title" className="text-2xl font-black tracking-tight sm:text-3xl">{copy.humanNoteTitle}</h3>
+              <p className="mt-3 text-base leading-8 text-neutral-600 dark:text-neutral-300">{copy.humanNoteBody}</p>
+            </div>
+          </aside>
         </div>
       </section>
 

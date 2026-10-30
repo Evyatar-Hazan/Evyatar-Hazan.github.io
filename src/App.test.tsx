@@ -338,6 +338,13 @@ describe('App', () => {
     expect(screen.getAllByRole('link', { name: 'LinkedIn' }).some((link) => link.getAttribute('href') === 'https://www.linkedin.com/in/evyatar-hazan-662235210/')).toBe(true);
     expect(screen.getByRole('link', { name: language === 'he' ? 'לצפייה בראיות מהפרויקטים' : 'View project evidence' })).toHaveAttribute('href', `/${language}/projects/`);
     expect(screen.getByRole('link', { name: language === 'he' ? 'להתחיל שיחה' : 'Start a conversation' })).toHaveAttribute('href', `/${language}/contact/`);
+    expect(screen.getByRole('heading', {
+      level: 3,
+      name: language === 'he' ? 'סקרנות היא חלק מהעבודה.' : 'Curiosity is part of the work.',
+    })).toBeInTheDocument();
+    expect(screen.getByText(language === 'he'
+      ? /התהליך הזה הוא מה ששומר על הסקרנות שלי/
+      : /That process is what keeps me curious/)).toBeInTheDocument();
     expect(document.querySelectorAll('[aria-controls="capability-panel"]')).toHaveLength(7);
     expect(document.querySelector('#delivery-process-title')?.closest('section')?.querySelectorAll('ol > li')).toHaveLength(5);
     expect(document.querySelectorAll('#working-principles [data-principle-id]')).toHaveLength(4);
