@@ -16,6 +16,7 @@ export type BlogPostMeta = {
   tags: string[];
   depth: BlogDepth;
   featured: boolean;
+  editorialRank: number;
 };
 
 export type BlogPost = BlogPostMeta & {
