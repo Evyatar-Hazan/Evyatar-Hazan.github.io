@@ -3949,18 +3949,26 @@ body {
   text-transform: uppercase;
 }
 
-.blog-archive-meta-divider {
+.blog-archive-meta .blog-date-separator {
   width: 0.3rem;
   height: 0.3rem;
-  flex: 0 0 0.3rem;
+  flex: none;
   border-radius: var(--radius-pill);
   background: var(--color-primary-500);
 }
 
-.blog-archive-read-time {
+.blog-archive-meta .blog-date-item {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+}
+
+.blog-date-label {
+  color: var(--color-neutral-400);
+}
+
+.dark .blog-date-label {
+  color: var(--color-neutral-500);
 }
 
 .blog-archive-depth {
@@ -4331,7 +4339,7 @@ body {
   text-transform: uppercase;
 }
 
-.blog-article-meta span {
+.blog-article-meta .blog-date-item {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
@@ -4343,9 +4351,10 @@ body {
   color: var(--color-primary-500);
 }
 
-.blog-article-meta i {
+.blog-article-meta .blog-date-separator {
   width: 0.3rem;
   height: 0.3rem;
+  flex: none;
   border-radius: var(--radius-pill);
   background: var(--color-primary-500);
 }

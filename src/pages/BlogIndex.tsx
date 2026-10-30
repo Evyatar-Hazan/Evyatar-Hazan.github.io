@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Clock, Search, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Search, X } from 'lucide-react';
 import { Fragment, useEffect, useState, type FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -16,31 +16,19 @@ import {
 } from '../features/blog-library/blogLibrary';
 import { localizedPath } from '../routing/portfolioRoutes';
 import { cardSurfaceClassName } from '../components/cardSurface';
+import BlogDateMeta from '../components/blog/BlogDateMeta';
 
 const languageFromI18n = (language: string): BlogLanguage => (language === 'he' ? 'he' : 'en');
 
-const formatDate = (date: string, language: BlogLanguage) =>
-  new Intl.DateTimeFormat(language === 'he' ? 'he-IL' : 'en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(new Date(date));
-
-const EntryMeta = ({ post, language }: { post: BlogPost; language: BlogLanguage }) => {
-  const { t } = useTranslation();
-
-  return (
-    <div className="blog-archive-meta">
-      <time dateTime={post.date}>{formatDate(post.date, language)}</time>
-      <span className="blog-archive-meta-divider" aria-hidden="true" />
-      <span className="blog-archive-read-time"><Clock aria-hidden="true" />{post.readTime}</span>
-      <span className="blog-archive-meta-divider" aria-hidden="true" />
-      <span className="blog-archive-depth">{t(`blog.library.depths.${post.depth}`)}</span>
-      <span className="blog-archive-meta-divider" aria-hidden="true" />
-      <span>{t('blog.languageLabel', { language: t(`blog.languages.${post.language}`) })}</span>
-    </div>
-  );
-};
+const EntryMeta = ({ post, language }: { post: BlogPost; language: BlogLanguage }) => (
+  <BlogDateMeta
+    className="blog-archive-meta"
+    post={post}
+    language={language}
+    showDepth
+    showLanguage
+  />
+);
 
 const escapeSearchPattern = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 

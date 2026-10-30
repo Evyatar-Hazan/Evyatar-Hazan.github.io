@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { ArrowLeft, ArrowRight, CalendarDays, Clock } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getBlogPost, getBlogPosts } from '../content/blog/posts';
@@ -16,6 +16,7 @@ import {
   getRelatedProjectRelations,
 } from '../data/contentRelations';
 import { getProjectById } from '../data/profile';
+import BlogDateMeta from '../components/blog/BlogDateMeta';
 
 type ArticleHeading = { id: string; label: string; level: number };
 
@@ -40,13 +41,6 @@ const ArticleOutlineLinks = ({
 );
 
 const languageFromI18n = (language: string): BlogLanguage => (language === 'he' ? 'he' : 'en');
-
-const formatDate = (date: string, language: BlogLanguage) =>
-  new Intl.DateTimeFormat(language === 'he' ? 'he-IL' : 'en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(new Date(date));
 
 const BlogPost = () => {
   const { slug } = useParams();
@@ -163,13 +157,12 @@ const BlogPost = () => {
             <span>ENTRY / {String(posts.length).padStart(2, '0')}</span>
           </div>
           <div className="blog-article-heading">
-            <div className="blog-article-meta">
-              <span><CalendarDays aria-hidden="true" />{formatDate(post.date, language)}</span>
-              <i aria-hidden="true" />
-              <span><Clock aria-hidden="true" />{post.readTime}</span>
-              <i aria-hidden="true" />
-              <span>{t('blog.languageLabel', { language: t(`blog.languages.${post.language}`) })}</span>
-            </div>
+            <BlogDateMeta
+              className="blog-article-meta"
+              post={post}
+              language={language}
+              showLanguage
+            />
             <p>WRITING SYSTEM / ENTRY {articleNumber}</p>
             <h1 tabIndex={-1}>{post.title}</h1>
             <div className="blog-article-deck">

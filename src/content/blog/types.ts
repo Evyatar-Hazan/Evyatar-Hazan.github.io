@@ -13,6 +13,7 @@ export type BlogPostMeta = {
   excerpt: string;
   readerOutcome: string;
   date: string;
+  updatedDate?: string;
   readTime: string;
   tags: string[];
   depth: BlogDepth;
