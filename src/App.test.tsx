@@ -334,6 +334,14 @@ describe('App', () => {
 
     expect(await screen.findByRole('heading', { level: 1, name: language === 'he' ? 'אביתר חזן' : 'Evyatar Hazan' })).toBeInTheDocument();
     expect(screen.getByText('Full Stack Developer')).toBeInTheDocument();
+    const biography = document.querySelector('main > section:first-of-type [data-professional-bio]');
+    expect(biography).toBeInTheDocument();
+    expect(biography).toHaveTextContent(
+      language === 'he'
+        ? 'אני אביתר, מפתח Full Stack שבונה מוצרי Web ומובייל מהגדרת המוצר ועד לאימות בפרודקשן.'
+        : 'I’m Evyatar, a full-stack developer building web and mobile products from product framing through production verification.',
+    );
+    expect(biography?.textContent?.trim().split(/\s+/).length).toBeLessThanOrEqual(45);
     expect(screen.getAllByRole('link', { name: 'GitHub' }).some((link) => link.getAttribute('href') === 'https://github.com/Evyatar-Hazan')).toBe(true);
     expect(screen.getAllByRole('link', { name: 'LinkedIn' }).some((link) => link.getAttribute('href') === 'https://www.linkedin.com/in/evyatar-hazan-662235210/')).toBe(true);
     expect(screen.getByRole('link', { name: language === 'he' ? 'לצפייה בראיות מהפרויקטים' : 'View project evidence' })).toHaveAttribute('href', `/${language}/projects/`);
