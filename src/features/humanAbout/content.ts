@@ -26,8 +26,8 @@ const humanAboutCopy = {
     he: 'חשיבה מקצה לקצה, בדרך עבודה מעשית.',
   },
   introduction: {
-    en: 'I’m Evyatar, a software developer working across web and mobile products, full-stack systems, automation, accessibility, and applied AI.',
-    he: 'אני אביתר, מפתח תוכנה שעובד על מוצרי Web ומובייל, מערכות Full Stack, אוטומציה, נגישות ויישומי AI.',
+    en: 'I’m Evyatar, a software developer. This public portfolio focuses on web and mobile products, full-stack systems, automation, accessibility, and the evidence available for each area.',
+    he: 'אני אביתר, מפתח תוכנה. הפורטפוליו הציבורי הזה מתמקד במוצרי Web ומובייל, מערכות Full Stack, אוטומציה, נגישות ובראיות הזמינות לכל תחום.',
   },
   pillars: [
     {
@@ -38,8 +38,8 @@ const humanAboutCopy = {
         he: 'רקע מקצועי',
       },
       body: {
-        en: 'My background connects product interfaces, backend and infrastructure work, cross-platform test automation, and computer-vision tooling.',
-        he: 'הרקע שלי מחבר בין ממשקי מוצר, עבודת Backend ותשתיות, אוטומציית בדיקות חוצת פלטפורמות וכלי ראייה ממוחשבת.',
+        en: 'The public examples here cover product interfaces, backend and infrastructure work, test automation, and delivery. Areas without a public example are marked as evidence gaps instead of being presented as proven experience.',
+        he: 'הדוגמאות הציבוריות כאן מכסות ממשקי מוצר, עבודת Backend ותשתיות, אוטומציית בדיקות ומסירה. תחומים שאין להם דוגמה ציבורית מסומנים כפערי ראיות במקום להיות מוצגים כניסיון מוכח.',
       },
     },
     {
@@ -50,8 +50,8 @@ const humanAboutCopy = {
         he: 'סגנון עבודה',
       },
       body: {
-        en: 'I prefer clean, modular code and reusable foundations. Accessibility, clarity, and maintainability are part of the build from the start.',
-        he: 'אני מעדיף קוד נקי ומודולרי ותשתיות לשימוש חוזר. נגישות, בהירות ותחזוקתיות הן חלק מהבנייה מההתחלה.',
+        en: 'I aim for clean, modular code and reusable foundations, with accessibility, clarity, and maintainability treated as design goals. These are working preferences, not a guarantee of a particular outcome.',
+        he: 'אני שואף לקוד נקי ומודולרי ולתשתיות לשימוש חוזר, ומתייחס לנגישות, בהירות ותחזוקתיות כיעדי תכנון. אלה העדפות עבודה, לא הבטחה לתוצאה מסוימת.',
       },
     },
     {
@@ -62,8 +62,8 @@ const humanAboutCopy = {
         he: 'איך עובדים יחד',
       },
       body: {
-        en: 'Work starts by clarifying the need and the desired outcome. From there, I connect experience, code, and infrastructure, validate the live result, and document the system for continued maintenance.',
-        he: 'העבודה מתחילה בחידוד הצורך והתוצאה הרצויה. משם אני מחבר חוויה, קוד ותשתית, מאמת את התוצאה החיה ומתעד את המערכת להמשך תחזוקה.',
+        en: 'The documented method starts by clarifying the need and desired outcome, then connects experience, code, infrastructure, verification, and handoff. The examples show the method in practice; they do not promise scope, timing, or results for future work.',
+        he: 'דרך העבודה המתועדת מתחילה בחידוד הצורך והתוצאה הרצויה, ואז מחברת חוויה, קוד, תשתית, אימות ומסירה. הדוגמאות מראות את השיטה בפועל; הן אינן מבטיחות היקף, זמן או תוצאה בעבודה עתידית.',
       },
     },
   ] satisfies readonly HumanAboutPillar[],
