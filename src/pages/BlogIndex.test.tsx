@@ -146,6 +146,19 @@ describe('BlogIndex knowledge library', () => {
     expect(window.location.search).toContain(`q=${encodeURIComponent(query).replaceAll('%20', '+')}`);
   });
 
+  it('preserves spaces while a multi-word query is typed', () => {
+    renderBlog();
+    const search = screen.getByRole('searchbox', { name: 'Search all notes' });
+
+    fireEvent.change(search, { target: { value: 'unfocused' } });
+    fireEvent.change(search, { target: { value: 'unfocused ' } });
+    fireEvent.change(search, { target: { value: 'unfocused baseline' } });
+
+    expect(search).toHaveValue('unfocused baseline');
+    expect(window.location.search).toContain('q=unfocused+baseline');
+    expect(screen.getByRole('heading', { name: 'A focus test needs an unfocused baseline' })).toBeInTheDocument();
+  });
+
   it('searches Hebrew and mixed text using the active language', () => {
     currentLanguage = 'he';
     renderBlog('/he/blog/');

@@ -190,7 +190,7 @@ const BlogIndex = () => {
     const next = new URLSearchParams(searchParams);
 
     Object.entries(updates).forEach(([key, value]) => {
-      const cleanValue = value?.trim() ?? '';
+      const cleanValue = key === 'q' ? value ?? '' : value?.trim() ?? '';
       if (cleanValue) next.set(key, cleanValue);
       else next.delete(key);
     });

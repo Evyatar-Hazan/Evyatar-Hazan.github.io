@@ -47,7 +47,9 @@ for (const entry of cases) {
     const search = page.getByRole('searchbox', { name: entry.searchLabel });
     await search.focus();
     await expect(search).toBeFocused();
-    await search.fill(entry.query);
+    await search.pressSequentially(entry.query, { delay: 35 });
+    await expect(search).toHaveValue(entry.query);
+    await expect(search).toBeFocused();
 
     await expect(page).toHaveURL(new RegExp(`q=${encodeURIComponent(entry.query).replaceAll('%20', '(?:\\+|%20)')}`));
     await expect(page.locator('[data-library-results] .blog-archive-entry')).toHaveCount(1);
