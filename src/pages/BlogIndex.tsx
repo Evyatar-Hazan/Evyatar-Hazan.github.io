@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Search, X } from 'lucide-react';
-import { Fragment, useState, type FormEvent } from 'react';
+import { Fragment, useEffect, useState, type FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getBlogPosts } from '../content/blog/posts';
@@ -138,9 +138,11 @@ const BlogIndex = () => {
   const posts = getBlogPosts(language);
   const [searchParams, setSearchParams] = useSearchParams();
   const [visibleCount, setVisibleCount] = useState(BLOG_LIBRARY_PAGE_SIZE);
+  const urlQuery = searchParams.get('q') ?? '';
+  const [queryDraft, setQueryDraft] = useState({ baseUrlQuery: urlQuery, value: urlQuery });
+  const query = queryDraft.baseUrlQuery === urlQuery ? queryDraft.value : urlQuery;
   const topics = getPopularBlogTopics(posts);
   const depths = getAvailableBlogDepths(posts);
-  const query = searchParams.get('q') ?? '';
   const requestedTopic = searchParams.get('topic') ?? '';
   const requestedDepth = searchParams.get('depth') ?? '';
   const activeTopic = topics.includes(requestedTopic) ? requestedTopic : '';
@@ -174,7 +176,7 @@ const BlogIndex = () => {
     const next = new URLSearchParams(searchParams);
 
     Object.entries(updates).forEach(([key, value]) => {
-      const cleanValue = value?.trim() ?? '';
+      const cleanValue = key === 'q' ? value ?? '' : value?.trim() ?? '';
       if (cleanValue) next.set(key, cleanValue);
       else next.delete(key);
     });
@@ -183,7 +185,28 @@ const BlogIndex = () => {
     setSearchParams(next, options);
   };
 
-  const resetLibrary = () => updateParams({ q: '', topic: '', depth: '' });
+  useEffect(() => {
+    if (query === urlQuery) return;
+
+    const timeoutId = window.setTimeout(() => {
+      const next = new URLSearchParams(searchParams);
+      if (query) next.set('q', query);
+      else next.delete('q');
+      setSearchParams(next, { replace: true });
+    }, 150);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [query, searchParams, setSearchParams, urlQuery]);
+
+  const clearSearch = () => {
+    setQueryDraft({ baseUrlQuery: urlQuery, value: '' });
+    updateParams({ q: '' });
+  };
+
+  const resetLibrary = () => {
+    setQueryDraft({ baseUrlQuery: urlQuery, value: '' });
+    updateParams({ q: '', topic: '', depth: '' });
+  };
 
   usePageSeo({
     title: t('blog.seo.indexTitle'),
@@ -239,7 +262,10 @@ const BlogIndex = () => {
                   id="blog-library-search"
                   type="search"
                   value={query}
-                  onChange={(event) => updateParams({ q: event.target.value }, { replace: true })}
+                  onChange={(event) => {
+                    setQueryDraft({ baseUrlQuery: urlQuery, value: event.target.value });
+                    setVisibleCount(BLOG_LIBRARY_PAGE_SIZE);
+                  }}
                   placeholder={t('blog.library.searchPlaceholder')}
                   autoComplete="off"
                 />
@@ -247,7 +273,7 @@ const BlogIndex = () => {
                   <button
                     type="button"
                     className="blog-library-clear"
-                    onClick={() => updateParams({ q: '' })}
+                    onClick={clearSearch}
                     aria-label={t('blog.library.clearSearch')}
                   >
                     <X aria-hidden="true" />
