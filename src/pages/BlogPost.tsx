@@ -125,6 +125,8 @@ const BlogPost = () => {
               <span><CalendarDays aria-hidden="true" />{formatDate(post.date, language)}</span>
               <i aria-hidden="true" />
               <span><Clock aria-hidden="true" />{post.readTime}</span>
+              <i aria-hidden="true" />
+              <span>{t('blog.languageLabel', { language: t(`blog.languages.${post.language}`) })}</span>
             </div>
             <p>WRITING SYSTEM / ENTRY {articleNumber}</p>
             <h1 tabIndex={-1}>{post.title}</h1>

@@ -25,13 +25,19 @@ const formatDate = (date: string, language: BlogLanguage) =>
     day: 'numeric',
   }).format(new Date(date));
 
-const EntryMeta = ({ post, language }: { post: BlogPost; language: BlogLanguage }) => (
-  <div className="blog-archive-meta">
-    <time dateTime={post.date}>{formatDate(post.date, language)}</time>
-    <span aria-hidden="true" />
-    <span><Clock aria-hidden="true" />{post.readTime}</span>
-  </div>
-);
+const EntryMeta = ({ post, language }: { post: BlogPost; language: BlogLanguage }) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="blog-archive-meta">
+      <time dateTime={post.date}>{formatDate(post.date, language)}</time>
+      <span className="blog-meta-separator" aria-hidden="true" />
+      <span><Clock aria-hidden="true" />{post.readTime}</span>
+      <span className="blog-meta-separator" aria-hidden="true" />
+      <span>{t('blog.languageLabel', { language: t(`blog.languages.${post.language}`) })}</span>
+    </div>
+  );
+};
 
 const escapeSearchPattern = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 

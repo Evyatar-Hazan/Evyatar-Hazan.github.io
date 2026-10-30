@@ -16,6 +16,9 @@ const libraryCopy = {
     'blog.library.reset': 'Reset library',
     'blog.library.emptyTitle': 'No notes match this signal',
     'blog.library.loadMore': 'Load more notes',
+    'blog.languageLabel': 'Language: {{language}}',
+    'blog.languages.en': 'English',
+    'blog.languages.he': 'Hebrew',
   },
   he: {
     'blog.title': 'בלוג',
@@ -28,12 +31,18 @@ const libraryCopy = {
     'blog.library.reset': 'איפוס הספרייה',
     'blog.library.emptyTitle': 'אין רשומות שמתאימות לחיפוש',
     'blog.library.loadMore': 'טעינת רשומות נוספות',
+    'blog.languageLabel': 'שפה: {{language}}',
+    'blog.languages.en': 'אנגלית',
+    'blog.languages.he': 'עברית',
   },
 } as const;
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string) => libraryCopy[currentLanguage as 'en' | 'he'][key as keyof typeof libraryCopy.en] ?? key,
+    t: (key: string, values?: { language?: string }) => {
+      const copy = libraryCopy[currentLanguage as 'en' | 'he'][key as keyof typeof libraryCopy.en] ?? key;
+      return values?.language ? copy.replace('{{language}}', values.language) : copy;
+    },
     i18n: { language: currentLanguage },
   }),
 }));
@@ -187,5 +196,19 @@ describe('BlogIndex knowledge library', () => {
     renderBlog('/he/blog/');
     expect(screen.getByRole('search', { name: 'חיפוש וסינון בספריית הידע' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'הכול' })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('shows reading duration and article language consistently before opening a post', () => {
+    const { unmount } = renderBlog();
+    const englishMeta = document.querySelector('.blog-archive-meta');
+    expect(englishMeta).toHaveTextContent('4 min read');
+    expect(englishMeta).toHaveTextContent('Language: English');
+    unmount();
+
+    currentLanguage = 'he';
+    renderBlog('/he/blog/');
+    const hebrewMeta = document.querySelector('.blog-archive-meta');
+    expect(hebrewMeta).toHaveTextContent('4 דקות קריאה');
+    expect(hebrewMeta).toHaveTextContent('שפה: עברית');
   });
 });

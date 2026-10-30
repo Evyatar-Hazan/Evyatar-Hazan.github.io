@@ -357,6 +357,11 @@
     "newerPost": "Newer entry",
     "olderPost": "Next entry",
     "readPost": "Read post",
+    "languageLabel": "Language: {{language}}",
+    "languages": {
+      "en": "English",
+      "he": "Hebrew"
+    },
     "backToBlog": "Back to blog",
     "notFoundTitle": "Post not found",
     "notFoundDescription": "The link may have changed, or this post may not exist in the current language yet.",
