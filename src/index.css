@@ -6277,6 +6277,25 @@ textarea.contact-workspace-input {
   list-style: disc;
 }
 
+.contact-error-summary button {
+  color: inherit;
+  text-align: start;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.contact-error-summary button:hover,
+.contact-error-summary button:focus-visible {
+  text-decoration-thickness: 2px;
+}
+
+.contact-error-summary button:focus-visible {
+  border-radius: 0.2rem;
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
 .contact-privacy-note {
   margin-top: 1.25rem;
   border-top: 1px solid var(--home-border);
@@ -6322,6 +6341,16 @@ textarea.contact-workspace-input {
 .contact-delivery-status > svg {
   width: var(--icon-size-sm);
   height: var(--icon-size-sm);
+}
+
+.contact-delivery-status__copy {
+  display: grid;
+  gap: 0.45rem;
+  line-height: 1.55;
+}
+
+.contact-delivery-status__copy strong {
+  font-weight: 900;
 }
 
 .contact-delivery-status.is-success {
