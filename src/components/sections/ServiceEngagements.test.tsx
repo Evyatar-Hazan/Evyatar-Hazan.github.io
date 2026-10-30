@@ -11,12 +11,17 @@ const buildPath = vi.fn<LocalizedPathBuilder>((language, target) => {
 
 describe('ServiceEngagements', () => {
   it.each([
-    ['en', 'Choose the starting point that fits the need.', 'A good fit for', 'What the work can include'],
-    ['he', 'בוחרים את נקודת הפתיחה שמתאימה לצורך.', 'למי זה מתאים', 'מה העבודה יכולה לכלול'],
-  ] as const)('renders three complete engagement articles in %s', (language, title, audience, deliverables) => {
+    ['en', 'Choose the starting point that fits the need.', 'Open to relevant conversations.', 'Availability / practical fit', 'A good fit for', 'What the work can include'],
+    ['he', 'בוחרים את נקודת הפתיחה שמתאימה לצורך.', 'פתוח לשיחות רלוונטיות.', 'זמינות / התאמה מעשית', 'למי זה מתאים', 'מה העבודה יכולה לכלול'],
+  ] as const)('renders three complete engagement articles in %s', (language, title, availability, availabilityLabel, audience, deliverables) => {
     render(<ServiceEngagements language={language} buildPath={buildPath} />);
 
     expect(screen.getByRole('heading', { level: 2, name: title })).toBeInTheDocument();
+    expect(screen.getByRole('complementary', { name: availabilityLabel })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 3, name: availability })).toBeInTheDocument();
+    expect(screen.getByText(language === 'he'
+      ? /זמינות ולוחות זמנים מאושרים לכל הזדמנות לאחר שיחת היכרות/
+      : /Availability and timing are confirmed for each opportunity after an initial conversation/)).toBeInTheDocument();
     const articles = screen.getAllByRole('article');
     expect(articles).toHaveLength(3);
 
