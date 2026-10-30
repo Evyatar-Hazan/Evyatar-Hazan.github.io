@@ -157,11 +157,14 @@ describe('ContactBriefFeature', () => {
     });
     vi.stubGlobal('fetch', fetchMock);
     render(<ContactBriefFeature language="he" buildLocalizedPath={buildLocalizedPath} />);
-    fireEvent.click(screen.getByRole('button', { name: /תקציר פרויקט קצר/i }));
+    fireEvent.click(screen.getByRole('button', { name: /שליחת הודעה קצרה/i }));
 
     expect(screen.queryByText('מה קורה עכשיו')).not.toBeInTheDocument();
     expect(screen.queryByText(/אין כאן התחייבות לזמן תגובה קבוע/i)).not.toBeInTheDocument();
 
+    fireEvent.change(screen.getByLabelText('הודעה'), {
+      target: { value: 'בדיקה סינתטית של הצעד הבא' },
+    });
     fireEvent.change(screen.getByLabelText('שם'), { target: { value: 'מבקר בדיקה' } });
     fireEvent.change(screen.getByLabelText('כתובת אימייל'), {
       target: { value: 'visitor@example.test' },
