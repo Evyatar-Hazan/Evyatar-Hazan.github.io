@@ -527,12 +527,12 @@ describe('App', () => {
     });
   });
 
-  it('surfaces recent writing on the home page', async () => {
+  it('surfaces editorially ranked writing on the home page', async () => {
     render(<App />);
 
     expect(await screen.findByText('blogPreview.eyebrow')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /blogPreview.viewAll/i })).toHaveAttribute('href', '/en/blog/');
-    expect(screen.getByRole('heading', { name: 'A focus test needs an unfocused baseline' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'What I learned from building a credible portfolio' })).toBeInTheDocument();
     expect(document.querySelectorAll('#writing article')).toHaveLength(3);
     expect(document.querySelectorAll('#writing .writing-feature')).toHaveLength(1);
     expect(document.querySelectorAll('#writing .writing-entry')).toHaveLength(2);

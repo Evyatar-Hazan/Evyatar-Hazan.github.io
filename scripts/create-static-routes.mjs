@@ -131,12 +131,28 @@ const removeAdSenseScript = (html) => html.replace(
 const rootHtml = await readFile(path.join(distDir, 'index.html'), 'utf8');
 
 const blogSource = await readFile(path.join(srcDir, 'content', 'blog', 'metadata.ts'), 'utf8');
+const editorialRankBySlug = new Map(
+  [...blogSource.matchAll(/^\s{2}'([^']+)':\s*(\d+),$/gmu)]
+    .map((match) => [match[1], Number(match[2])])
+);
+const compareEditorialValue = (left, right) =>
+  (editorialRankBySlug.get(left.slug) ?? Number.MAX_SAFE_INTEGER)
+  - (editorialRankBySlug.get(right.slug) ?? Number.MAX_SAFE_INTEGER)
+  || Date.parse(right.date) - Date.parse(left.date)
+  || left.slug.localeCompare(right.slug);
 const blogFiles = await readdir(path.join(srcDir, 'content', 'blog'));
 const blogSlugs = [...new Set(
   blogFiles
     .filter((file) => file.endsWith('.en.mdx'))
     .map((file) => file.replace(/\.en\.mdx$/, ''))
 )];
+const missingEditorialRanks = blogSlugs.filter((slug) => !editorialRankBySlug.has(slug));
+if (missingEditorialRanks.length > 0) {
+  throw new Error(`Missing editorial rank for: ${missingEditorialRanks.join(', ')}`);
+}
+if (new Set(editorialRankBySlug.values()).size !== editorialRankBySlug.size) {
+  throw new Error('Editorial ranks must be unique so the default blog order stays explicit.');
+}
 const blogArticleHtml = new Map();
 for (const file of blogFiles.filter((candidate) => /\.(en|he)\.mdx$/u.test(candidate))) {
   const match = file.match(/^(.*)\.(en|he)\.mdx$/u);
@@ -152,7 +168,8 @@ const blogEntries = [...blogSource.matchAll(/slug:\s*'([^']+)'[\s\S]*?language:\
     excerpt: match[3],
     date: match[4],
     tags: match[5].replace(/'/g, '').split(',').map((value) => value.trim()).filter(Boolean)
-  }));
+  }))
+  .sort(compareEditorialValue);
 
 const localizedBlogEntries = [...blogSource.matchAll(/slug:\s*'([^']+)'[\s\S]*?language:\s*'(en|he)'[\s\S]*?title:\s*'([^']+)'[\s\S]*?excerpt:\s*'([^']+)'[\s\S]*?date:\s*'([^']+)'[\s\S]*?tags:\s*\[([^\]]*)\]/g)]
   .map((match) => ({
@@ -162,7 +179,8 @@ const localizedBlogEntries = [...blogSource.matchAll(/slug:\s*'([^']+)'[\s\S]*?l
     excerpt: match[4],
     date: match[5],
     tags: match[6].replace(/'/g, '').split(',').map((value) => value.trim()).filter(Boolean)
-  }));
+  }))
+  .sort(compareEditorialValue);
 
 const profileSource = await readFile(path.join(srcDir, 'data', 'profile.ts'), 'utf8');
 const localeByLanguage = {
