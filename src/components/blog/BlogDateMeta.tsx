@@ -8,6 +8,7 @@ type BlogDateMetaProps = {
   language: BlogLanguage;
   post: BlogPostMeta;
   showDepth?: boolean;
+  showLanguage?: boolean;
 };
 
 const DateValue = ({ date, language }: { date: string; language: BlogLanguage }) => {
@@ -20,7 +21,13 @@ const DateValue = ({ date, language }: { date: string; language: BlogLanguage })
   );
 };
 
-const BlogDateMeta = ({ className, language, post, showDepth = false }: BlogDateMetaProps) => {
+const BlogDateMeta = ({
+  className,
+  language,
+  post,
+  showDepth = false,
+  showLanguage = false,
+}: BlogDateMetaProps) => {
   const { t } = useTranslation();
   const updatedDate = post.updatedDate
     ? presentCalendarDate(post.updatedDate, { language })
@@ -54,6 +61,14 @@ const BlogDateMeta = ({ className, language, post, showDepth = false }: BlogDate
           <i className="blog-date-separator" aria-hidden="true" />
           <span className="blog-date-item blog-archive-depth">
             {t(`blog.library.depths.${post.depth}`)}
+          </span>
+        </>
+      )}
+      {showLanguage && (
+        <>
+          <i className="blog-date-separator" aria-hidden="true" />
+          <span className="blog-date-item">
+            {t('blog.languageLabel', { language: t(`blog.languages.${post.language}`) })}
           </span>
         </>
       )}

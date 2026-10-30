@@ -157,7 +157,12 @@ const BlogPost = () => {
             <span>ENTRY / {String(posts.length).padStart(2, '0')}</span>
           </div>
           <div className="blog-article-heading">
-            <BlogDateMeta className="blog-article-meta" post={post} language={language} />
+            <BlogDateMeta
+              className="blog-article-meta"
+              post={post}
+              language={language}
+              showLanguage
+            />
             <p>WRITING SYSTEM / ENTRY {articleNumber}</p>
             <h1 tabIndex={-1}>{post.title}</h1>
             <div className="blog-article-deck">

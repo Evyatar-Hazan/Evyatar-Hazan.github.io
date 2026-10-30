@@ -359,6 +359,11 @@
     "newerPost": "הרשומה הקודמת",
     "olderPost": "הרשומה הבאה",
     "readPost": "קרא פוסט",
+    "languageLabel": "שפה: {{language}}",
+    "languages": {
+      "en": "אנגלית",
+      "he": "עברית"
+    },
     "backToBlog": "חזרה לבלוג",
     "notFoundTitle": "הפוסט לא נמצא",
     "notFoundDescription": "יכול להיות שהקישור השתנה או שהפוסט עדיין לא קיים בשפה הנוכחית.",

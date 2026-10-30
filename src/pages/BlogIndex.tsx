@@ -21,7 +21,13 @@ import BlogDateMeta from '../components/blog/BlogDateMeta';
 const languageFromI18n = (language: string): BlogLanguage => (language === 'he' ? 'he' : 'en');
 
 const EntryMeta = ({ post, language }: { post: BlogPost; language: BlogLanguage }) => (
-  <BlogDateMeta className="blog-archive-meta" post={post} language={language} showDepth />
+  <BlogDateMeta
+    className="blog-archive-meta"
+    post={post}
+    language={language}
+    showDepth
+    showLanguage
+  />
 );
 
 const escapeSearchPattern = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

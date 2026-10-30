@@ -8,6 +8,8 @@ vi.mock('react-i18next', () => ({
     t: (key: string) => ({
       'blog.publishedOn': 'Published',
       'blog.updatedOn': 'Updated',
+      'blog.languageLabel': 'Language: English',
+      'blog.languages.en': 'English',
     }[key] ?? key),
   }),
 }));
@@ -28,12 +30,15 @@ const post: BlogPostMeta = {
 
 describe('BlogDateMeta', () => {
   it('distinguishes publication and update dates with semantic, locale-aware values', () => {
-    const { container } = render(<BlogDateMeta className="meta" language="en" post={post} />);
+    const { container } = render(
+      <BlogDateMeta className="meta" language="en" post={post} showLanguage />,
+    );
 
     expect(screen.getByText('Published')).toBeInTheDocument();
     expect(screen.getByText('Updated')).toBeInTheDocument();
     expect(screen.getByText('September 6, 2026')).toHaveAttribute('datetime', '2026-09-06');
     expect(screen.getByText('October 3, 2026')).toHaveAttribute('datetime', '2026-10-03');
+    expect(screen.getByText('Language: English')).toBeInTheDocument();
     expect(container.querySelectorAll('[data-date-kind]')).toHaveLength(2);
   });
 
