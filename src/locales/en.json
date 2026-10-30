@@ -351,6 +351,8 @@
     "subtitle": "Short, practical articles about digital products, frontend work, testing, and deployment.",
     "featured": "Featured",
     "latestEntry": "Latest entry",
+    "publishedOn": "Published",
+    "updatedOn": "Updated",
     "articleTopics": "Article topics",
     "articleOutline": "Article map",
     "moreWriting": "Continue reading",

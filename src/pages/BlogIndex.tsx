@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Clock, Search, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Search, X } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -15,22 +15,12 @@ import {
 } from '../features/blog-library/blogLibrary';
 import { localizedPath } from '../routing/portfolioRoutes';
 import { cardSurfaceClassName } from '../components/cardSurface';
+import BlogDateMeta from '../components/blog/BlogDateMeta';
 
 const languageFromI18n = (language: string): BlogLanguage => (language === 'he' ? 'he' : 'en');
 
-const formatDate = (date: string, language: BlogLanguage) =>
-  new Intl.DateTimeFormat(language === 'he' ? 'he-IL' : 'en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(new Date(date));
-
 const EntryMeta = ({ post, language }: { post: BlogPost; language: BlogLanguage }) => (
-  <div className="blog-archive-meta">
-    <time dateTime={post.date}>{formatDate(post.date, language)}</time>
-    <span aria-hidden="true" />
-    <span><Clock aria-hidden="true" />{post.readTime}</span>
-  </div>
+  <BlogDateMeta className="blog-archive-meta" post={post} language={language} />
 );
 
 const ArchiveFeature = ({ post, language }: { post: BlogPost; language: BlogLanguage }) => {

@@ -8,6 +8,7 @@ export type BlogPostMeta = {
   title: string;
   excerpt: string;
   date: string;
+  updatedDate?: string;
   readTime: string;
   tags: string[];
   featured: boolean;
