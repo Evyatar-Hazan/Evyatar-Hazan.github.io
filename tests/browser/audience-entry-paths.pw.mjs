@@ -7,7 +7,7 @@ const viewports = [
 
 const languages = {
   en: {
-    title: 'What are you here to explore?',
+    title: 'What do you need to move forward?',
     links: [
       ['Discuss a product or system', '/en/contact/'],
       ['Review selected work', '/en/projects/'],
@@ -15,7 +15,7 @@ const languages = {
     ],
   },
   he: {
-    title: 'מה תרצו למצוא כאן?',
+    title: 'מה צריך להתקדם?',
     links: [
       ['לדבר על מוצר או מערכת', '/he/contact/'],
       ['לצפייה בעבודות נבחרות', '/he/projects/'],
