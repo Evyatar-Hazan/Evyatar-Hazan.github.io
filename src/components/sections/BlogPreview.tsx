@@ -52,7 +52,7 @@ const ArticleLink = ({ post, language, featured = false, index }: ArticleLinkPro
     >
       <div className="writing-article-index" aria-hidden="true">
         <span>{issue}</span>
-        <span>{featured ? t('blogPreview.latest') : t('blogPreview.note')}</span>
+        <span>{featured ? t('blogPreview.editorialPick') : t('blogPreview.note')}</span>
       </div>
 
       <div className="writing-article-copy">
