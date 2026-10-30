@@ -102,6 +102,8 @@ const localizedUi = {
     privacyLink: 'Read the privacy notice',
     emailFallback: 'Form delivery unavailable? Email directly:',
     success: 'FormSubmit confirmed delivery. Your message is on its way.',
+    successNextLabel: 'What happens next',
+    successNext: 'I will review the context and reply with focused questions or a recommended next step. There is no fixed response-time promise.',
     error: 'Delivery was not confirmed. Your brief is still here; retry or use a draft instead.',
     timeout: 'The request timed out before delivery was confirmed. Your brief is still here.',
     retry: 'Retry form delivery',
@@ -164,6 +166,8 @@ const localizedUi = {
     privacyLink: 'למידע נוסף בעמוד הפרטיות',
     emailFallback: 'הטופס לא זמין? אפשר לשלוח אימייל ישירות:',
     success: 'FormSubmit אישר את המסירה. ההודעה בדרך.',
+    successNextLabel: 'מה קורה עכשיו',
+    successNext: 'אעבור על ההקשר ואחזור עם שאלות ממוקדות או המלצה לצעד הבא. אין כאן התחייבות לזמן תגובה קבוע.',
     error: 'המסירה לא אושרה. התקציר נשמר כאן; אפשר לנסות שוב או להשתמש בטיוטה.',
     timeout: 'הבקשה הסתיימה לפני שהמסירה אושרה. התקציר נשמר כאן.',
     retry: 'ניסיון שליחה נוסף',
@@ -554,12 +558,18 @@ const ContactBriefFeature = ({
                   tabIndex={-1}
                   role="status"
                   aria-live="polite"
+                  aria-atomic="true"
                   className={`contact-delivery-status is-${formStatus}`}
                 >
                   {formStatus === 'success'
                     ? <CheckCircle2 aria-hidden="true" />
                     : <XCircle aria-hidden="true" />}
-                  <p>{statusMessage}</p>
+                  {formStatus === 'success' ? (
+                    <div className="contact-delivery-status__copy">
+                      <p>{statusMessage}</p>
+                      <p><strong>{ui.successNextLabel}:</strong> {ui.successNext}</p>
+                    </div>
+                  ) : <p>{statusMessage}</p>}
                   {formStatus !== 'success' && (
                     <button type="submit" disabled={isSubmitting}>{ui.retry}</button>
                   )}
