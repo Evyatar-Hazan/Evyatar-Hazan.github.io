@@ -338,7 +338,7 @@ describe('App', () => {
     expect(screen.getAllByRole('link', { name: 'LinkedIn' }).some((link) => link.getAttribute('href') === 'https://www.linkedin.com/in/evyatar-hazan-662235210/')).toBe(true);
     expect(screen.getByRole('link', { name: language === 'he' ? 'לצפייה בראיות מהפרויקטים' : 'View project evidence' })).toHaveAttribute('href', `/${language}/projects/`);
     expect(screen.getByRole('link', { name: language === 'he' ? 'להתחיל שיחה' : 'Start a conversation' })).toHaveAttribute('href', `/${language}/contact/`);
-    expect(document.querySelectorAll('[aria-controls="capability-panel"]')).toHaveLength(7);
+    expect(document.querySelectorAll('[aria-controls="capability-panel"]')).toHaveLength(6);
     expect(document.querySelector('#delivery-process-title')?.closest('section')?.querySelectorAll('ol > li')).toHaveLength(5);
     expect(document.querySelectorAll('#working-principles [data-principle-id]')).toHaveLength(4);
     expect(document.querySelectorAll('#service-engagements > div > ol > li')).toHaveLength(3);
@@ -351,16 +351,13 @@ describe('App', () => {
     await waitFor(() => expect(document.querySelector('#capability-panel')).toHaveAttribute('data-capability-id', 'automation'));
     expect(screen.getByText(/do not publicly verify every named device-automation tool/i)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: /AI & computer vision/ }));
-    expect(window.location.search).toContain('capability=aiCv');
-    expect(window.location.search).toContain('ref=profile');
-    expect(window.location.hash).toBe('#capability-explorer-title');
-    expect(document.querySelector('#capability-panel')).toHaveAttribute('data-capability-id', 'aiCv');
-    expect(screen.getByText(/No canonical public project or article/i)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /AI & computer vision/ })).not.toBeInTheDocument();
 
-    window.history.pushState({}, '', '/en/about/?capability=missing');
+    window.history.pushState({}, '', '/en/about/?capability=aiCv&ref=profile#capability-explorer-title');
     fireEvent.popState(window);
     await waitFor(() => expect(document.querySelector('#capability-panel')).toHaveAttribute('data-capability-id', 'webMobile'));
+    expect(window.location.search).toContain('ref=profile');
+    expect(window.location.hash).toBe('#capability-explorer-title');
   });
 
   it('publishes one conservative Person JSON-LD record on About only', async () => {
