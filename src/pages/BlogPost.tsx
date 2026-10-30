@@ -14,6 +14,26 @@ import { getProjectById } from '../data/profile';
 
 type ArticleHeading = { id: string; label: string; level: number };
 
+const ARTICLE_OUTLINE_MIN_HEADINGS = 6;
+
+const ArticleOutlineLinks = ({
+  activeHeading,
+  headings,
+}: {
+  activeHeading: string;
+  headings: ArticleHeading[];
+}) => (
+  <ol>
+    {headings.map((heading) => (
+      <li key={heading.id} data-level={heading.level}>
+        <a href={`#${heading.id}`} aria-current={activeHeading === heading.id ? 'location' : undefined}>
+          {heading.label}
+        </a>
+      </li>
+    ))}
+  </ol>
+);
+
 const languageFromI18n = (language: string): BlogLanguage => (language === 'he' ? 'he' : 'en');
 
 const formatDate = (date: string, language: BlogLanguage) =>
@@ -97,6 +117,7 @@ const BlogPost = () => {
 
   const Content = post.Content;
   const articleNumber = String(postIndex + 1).padStart(2, '0');
+  const hasArticleOutline = headings.length >= ARTICLE_OUTLINE_MIN_HEADINGS;
   const relatedProjects: RelatedContentItem[] = getRelatedProjectRelations(post.slug).flatMap((relation) => (
     getProjectById(relation.projectId)
       ? [{
@@ -144,21 +165,22 @@ const BlogPost = () => {
               <span>READING / {articleNumber}</span>
               <div><motion.i style={{ scaleY: reduceMotion ? 1 : progressScale }} /></div>
             </div>
-            {headings.length > 0 && (
-              <nav>
+            {hasArticleOutline && (
+              <nav aria-label={t('blog.articleOutline')}>
                 <span>{t('blog.articleOutline')}</span>
-                <ol>
-                  {headings.map((heading) => (
-                    <li key={heading.id} data-level={heading.level}>
-                      <a href={`#${heading.id}`} aria-current={activeHeading === heading.id ? 'location' : undefined}>
-                        {heading.label}
-                      </a>
-                    </li>
-                  ))}
-                </ol>
+                <ArticleOutlineLinks activeHeading={activeHeading} headings={headings} />
               </nav>
             )}
           </aside>
+
+          {hasArticleOutline && (
+            <details className="blog-mobile-outline">
+              <summary>{t('blog.articleOutline')}</summary>
+              <nav aria-label={t('blog.articleOutline')}>
+                <ArticleOutlineLinks activeHeading={activeHeading} headings={headings} />
+              </nav>
+            </details>
+          )}
 
           <div ref={proseRef} className="blog-prose">
             <Content />

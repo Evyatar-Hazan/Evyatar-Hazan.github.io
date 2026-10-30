@@ -729,6 +729,28 @@ describe('App', () => {
     expect(document.querySelectorAll('.blog-article-next-grid a').length).toBeGreaterThan(0);
   });
 
+  it('shows a heading-synchronized outline only for articles with at least six sections', async () => {
+    const longArticle = renderAt('/en/blog/retries-should-not-duplicate-data/');
+
+    expect(await screen.findByRole('heading', { name: 'A retry should repeat intent, not duplicate data' })).toBeInTheDocument();
+    const proseHeadings = Array.from(longArticle.container.querySelectorAll<HTMLElement>('.blog-prose > h2, .blog-prose > h3'));
+    const desktopOutline = longArticle.container.querySelector<HTMLElement>('.blog-reading-rail nav');
+    const outlineLinks = Array.from(desktopOutline?.querySelectorAll<HTMLAnchorElement>('a') ?? []);
+
+    expect(proseHeadings.length).toBeGreaterThanOrEqual(6);
+    expect(outlineLinks.map((link) => link.textContent)).toEqual(proseHeadings.map((heading) => heading.textContent));
+    expect(outlineLinks.map((link) => link.hash)).toEqual(proseHeadings.map((heading) => `#${heading.id}`));
+    expect(longArticle.container.querySelector('.blog-mobile-outline')).toBeInTheDocument();
+
+    longArticle.unmount();
+    const shortArticle = renderAt('/en/blog/catering-whatsapp/');
+
+    expect(await screen.findByRole('heading', { name: 'How I built a business site around WhatsApp' })).toBeInTheDocument();
+    expect(shortArticle.container.querySelectorAll('.blog-prose > h2, .blog-prose > h3')).toHaveLength(4);
+    expect(shortArticle.container.querySelector('.blog-reading-rail nav')).not.toBeInTheDocument();
+    expect(shortArticle.container.querySelector('.blog-mobile-outline')).not.toBeInTheDocument();
+  });
+
   it('mounts the synthetic retry demo only in its related article', async () => {
     renderAt('/en/blog/retries-should-not-duplicate-data/');
 
