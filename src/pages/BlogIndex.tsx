@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Clock, Search, X } from 'lucide-react';
-import { useState, type FormEvent } from 'react';
+import { Fragment, useState, type FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getBlogPosts } from '../content/blog/posts';
@@ -32,6 +32,29 @@ const EntryMeta = ({ post, language }: { post: BlogPost; language: BlogLanguage 
     <span><Clock aria-hidden="true" />{post.readTime}</span>
   </div>
 );
+
+const escapeSearchPattern = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const HighlightedSearchText = ({ text, query }: { text: string; query: string }) => {
+  const pattern = query
+    .normalize('NFKC')
+    .trim()
+    .split(/\s+/u)
+    .filter(Boolean)
+    .map(escapeSearchPattern)
+    .join('\\s+');
+
+  if (!pattern) return text;
+
+  const parts = text.split(new RegExp(`(${pattern})`, 'giu')).filter(Boolean);
+  const exactMatch = new RegExp(`^${pattern}$`, 'iu');
+
+  return parts.map((part, index) => (
+    <Fragment key={`${part}-${index}`}>
+      {exactMatch.test(part) ? <mark className="blog-search-highlight">{part}</mark> : part}
+    </Fragment>
+  ));
+};
 
 const ArchiveFeature = ({ post, language }: { post: BlogPost; language: BlogLanguage }) => {
   const { t } = useTranslation();
@@ -66,7 +89,17 @@ const ArchiveFeature = ({ post, language }: { post: BlogPost; language: BlogLang
   );
 };
 
-const ArchiveEntry = ({ post, index, language }: { post: BlogPost; index: number; language: BlogLanguage }) => {
+const ArchiveEntry = ({
+  post,
+  index,
+  language,
+  query,
+}: {
+  post: BlogPost;
+  index: number;
+  language: BlogLanguage;
+  query: string;
+}) => {
   const { t } = useTranslation();
   const reduceMotion = useReducedMotion();
   const ArrowIcon = language === 'he' ? ArrowLeft : ArrowRight;
@@ -86,11 +119,17 @@ const ArchiveEntry = ({ post, index, language }: { post: BlogPost; index: number
       </div>
       <div className="blog-archive-entry-copy">
         <EntryMeta post={post} language={language} />
-        <h2><Link to={localizedPath(language, { route: 'article', id: post.slug as ArticleId })}>{post.title}</Link></h2>
-        <p>{post.excerpt}</p>
+        <h2>
+          <Link to={localizedPath(language, { route: 'article', id: post.slug as ArticleId })}>
+            <HighlightedSearchText text={post.title} query={query} />
+          </Link>
+        </h2>
+        <p><HighlightedSearchText text={post.excerpt} query={query} /></p>
         <div className="blog-archive-entry-footer">
           <ul aria-label={t('blog.articleTopics')}>
-            {post.tags.slice(0, 3).map((tag) => <li key={tag}>{tag}</li>)}
+            {post.tags.slice(0, 3).map((tag) => (
+              <li key={tag}><HighlightedSearchText text={tag} query={query} /></li>
+            ))}
           </ul>
           <Link to={localizedPath(language, { route: 'article', id: post.slug as ArticleId })} aria-label={`${t('blog.readPost')}: ${post.title}`}>
             {t('blog.readPost')}<ArrowIcon aria-hidden="true" />
@@ -266,6 +305,7 @@ const BlogIndex = () => {
                   post={post}
                   index={index + (isFiltering ? 0 : 1)}
                   language={language}
+                  query={normalizedQuery ? query : ''}
                 />
               ))}
             </div>

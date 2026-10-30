@@ -4161,6 +4161,20 @@ body {
   color: var(--color-neutral-300);
 }
 
+.blog-search-highlight {
+  border-bottom: 2px solid var(--color-warning-700);
+  padding-inline: 0.08em;
+  background: color-mix(in srgb, var(--color-warning-300) 58%, transparent);
+  color: inherit;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.dark .blog-search-highlight {
+  border-bottom-color: var(--color-warning-300);
+  background: color-mix(in srgb, var(--color-warning-300) 28%, transparent);
+}
+
 .blog-archive-entry-footer {
   margin-top: auto;
 }
