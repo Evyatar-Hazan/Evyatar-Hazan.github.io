@@ -11,8 +11,8 @@ const buildPath = vi.fn<LocalizedPathBuilder>((language, target) => {
 
 describe('ServiceEngagements', () => {
   it.each([
-    ['en', 'Three ways to move a product forward.', 'Intended audience', 'Typical deliverables'],
-    ['he', 'שלוש דרכים לקדם מוצר.', 'למי זה מתאים', 'תוצרים אופייניים'],
+    ['en', 'Choose the starting point that fits the need.', 'A good fit for', 'What the work can include'],
+    ['he', 'בוחרים את נקודת הפתיחה שמתאימה לצורך.', 'למי זה מתאים', 'מה העבודה יכולה לכלול'],
   ] as const)('renders three complete engagement articles in %s', (language, title, audience, deliverables) => {
     render(<ServiceEngagements language={language} buildPath={buildPath} />);
 

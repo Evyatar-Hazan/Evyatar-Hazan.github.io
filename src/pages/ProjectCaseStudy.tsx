@@ -12,7 +12,6 @@ import {
 } from '../data/contentRelations';
 import { getPortfolioCapabilityGroups } from '../data/portfolioCapabilities';
 import { localizedPath } from '../routing/portfolioRoutes';
-import AiProvenanceSection from '../features/ai-provenance/AiProvenanceSection';
 import ProductVisualGallery from '../components/ProductVisualGallery';
 import CaseStudyStory from '../components/CaseStudyStory';
 import {
@@ -111,13 +110,7 @@ const ProjectCaseStudy = () => {
     />
   );
 
-  const supplementaryEvidence: ReactNode = project.id === 'nis_boutique' ? (
-    <AiProvenanceSection
-      buildPath={localizedPath}
-      language={language}
-      mode="full"
-    />
-  ) : undefined;
+  const supplementaryEvidence: ReactNode = undefined;
 
   return (
     <main id="main-content" tabIndex={-1} className="bg-surface-canvas transition-colors duration-500">

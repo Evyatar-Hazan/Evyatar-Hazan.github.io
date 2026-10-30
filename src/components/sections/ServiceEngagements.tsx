@@ -14,20 +14,20 @@ type ServiceEngagementsProps = PortfolioSlotProps & {
 
 const sectionCopy = {
   en: {
-    eyebrow: '03 / Engagement types',
-    title: 'Three ways to move a product forward.',
-    intro: 'Choose the starting point closest to the current need. Each path connects the work to a relevant public example.',
-    audience: 'Intended audience',
-    deliverables: 'Typical deliverables',
-    proof: 'Relevant proof',
+    eyebrow: '03 / Ways to work together',
+    title: 'Choose the starting point that fits the need.',
+    intro: 'A new product, an internal system, or an existing product that needs to improve.',
+    audience: 'A good fit for',
+    deliverables: 'What the work can include',
+    proof: 'Relevant example',
   },
   he: {
-    eyebrow: '03 / סוגי התקשרות',
-    title: 'שלוש דרכים לקדם מוצר.',
-    intro: 'בחרו את נקודת הפתיחה הקרובה ביותר לצורך הנוכחי. כל מסלול מחבר את העבודה לדוגמה ציבורית רלוונטית.',
+    eyebrow: '03 / דרכים לעבוד יחד',
+    title: 'בוחרים את נקודת הפתיחה שמתאימה לצורך.',
+    intro: 'מוצר חדש, מערכת פנימית או מוצר קיים שצריך להשתפר.',
     audience: 'למי זה מתאים',
-    deliverables: 'תוצרים אופייניים',
-    proof: 'הוכחה רלוונטית',
+    deliverables: 'מה העבודה יכולה לכלול',
+    proof: 'דוגמה רלוונטית',
   },
 } as const;
 

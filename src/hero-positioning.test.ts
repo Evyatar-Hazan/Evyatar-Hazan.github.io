@@ -3,17 +3,17 @@ import en from './locales/en.json';
 import he from './locales/he.json';
 
 describe('FIX-031 hero positioning', () => {
-  it('states who Evyatar is and what he builds for whom in two English lines', () => {
-    expect(en.home.compiler.prelude).toBe('Evyatar Hazan, Full Stack Developer');
+  it('leads with the visitor need and the promised outcome in English', () => {
+    expect(en.home.compiler.prelude).toBe('Have a need that must move forward?');
     expect(en.home.compiler.headline).toBe(
-      'Digital products for businesses and teams',
+      'Turn it into a web product that works.',
     );
   });
 
-  it('states who Evyatar is and what he builds for whom in two Hebrew lines', () => {
-    expect(he.home.compiler.prelude).toBe('אביתר חזן, מפתח Full Stack');
+  it('leads with the visitor need and the promised outcome in Hebrew', () => {
+    expect(he.home.compiler.prelude).toBe('יש צורך שצריך להתקדם?');
     expect(he.home.compiler.headline).toBe(
-      'מוצרים דיגיטליים לעסקים ולצוותים',
+      'הופכים אותו למוצר Web שעובד.',
     );
   });
 });

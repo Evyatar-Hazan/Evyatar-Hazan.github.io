@@ -38,12 +38,12 @@ export const audiencePaths: readonly AudiencePath[] = [
       he: 'בעלי עסקים, יזמים וצוותי מוצר',
     },
     title: {
-      en: 'I turn a real need into a web product that works.',
-      he: 'אני הופך צורך אמיתי למוצר Web שעובד.',
+      en: 'Move a real need forward with a web product that works.',
+      he: 'מקדמים צורך אמיתי בעזרת מוצר Web שעובד.',
     },
     description: {
-      en: 'Bring the goal, workflow, or system that needs to move forward. Start with a direct conversation about the product need.',
-      he: 'מביאים את היעד, התהליך או המערכת שצריכים להתקדם. מתחילים בשיחה ישירה על הצורך המוצרי.',
+      en: 'Bring the goal, workflow, or system that is holding the next step back. The first conversation focuses on the need and the useful outcome.',
+      he: 'מביאים את היעד, התהליך או המערכת שמעכבים את הצעד הבא. השיחה הראשונה מתמקדת בצורך ובתוצאה שתהיה שימושית.',
     },
     cta: {
       label: {
@@ -61,12 +61,12 @@ export const audiencePaths: readonly AudiencePath[] = [
       he: 'מגייסים ומנהלים טכנולוגיים',
     },
     title: {
-      en: 'Review the product thinking behind the code.',
-      he: 'בוחנים את החשיבה המוצרית שמאחורי הקוד.',
+      en: 'See product thinking, engineering, and delivery in practice.',
+      he: 'רואים חשיבה מוצרית, הנדסה ומסירה בפועל.',
     },
     description: {
-      en: 'Selected case studies show the need, product decision, system, contribution, and public proof.',
-      he: 'קייס סטאדיז נבחרים מציגים את הצורך, החלטת המוצר, המערכת, התרומה וההוכחה הציבורית.',
+      en: 'Selected case studies present the challenge, the solution, the contribution, and the live result in a concise format.',
+      he: 'קייס סטאדיז נבחרים מציגים בקצרה את האתגר, הפתרון, התרומה והתוצאה החיה.',
     },
     cta: {
       label: {

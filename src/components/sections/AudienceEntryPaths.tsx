@@ -11,16 +11,16 @@ export type AudienceEntryPathsProps = PortfolioSlotProps & {
 
 const sectionCopy = {
   en: {
-    eyebrow: 'Choose your starting point',
-    title: 'What are you here to explore?',
-    description: 'Pick the route that matches your visit. Each one opens an existing, focused part of the portfolio.',
-    marker: 'Audience path',
+    eyebrow: 'Start with your goal',
+    title: 'What do you need to move forward?',
+    description: 'Choose the route that matches your need. Each one opens a focused part of the portfolio.',
+    marker: 'Start here',
   },
   he: {
-    eyebrow: 'בחרו נקודת פתיחה',
-    title: 'מה תרצו למצוא כאן?',
-    description: 'בחרו את המסלול שמתאים לביקור שלכם. כל אחד מוביל לחלק קיים וממוקד באתר.',
-    marker: 'מסלול קהל',
+    eyebrow: 'מתחילים בצורך שלכם',
+    title: 'מה צריך להתקדם?',
+    description: 'בחרו את המסלול שמתאים לצורך שלכם. כל אחד מוביל לחלק ממוקד באתר.',
+    marker: 'מתחילים כאן',
   },
 } as const;
 

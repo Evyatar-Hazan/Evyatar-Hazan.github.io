@@ -140,8 +140,8 @@ export const serviceEngagements: readonly ServiceEngagement[] = [
     proof: {
       projectId: 'online_converter',
       summary: {
-        en: 'Online Converter grew from a small browser utility into a bilingual, registry-driven product with structured metadata and quality gates.',
-        he: 'Online Converter התפתח מכלי דפדפן קטן למוצר דו־לשוני מבוסס registry, עם metadata מסודר ושערי איכות.',
+        en: 'Online Converter grew from a small browser utility into a bilingual product with clearer navigation, safer conversions, and broader discovery.',
+        he: 'Online Converter התפתח מכלי דפדפן קטן למוצר דו־לשוני עם ניווט ברור יותר, המרות בטוחות יותר וחשיפה רחבה יותר.',
       },
       label: {
         en: 'See the product-improvement case study',

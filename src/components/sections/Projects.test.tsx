@@ -21,7 +21,7 @@ describe('Projects flagship hierarchy', () => {
     expect(container.querySelectorAll('[data-featured-project]')).toHaveLength(1);
     expect(container.querySelector('[data-featured-project="nis_boutique"]')).toBeInTheDocument();
     expect(container.querySelectorAll('[data-supporting-project]')).toHaveLength(3);
-    expect(screen.getByText('Flagship project / in depth')).toBeInTheDocument();
+    expect(screen.getByText('One project / in depth')).toBeInTheDocument();
   });
 
   it('keeps the flagship story, outcome, and case study link explicit', () => {

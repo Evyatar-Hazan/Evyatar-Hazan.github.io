@@ -46,7 +46,7 @@ describe('AudienceEntryPaths', () => {
   it('renders the Hebrew path labels and exposes a localized navigation name', () => {
     render(<AudienceEntryPaths language="he" buildPath={buildPath} />);
 
-    expect(screen.getByRole('navigation', { name: 'מה תרצו למצוא כאן?' })).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: 'מה צריך להתקדם?' })).toBeInTheDocument();
     expect(screen.getByText('בעלי עסקים, יזמים וצוותי מוצר')).toBeInTheDocument();
     expect(screen.getByText('מגייסים ומנהלים טכנולוגיים')).toBeInTheDocument();
     expect(screen.getByText('קוראים טכניים ואנשי פיתוח')).toBeInTheDocument();
