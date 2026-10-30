@@ -39,6 +39,7 @@ import {
   type ContactContext,
   type ContactIntentId,
 } from './contactIntent';
+import { trackContactFunnelEvent } from '../../analytics/contactFunnel';
 
 export const contactFormEndpoint = 'https://formsubmit.co/ajax/evyatarhazan3.14@gmail.com';
 const submissionTimeoutMs = 12_000;
@@ -215,6 +216,7 @@ const ContactBriefFeature = ({
   const statusId = `${reactId}-status`;
   const errorSummaryRef = useRef<HTMLDivElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
+  const contactStartTrackedRef = useRef(false);
   const [isBuilderOpen, setIsBuilderOpen] = useState(false);
   const [brief, setBrief] = useState<ContactBriefValues>(emptyContactBrief);
   const [name, setName] = useState('');
@@ -247,6 +249,21 @@ const ContactBriefFeature = ({
     if (formStatus === 'idle') return;
     statusRef.current?.focus();
   }, [formStatus]);
+
+  useEffect(() => {
+    void trackContactFunnelEvent('contact_view');
+  }, []);
+
+  const toggleBuilder = () => {
+    setIsBuilderOpen((open) => {
+      const nextOpen = !open;
+      if (nextOpen && !contactStartTrackedRef.current) {
+        contactStartTrackedRef.current = true;
+        void trackContactFunnelEvent('contact_start');
+      }
+      return nextOpen;
+    });
+  };
 
   const updateBrief = <Key extends keyof ContactBriefValues>(
     key: Key,
@@ -291,6 +308,7 @@ const ContactBriefFeature = ({
 
     setIsSubmitting(true);
     setFormStatus('idle');
+    void trackContactFunnelEvent('contact_submit_attempt');
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), submissionTimeoutMs);
 
@@ -312,8 +330,10 @@ const ContactBriefFeature = ({
       const payload = await response.json().catch(() => null) as { success?: boolean | string } | null;
       const confirmed = response.ok && (payload?.success === true || payload?.success === 'true');
       setFormStatus(confirmed ? 'success' : 'error');
+      void trackContactFunnelEvent(confirmed ? 'contact_submit_success' : 'contact_submit_error');
     } catch (error) {
       setFormStatus(error instanceof DOMException && error.name === 'AbortError' ? 'timeout' : 'error');
+      void trackContactFunnelEvent('contact_submit_error');
     } finally {
       window.clearTimeout(timeout);
       setIsSubmitting(false);
@@ -427,7 +447,7 @@ const ContactBriefFeature = ({
           className="home-contact-disclosure"
           aria-expanded={isBuilderOpen}
           aria-controls={builderId}
-          onClick={() => setIsBuilderOpen((open) => !open)}
+          onClick={toggleBuilder}
         >
           {ui.builderToggle}<ArrowIcon aria-hidden="true" className="h-4 w-4" />
         </button>
