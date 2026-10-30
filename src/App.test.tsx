@@ -346,6 +346,13 @@ describe('App', () => {
     expect(screen.getByRole('link', { name: language === 'he' ? 'לצפייה בראיות מהפרויקטים' : 'View project evidence' })).toHaveAttribute('href', `/${language}/projects/`);
     expect(screen.getByRole('link', { name: language === 'he' ? 'להתחיל שיחה' : 'Start a conversation' })).toHaveAttribute('href', `/${language}/contact/`);
     expect(document.querySelectorAll('[aria-controls="capability-panel"]')).toHaveLength(7);
+    expect(document.querySelectorAll('[data-professional-timeline] [data-timeline-entry]')).toHaveLength(4);
+    expect(screen.getByRole('heading', {
+      level: 3,
+      name: language === 'he'
+        ? 'כל שלב הרחיב את המערכת שיכולתי לקחת עליה אחריות.'
+        : 'Each stage expanded the system I could own.',
+    })).toBeInTheDocument();
     expect(document.querySelector('#delivery-process-title')?.closest('section')?.querySelectorAll('ol > li')).toHaveLength(5);
     expect(document.querySelectorAll('#working-principles [data-principle-id]')).toHaveLength(4);
     expect(document.querySelectorAll('#service-engagements > div > ol > li')).toHaveLength(3);
