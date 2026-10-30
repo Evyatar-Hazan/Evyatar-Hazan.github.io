@@ -70,6 +70,7 @@ test.describe('FIX-064 article-card summaries and outcomes', () => {
     const result = page.locator('[data-library-results] .blog-archive-entry');
     await expect(result).toHaveCount(1);
     await expect(result.getByRole('heading')).toHaveText('A retry should repeat intent, not duplicate data');
+    await expect(result.locator('mark.blog-search-highlight')).toHaveText('idempotent');
 
     await result.getByRole('link', {
       name: 'A retry should repeat intent, not duplicate data',
