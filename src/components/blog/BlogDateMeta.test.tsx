@@ -22,6 +22,7 @@ const post: BlogPostMeta = {
   readTime: '7 min read',
   tags: ['Testing'],
   featured: false,
+  editorialRank: 1,
 };
 
 describe('BlogDateMeta', () => {
