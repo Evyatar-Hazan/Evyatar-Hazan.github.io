@@ -173,6 +173,7 @@ const localizedUi = {
 } as const;
 
 type FormErrors = Partial<Record<'name' | 'email', string>>;
+type FormErrorField = keyof FormErrors;
 type FormStatus = 'idle' | 'success' | 'error' | 'timeout';
 
 export type ContactBriefFeatureProps = PortfolioSlotProps & {
@@ -230,6 +231,10 @@ const ContactBriefFeature = ({
   const whatsappHref = buildContactWhatsappHref(profileLinks.whatsapp, message);
   const emailHref = buildContactEmailHref(profileLinks.email, language, message, context);
   const privacyHref = buildLocalizedPath(language, { route: 'privacy' });
+
+  const focusErrorField = (field: FormErrorField) => {
+    document.getElementById(`${reactId}-${field}`)?.focus();
+  };
 
   useEffect(() => {
     if (formStatus === 'idle') return;
@@ -494,7 +499,8 @@ const ContactBriefFeature = ({
                     placeholder={ui.namePlaceholder}
                     value={name}
                     aria-invalid={Boolean(errors.name)}
-                    aria-describedby={`${reactId}-identity-hint${errors.name ? ` ${reactId}-name-error` : ''}`}
+                    aria-describedby={`${reactId}-identity-hint`}
+                    aria-errormessage={errors.name ? `${reactId}-name-error` : undefined}
                     onChange={(event) => {
                       setName(event.target.value);
                       setErrors((current) => ({ ...current, name: undefined }));
@@ -518,7 +524,8 @@ const ContactBriefFeature = ({
                     placeholder={ui.emailPlaceholder}
                     value={email}
                     aria-invalid={Boolean(errors.email)}
-                    aria-describedby={`${reactId}-identity-hint${errors.email ? ` ${reactId}-email-error` : ''}`}
+                    aria-describedby={`${reactId}-identity-hint`}
+                    aria-errormessage={errors.email ? `${reactId}-email-error` : undefined}
                     onChange={(event) => {
                       setEmail(event.target.value);
                       setErrors((current) => ({ ...current, email: undefined }));
@@ -534,7 +541,13 @@ const ContactBriefFeature = ({
               {Object.keys(errors).length > 0 && (
                 <div ref={errorSummaryRef} tabIndex={-1} role="alert" className="contact-error-summary">
                   <strong>{ui.errorSummary}</strong>
-                  <ul>{Object.values(errors).filter(Boolean).map((error) => <li key={error}>{error}</li>)}</ul>
+                  <ul>
+                    {(Object.entries(errors) as [FormErrorField, string][]).map(([field, error]) => (
+                      <li key={field}>
+                        <button type="button" onClick={() => focusErrorField(field)}>{error}</button>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
 
