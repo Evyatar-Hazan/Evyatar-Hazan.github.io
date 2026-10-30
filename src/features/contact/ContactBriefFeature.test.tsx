@@ -89,6 +89,10 @@ describe('ContactBriefFeature', () => {
     );
     expect(emailBody).toContain('A synthetic scheduling tool');
     expect(whatsappBody).toContain('A synthetic scheduling tool');
+    expect(screen.getByRole('link', { name: 'evyatarhazan3.14@gmail.com' })).toHaveAttribute(
+      'href',
+      expect.stringMatching(/^mailto:evyatarhazan3\.14@gmail\.com/),
+    );
   });
 
   it('does not contact the provider when required form identity fields are missing', () => {
@@ -132,6 +136,10 @@ describe('ContactBriefFeature', () => {
     expect(body.get('message')).toContain('Synthetic portfolio fixture');
     expect([...body.keys()]).not.toContain('intent');
     expect(await screen.findByText(/confirmed delivery/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'evyatarhazan3.14@gmail.com' })).toHaveAttribute(
+      'href',
+      expect.stringMatching(/^mailto:evyatarhazan3\.14@gmail\.com/),
+    );
   });
 
   it('renders allowlisted project context and clears it through the caller', () => {
@@ -184,6 +192,10 @@ describe('ContactBriefFeature', () => {
     expect(screen.getByRole('link', { name: 'Open email draft' })).toHaveAttribute(
       'href',
       expect.stringContaining('Keep+this+synthetic+brief'),
+    );
+    expect(screen.getByRole('link', { name: 'evyatarhazan3.14@gmail.com' })).toHaveAttribute(
+      'href',
+      expect.stringMatching(/^mailto:evyatarhazan3\.14@gmail\.com/),
     );
   });
 

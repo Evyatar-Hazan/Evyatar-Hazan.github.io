@@ -100,6 +100,7 @@ const localizedUi = {
     privacyTitle: 'Privacy and recovery',
     privacyPrefix: 'FormSubmit receives your name, email, and the reviewed message only after you press send. The site does not save the brief locally.',
     privacyLink: 'Read the privacy notice',
+    emailFallback: 'Form delivery unavailable? Email directly:',
     success: 'FormSubmit confirmed delivery. Your message is on its way.',
     error: 'Delivery was not confirmed. Your brief is still here; retry or use a draft instead.',
     timeout: 'The request timed out before delivery was confirmed. Your brief is still here.',
@@ -161,6 +162,7 @@ const localizedUi = {
     privacyTitle: 'פרטיות והתאוששות',
     privacyPrefix: 'FormSubmit מקבל את השם, האימייל וההודעה שנבדקה רק לאחר לחיצה על שליחה. האתר אינו שומר את התקציר מקומית.',
     privacyLink: 'למידע נוסף בעמוד הפרטיות',
+    emailFallback: 'הטופס לא זמין? אפשר לשלוח אימייל ישירות:',
     success: 'FormSubmit אישר את המסירה. ההודעה בדרך.',
     error: 'המסירה לא אושרה. התקציר נשמר כאן; אפשר לנסות שוב או להשתמש בטיוטה.',
     timeout: 'הבקשה הסתיימה לפני שהמסירה אושרה. התקציר נשמר כאן.',
@@ -183,6 +185,7 @@ const fieldClassName = 'contact-workspace-field';
 const inputClassName = 'contact-workspace-input';
 const actionClassName = 'home-action home-action--secondary';
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u;
+const publicEmailAddress = profileLinks.email.replace(/^mailto:/u, '');
 
 const ContactBriefFeature = ({
   language,
@@ -525,6 +528,11 @@ const ContactBriefFeature = ({
                 <h3 id={`${reactId}-privacy-title`}>{ui.privacyTitle}</h3>
                 <p>{ui.privacyPrefix} <a href={privacyHref}>{ui.privacyLink}</a></p>
               </section>
+
+              <p className="contact-email-fallback">
+                <span>{ui.emailFallback}</span>{' '}
+                <a data-email-fallback href={emailHref}>{publicEmailAddress}</a>
+              </p>
 
               {formStatus !== 'idle' && (
                 <div
