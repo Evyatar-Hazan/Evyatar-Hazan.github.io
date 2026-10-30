@@ -101,8 +101,8 @@ const localizedUi = {
     privacyPrefix: 'FormSubmit receives your name, email, and the reviewed message only after you press send. The site does not save the brief locally.',
     privacyLink: 'Read the privacy notice',
     success: 'FormSubmit confirmed delivery. Your message is on its way.',
-    error: 'Delivery was not confirmed. Your brief is still here; retry or use a draft instead.',
-    timeout: 'The request timed out before delivery was confirmed. Your brief is still here.',
+    error: 'Delivery was not confirmed. Every field is still here; review the details, retry, or use an email or WhatsApp draft.',
+    timeout: 'The request timed out before delivery was confirmed. Every field is still here; review the details and retry.',
     retry: 'Retry form delivery',
   },
   he: {
@@ -162,8 +162,8 @@ const localizedUi = {
     privacyPrefix: 'FormSubmit מקבל את השם, האימייל וההודעה שנבדקה רק לאחר לחיצה על שליחה. האתר אינו שומר את התקציר מקומית.',
     privacyLink: 'למידע נוסף בעמוד הפרטיות',
     success: 'FormSubmit אישר את המסירה. ההודעה בדרך.',
-    error: 'המסירה לא אושרה. התקציר נשמר כאן; אפשר לנסות שוב או להשתמש בטיוטה.',
-    timeout: 'הבקשה הסתיימה לפני שהמסירה אושרה. התקציר נשמר כאן.',
+    error: 'המסירה לא אושרה. כל השדות נשמרו כאן; אפשר לבדוק את הפרטים, לנסות שוב או להשתמש בטיוטת אימייל או WhatsApp.',
+    timeout: 'הבקשה הסתיימה לפני שהמסירה אושרה. כל השדות נשמרו כאן; אפשר לבדוק את הפרטים ולנסות שוב.',
     retry: 'ניסיון שליחה נוסף',
   },
 } as const;
@@ -478,7 +478,11 @@ const ContactBriefFeature = ({
                     value={name}
                     aria-invalid={Boolean(errors.name)}
                     aria-describedby={`${reactId}-identity-hint${errors.name ? ` ${reactId}-name-error` : ''}`}
-                    onChange={(event) => { setName(event.target.value); setErrors((current) => ({ ...current, name: undefined })); }}
+                    onChange={(event) => {
+                      setName(event.target.value);
+                      setErrors((current) => ({ ...current, name: undefined }));
+                      setFormStatus('idle');
+                    }}
                     className={inputClassName}
                   />
                   {errors.name && <p id={`${reactId}-name-error`} className="contact-field-error">{errors.name}</p>}
@@ -498,7 +502,11 @@ const ContactBriefFeature = ({
                     value={email}
                     aria-invalid={Boolean(errors.email)}
                     aria-describedby={`${reactId}-identity-hint${errors.email ? ` ${reactId}-email-error` : ''}`}
-                    onChange={(event) => { setEmail(event.target.value); setErrors((current) => ({ ...current, email: undefined })); }}
+                    onChange={(event) => {
+                      setEmail(event.target.value);
+                      setErrors((current) => ({ ...current, email: undefined }));
+                      setFormStatus('idle');
+                    }}
                     className={inputClassName}
                   />
                   {errors.email && <p id={`${reactId}-email-error`} className="contact-field-error">{errors.email}</p>}
