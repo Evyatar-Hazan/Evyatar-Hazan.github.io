@@ -77,7 +77,8 @@ describe('capability proof data', () => {
     expect(statuses.get('TypeScript')).toBe('used');
     expect(statuses.get('Java')).toBe('learning');
     expect(statuses.get('Python')).toBe('learning');
-    expect(statuses.get('YOLOv5')).toBe('exploring');
+    expect(statuses.get('Next.js')).toBe('exploring');
+    expect(statuses.has('YOLOv5')).toBe(false);
     expect(new Set(statuses.values())).toEqual(new Set(['used', 'learning', 'exploring']));
   });
 });

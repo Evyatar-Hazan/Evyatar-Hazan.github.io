@@ -379,14 +379,14 @@ describe('App', () => {
   });
 
   it('labels capability knowledge as used, learning, or exploring', async () => {
-    renderAt('/en/about/?capability=languages#capability-explorer-title');
+    renderAt('/en/about/?capability=webMobile#capability-explorer-title');
 
-    await waitFor(() => expect(document.querySelector('#capability-panel')).toHaveAttribute('data-capability-id', 'languages'));
-    expect(document.querySelector('[data-skill-status="used"]')).toHaveTextContent('TypeScript');
+    await waitFor(() => expect(document.querySelector('#capability-panel')).toHaveAttribute('data-capability-id', 'webMobile'));
+    expect(document.querySelector('[data-skill-status="used"]')).toHaveTextContent('React Native');
+    expect(document.querySelector('[data-skill-status="exploring"]')).toHaveTextContent('Next.js');
+
+    fireEvent.click(screen.getByRole('button', { name: /Languages/ }));
     expect(document.querySelector('[data-skill-status="learning"]')).toHaveTextContent('Java');
-
-    fireEvent.click(screen.getByRole('button', { name: /AI & computer vision/ }));
-    expect(document.querySelectorAll('[data-skill-status="exploring"]')).toHaveLength(4);
   });
 
   it('publishes one conservative Person JSON-LD record on About only', async () => {
