@@ -107,6 +107,7 @@ const localizedUi = {
     privacyTitle: 'Privacy and recovery',
     privacyPrefix: 'FormSubmit receives your name, email, and the reviewed message only after you press send. A hidden honeypot filters automated submissions without tracking or a CAPTCHA. The site does not save the brief locally.',
     privacyLink: 'Read the privacy notice',
+    emailFallback: 'Form delivery unavailable? Email directly:',
     success: 'FormSubmit confirmed delivery. Your message is on its way.',
     successNextLabel: 'What happens next',
     successNext: 'I will review the context and reply with focused questions or a recommended next step. There is no fixed response-time promise.',
@@ -172,6 +173,7 @@ const localizedUi = {
     privacyTitle: 'פרטיות והתאוששות',
     privacyPrefix: 'FormSubmit מקבל את השם, האימייל וההודעה שנבדקה רק לאחר לחיצה על שליחה. שדה מלכודת מוסתר מסנן שליחות אוטומטיות בלי מעקב ובלי CAPTCHA. האתר אינו שומר את התקציר מקומית.',
     privacyLink: 'למידע נוסף בעמוד הפרטיות',
+    emailFallback: 'הטופס לא זמין? אפשר לשלוח אימייל ישירות:',
     success: 'FormSubmit אישר את המסירה. ההודעה בדרך.',
     successNextLabel: 'מה קורה עכשיו',
     successNext: 'אעבור על ההקשר ואחזור עם שאלות ממוקדות או המלצה לצעד הבא. אין כאן התחייבות לזמן תגובה קבוע.',
@@ -228,6 +230,7 @@ const fieldClassName = 'contact-workspace-field';
 const inputClassName = 'contact-workspace-input';
 const actionClassName = 'home-action home-action--secondary';
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u;
+const publicEmailAddress = profileLinks.email.replace(/^mailto:/u, '');
 
 const ContactBriefFeature = ({
   language,
@@ -638,6 +641,11 @@ const ContactBriefFeature = ({
                 <h3 id={`${reactId}-privacy-title`}>{ui.privacyTitle}</h3>
                 <p>{ui.privacyPrefix} <a href={privacyHref}>{ui.privacyLink}</a></p>
               </section>
+
+              <p className="contact-email-fallback">
+                <span>{ui.emailFallback}</span>{' '}
+                <a data-email-fallback href={emailHref}>{publicEmailAddress}</a>
+              </p>
 
               {formStatus !== 'idle' && (
                 <div

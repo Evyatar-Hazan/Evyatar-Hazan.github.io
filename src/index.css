@@ -6325,6 +6325,29 @@ textarea.contact-workspace-input {
   text-underline-offset: 0.18rem;
 }
 
+.contact-email-fallback {
+  margin-top: 0.85rem;
+  color: var(--color-neutral-600);
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+.dark .contact-email-fallback {
+  color: var(--color-neutral-300);
+}
+
+.contact-email-fallback a {
+  color: var(--color-primary-700);
+  font-weight: 900;
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+}
+
+.dark .contact-email-fallback a {
+  color: var(--color-primary-300);
+}
+
 .contact-delivery-status {
   display: grid;
   grid-template-columns: auto 1fr;
