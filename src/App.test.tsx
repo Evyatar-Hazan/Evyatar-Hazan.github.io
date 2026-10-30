@@ -345,6 +345,13 @@ describe('App', () => {
     expect(professionalLinks.getByRole('link', { name: language === 'he' ? 'אימייל' : 'Email' })).not.toHaveAttribute('target');
     expect(screen.getByRole('link', { name: language === 'he' ? 'לצפייה בראיות מהפרויקטים' : 'View project evidence' })).toHaveAttribute('href', `/${language}/projects/`);
     expect(screen.getByRole('link', { name: language === 'he' ? 'להתחיל שיחה' : 'Start a conversation' })).toHaveAttribute('href', `/${language}/contact/`);
+    expect(screen.getByRole('heading', {
+      level: 3,
+      name: language === 'he' ? 'סקרנות היא חלק מהעבודה.' : 'Curiosity is part of the work.',
+    })).toBeInTheDocument();
+    expect(screen.getByText(language === 'he'
+      ? /התהליך הזה הוא מה ששומר על הסקרנות שלי/
+      : /That process is what keeps me curious/)).toBeInTheDocument();
     expect(document.querySelectorAll('[aria-controls="capability-panel"]')).toHaveLength(7);
     expect(document.querySelectorAll('[data-professional-timeline] [data-timeline-entry]')).toHaveLength(4);
     expect(screen.getByRole('heading', {
