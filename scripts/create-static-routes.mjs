@@ -260,7 +260,8 @@ const staticRoutes = [
         { href: '/blog/tests-need-honest-environments/', label: 'Honest test environments article' },
         { href: '/contact/', label: 'Contact' },
         { href: 'https://github.com/Evyatar-Hazan', label: 'GitHub' },
-        { href: 'https://www.linkedin.com/in/evyatar-hazan-662235210/', label: 'LinkedIn' }
+        { href: 'https://www.linkedin.com/in/evyatar-hazan-662235210/', label: 'LinkedIn' },
+        { href: 'mailto:evyatarhazan3.14@gmail.com', label: 'Email' }
       ]
     }
   },
