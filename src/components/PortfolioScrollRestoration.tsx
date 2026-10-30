@@ -12,6 +12,7 @@ const PortfolioScrollRestoration = () => {
   const location = useLocation();
   const navigationType = useNavigationType();
   const positions = useRef(new Map<string, ScrollPosition>());
+  const previousContentLocation = useRef<string | null>(null);
 
   useEffect(() => {
     if (!('scrollRestoration' in window.history)) return;
@@ -39,6 +40,11 @@ const PortfolioScrollRestoration = () => {
   }, [location.key]);
 
   useLayoutEffect(() => {
+    const contentLocation = `${location.pathname}${location.hash}`;
+    const contentLocationChanged = previousContentLocation.current !== contentLocation;
+    previousContentLocation.current = contentLocation;
+
+    if (!contentLocationChanged) return;
     if (location.hash) return;
 
     const savedPosition = navigationType === 'POP'
@@ -87,7 +93,7 @@ const PortfolioScrollRestoration = () => {
       window.removeEventListener('pointerdown', cancelRestoration);
       window.removeEventListener('keydown', cancelRestoration);
     };
-  }, [location.hash, location.key, navigationType]);
+  }, [location.hash, location.key, location.pathname, navigationType]);
 
   return null;
 };
