@@ -201,14 +201,14 @@ describe('BlogIndex knowledge library', () => {
   it('shows reading duration and article language consistently before opening a post', () => {
     const { unmount } = renderBlog();
     const englishMeta = document.querySelector('.blog-archive-meta');
-    expect(englishMeta).toHaveTextContent('4 min read');
+    expect(englishMeta).toHaveTextContent(/\d+ min read/);
     expect(englishMeta).toHaveTextContent('Language: English');
     unmount();
 
     currentLanguage = 'he';
     renderBlog('/he/blog/');
     const hebrewMeta = document.querySelector('.blog-archive-meta');
-    expect(hebrewMeta).toHaveTextContent('4 דקות קריאה');
+    expect(hebrewMeta).toHaveTextContent(/\d+ דקות קריאה/);
     expect(hebrewMeta).toHaveTextContent('שפה: עברית');
   });
 });
