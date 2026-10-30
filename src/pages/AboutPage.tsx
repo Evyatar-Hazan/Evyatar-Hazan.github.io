@@ -18,6 +18,7 @@ import { getCapabilityProofGroups } from '../features/capability-proof/capabilit
 import { getHumanAboutContent } from '../features/humanAbout/content';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { localizedPath } from '../routing/portfolioRoutes';
+import { getProfessionalTimeline } from '../data/professionalTimeline';
 
 const pageCopy = {
   en: {
@@ -27,6 +28,10 @@ const pageCopy = {
     lead: 'I connect product thinking, frontend, backend, infrastructure, and verification into systems that are clear to use and maintain.',
     projects: 'View project evidence',
     contact: 'Start a conversation',
+    evidenceBoundaryTitle: 'Evidence boundary',
+    evidenceBoundary: 'The role and working preferences on this page are self-descriptions. Public projects and articles show the available evidence; no formal credential, employer history, years-of-experience total, or measured business outcome is implied unless a named source is shown.',
+    evidenceProjects: 'Public projects',
+    evidenceWriting: 'Technical writing',
     storyEyebrow: '01 / Professional story',
     storyTitle: 'A practical end-to-end view of product work.',
     capabilitiesEyebrow: '02 / Capability explorer',
@@ -56,6 +61,10 @@ const pageCopy = {
     lead: 'אני מחבר חשיבה מוצרית, Frontend, Backend, תשתיות ואימות למערכות ברורות לשימוש ולתחזוקה.',
     projects: 'לצפייה בראיות מהפרויקטים',
     contact: 'להתחיל שיחה',
+    evidenceBoundaryTitle: 'גבול הראיות',
+    evidenceBoundary: 'התפקיד והעדפות העבודה בעמוד הזה הם תיאור עצמי. הפרויקטים והמאמרים הציבוריים מציגים את הראיות הזמינות; אין כאן טענה להסמכה רשמית, היסטוריית מעסיקים, מספר שנות ניסיון או תוצאה עסקית מדידה בלי מקור נקוב.',
+    evidenceProjects: 'פרויקטים ציבוריים',
+    evidenceWriting: 'כתיבה טכנית',
     storyEyebrow: '01 / הסיפור המקצועי',
     storyTitle: 'מבט מעשי מקצה לקצה על עבודת מוצר.',
     capabilitiesEyebrow: '02 / מפת יכולות',
@@ -117,6 +126,7 @@ const AboutPage = () => {
   const language = i18n.language === 'he' ? 'he' : 'en';
   const copy = pageCopy[language];
   const human = getHumanAboutContent(language);
+  const timeline = getProfessionalTimeline(language);
   const groups = getCapabilityProofGroups(language);
   const location = useLocation();
   const navigate = useNavigate();
@@ -127,8 +137,8 @@ const AboutPage = () => {
   usePageSeo({
     title: language === 'he' ? 'אודות אביתר חזן | פרופיל מקצועי' : 'About Evyatar Hazan | Professional Profile',
     description: language === 'he'
-      ? 'פרופיל מקצועי מבוסס ראיות של אביתר חזן: עבודת מוצר, Full Stack, תשתיות, אוטומציה, דרך עבודה ופרויקטים ציבוריים.'
-      : 'Evidence-backed professional profile for Evyatar Hazan across product work, full-stack systems, infrastructure, automation, delivery, and public projects.',
+      ? 'פרופיל מקצועי של אביתר חזן שמפריד בין תיאור עצמי והעדפות עבודה לבין ראיות ציבוריות מפרויקטים ומאמרים, עם גבולות מפורשים לפערי מידע.'
+      : 'A professional profile for Evyatar Hazan that separates self-description and working preferences from public project and article evidence, with explicit boundaries for information gaps.',
     path: '/about/',
   });
 
@@ -160,6 +170,14 @@ const AboutPage = () => {
               <Link to={localizedPath(language, { route: 'projects' })} className="inline-flex min-h-12 items-center justify-between gap-4 bg-neutral-950 px-5 py-3 text-sm font-black text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:bg-surface-raised dark:text-content-primary">{copy.projects}<ArrowIcon aria-hidden="true" className="h-4 w-4" /></Link>
               <Link to={localizedPath(language, { route: 'contact' })} className="inline-flex min-h-12 items-center justify-between gap-4 border border-neutral-950 px-5 py-3 text-sm font-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:border-content-primary">{copy.contact}<ArrowIcon aria-hidden="true" className="h-4 w-4" /></Link>
             </div>
+            <aside data-about-evidence-boundary className="mt-6 border-t border-neutral-300 pt-5 dark:border-neutral-700">
+              <h2 className="font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-neutral-500 dark:text-neutral-400">{copy.evidenceBoundaryTitle}</h2>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-neutral-600 dark:text-neutral-400">{copy.evidenceBoundary}</p>
+              <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm font-black">
+                <Link className="inline-flex min-h-11 items-center underline decoration-primary-500/40 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500" to={localizedPath(language, { route: 'projects' })}>{copy.evidenceProjects}</Link>
+                <Link className="inline-flex min-h-11 items-center underline decoration-primary-500/40 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500" to={localizedPath(language, { route: 'blog' })}>{copy.evidenceWriting}</Link>
+              </div>
+            </aside>
           </div>
         </div>
       </section>
@@ -172,6 +190,25 @@ const AboutPage = () => {
           </header>
           <div className="grid divide-y divide-neutral-300/80 dark:divide-neutral-800 lg:grid-cols-3 lg:divide-x lg:divide-y-0 rtl:lg:divide-x-reverse">
             {human.pillars.map((pillar, index) => <article key={pillar.id} className="py-8 lg:px-8 lg:py-12 lg:first:ps-0"><p className="font-mono text-xs font-black text-primary-700 dark:text-primary-400">0{index + 1}</p><h3 className="mt-4 text-2xl font-black">{pillar.title}</h3><p className="mt-4 text-base leading-8 text-neutral-600 dark:text-neutral-400">{pillar.body}</p></article>)}
+          </div>
+          <div className="border-t border-neutral-300/80 pt-10 dark:border-neutral-800 lg:pt-14">
+            <header className="grid gap-5 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+              <div>
+                <p className="font-mono text-[0.68rem] font-black uppercase tracking-[0.18em] text-primary-700 dark:text-primary-400">{timeline.eyebrow}</p>
+                <h3 id="professional-timeline-title" className="mt-4 max-w-[18ch] text-3xl font-black leading-tight tracking-[-0.04em] sm:text-5xl">{timeline.title}</h3>
+              </div>
+              <p className="max-w-2xl text-base leading-8 text-neutral-600 dark:text-neutral-400 lg:justify-self-end">{timeline.introduction}</p>
+            </header>
+            <ol aria-labelledby="professional-timeline-title" className="mt-9 grid gap-0" data-professional-timeline>
+              {timeline.entries.map((entry, index) => (
+                <li key={entry.id} data-timeline-entry={entry.id} className="relative grid gap-3 border-s-2 border-neutral-300 py-7 ps-7 dark:border-neutral-700 sm:grid-cols-[8rem_minmax(12rem,0.75fr)_minmax(0,1.25fr)] sm:items-start sm:gap-6 sm:ps-9">
+                  <span aria-hidden="true" className="absolute -start-[0.48rem] top-8 h-3.5 w-3.5 rounded-full border-[3px] border-neutral-50 bg-primary-600 ring-1 ring-primary-600 dark:border-neutral-950 dark:bg-primary-400 dark:ring-primary-400" />
+                  <p className="font-mono text-sm font-black text-primary-700 dark:text-primary-400"><span className="sr-only">{language === 'he' ? `שלב ${index + 1}: ` : `Stage ${index + 1}: `}</span>{entry.period}</p>
+                  <h4 className="text-xl font-black leading-snug">{entry.role}</h4>
+                  <p className="max-w-3xl text-sm leading-7 text-neutral-600 dark:text-neutral-400 sm:text-base">{entry.impact}</p>
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
       </section>
@@ -203,7 +240,7 @@ const AboutPage = () => {
                   </ul>
                 </header>
                 <div className="grid gap-7 md:grid-cols-2">
-                  <div><h4 className="font-mono text-xs font-black uppercase tracking-[0.16em]">{copy.demonstrated}</h4>{activeGroup.demonstrations.length ? <ul className="mt-3 divide-y divide-neutral-300 dark:divide-neutral-800">{activeGroup.demonstrations.map((item) => { const internal = item.kind === 'article' || item.hasCaseStudy; const href = item.kind === 'article' ? localizedPath(language, { route: 'article', id: item.id }) : item.hasCaseStudy ? localizedPath(language, { route: 'project', id: item.id }) : item.githubUrl; return <li key={`${item.kind}:${item.id}`}><a href={href} {...(!internal ? { target: '_blank', rel: 'noopener noreferrer' } : {})} className="grid min-h-12 grid-cols-[auto_1fr_auto] gap-3 py-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500">{item.kind === 'project' ? <FolderKanban aria-hidden="true" className="mt-1 h-4 w-4 text-primary-600" /> : <BookOpenText aria-hidden="true" className="mt-1 h-4 w-4 text-primary-600" />}<span><span className="block font-mono text-[0.6rem] font-black uppercase text-neutral-500">{item.kind === 'project' ? copy.project : copy.article}</span><span className="mt-1 block text-sm font-black">{item.title}</span></span>{!internal && <ExternalLink aria-hidden="true" className="h-4 w-4" />}</a></li>; })}</ul> : null}{activeGroup.publicEvidenceGap && <div className="mt-5 border-s-2 border-warning-300 ps-4"><h4 className="font-mono text-[0.62rem] font-black uppercase tracking-[0.14em] text-warning-700 dark:text-warning-300">{copy.gap}</h4><p className="mt-2 text-sm leading-6 text-neutral-600 dark:text-neutral-400">{activeGroup.publicEvidenceGap}</p></div>}</div>
+                  <div><h4 className="font-mono text-xs font-black uppercase tracking-[0.16em]">{copy.demonstrated}</h4>{activeGroup.demonstrations.length ? <ul data-evidence-demonstrations className="mt-3 divide-y divide-neutral-300 dark:divide-neutral-800">{activeGroup.demonstrations.map((item) => { const internal = item.kind === 'article' || item.hasCaseStudy; const href = item.kind === 'article' ? localizedPath(language, { route: 'article', id: item.id }) : item.hasCaseStudy ? localizedPath(language, { route: 'project', id: item.id }) : item.githubUrl; return <li key={`${item.kind}:${item.id}`}><a href={href} {...(!internal ? { target: '_blank', rel: 'noopener noreferrer' } : {})} className="grid min-h-12 grid-cols-[auto_1fr_auto] gap-3 py-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500">{item.kind === 'project' ? <FolderKanban aria-hidden="true" className="mt-1 h-4 w-4 text-primary-600" /> : <BookOpenText aria-hidden="true" className="mt-1 h-4 w-4 text-primary-600" />}<span><span className="block font-mono text-[0.6rem] font-black uppercase text-neutral-500">{item.kind === 'project' ? copy.project : copy.article}</span><span className="mt-1 block text-sm font-black">{item.title}</span></span>{!internal && <ExternalLink aria-hidden="true" className="h-4 w-4" />}</a></li>; })}</ul> : null}{activeGroup.publicEvidenceGap && <div data-evidence-gap className="mt-5 border-s-2 border-warning-300 ps-4"><h4 className="font-mono text-[0.62rem] font-black uppercase tracking-[0.14em] text-warning-700 dark:text-warning-300">{copy.gap}</h4><p className="mt-2 text-sm leading-6 text-neutral-600 dark:text-neutral-400">{activeGroup.publicEvidenceGap}</p></div>}</div>
                   <div className="border-s border-neutral-300 ps-5 dark:border-neutral-800"><h4 className="font-mono text-xs font-black uppercase tracking-[0.16em]">{copy.measured}</h4>{activeGroup.measuredOutcomes.length ? <ul className="mt-3">{activeGroup.measuredOutcomes.map((outcome) => <li key={outcome.projectId} className="border-t border-neutral-300 py-4 dark:border-neutral-800"><strong>{outcome.projectTitle}</strong></li>)}</ul> : <p className="mt-3 border-t border-neutral-300 pt-4 text-sm leading-6 text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">{copy.noMeasured}</p>}</div>
                 </div>
               </div>
