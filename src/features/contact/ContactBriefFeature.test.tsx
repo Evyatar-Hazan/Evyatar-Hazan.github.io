@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { LocalizedPathBuilder } from '../../contracts/portfolio';
 import ContactBriefFeature from './ContactBriefFeature';
@@ -137,6 +137,33 @@ describe('ContactBriefFeature', () => {
     expect(body.get('_captcha')).toBe('false');
     expect([...body.keys()]).not.toContain('intent');
     expect(await screen.findByText(/confirmed delivery/i)).toBeInTheDocument();
+    expect(screen.getByText(/What happens next/i)).toBeInTheDocument();
+    expect(screen.getByText(/focused questions or a recommended next step/i)).toBeInTheDocument();
+    expect(screen.getByText(/no fixed response-time promise/i)).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveAttribute('aria-atomic', 'true');
+  });
+
+  it('shows the localized next step only after provider-confirmed success', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ success: true }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    render(<ContactBriefFeature language="he" buildLocalizedPath={buildLocalizedPath} />);
+    fireEvent.click(screen.getByRole('button', { name: /תקציר פרויקט קצר/i }));
+
+    expect(screen.queryByText('מה קורה עכשיו')).not.toBeInTheDocument();
+    expect(screen.queryByText(/אין כאן התחייבות לזמן תגובה קבוע/i)).not.toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText('שם'), { target: { value: 'מבקר בדיקה' } });
+    fireEvent.change(screen.getByLabelText('כתובת אימייל'), {
+      target: { value: 'visitor@example.test' },
+    });
+    fireEvent.submit(screen.getByRole('button', { name: /שליחה באמצעות FormSubmit/i }).closest('form')!);
+
+    expect(await screen.findByText(/מה קורה עכשיו/i)).toBeInTheDocument();
+    expect(screen.getByText(/שאלות ממוקדות או המלצה לצעד הבא/i)).toBeInTheDocument();
+    expect(screen.getByText(/אין כאן התחייבות לזמן תגובה קבוע/i)).toBeInTheDocument();
   });
 
   it('passes honeypot values to FormSubmit without exposing a CAPTCHA or focus target', async () => {
@@ -237,5 +264,47 @@ describe('ContactBriefFeature', () => {
 
     expect(await screen.findByText(/Delivery was not confirmed/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Retry form delivery' })).toBeInTheDocument();
+    expect(screen.queryByText(/What happens next/i)).not.toBeInTheDocument();
+  });
+
+  it('links every inline error to its field, announces the summary, and lets keyboard users return to the field', async () => {
+    render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Build a short project brief (optional)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Send with FormSubmit' }));
+
+    const nameField = screen.getByRole('textbox', { name: 'Name' });
+    const emailField = screen.getByRole('textbox', { name: 'Email address' });
+    const alert = screen.getByRole('alert');
+    const nameErrorId = nameField.getAttribute('aria-errormessage');
+    const emailErrorId = emailField.getAttribute('aria-errormessage');
+    const nameError = document.getElementById(nameErrorId!);
+    const emailError = document.getElementById(emailErrorId!);
+
+    expect(nameField).toHaveAttribute('aria-invalid', 'true');
+    expect(emailField).toHaveAttribute('aria-invalid', 'true');
+    expect(nameError).toHaveTextContent('Enter your name to send through the form.');
+    expect(emailError).toHaveTextContent('Enter your email address to send through the form.');
+    await waitFor(() => expect(alert).toHaveFocus());
+
+    fireEvent.click(within(alert).getByRole('button', { name: 'Enter your email address to send through the form.' }));
+    expect(emailField).toHaveFocus();
+  });
+
+  it('uses the same accessible inline-error contract in Hebrew and clears a corrected field error', () => {
+    render(<ContactBriefFeature language="he" buildLocalizedPath={buildLocalizedPath} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'הכנת תקציר פרויקט קצר (לא חובה)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'שליחה באמצעות FormSubmit' }));
+
+    const nameField = screen.getByRole('textbox', { name: 'שם' });
+    const nameErrorId = nameField.getAttribute('aria-errormessage');
+    expect(nameErrorId).toBeTruthy();
+    expect(document.getElementById(nameErrorId!)).toHaveTextContent('יש להזין שם כדי לשלוח דרך הטופס.');
+    expect(screen.getByRole('alert')).toHaveTextContent('יש לתקן את השדות הבאים:');
+
+    fireEvent.change(nameField, { target: { value: 'אביתר' } });
+    expect(nameField).toHaveAttribute('aria-invalid', 'false');
+    expect(nameField).not.toHaveAttribute('aria-errormessage');
   });
 });
