@@ -26,7 +26,7 @@ const pageCopy = {
     eyebrow: 'Professional profile / evidence dossier',
     title: 'Evyatar Hazan',
     role: 'Full Stack Developer',
-    lead: 'I connect product thinking, frontend, backend, infrastructure, and verification into systems that are clear to use and maintain.',
+    bio: 'I’m Evyatar, a full-stack developer building web and mobile products from product framing through production verification. I work across React, Node.js, infrastructure, automation, accessibility, and applied AI.',
     projects: 'View project evidence',
     contact: 'Start a conversation',
     cv: 'Download CV',
@@ -37,6 +37,9 @@ const pageCopy = {
     evidenceWriting: 'Technical writing',
     storyEyebrow: '01 / Professional story',
     storyTitle: 'A practical end-to-end view of product work.',
+    humanNoteEyebrow: 'A human note',
+    humanNoteTitle: 'Curiosity is part of the work.',
+    humanNoteBody: 'I enjoy turning complexity into clarity—in an interface, a system, or a short article that captures something new I learned. That process is what keeps me curious from one project to the next.',
     capabilitiesEyebrow: '02 / Capability explorer',
     capabilitiesTitle: 'Select a field. Follow the evidence.',
     capabilitiesIntro: 'Skills describe the working surface. Projects and articles show where the practice is public. Measured outcomes stay separate and appear only with verified evidence.',
@@ -54,7 +57,7 @@ const pageCopy = {
     eyebrow: 'פרופיל מקצועי / תיק ראיות',
     title: 'אביתר חזן',
     role: 'Full Stack Developer',
-    lead: 'אני מחבר חשיבה מוצרית, Frontend, Backend, תשתיות ואימות למערכות ברורות לשימוש ולתחזוקה.',
+    bio: 'אני אביתר, מפתח Full Stack שבונה מוצרי Web ומובייל מהגדרת המוצר ועד לאימות בפרודקשן. אני עובד עם React, Node.js, תשתיות, אוטומציה, נגישות ו־AI יישומי.',
     projects: 'לצפייה בראיות מהפרויקטים',
     contact: 'להתחיל שיחה',
     cv: 'להורדת קורות החיים',
@@ -65,6 +68,9 @@ const pageCopy = {
     evidenceWriting: 'כתיבה טכנית',
     storyEyebrow: '01 / הסיפור המקצועי',
     storyTitle: 'מבט מעשי מקצה לקצה על עבודת מוצר.',
+    humanNoteEyebrow: 'הערה אישית',
+    humanNoteTitle: 'סקרנות היא חלק מהעבודה.',
+    humanNoteBody: 'אני נהנה להפוך מורכבות לבהירות — בממשק, במערכת או במאמר קצר שמסכם משהו חדש שלמדתי. התהליך הזה הוא מה ששומר על הסקרנות שלי מפרויקט לפרויקט.',
     capabilitiesEyebrow: '02 / מפת יכולות',
     capabilitiesTitle: 'בוחרים תחום ועוקבים אחרי הראיות.',
     capabilitiesIntro: 'המיומנויות מתארות את מרחב העבודה. פרויקטים ומאמרים מראים היכן קיימת הדגמה ציבורית. תוצאות מדידות נשארות נפרדות ומופיעות רק עם ראיה מאומתת.',
@@ -152,7 +158,7 @@ const AboutPage = () => {
             <p className="mt-6 font-mono text-sm font-black uppercase tracking-[0.16em] text-neutral-500 dark:text-neutral-400">{copy.role}</p>
           </div>
           <div className="border-s-2 border-primary-500 ps-6">
-            <p className="max-w-2xl text-xl font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 sm:text-2xl">{copy.lead}</p>
+            <p data-professional-bio className="max-w-2xl text-xl font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 sm:text-2xl">{copy.bio}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a href={profileLinks.github} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 border border-neutral-300 px-4 py-2 text-sm font-black hover:border-primary-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:border-neutral-700"><Github aria-hidden="true" className="h-4 w-4" />GitHub</a>
               <a href={profileLinks.linkedin} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 border border-neutral-300 px-4 py-2 text-sm font-black hover:border-primary-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:border-neutral-700"><Linkedin aria-hidden="true" className="h-4 w-4" />LinkedIn</a>
@@ -214,6 +220,13 @@ const AboutPage = () => {
               ))}
             </ol>
           </div>
+          <aside aria-labelledby="human-note-title" className="mt-10 grid gap-4 border-t border-neutral-300/80 pt-8 dark:border-neutral-800 sm:grid-cols-[minmax(8rem,0.28fr)_minmax(0,1fr)] sm:items-start sm:gap-8">
+            <p className="font-mono text-[0.68rem] font-black uppercase tracking-[0.18em] text-primary-700 dark:text-primary-400">{copy.humanNoteEyebrow}</p>
+            <div className="max-w-3xl">
+              <h3 id="human-note-title" className="text-2xl font-black tracking-tight sm:text-3xl">{copy.humanNoteTitle}</h3>
+              <p className="mt-3 text-base leading-8 text-neutral-600 dark:text-neutral-300">{copy.humanNoteBody}</p>
+            </div>
+          </aside>
         </div>
       </section>
 

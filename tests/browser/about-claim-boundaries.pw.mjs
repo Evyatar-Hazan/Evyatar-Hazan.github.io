@@ -31,16 +31,13 @@ for (const scenario of scenarios) {
     expect(unboundedClaimText).not.toMatch(/\b\d+\+?\s+שנות?\b|מומחה|מוסמך|עטור פרסים/i);
 
     const capabilityButtons = page.locator('[aria-controls="capability-panel"]');
-    await expect(capabilityButtons).toHaveCount(7);
+    await expect(capabilityButtons).toHaveCount(6);
     for (const button of await capabilityButtons.all()) {
       await button.click();
       await expect(button).toHaveAttribute('aria-pressed', 'true');
       const panel = page.locator('#capability-panel');
       await expect(panel).toBeVisible();
-      await expect.poll(async () => (
-        await panel.locator('[data-evidence-demonstrations] a').count()
-        + await panel.locator('[data-evidence-gap]').count()
-      )).toBeGreaterThan(0);
+      await expect(panel.locator('[data-evidence-demonstrations] a')).not.toHaveCount(0);
     }
 
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);

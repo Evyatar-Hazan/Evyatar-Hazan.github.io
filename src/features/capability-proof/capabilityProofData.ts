@@ -198,16 +198,21 @@ export const getCapabilityProofGroups = (
 ): CapabilityProofGroup[] => {
   const projectMap = getLocalizedProjectMap(language);
 
-  return getPortfolioCapabilityGroups(language).map((group) => {
+  return getPortfolioCapabilityGroups(language).flatMap((group) => {
     const definition = capabilityProofDefinitions[group.id];
 
-    return {
+    // The public capability map is a proof index, not a complete skills list.
+    // Keep unsupported claims in the canonical inventory, but do not present
+    // them as selectable capabilities until a project or article proves them.
+    if (definition.demonstrations.length === 0) return [];
+
+    return [{
       ...group,
       demonstrations: definition.demonstrations.map((reference) => (
         resolveDemonstration(reference, language, projectMap)
       )),
       measuredOutcomes: resolveMeasuredOutcomes(definition.demonstrations, projectMap),
       publicEvidenceGap: definition.publicEvidenceGap?.[language],
-    };
+    }];
   });
 };

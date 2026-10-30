@@ -334,6 +334,14 @@ describe('App', () => {
 
     expect(await screen.findByRole('heading', { level: 1, name: language === 'he' ? 'אביתר חזן' : 'Evyatar Hazan' })).toBeInTheDocument();
     expect(screen.getByText('Full Stack Developer')).toBeInTheDocument();
+    const biography = document.querySelector('main > section:first-of-type [data-professional-bio]');
+    expect(biography).toBeInTheDocument();
+    expect(biography).toHaveTextContent(
+      language === 'he'
+        ? 'אני אביתר, מפתח Full Stack שבונה מוצרי Web ומובייל מהגדרת המוצר ועד לאימות בפרודקשן.'
+        : 'I’m Evyatar, a full-stack developer building web and mobile products from product framing through production verification.',
+    );
+    expect(biography?.textContent?.trim().split(/\s+/).length).toBeLessThanOrEqual(45);
     expect(screen.getAllByRole('link', { name: 'GitHub' }).some((link) => link.getAttribute('href') === 'https://github.com/Evyatar-Hazan')).toBe(true);
     expect(screen.getAllByRole('link', { name: 'LinkedIn' }).some((link) => link.getAttribute('href') === 'https://www.linkedin.com/in/evyatar-hazan-662235210/')).toBe(true);
     expect(screen.getByRole('link', { name: language === 'he' ? 'לצפייה בראיות מהפרויקטים' : 'View project evidence' })).toHaveAttribute('href', `/${language}/projects/`);
@@ -344,7 +352,14 @@ describe('App', () => {
     expect(document.querySelector('time[datetime="2026-07-23"]')).toHaveTextContent(
       language === 'he' ? 'עודכן ב־23 ביולי 2026' : 'Updated July 23, 2026',
     );
-    expect(document.querySelectorAll('[aria-controls="capability-panel"]')).toHaveLength(7);
+    expect(screen.getByRole('heading', {
+      level: 3,
+      name: language === 'he' ? 'סקרנות היא חלק מהעבודה.' : 'Curiosity is part of the work.',
+    })).toBeInTheDocument();
+    expect(screen.getByText(language === 'he'
+      ? /התהליך הזה הוא מה ששומר על הסקרנות שלי/
+      : /That process is what keeps me curious/)).toBeInTheDocument();
+    expect(document.querySelectorAll('[aria-controls="capability-panel"]')).toHaveLength(6);
     expect(document.querySelectorAll('[data-professional-timeline] [data-timeline-entry]')).toHaveLength(4);
     expect(screen.getByRole('heading', {
       level: 3,
@@ -355,6 +370,10 @@ describe('App', () => {
     expect(document.querySelector('#delivery-process-title')?.closest('section')?.querySelectorAll('ol > li')).toHaveLength(5);
     expect(document.querySelectorAll('#working-principles [data-principle-id]')).toHaveLength(4);
     expect(document.querySelectorAll('#service-engagements > div > ol > li')).toHaveLength(3);
+    expect(screen.getByRole('heading', {
+      level: 3,
+      name: language === 'he' ? 'פתוח לשיחות רלוונטיות.' : 'Open to relevant conversations.',
+    })).toBeInTheDocument();
     expect(document.querySelectorAll('h1')).toHaveLength(1);
   });
 
@@ -364,16 +383,13 @@ describe('App', () => {
     await waitFor(() => expect(document.querySelector('#capability-panel')).toHaveAttribute('data-capability-id', 'automation'));
     expect(screen.getByText(/do not publicly verify every named device-automation tool/i)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: /AI & computer vision/ }));
-    expect(window.location.search).toContain('capability=aiCv');
-    expect(window.location.search).toContain('ref=profile');
-    expect(window.location.hash).toBe('#capability-explorer-title');
-    expect(document.querySelector('#capability-panel')).toHaveAttribute('data-capability-id', 'aiCv');
-    expect(screen.getByText(/No canonical public project or article/i)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /AI & computer vision/ })).not.toBeInTheDocument();
 
-    window.history.pushState({}, '', '/en/about/?capability=missing');
+    window.history.pushState({}, '', '/en/about/?capability=aiCv&ref=profile#capability-explorer-title');
     fireEvent.popState(window);
     await waitFor(() => expect(document.querySelector('#capability-panel')).toHaveAttribute('data-capability-id', 'webMobile'));
+    expect(window.location.search).toContain('ref=profile');
+    expect(window.location.hash).toBe('#capability-explorer-title');
   });
 
   it('publishes one conservative Person JSON-LD record on About only', async () => {
