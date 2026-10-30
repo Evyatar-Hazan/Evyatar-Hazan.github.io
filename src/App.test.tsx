@@ -356,6 +356,10 @@ describe('App', () => {
     expect(document.querySelector('#delivery-process-title')?.closest('section')?.querySelectorAll('ol > li')).toHaveLength(5);
     expect(document.querySelectorAll('#working-principles [data-principle-id]')).toHaveLength(4);
     expect(document.querySelectorAll('#service-engagements > div > ol > li')).toHaveLength(3);
+    expect(screen.getByRole('heading', {
+      level: 3,
+      name: language === 'he' ? 'פתוח לשיחות רלוונטיות.' : 'Open to relevant conversations.',
+    })).toBeInTheDocument();
     expect(document.querySelectorAll('h1')).toHaveLength(1);
   });
 
