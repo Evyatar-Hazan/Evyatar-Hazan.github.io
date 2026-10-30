@@ -12,7 +12,13 @@ const libraryCopy = {
     'blog.library.searchPlaceholder': 'Title, summary, or tag',
     'blog.library.clearSearch': 'Clear search',
     'blog.library.filtersLabel': 'Filter by topic',
+    'blog.library.topicFiltersLabel': 'Filter by topic',
+    'blog.library.depthFiltersLabel': 'Filter by depth',
     'blog.library.allTopics': 'All',
+    'blog.library.allDepths': 'All levels',
+    'blog.library.depths.foundation': 'Foundations',
+    'blog.library.depths.applied': 'Applied',
+    'blog.library.depths.deep-dive': 'Deep dive',
     'blog.library.reset': 'Reset library',
     'blog.library.emptyTitle': 'No notes match this signal',
     'blog.library.loadMore': 'Load more notes',
@@ -24,7 +30,13 @@ const libraryCopy = {
     'blog.library.searchPlaceholder': 'כותרת, תקציר או תגית',
     'blog.library.clearSearch': 'ניקוי החיפוש',
     'blog.library.filtersLabel': 'סינון לפי נושא',
+    'blog.library.topicFiltersLabel': 'סינון לפי נושא',
+    'blog.library.depthFiltersLabel': 'סינון לפי רמת עומק',
     'blog.library.allTopics': 'הכול',
+    'blog.library.allDepths': 'כל הרמות',
+    'blog.library.depths.foundation': 'יסודות',
+    'blog.library.depths.applied': 'יישומי',
+    'blog.library.depths.deep-dive': 'העמקה',
     'blog.library.reset': 'איפוס הספרייה',
     'blog.library.emptyTitle': 'אין רשומות שמתאימות לחיפוש',
     'blog.library.loadMore': 'טעינת רשומות נוספות',
@@ -39,8 +51,13 @@ vi.mock('react-i18next', () => ({
 }));
 
 import BlogIndex from './BlogIndex';
-import { getPopularBlogTopics, normalizeBlogSearchText } from '../features/blog-library/blogLibrary';
+import {
+  getAvailableBlogDepths,
+  getPopularBlogTopics,
+  normalizeBlogSearchText,
+} from '../features/blog-library/blogLibrary';
 import { getBlogPosts } from '../content/blog/posts';
+import { blogDepthBySlug } from '../content/blog/metadata';
 
 const renderBlog = (url = '/en/blog/') => {
   window.history.pushState({}, '', url);
@@ -82,6 +99,21 @@ describe('BlogIndex knowledge library', () => {
       'Reliability',
     ]);
     expect(normalizeBlogSearchText('  MIXED  טקסט  ', 'he')).toBe('mixed טקסט');
+  });
+
+  it('classifies every localized article once with one shared depth taxonomy', () => {
+    const englishPosts = getBlogPosts('en');
+    const hebrewPosts = getBlogPosts('he');
+
+    expect(getAvailableBlogDepths(englishPosts)).toEqual(['foundation', 'applied', 'deep-dive']);
+    expect(Object.keys(blogDepthBySlug)).toHaveLength(33);
+    expect(englishPosts).toHaveLength(33);
+    expect(hebrewPosts).toHaveLength(33);
+
+    englishPosts.forEach((post) => {
+      expect(post.depth).toBe(blogDepthBySlug[post.slug as keyof typeof blogDepthBySlug]);
+      expect(hebrewPosts.find((candidate) => candidate.slug === post.slug)?.depth).toBe(post.depth);
+    });
   });
 
   it('shows the lead, compact reading routes, twelve notes, and progressively loads the rest', () => {
@@ -151,7 +183,7 @@ describe('BlogIndex knowledge library', () => {
     expect(document.querySelector('.blog-archive-entry-footer mark')).toHaveTextContent('Monetization');
   });
 
-  it('combines an exact topic filter with search and exposes accessible state', () => {
+  it('combines exact topic and depth filters with search and exposes accessible state', () => {
     renderBlog();
 
     const reliability = screen.getByRole('button', { name: 'Reliability' });
@@ -159,6 +191,12 @@ describe('BlogIndex knowledge library', () => {
     expect(reliability).toHaveAttribute('aria-pressed', 'true');
     expect(window.location.search).toContain('topic=Reliability');
     expect(resultCards()).toHaveLength(3);
+
+    const applied = screen.getByRole('button', { name: 'Applied' });
+    fireEvent.click(applied);
+    expect(applied).toHaveAttribute('aria-pressed', 'true');
+    expect(window.location.search).toContain('depth=applied');
+    expect(resultCards()).toHaveLength(1);
 
     fireEvent.change(screen.getByRole('searchbox', { name: 'Search all notes' }), {
       target: { value: 'timestamp' },
@@ -169,7 +207,7 @@ describe('BlogIndex knowledge library', () => {
   });
 
   it('shows an accessible empty state and resets query and topic while preserving unrelated params', () => {
-    renderBlog('/en/blog/?campaign=portfolio&topic=Reliability&q=definitely-no-match');
+    renderBlog('/en/blog/?campaign=portfolio&topic=Reliability&depth=deep-dive&q=definitely-no-match');
 
     expect(screen.getByRole('status')).toHaveTextContent('No notes match this signal');
     fireEvent.click(screen.getAllByRole('button', { name: 'Reset library' })[0]);
@@ -177,20 +215,23 @@ describe('BlogIndex knowledge library', () => {
     expect(window.location.search).toBe('?campaign=portfolio');
     expect(document.querySelector('.blog-archive-feature')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'All' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'All levels' })).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('restores direct query state, safely ignores invalid topics, and reacts to history navigation', async () => {
-    renderBlog('/en/blog/?ref=direct&q=unicode&topic=Java');
+    renderBlog('/en/blog/?ref=direct&q=unicode&topic=Java&depth=applied');
 
     expect(screen.getByRole('searchbox', { name: 'Search all notes' })).toHaveValue('unicode');
     expect(screen.getByRole('button', { name: 'Java' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Applied' })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByRole('heading', { name: 'Why String.length() does not really count characters' })).toBeInTheDocument();
 
-    window.history.pushState({}, '', '/en/blog/?ref=direct&topic=not-a-real-tag');
+    window.history.pushState({}, '', '/en/blog/?ref=direct&topic=not-a-real-tag&depth=not-a-real-depth');
     window.dispatchEvent(new PopStateEvent('popstate'));
 
     await waitFor(() => expect(screen.getByRole('searchbox', { name: 'Search all notes' })).toHaveValue(''));
     expect(screen.getByRole('button', { name: 'All' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'All levels' })).toHaveAttribute('aria-pressed', 'true');
     expect(window.location.search).toContain('ref=direct');
   });
 
