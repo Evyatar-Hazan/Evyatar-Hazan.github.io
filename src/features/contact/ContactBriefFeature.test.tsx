@@ -134,6 +134,33 @@ describe('ContactBriefFeature', () => {
     expect(body.get('_captcha')).toBe('false');
     expect([...body.keys()]).not.toContain('intent');
     expect(await screen.findByText(/confirmed delivery/i)).toBeInTheDocument();
+    expect(screen.getByText(/What happens next/i)).toBeInTheDocument();
+    expect(screen.getByText(/focused questions or a recommended next step/i)).toBeInTheDocument();
+    expect(screen.getByText(/no fixed response-time promise/i)).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveAttribute('aria-atomic', 'true');
+  });
+
+  it('shows the localized next step only after provider-confirmed success', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ success: true }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    render(<ContactBriefFeature language="he" buildLocalizedPath={buildLocalizedPath} />);
+    fireEvent.click(screen.getByRole('button', { name: /תקציר פרויקט קצר/i }));
+
+    expect(screen.queryByText('מה קורה עכשיו')).not.toBeInTheDocument();
+    expect(screen.queryByText(/אין כאן התחייבות לזמן תגובה קבוע/i)).not.toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText('שם'), { target: { value: 'מבקר בדיקה' } });
+    fireEvent.change(screen.getByLabelText('כתובת אימייל'), {
+      target: { value: 'visitor@example.test' },
+    });
+    fireEvent.submit(screen.getByRole('button', { name: /שליחה באמצעות FormSubmit/i }).closest('form')!);
+
+    expect(await screen.findByText(/מה קורה עכשיו/i)).toBeInTheDocument();
+    expect(screen.getByText(/שאלות ממוקדות או המלצה לצעד הבא/i)).toBeInTheDocument();
+    expect(screen.getByText(/אין כאן התחייבות לזמן תגובה קבוע/i)).toBeInTheDocument();
   });
 
   it('passes honeypot values to FormSubmit without exposing a CAPTCHA or focus target', async () => {
@@ -272,5 +299,6 @@ describe('ContactBriefFeature', () => {
 
     expect(await screen.findByText(/Delivery was not confirmed/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Retry form delivery' })).toBeInTheDocument();
+    expect(screen.queryByText(/What happens next/i)).not.toBeInTheDocument();
   });
 });

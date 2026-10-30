@@ -101,6 +101,8 @@ const localizedUi = {
     privacyPrefix: 'FormSubmit receives your name, email, and the reviewed message only after you press send. A hidden honeypot filters automated submissions without tracking or a CAPTCHA. The site does not save the brief locally.',
     privacyLink: 'Read the privacy notice',
     success: 'FormSubmit confirmed delivery. Your message is on its way.',
+    successNextLabel: 'What happens next',
+    successNext: 'I will review the context and reply with focused questions or a recommended next step. There is no fixed response-time promise.',
     error: 'Delivery was not confirmed. Every field is still here; review the details, retry, or use an email or WhatsApp draft.',
     timeout: 'The request timed out before delivery was confirmed. Every field is still here; review the details and retry.',
     retry: 'Retry form delivery',
@@ -162,6 +164,8 @@ const localizedUi = {
     privacyPrefix: 'FormSubmit מקבל את השם, האימייל וההודעה שנבדקה רק לאחר לחיצה על שליחה. שדה מלכודת מוסתר מסנן שליחות אוטומטיות בלי מעקב ובלי CAPTCHA. האתר אינו שומר את התקציר מקומית.',
     privacyLink: 'למידע נוסף בעמוד הפרטיות',
     success: 'FormSubmit אישר את המסירה. ההודעה בדרך.',
+    successNextLabel: 'מה קורה עכשיו',
+    successNext: 'אעבור על ההקשר ואחזור עם שאלות ממוקדות או המלצה לצעד הבא. אין כאן התחייבות לזמן תגובה קבוע.',
     error: 'המסירה לא אושרה. כל השדות נשמרו כאן; אפשר לבדוק את הפרטים, לנסות שוב או להשתמש בטיוטת אימייל או WhatsApp.',
     timeout: 'הבקשה הסתיימה לפני שהמסירה אושרה. כל השדות נשמרו כאן; אפשר לבדוק את הפרטים ולנסות שוב.',
     retry: 'ניסיון שליחה נוסף',
@@ -554,12 +558,18 @@ const ContactBriefFeature = ({
                   tabIndex={-1}
                   role="status"
                   aria-live="polite"
+                  aria-atomic="true"
                   className={`contact-delivery-status is-${formStatus}`}
                 >
                   {formStatus === 'success'
                     ? <CheckCircle2 aria-hidden="true" />
                     : <XCircle aria-hidden="true" />}
-                  <p>{statusMessage}</p>
+                  {formStatus === 'success' ? (
+                    <div className="contact-delivery-status__copy">
+                      <p>{statusMessage}</p>
+                      <p><strong>{ui.successNextLabel}:</strong> {ui.successNext}</p>
+                    </div>
+                  ) : <p>{statusMessage}</p>}
                   {formStatus !== 'success' && (
                     <button type="submit" disabled={isSubmitting}>{ui.retry}</button>
                   )}
