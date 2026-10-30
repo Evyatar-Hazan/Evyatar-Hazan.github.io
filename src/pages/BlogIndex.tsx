@@ -68,7 +68,7 @@ const ArchiveFeature = ({ post, language }: { post: BlogPost; language: BlogLang
       </div>
       <div className="blog-archive-feature-copy">
         <EntryMeta post={post} language={language} />
-        <p className="blog-archive-label">{t('blog.latestEntry')}</p>
+        <p className="blog-archive-label">{t('blog.featured')}</p>
         <h2><Link to={localizedPath(language, { route: 'article', id: post.slug as ArticleId })}>{post.title}</Link></h2>
         <p>{post.excerpt}</p>
         <div className="blog-archive-feature-footer">
