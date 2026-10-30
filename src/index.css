@@ -6160,6 +6160,79 @@ body {
   padding: 1rem;
 }
 
+.contact-inquiry-type {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.contact-inquiry-type > legend {
+  color: var(--color-neutral-950);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.dark .contact-inquiry-type > legend {
+  color: var(--color-white);
+}
+
+.contact-inquiry-type > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.contact-inquiry-type label {
+  display: flex;
+  min-height: 3rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: 0.9rem;
+  padding: 0.65rem 0.75rem;
+  color: var(--color-neutral-700);
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-align: center;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+}
+
+.contact-inquiry-type label.is-selected {
+  border-color: var(--color-primary-500);
+  background: color-mix(in srgb, var(--color-primary-500) 10%, transparent);
+  color: var(--color-primary-800);
+}
+
+.dark .contact-inquiry-type label {
+  border-color: var(--color-neutral-700);
+  color: var(--color-neutral-300);
+}
+
+.dark .contact-inquiry-type label.is-selected {
+  border-color: var(--color-primary-400);
+  background: color-mix(in srgb, var(--color-primary-400) 15%, transparent);
+  color: var(--color-primary-200);
+}
+
+.contact-inquiry-type input {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.contact-inquiry-type label:focus-within {
+  outline: 3px solid color-mix(in srgb, var(--color-primary-500) 45%, transparent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .contact-inquiry-type > div {
+    grid-template-columns: 1fr;
+  }
+}
+
 .contact-workspace-input {
   margin-top: 0.5rem;
 }

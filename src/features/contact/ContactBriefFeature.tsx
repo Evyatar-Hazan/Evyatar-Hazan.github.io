@@ -27,8 +27,13 @@ import {
   buildContactWhatsappHref,
   contactBriefCopy,
   contactBriefLimits,
+  contactInquiryTypeIds,
   emptyContactBrief,
+  getContactInquiryEmailSubject,
+  getContactInquiryFields,
   type ContactBriefValues,
+  type ContactBriefTextField,
+  type ContactInquiryTypeId,
   type PreferredContactChannel,
 } from './contactBrief';
 import {
@@ -46,7 +51,7 @@ const submissionTimeoutMs = 12_000;
 const localizedUi = {
   en: {
     eyebrow: 'PROJECT HANDOFF / 01',
-    title: 'Start a project conversation.',
+    title: 'Start a focused conversation.',
     description: 'Keep the portfolio context intact, use a direct channel immediately, or shape a short optional brief before you choose how to send it.',
     contextTitle: 'Conversation context',
     contextDescription: 'This public context came from the portfolio. No personal details are stored in the URL.',
@@ -64,15 +69,16 @@ const localizedUi = {
       {
         label: '02 / Next',
         title: 'I will reply with focused questions and a recommended next step.',
-        description: 'If there is a fit, we will turn the conversation into a short scope and a practical work plan.',
+        description: 'If there is a fit, we will turn the conversation into a clear next step for the project, role, or collaboration.',
       },
     ],
     whatsapp: 'WhatsApp',
     email: 'Email',
     linkedin: 'LinkedIn',
-    builderToggle: 'Build a short project brief (optional)',
+    builderToggle: 'Build a short inquiry brief (optional)',
     builderTitle: 'Shape the handoff before sending',
     builderDescription: 'Nothing is sent or stored while you write. Blank answers are left out of the message.',
+    inquiryTypeLegend: 'What would you like to discuss?',
     fields: {
       need: { label: 'What do you need?', placeholder: 'A website, product flow, internal tool…' },
       existingSituation: { label: 'What exists today?', placeholder: 'A short description of the current situation' },
@@ -107,7 +113,7 @@ const localizedUi = {
   },
   he: {
     eyebrow: 'PROJECT HANDOFF / 01',
-    title: 'פותחים שיחת פרויקט.',
+    title: 'פותחים שיחה ממוקדת.',
     description: 'שומרים על ההקשר מהפורטפוליו, פונים מיד בערוץ ישיר או מסדרים תקציר קצר ולא־מחייב לפני שבוחרים איך להשתמש בו.',
     contextTitle: 'הקשר השיחה',
     contextDescription: 'זהו הקשר ציבורי שהגיע מהפורטפוליו. פרטים אישיים אינם נשמרים בכתובת.',
@@ -125,15 +131,16 @@ const localizedUi = {
       {
         label: '02 / מה קורה אחר כך',
         title: 'אחזור עם שאלות ממוקדות והמלצה לצעד הבא.',
-        description: 'אם יש התאמה, נהפוך את השיחה לאפיון קצר ולתוכנית עבודה מעשית.',
+        description: 'אם יש התאמה, נהפוך את השיחה לצעד הבא ברור לפרויקט, למשרה או לשיתוף הפעולה.',
       },
     ],
     whatsapp: 'WhatsApp',
     email: 'אימייל',
     linkedin: 'LinkedIn',
-    builderToggle: 'הכנת תקציר פרויקט קצר (לא חובה)',
+    builderToggle: 'הכנת תקציר פנייה קצר (לא חובה)',
     builderTitle: 'מסדרים את ההעברה לפני השליחה',
     builderDescription: 'בזמן הכתיבה דבר לא נשלח או נשמר. תשובות ריקות לא יופיעו בהודעה.',
+    inquiryTypeLegend: 'על מה תרצו לדבר?',
     fields: {
       need: { label: 'מה צריך?', placeholder: 'אתר, תהליך מוצר, כלי פנימי…' },
       existingSituation: { label: 'מה קיים היום?', placeholder: 'תיאור קצר של המצב הנוכחי' },
@@ -165,6 +172,37 @@ const localizedUi = {
     error: 'המסירה לא אושרה. התקציר נשמר כאן; אפשר לנסות שוב או להשתמש בטיוטה.',
     timeout: 'הבקשה הסתיימה לפני שהמסירה אושרה. התקציר נשמר כאן.',
     retry: 'ניסיון שליחה נוסף',
+  },
+} as const;
+
+const inquiryFieldPlaceholders = {
+  en: {
+    job: {
+      need: 'For example: Full Stack Engineer or product engineering lead',
+      existingSituation: 'Company, team, or hiring context',
+      desiredOutcome: 'The experience or strengths that make this worth discussing',
+      timeframe: 'For example: immediate, this quarter, flexible',
+    },
+    collaboration: {
+      need: 'The idea, format, or topic you want to explore together',
+      issue: 'What makes this the right moment to collaborate?',
+      desiredOutcome: 'What should both sides create or learn?',
+      timeframe: 'For example: one session, this quarter, flexible',
+    },
+  },
+  he: {
+    job: {
+      need: 'לדוגמה: Full Stack Engineer או הובלת הנדסת מוצר',
+      existingSituation: 'החברה, הצוות או הקשר הגיוס',
+      desiredOutcome: 'הניסיון או החוזקות שבגללם כדאי לדבר',
+      timeframe: 'לדוגמה: מיידי, ברבעון הקרוב, גמיש',
+    },
+    collaboration: {
+      need: 'הרעיון, הפורמט או הנושא שכדאי לבדוק יחד',
+      issue: 'מה הופך את זה לזמן הנכון לשתף פעולה?',
+      desiredOutcome: 'מה שני הצדדים אמורים ליצור או ללמוד?',
+      timeframe: 'לדוגמה: מפגש אחד, הרבעון הקרוב, גמיש',
+    },
   },
 } as const;
 
@@ -204,7 +242,13 @@ const ContactBriefFeature = ({
   const errorSummaryRef = useRef<HTMLDivElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
   const [isBuilderOpen, setIsBuilderOpen] = useState(false);
-  const [brief, setBrief] = useState<ContactBriefValues>(emptyContactBrief);
+  const [inquiryType, setInquiryType] = useState<ContactInquiryTypeId>('project');
+  const [briefs, setBriefs] = useState<Record<ContactInquiryTypeId, ContactBriefValues>>({
+    project: { ...emptyContactBrief },
+    job: { ...emptyContactBrief },
+    collaboration: { ...emptyContactBrief },
+  });
+  const brief = briefs[inquiryType];
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
@@ -217,13 +261,16 @@ const ContactBriefFeature = ({
   );
   const intentOptions = useMemo(() => contactIntentOptions(language), [language]);
   const projectOptions = useMemo(() => contactProjectOptions(language), [language]);
+  const inquiryFields = getContactInquiryFields(language, inquiryType);
+  const inquiryCopy = content.inquiryTypes[inquiryType];
+  const inquiryLabels = inquiryCopy.labels as Partial<Record<ContactBriefTextField, string>>;
 
   const message = useMemo(
-    () => buildContactBriefMessage(language, brief, context),
-    [brief, context, language],
+    () => buildContactBriefMessage(language, brief, context, inquiryType),
+    [brief, context, inquiryType, language],
   );
   const whatsappHref = buildContactWhatsappHref(profileLinks.whatsapp, message);
-  const emailHref = buildContactEmailHref(profileLinks.email, language, message, context);
+  const emailHref = buildContactEmailHref(profileLinks.email, language, message, context, inquiryType);
   const privacyHref = buildLocalizedPath(language, { route: 'privacy' });
 
   useEffect(() => {
@@ -236,7 +283,10 @@ const ContactBriefFeature = ({
     value: ContactBriefValues[Key],
   ) => {
     setFormStatus('idle');
-    setBrief((current) => ({ ...current, [key]: value }));
+    setBriefs((current) => ({
+      ...current,
+      [inquiryType]: { ...current[inquiryType], [key]: value },
+    }));
   };
 
   const updateIntent = (intent: ContactIntentId) => {
@@ -281,7 +331,7 @@ const ContactBriefFeature = ({
       body.set('name', name.trim());
       body.set('email', email.trim());
       body.set('message', message);
-      body.set('_subject', contextDetails.emailSubject);
+      body.set('_subject', getContactInquiryEmailSubject(language, inquiryType, context));
 
       const response = await fetch(contactFormEndpoint, {
         method: 'POST',
@@ -417,17 +467,39 @@ const ContactBriefFeature = ({
               <SectionHeading id={`${reactId}-builder-title`} className="text-2xl font-bold text-neutral-950 dark:text-white">{ui.builderTitle}</SectionHeading>
               <p className="mt-2 leading-7 text-neutral-600 dark:text-neutral-400">{ui.builderDescription}</p>
 
+              <fieldset className="contact-inquiry-type mt-6">
+                <legend>{ui.inquiryTypeLegend}</legend>
+                <div>
+                  {contactInquiryTypeIds.map((type) => (
+                    <label key={type} className={inquiryType === type ? 'is-selected' : ''}>
+                      <input
+                        type="radio"
+                        name={`${reactId}-inquiry-type`}
+                        value={type}
+                        checked={inquiryType === type}
+                        onChange={() => { setInquiryType(type); setFormStatus('idle'); }}
+                      />
+                      <span>{content.inquiryTypes[type].label}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+
               <fieldset className="mt-6 grid gap-4">
                 <legend className="sr-only">{ui.builderTitle}</legend>
-                {(['need', 'existingSituation', 'issue', 'desiredOutcome', 'timeframe'] as const).map((key) => (
+                {inquiryFields.map((key) => (
                   <div key={key} className={fieldClassName}>
-                    <label htmlFor={`${reactId}-${key}`}>{ui.fields[key].label}</label>
+                    <label htmlFor={`${reactId}-${key}`}>
+                      {inquiryType === 'project' ? ui.fields[key].label : inquiryLabels[key]}
+                    </label>
                     <textarea
                       id={`${reactId}-${key}`}
                       rows={key === 'timeframe' ? 2 : 3}
                       maxLength={contactBriefLimits[key]}
                       value={brief[key]}
-                      placeholder={ui.fields[key].placeholder}
+                      placeholder={inquiryType === 'project'
+                        ? ui.fields[key].placeholder
+                        : (inquiryFieldPlaceholders[language][inquiryType] as Partial<Record<ContactBriefTextField, string>>)[key]}
                       onChange={(event) => updateBrief(key, event.target.value)}
                       className={inputClassName}
                     />

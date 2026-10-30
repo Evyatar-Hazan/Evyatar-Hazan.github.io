@@ -7,7 +7,7 @@ const buildLocalizedPath: LocalizedPathBuilder = (language, target) =>
   `/${language}/${target.route}/`;
 
 const openBuilder = () => {
-  fireEvent.click(screen.getByRole('button', { name: /project brief/i }));
+  fireEvent.click(screen.getByRole('button', { name: /inquiry brief/i }));
 };
 
 afterEach(() => {
@@ -89,6 +89,46 @@ describe('ContactBriefFeature', () => {
     );
     expect(emailBody).toContain('A synthetic scheduling tool');
     expect(whatsappBody).toContain('A synthetic scheduling tool');
+  });
+
+  it('shows only the fields relevant to the selected inquiry type', () => {
+    render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
+    openBuilder();
+
+    expect(screen.getByRole('radio', { name: 'Project' })).toBeChecked();
+    expect(screen.getByLabelText('What is not working?')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('radio', { name: 'Role or opportunity' }));
+
+    expect(screen.getByLabelText('Role or opportunity', { selector: 'textarea' })).toBeInTheDocument();
+    expect(screen.getByLabelText('Company or team')).toBeInTheDocument();
+    expect(screen.getByLabelText('Why this looks relevant')).toBeInTheDocument();
+    expect(screen.queryByLabelText('What is not working?')).not.toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText('Role or opportunity', { selector: 'textarea' }), {
+      target: { value: 'Synthetic product engineering role' },
+    });
+    expect(screen.getByLabelText<HTMLTextAreaElement>('Message review').value).toContain(
+      'Inquiry type: Role or opportunity',
+    );
+    expect(screen.getByLabelText<HTMLTextAreaElement>('Message review').value).toContain(
+      'Role or opportunity: Synthetic product engineering role',
+    );
+
+    fireEvent.click(screen.getByRole('radio', { name: 'Collaboration' }));
+    expect(screen.getByLabelText('Collaboration idea')).toBeInTheDocument();
+    expect(screen.getByLabelText('Why now')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Company or team')).not.toBeInTheDocument();
+  });
+
+  it('renders the inquiry taxonomy and relevant fields in Hebrew', () => {
+    render(<ContactBriefFeature language="he" buildLocalizedPath={buildLocalizedPath} />);
+    fireEvent.click(screen.getByRole('button', { name: /תקציר פנייה/i }));
+    fireEvent.click(screen.getByRole('radio', { name: 'משרה או הזדמנות' }));
+
+    expect(screen.getByLabelText('החברה או הצוות')).toBeInTheDocument();
+    expect(screen.getByLabelText('למה זה נראה רלוונטי')).toBeInTheDocument();
+    expect(screen.queryByLabelText('מה לא עובד?')).not.toBeInTheDocument();
   });
 
   it('does not contact the provider when required form identity fields are missing', () => {
