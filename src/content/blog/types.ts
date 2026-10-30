@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react';
+import type { ComponentPropsWithoutRef, ComponentType } from 'react';
 
 export type BlogLanguage = 'he' | 'en';
 
@@ -19,6 +19,10 @@ export type BlogPostMeta = {
   editorialRank: number;
 };
 
+export type BlogMdxComponents = {
+  pre?: ComponentType<ComponentPropsWithoutRef<'pre'>>;
+};
+
 export type BlogPost = BlogPostMeta & {
-  Content: ComponentType;
+  Content: ComponentType<{ components?: BlogMdxComponents }>;
 };
