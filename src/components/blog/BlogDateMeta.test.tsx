@@ -21,6 +21,7 @@ const post: BlogPostMeta = {
   updatedDate: '2026-10-03',
   readTime: '7 min read',
   tags: ['Testing'],
+  depth: 'applied',
   featured: false,
   editorialRank: 1,
 };

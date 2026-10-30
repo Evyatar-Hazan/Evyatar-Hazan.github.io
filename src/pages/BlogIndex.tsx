@@ -10,6 +10,7 @@ import type { ArticleId } from '../contracts/portfolio';
 import ReadingRoutesSection from '../features/curated-reading-routes/ReadingRoutesSection';
 import {
   BLOG_LIBRARY_PAGE_SIZE,
+  getAvailableBlogDepths,
   getPopularBlogTopics,
   normalizeBlogSearchText,
 } from '../features/blog-library/blogLibrary';
@@ -20,7 +21,7 @@ import BlogDateMeta from '../components/blog/BlogDateMeta';
 const languageFromI18n = (language: string): BlogLanguage => (language === 'he' ? 'he' : 'en');
 
 const EntryMeta = ({ post, language }: { post: BlogPost; language: BlogLanguage }) => (
-  <BlogDateMeta className="blog-archive-meta" post={post} language={language} />
+  <BlogDateMeta className="blog-archive-meta" post={post} language={language} showDepth />
 );
 
 const escapeSearchPattern = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -99,6 +100,7 @@ const ArchiveEntry = ({
     <motion.article
       className={cardSurfaceClassName('interactive', 'blog-archive-entry')}
       data-blog-slug={post.slug}
+      data-blog-depth={post.depth}
       initial={reduceMotion ? false : { opacity: 0, y: 12 }}
       whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-5% 0px -5% 0px' }}
@@ -137,16 +139,22 @@ const BlogIndex = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [visibleCount, setVisibleCount] = useState(BLOG_LIBRARY_PAGE_SIZE);
   const topics = getPopularBlogTopics(posts);
+  const depths = getAvailableBlogDepths(posts);
   const query = searchParams.get('q') ?? '';
   const requestedTopic = searchParams.get('topic') ?? '';
+  const requestedDepth = searchParams.get('depth') ?? '';
   const activeTopic = topics.includes(requestedTopic) ? requestedTopic : '';
+  const activeDepth = depths.includes(requestedDepth as (typeof depths)[number])
+    ? requestedDepth as (typeof depths)[number]
+    : '';
   const normalizedQuery = normalizeBlogSearchText(query, language);
-  const isFiltering = normalizedQuery.length > 0 || activeTopic.length > 0;
+  const isFiltering = normalizedQuery.length > 0 || activeTopic.length > 0 || activeDepth.length > 0;
   const [featuredPost, ...archivePosts] = posts;
 
   const filteredPosts = posts.filter((post) => {
     const matchesTopic = !activeTopic || post.tags.includes(activeTopic);
-    if (!matchesTopic) return false;
+    const matchesDepth = !activeDepth || post.depth === activeDepth;
+    if (!matchesTopic || !matchesDepth) return false;
     if (!normalizedQuery) return true;
 
     const searchableText = normalizeBlogSearchText(
@@ -160,7 +168,7 @@ const BlogIndex = () => {
   const hasMore = !isFiltering && visibleCount < archivePosts.length;
 
   const updateParams = (
-    updates: { q?: string; topic?: string },
+    updates: { q?: string; topic?: string; depth?: string },
     options: { replace?: boolean } = {},
   ) => {
     const next = new URLSearchParams(searchParams);
@@ -175,7 +183,7 @@ const BlogIndex = () => {
     setSearchParams(next, options);
   };
 
-  const resetLibrary = () => updateParams({ q: '', topic: '' });
+  const resetLibrary = () => updateParams({ q: '', topic: '', depth: '' });
 
   usePageSeo({
     title: t('blog.seo.indexTitle'),
@@ -248,26 +256,51 @@ const BlogIndex = () => {
               </div>
             </div>
 
-            <div className="blog-library-filter-group" role="group" aria-label={t('blog.library.filtersLabel')}>
-              <p>{t('blog.library.filtersLabel')}</p>
-              <div className="blog-library-filters">
-                <button
-                  type="button"
-                  aria-pressed={!activeTopic}
-                  onClick={() => updateParams({ topic: '' })}
-                >
-                  {t('blog.library.allTopics')}
-                </button>
-                {topics.map((topic) => (
+            <div className="blog-library-filter-stack">
+              <div className="blog-library-filter-group" role="group" aria-label={t('blog.library.topicFiltersLabel')}>
+                <p>{t('blog.library.topicFiltersLabel')}</p>
+                <div className="blog-library-filters">
                   <button
-                    key={topic}
                     type="button"
-                    aria-pressed={activeTopic === topic}
-                    onClick={() => updateParams({ topic })}
+                    aria-pressed={!activeTopic}
+                    onClick={() => updateParams({ topic: '' })}
                   >
-                    {topic}
+                    {t('blog.library.allTopics')}
                   </button>
-                ))}
+                  {topics.map((topic) => (
+                    <button
+                      key={topic}
+                      type="button"
+                      aria-pressed={activeTopic === topic}
+                      onClick={() => updateParams({ topic })}
+                    >
+                      {topic}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="blog-library-filter-group" role="group" aria-label={t('blog.library.depthFiltersLabel')}>
+                <p>{t('blog.library.depthFiltersLabel')}</p>
+                <div className="blog-library-filters blog-library-depth-filters">
+                  <button
+                    type="button"
+                    aria-pressed={!activeDepth}
+                    onClick={() => updateParams({ depth: '' })}
+                  >
+                    {t('blog.library.allDepths')}
+                  </button>
+                  {depths.map((depth) => (
+                    <button
+                      key={depth}
+                      type="button"
+                      aria-pressed={activeDepth === depth}
+                      onClick={() => updateParams({ depth })}
+                    >
+                      {t(`blog.library.depths.${depth}`)}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </form>
