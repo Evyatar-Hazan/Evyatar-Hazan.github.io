@@ -353,6 +353,12 @@ describe('App', () => {
     expect(professionalLinks.getByRole('link', { name: language === 'he' ? 'אימייל' : 'Email' })).not.toHaveAttribute('target');
     expect(screen.getByRole('link', { name: language === 'he' ? 'לצפייה בראיות מהפרויקטים' : 'View project evidence' })).toHaveAttribute('href', `/${language}/projects/`);
     expect(screen.getByRole('link', { name: language === 'he' ? 'להתחיל שיחה' : 'Start a conversation' })).toHaveAttribute('href', `/${language}/contact/`);
+    const cvLink = screen.getByRole('link', { name: language === 'he' ? 'להורדת קורות החיים' : 'Download CV' });
+    expect(cvLink).toHaveAttribute('href', '/evyatar-hazan-cv.pdf');
+    expect(cvLink).toHaveAttribute('download', 'Evyatar-Hazan-CV.pdf');
+    expect(document.querySelector('time[datetime="2026-07-23"]')).toHaveTextContent(
+      language === 'he' ? 'עודכן ב־23 ביולי 2026' : 'Updated July 23, 2026',
+    );
     expect(screen.getByRole('heading', {
       level: 3,
       name: language === 'he' ? 'סקרנות היא חלק מהעבודה.' : 'Curiosity is part of the work.',

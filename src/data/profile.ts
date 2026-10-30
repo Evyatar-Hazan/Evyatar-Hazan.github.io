@@ -9,7 +9,12 @@ export const profileLinks = {
   linkedin: 'https://www.linkedin.com/in/evyatar-hazan-662235210/',
   email: 'mailto:evyatarhazan3.14@gmail.com',
   whatsapp: 'https://wa.me/972587127547',
-  cv: '',
+  cv: '/evyatar-hazan-cv.pdf',
+} as const;
+
+export const publicCv = {
+  updatedAt: '2026-07-23',
+  downloadName: 'Evyatar-Hazan-CV.pdf',
 } as const;
 
 export type LocalizedText = {
