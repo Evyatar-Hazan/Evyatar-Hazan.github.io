@@ -34,6 +34,9 @@ const pageCopy = {
     evidenceWriting: 'Technical writing',
     storyEyebrow: '01 / Professional story',
     storyTitle: 'A practical end-to-end view of product work.',
+    humanNoteEyebrow: 'A human note',
+    humanNoteTitle: 'Curiosity is part of the work.',
+    humanNoteBody: 'I enjoy turning complexity into clarity—in an interface, a system, or a short article that captures something new I learned. That process is what keeps me curious from one project to the next.',
     capabilitiesEyebrow: '02 / Capability explorer',
     capabilitiesTitle: 'Select a field. Follow the evidence.',
     capabilitiesIntro: 'Each skill is labeled as used, learning, or exploring. Public work supports “used”; active study stays visibly separate; unsupported claims remain exploratory.',
@@ -67,6 +70,9 @@ const pageCopy = {
     evidenceWriting: 'כתיבה טכנית',
     storyEyebrow: '01 / הסיפור המקצועי',
     storyTitle: 'מבט מעשי מקצה לקצה על עבודת מוצר.',
+    humanNoteEyebrow: 'הערה אישית',
+    humanNoteTitle: 'סקרנות היא חלק מהעבודה.',
+    humanNoteBody: 'אני נהנה להפוך מורכבות לבהירות — בממשק, במערכת או במאמר קצר שמסכם משהו חדש שלמדתי. התהליך הזה הוא מה ששומר על הסקרנות שלי מפרויקט לפרויקט.',
     capabilitiesEyebrow: '02 / מפת יכולות',
     capabilitiesTitle: 'בוחרים תחום ועוקבים אחרי הראיות.',
     capabilitiesIntro: 'כל מיומנות מסומנת כ־Used,‏ Learning או Exploring. עבודה ציבורית תומכת ב־Used, למידה פעילה נשארת נפרדת, וטענה ללא הוכחת שימוש נשארת Exploring.',
@@ -210,6 +216,13 @@ const AboutPage = () => {
               ))}
             </ol>
           </div>
+          <aside aria-labelledby="human-note-title" className="mt-10 grid gap-4 border-t border-neutral-300/80 pt-8 dark:border-neutral-800 sm:grid-cols-[minmax(8rem,0.28fr)_minmax(0,1fr)] sm:items-start sm:gap-8">
+            <p className="font-mono text-[0.68rem] font-black uppercase tracking-[0.18em] text-primary-700 dark:text-primary-400">{copy.humanNoteEyebrow}</p>
+            <div className="max-w-3xl">
+              <h3 id="human-note-title" className="text-2xl font-black tracking-tight sm:text-3xl">{copy.humanNoteTitle}</h3>
+              <p className="mt-3 text-base leading-8 text-neutral-600 dark:text-neutral-300">{copy.humanNoteBody}</p>
+            </div>
+          </aside>
         </div>
       </section>
 
