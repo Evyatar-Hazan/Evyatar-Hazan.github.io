@@ -386,6 +386,17 @@ describe('App', () => {
     expect(window.location.hash).toBe('#capability-explorer-title');
   });
 
+  it('labels capability knowledge as used, learning, or exploring', async () => {
+    renderAt('/en/about/?capability=webMobile#capability-explorer-title');
+
+    await waitFor(() => expect(document.querySelector('#capability-panel')).toHaveAttribute('data-capability-id', 'webMobile'));
+    expect(document.querySelector('[data-skill-status="used"]')).toHaveTextContent('React Native');
+    expect(document.querySelector('[data-skill-status="exploring"]')).toHaveTextContent('Next.js');
+
+    fireEvent.click(screen.getByRole('button', { name: /Languages/ }));
+    expect(document.querySelector('[data-skill-status="learning"]')).toHaveTextContent('Java');
+  });
+
   it('publishes one conservative Person JSON-LD record on About only', async () => {
     const view = renderAt('/en/about/');
     await screen.findByRole('heading', { level: 1, name: 'Evyatar Hazan' });

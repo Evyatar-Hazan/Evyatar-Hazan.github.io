@@ -1,6 +1,7 @@
 import type { LocalizedText } from './profile';
 
 export type PortfolioLanguage = 'en' | 'he';
+export type PortfolioSkillStatus = 'used' | 'learning' | 'exploring';
 
 export type PortfolioCapabilityGroup = {
   id: 'webMobile' | 'languages' | 'aiCv' | 'devops' | 'databases' | 'automation' | 'methodologies';
@@ -10,6 +11,73 @@ export type PortfolioCapabilityGroup = {
 };
 
 export type PortfolioCapabilityId = PortfolioCapabilityGroup['id'];
+
+/**
+ * Conservative public-facing status for each named skill.
+ *
+ * `used` is reserved for skills with direct public project or repository
+ * evidence. `learning` reflects the active programming-learning map read on
+ * 2026-10-30 when no equivalent public-use evidence is published. Everything
+ * else remains `exploring` instead of being presented as demonstrated
+ * expertise.
+ */
+export const portfolioSkillStatusByName: Readonly<Record<string, PortfolioSkillStatus>> = {
+  'React Native': 'used',
+  React: 'used',
+  'Next.js': 'exploring',
+  Vite: 'used',
+  'Node.js': 'used',
+  NestJS: 'exploring',
+  Express: 'used',
+  Redux: 'exploring',
+  'REST APIs': 'exploring',
+  'Google OAuth': 'exploring',
+  TypeScript: 'used',
+  JavaScript: 'used',
+  Java: 'learning',
+  Python: 'learning',
+  YOLOv5: 'exploring',
+  ONNX: 'exploring',
+  TFLite: 'exploring',
+  'Image Processing & Mapping': 'exploring',
+  AWS: 'exploring',
+  Docker: 'exploring',
+  Linux: 'exploring',
+  'Jenkins CI/CD': 'exploring',
+  CI: 'used',
+  Vercel: 'used',
+  Render: 'used',
+  Git: 'used',
+  PostgreSQL: 'exploring',
+  SQL: 'used',
+  Prisma: 'used',
+  PgAdmin: 'exploring',
+  Cloudinary: 'used',
+  Appium: 'exploring',
+  Selenium: 'exploring',
+  Perfecto: 'exploring',
+  XCUITest: 'exploring',
+  Allure: 'exploring',
+  'Technical Mentoring': 'exploring',
+  'Development Leadership': 'exploring',
+  'Product/QA Collaboration': 'exploring',
+  SEO: 'used',
+  i18n: 'used',
+  RTL: 'used',
+  'Privacy-first': 'used',
+  Monorepo: 'used',
+  Jira: 'exploring',
+};
+
+export const getPortfolioSkillStatus = (skill: string): PortfolioSkillStatus => {
+  const status = portfolioSkillStatusByName[skill];
+
+  if (!status) {
+    throw new Error(`Missing portfolio skill status: ${skill}`);
+  }
+
+  return status;
+};
 
 /**
  * The canonical, UI-agnostic capability inventory shared by portfolio surfaces.
