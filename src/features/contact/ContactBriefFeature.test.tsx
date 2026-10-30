@@ -135,6 +135,7 @@ describe('ContactBriefFeature', () => {
     expect(screen.getByText(/What happens next/i)).toBeInTheDocument();
     expect(screen.getByText(/focused questions or a recommended next step/i)).toBeInTheDocument();
     expect(screen.getByText(/no fixed response-time promise/i)).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveAttribute('aria-atomic', 'true');
   });
 
   it('shows the localized next step only after provider-confirmed success', async () => {
