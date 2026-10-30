@@ -134,6 +134,38 @@ describe('ContactBriefFeature', () => {
     expect(await screen.findByText(/confirmed delivery/i)).toBeInTheDocument();
   });
 
+  it('includes allowlisted case-study context in the submitted message', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ success: true }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    render(
+      <ContactBriefFeature
+        language="en"
+        buildLocalizedPath={buildLocalizedPath}
+        context={{ intent: 'project', projectId: 'online_converter' }}
+        onContextChange={vi.fn()}
+      />,
+    );
+    openBuilder();
+
+    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Test Visitor' } });
+    fireEvent.change(screen.getByLabelText('Email address'), {
+      target: { value: 'visitor@example.test' },
+    });
+    fireEvent.submit(screen.getByRole('button', { name: /send with FormSubmit/i }).closest('form')!);
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    const body = init.body as FormData;
+    expect(body.get('message')).toContain(
+      'Related project (selected on the portfolio): Online Converter',
+    );
+    expect(body.get('_subject')).toBe('Project inquiry related to Online Converter');
+    expect([...body.keys()]).toEqual(['name', 'email', 'message', '_subject']);
+  });
+
   it('renders allowlisted project context and clears it through the caller', () => {
     const onContextChange = vi.fn();
     render(
