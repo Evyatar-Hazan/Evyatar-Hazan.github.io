@@ -7,7 +7,7 @@ const buildLocalizedPath: LocalizedPathBuilder = (language, target) =>
   `/${language}/${target.route}/`;
 
 const openBuilder = () => {
-  fireEvent.click(screen.getByRole('button', { name: /project brief/i }));
+  fireEvent.click(screen.getByRole('button', { name: /short message/i }));
 };
 
 afterEach(() => {
@@ -51,11 +51,11 @@ describe('ContactBriefFeature', () => {
     expect(screen.getByText(next)).toBeVisible();
   });
 
-  it('previews synthetic brief data and injects the localized privacy link', () => {
+  it('builds drafts from synthetic brief data and injects the localized privacy link', () => {
     render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
     openBuilder();
 
-    fireEvent.change(screen.getByLabelText('What do you need?'), {
+    fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'A synthetic scheduling tool' },
     });
     fireEvent.change(screen.getByLabelText('What is not working?'), {
@@ -69,11 +69,6 @@ describe('ContactBriefFeature', () => {
       target: { value: 'A reliable handoff' },
     });
 
-    const preview = screen.getByLabelText<HTMLTextAreaElement>('Message review');
-    expect(preview.value).toContain('What I need: A synthetic scheduling tool');
-    expect(preview.value).toContain('Main issue: The current handoff is manual');
-    expect(preview.value).toContain('Desired outcome: A reliable handoff');
-    expect(preview.value).toContain('Preferred channel: WhatsApp');
     expect(screen.getByRole('link', { name: 'Read the privacy notice' })).toHaveAttribute(
       'href',
       '/en/privacy/',
@@ -88,10 +83,25 @@ describe('ContactBriefFeature', () => {
       'text',
     );
     expect(emailBody).toContain('A synthetic scheduling tool');
+    expect(emailBody).toContain('Main issue: The current handoff is manual');
+    expect(emailBody).toContain('Desired outcome: A reliable handoff');
+    expect(emailBody).toContain('Preferred channel: WhatsApp');
     expect(whatsappBody).toContain('A synthetic scheduling tool');
   });
 
-  it('does not contact the provider when required form identity fields are missing', () => {
+  it('keeps the short form to exactly three required fields', () => {
+    render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
+    openBuilder();
+
+    const requiredFields = screen.getAllByRole('textbox').filter((field) => field.hasAttribute('required'));
+    expect(requiredFields).toHaveLength(3);
+    expect(screen.getByLabelText('Message')).toBeRequired();
+    expect(screen.getByLabelText('Name')).toBeRequired();
+    expect(screen.getByLabelText('Email address')).toBeRequired();
+    expect(screen.getByLabelText('What exists today?')).not.toBeRequired();
+  });
+
+  it('does not contact the provider when required short-form fields are missing', () => {
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
     render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
@@ -102,7 +112,7 @@ describe('ContactBriefFeature', () => {
     expect(fetchMock).not.toHaveBeenCalled();
     expect(screen.getByLabelText('Name')).toBeRequired();
     expect(screen.getByLabelText('Email address')).toBeRequired();
-    expect(screen.getByRole('alert')).toHaveTextContent('Enter your name');
+    expect(screen.getByRole('alert')).toHaveTextContent('Enter a short message');
   });
 
   it('submits only the allowlisted delivery fields after an explicit submit', async () => {
@@ -114,7 +124,7 @@ describe('ContactBriefFeature', () => {
     render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
     openBuilder();
 
-    fireEvent.change(screen.getByLabelText('What do you need?'), {
+    fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'Synthetic portfolio fixture' },
     });
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Test Visitor' } });
@@ -164,7 +174,7 @@ describe('ContactBriefFeature', () => {
     render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
     openBuilder();
 
-    fireEvent.change(screen.getByLabelText('What do you need?'), {
+    fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'Keep this synthetic brief' },
     });
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Test Visitor' } });
@@ -178,7 +188,7 @@ describe('ContactBriefFeature', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     rejectRequest?.(new Error('synthetic network failure'));
     expect(await screen.findByText(/Delivery was not confirmed/i)).toBeInTheDocument();
-    expect(screen.getByLabelText<HTMLTextAreaElement>('What do you need?').value).toBe(
+    expect(screen.getByLabelText<HTMLTextAreaElement>('Message').value).toBe(
       'Keep this synthetic brief',
     );
     expect(screen.getByRole('link', { name: 'Open email draft' })).toHaveAttribute(
@@ -196,6 +206,9 @@ describe('ContactBriefFeature', () => {
     render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
     openBuilder();
 
+    fireEvent.change(screen.getByLabelText('Message'), {
+      target: { value: 'Synthetic provider confirmation check' },
+    });
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Test Visitor' } });
     fireEvent.change(screen.getByLabelText('Email address'), {
       target: { value: 'visitor@example.test' },
