@@ -3617,6 +3617,12 @@ body {
   background: var(--effect-blog-paper-muted);
 }
 
+.blog-library-filter-stack {
+  display: grid;
+  min-width: 0;
+  gap: 0.9rem;
+}
+
 .blog-library-search > label,
 .blog-library-filter-group > p {
   display: block;
@@ -3907,17 +3913,26 @@ body {
   text-transform: uppercase;
 }
 
-.blog-archive-meta > span:not(:last-child) {
+.blog-archive-meta-divider {
   width: 0.3rem;
   height: 0.3rem;
+  flex: 0 0 0.3rem;
   border-radius: var(--radius-pill);
   background: var(--color-primary-500);
 }
 
-.blog-archive-meta span:last-child {
+.blog-archive-read-time {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+}
+
+.blog-archive-depth {
+  color: var(--color-primary-700);
+}
+
+.dark .blog-archive-depth {
+  color: var(--color-primary-300);
 }
 
 .blog-archive-meta svg {
@@ -4440,6 +4455,10 @@ body {
   font-weight: 720;
   line-height: 1.35;
   transition: color 180ms ease, transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.blog-mobile-outline {
+  display: none;
 }
 
 .blog-reading-rail a[aria-current='location'] {
@@ -5025,6 +5044,58 @@ body {
 
   .blog-reading-rail {
     display: none;
+  }
+
+  .blog-mobile-outline {
+    display: block;
+    margin-bottom: 2rem;
+    border-block: 1px solid var(--effect-shell-border);
+    padding-block: 0.9rem;
+  }
+
+  .blog-mobile-outline summary {
+    min-height: 2.75rem;
+    cursor: pointer;
+    color: var(--color-neutral-700);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.72rem;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+    line-height: 2.75rem;
+    text-transform: uppercase;
+  }
+
+  .dark .blog-mobile-outline summary {
+    color: var(--color-neutral-200);
+  }
+
+  .blog-mobile-outline ol {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+    padding-block-end: 0.5rem;
+  }
+
+  .blog-mobile-outline li[data-level='3'] {
+    padding-inline-start: 0.9rem;
+  }
+
+  .blog-mobile-outline a {
+    display: block;
+    min-height: 2.75rem;
+    padding-block: 0.7rem;
+    color: var(--color-neutral-600);
+    font-size: 0.85rem;
+    font-weight: 720;
+    line-height: 1.45;
+  }
+
+  .blog-mobile-outline a[aria-current='location'] {
+    color: var(--color-primary-600);
+  }
+
+  .dark .blog-mobile-outline a[aria-current='location'] {
+    color: var(--color-primary-300);
   }
 
   .blog-article-next {
