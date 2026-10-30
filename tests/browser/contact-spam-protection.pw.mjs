@@ -1,8 +1,18 @@
 import { expect, test } from '@playwright/test';
 
 const scenarios = [
-  { language: 'en', viewport: { width: 1440, height: 900 }, toggle: 'Build a short project brief (optional)' },
-  { language: 'he', viewport: { width: 390, height: 844 }, toggle: 'הכנת תקציר פרויקט קצר (לא חובה)' },
+  {
+    language: 'en',
+    viewport: { width: 1440, height: 900 },
+    toggle: 'Build a short project brief (optional)',
+    disclosure: 'A hidden honeypot filters automated submissions without tracking or a CAPTCHA.',
+  },
+  {
+    language: 'he',
+    viewport: { width: 390, height: 844 },
+    toggle: 'הכנת תקציר פרויקט קצר (לא חובה)',
+    disclosure: 'שדה מלכודת מוסתר מסנן שליחות אוטומטיות בלי מעקב ובלי CAPTCHA.',
+  },
 ];
 
 for (const scenario of scenarios) {
@@ -17,6 +27,7 @@ for (const scenario of scenarios) {
     await expect(honeypot).toHaveAttribute('tabindex', '-1');
     await expect(page.locator('iframe[src*="recaptcha"], script[src*="recaptcha"]')).toHaveCount(0);
     await expect(page.locator('body')).not.toContainText('I am not a robot');
+    await expect(page.getByText(scenario.disclosure, { exact: false })).toBeVisible();
 
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
       await page.evaluate(() => document.documentElement.clientWidth),
