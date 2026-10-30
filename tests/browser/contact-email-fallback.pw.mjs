@@ -19,8 +19,8 @@ for (const entry of cases) {
 
     await page.getByRole('button', {
       name: entry.language === 'he'
-        ? 'הכנת תקציר פרויקט קצר (לא חובה)'
-        : 'Build a short project brief (optional)',
+        ? 'שליחת הודעה קצרה'
+        : 'Send a short message',
     }).click();
 
     const fallback = page.locator('[data-email-fallback]');
@@ -28,6 +28,7 @@ for (const entry of cases) {
     await expect(fallback).toHaveText('evyatarhazan3.14@gmail.com');
     await expect(fallback).toHaveAttribute('href', /^mailto:evyatarhazan3\.14@gmail\.com/);
 
+    await page.getByLabel(entry.language === 'he' ? 'הודעה' : 'Message').fill('Synthetic fallback check');
     await page.getByLabel(entry.language === 'he' ? 'שם' : 'Name').fill('Synthetic Visitor');
     await page.getByLabel(entry.language === 'he' ? 'כתובת אימייל' : 'Email address').fill('visitor@example.test');
     await page.getByRole('button', {

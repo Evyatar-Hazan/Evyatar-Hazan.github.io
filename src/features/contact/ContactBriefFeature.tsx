@@ -76,26 +76,27 @@ const localizedUi = {
     whatsapp: 'WhatsApp',
     email: 'Email',
     linkedin: 'LinkedIn',
-    builderToggle: 'Build a short project brief (optional)',
-    builderTitle: 'Shape the handoff before sending',
-    builderDescription: 'Nothing is sent or stored while you write. Blank answers are left out of the message.',
+    builderToggle: 'Send a short message',
+    builderTitle: 'Add context only if it helps',
+    builderDescription: 'These details are optional. Blank answers are left out of the message.',
     inquiryTypeLegend: 'What would you like to discuss?',
     fields: {
-      need: { label: 'What do you need?', placeholder: 'A website, product flow, internal tool…' },
+      need: { label: 'Message', placeholder: 'What would you like to build, improve, or solve?' },
       existingSituation: { label: 'What exists today?', placeholder: 'A short description of the current situation' },
       issue: { label: 'What is not working?', placeholder: 'The main blocker or problem to solve' },
       desiredOutcome: { label: 'What outcome would make this successful?', placeholder: 'The change you want people or the team to experience' },
       timeframe: { label: 'What is the timeframe?', placeholder: 'For example: exploring, this quarter, flexible' },
       preferredChannel: { label: 'Preferred channel', placeholder: 'No preference' },
     },
-    previewTitle: 'Message review',
-    previewDescription: 'This exact message is used for the email and WhatsApp drafts.',
-    formIdentityTitle: 'Details used only for form delivery',
+    previewTitle: 'Send a short message',
+    previewDescription: 'Message, name, and email are the only required fields.',
+    formIdentityTitle: 'Your details',
     nameLabel: 'Name',
     namePlaceholder: 'Your name',
     emailLabel: 'Email address',
     emailPlaceholder: 'you@example.com',
-    requiredHint: 'Required only when sending through the form.',
+    requiredHint: 'Only these three fields are required to send.',
+    needRequired: 'Enter a short message to send through the form.',
     nameRequired: 'Enter your name to send through the form.',
     emailRequired: 'Enter your email address to send through the form.',
     emailInvalid: 'Enter a valid email address.',
@@ -142,26 +143,27 @@ const localizedUi = {
     whatsapp: 'WhatsApp',
     email: 'אימייל',
     linkedin: 'LinkedIn',
-    builderToggle: 'הכנת תקציר פרויקט קצר (לא חובה)',
-    builderTitle: 'מסדרים את ההעברה לפני השליחה',
-    builderDescription: 'בזמן הכתיבה דבר לא נשלח או נשמר. תשובות ריקות לא יופיעו בהודעה.',
+    builderToggle: 'שליחת הודעה קצרה',
+    builderTitle: 'מוסיפים הקשר רק אם הוא עוזר',
+    builderDescription: 'הפרטים האלה אינם חובה. תשובות ריקות לא יופיעו בהודעה.',
     inquiryTypeLegend: 'על מה תרצו לדבר?',
     fields: {
-      need: { label: 'מה צריך?', placeholder: 'אתר, תהליך מוצר, כלי פנימי…' },
+      need: { label: 'הודעה', placeholder: 'מה תרצו לבנות, לשפר או לפתור?' },
       existingSituation: { label: 'מה קיים היום?', placeholder: 'תיאור קצר של המצב הנוכחי' },
       issue: { label: 'מה לא עובד?', placeholder: 'החסם או הבעיה המרכזית שצריך לפתור' },
       desiredOutcome: { label: 'מהי התוצאה הרצויה?', placeholder: 'השינוי הרצוי עבור המשתמשים או הצוות' },
       timeframe: { label: 'מה לוח הזמנים?', placeholder: 'לדוגמה: בבדיקה, ברבעון הקרוב, גמיש' },
       preferredChannel: { label: 'ערוץ מועדף', placeholder: 'אין העדפה' },
     },
-    previewTitle: 'בדיקת ההודעה',
-    previewDescription: 'זהו הטקסט המדויק שישמש בטיוטות האימייל וה־WhatsApp.',
-    formIdentityTitle: 'פרטים שנדרשים רק לשליחה דרך הטופס',
+    previewTitle: 'שליחת הודעה קצרה',
+    previewDescription: 'הודעה, שם ואימייל הם שלושת שדות החובה היחידים.',
+    formIdentityTitle: 'הפרטים שלך',
     nameLabel: 'שם',
     namePlaceholder: 'השם שלך',
     emailLabel: 'כתובת אימייל',
     emailPlaceholder: 'you@example.com',
-    requiredHint: 'נדרש רק עבור שליחה דרך הטופס.',
+    requiredHint: 'רק שלושת השדות האלה נדרשים לשליחה.',
+    needRequired: 'יש להזין הודעה קצרה כדי לשלוח דרך הטופס.',
     nameRequired: 'יש להזין שם כדי לשלוח דרך הטופס.',
     emailRequired: 'יש להזין כתובת אימייל כדי לשלוח דרך הטופס.',
     emailInvalid: 'יש להזין כתובת אימייל תקינה.',
@@ -214,7 +216,7 @@ const inquiryFieldPlaceholders = {
   },
 } as const;
 
-type FormErrors = Partial<Record<'name' | 'email', string>>;
+type FormErrors = Partial<Record<'need' | 'name' | 'email', string>>;
 type FormErrorField = keyof FormErrors;
 type FormStatus = 'idle' | 'success' | 'error' | 'timeout';
 
@@ -319,6 +321,7 @@ const ContactBriefFeature = ({
 
   const validateIdentity = () => {
     const nextErrors: FormErrors = {};
+    if (!brief.need.trim()) nextErrors.need = ui.needRequired;
     if (!name.trim()) nextErrors.name = ui.nameRequired;
     if (!email.trim()) nextErrors.email = ui.emailRequired;
     else if (!emailPattern.test(email.trim())) nextErrors.email = ui.emailInvalid;
@@ -505,7 +508,7 @@ const ContactBriefFeature = ({
 
               <fieldset className="mt-6 grid gap-4">
                 <legend className="sr-only">{ui.builderTitle}</legend>
-                {inquiryFields.map((key) => (
+                {inquiryFields.filter((key) => key !== 'need').map((key) => (
                   <div key={key} className={fieldClassName}>
                     <label htmlFor={`${reactId}-${key}`}>
                       {inquiryType === 'project' ? ui.fields[key].label : inquiryLabels[key]}
@@ -540,7 +543,6 @@ const ContactBriefFeature = ({
                 </div>
               </fieldset>
             </section>
-
             <form noValidate onSubmit={handleSubmit} className={cardSurfaceClassName('raised', 'contact-message-review')}>
               <input
                 type="text"
@@ -554,15 +556,31 @@ const ContactBriefFeature = ({
               />
               <SectionHeading className="text-xl font-bold text-neutral-950 dark:text-white">{ui.previewTitle}</SectionHeading>
               <p className="mt-2 text-sm leading-6 text-neutral-600 dark:text-neutral-400">{ui.previewDescription}</p>
-              <label htmlFor={`${reactId}-preview`} className="sr-only">{ui.previewTitle}</label>
-              <textarea
-                id={`${reactId}-preview`}
-                value={message}
-                readOnly
-                dir="auto"
-                rows={12}
-                className={`${inputClassName} resize-y font-mono text-sm leading-6`}
-              />
+
+              <div className={`${fieldClassName} mt-5`}>
+                <label htmlFor={`${reactId}-need`}>
+                  {inquiryType === 'project' ? ui.fields.need.label : inquiryLabels.need}
+                </label>
+                <textarea
+                  id={`${reactId}-need`}
+                  name="message"
+                  required
+                  rows={4}
+                  maxLength={contactBriefLimits.need}
+                  value={brief.need}
+                  placeholder={inquiryType === 'project'
+                    ? ui.fields.need.placeholder
+                    : inquiryFieldPlaceholders[language][inquiryType].need}
+                  aria-invalid={Boolean(errors.need)}
+                  aria-errormessage={errors.need ? `${reactId}-need-error` : undefined}
+                  onChange={(event) => {
+                    updateBrief('need', event.target.value);
+                    setErrors((current) => ({ ...current, need: undefined }));
+                  }}
+                  className={inputClassName}
+                />
+                {errors.need && <p id={`${reactId}-need-error`} className="contact-field-error">{errors.need}</p>}
+              </div>
 
               <fieldset className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
                 <legend className="col-span-full mb-1 text-sm font-black text-neutral-950 dark:text-white">{ui.formIdentityTitle}</legend>
@@ -672,6 +690,7 @@ const ContactBriefFeature = ({
                 </div>
               )}
             </form>
+
           </div>
         )}
       </div>
