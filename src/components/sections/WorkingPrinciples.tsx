@@ -39,6 +39,7 @@ const EvidenceBlock = ({
 
   return (
     <div
+      data-evidence-tone={tone}
       className={`border-s-2 ps-4 sm:ps-5 ${
         tone === 'example'
           ? 'border-primary-500'
