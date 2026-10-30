@@ -38,16 +38,19 @@ describe('ContactBriefFeature', () => {
       language: 'en' as const,
       send: 'The need, the current situation, and the result you want.',
       next: 'I will reply with focused questions and a recommended next step.',
+      availability: 'Reply timing varies with current workload. Send the context first; I will confirm availability and the next realistic step.',
     },
     {
       language: 'he' as const,
       send: 'את הצורך, המצב הנוכחי והתוצאה שרוצים להשיג.',
       next: 'אחזור עם שאלות ממוקדות והמלצה לצעד הבא.',
+      availability: 'זמן התגובה משתנה לפי עומס העבודה הנוכחי. שלחו קודם את ההקשר; אחזור עם אישור זמינות והצעד המעשי הבא.',
     },
-  ])('explains what to send and what happens next in $language', ({ language, send, next }) => {
+  ])('explains what to send, availability, and what happens next in $language', ({ language, send, next, availability }) => {
     render(<ContactBriefFeature language={language} buildLocalizedPath={buildLocalizedPath} />);
 
     expect(screen.getByText(send)).toBeVisible();
+    expect(screen.getByText(availability)).toBeVisible();
     expect(screen.getByText(next)).toBeVisible();
   });
 
@@ -174,6 +177,43 @@ describe('ContactBriefFeature', () => {
     expect(await screen.findByText(/מה קורה עכשיו/i)).toBeInTheDocument();
     expect(screen.getByText(/שאלות ממוקדות או המלצה לצעד הבא/i)).toBeInTheDocument();
     expect(screen.getByText(/אין כאן התחייבות לזמן תגובה קבוע/i)).toBeInTheDocument();
+  });
+
+  it('includes allowlisted case-study context in the submitted message', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ success: true }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    render(
+      <ContactBriefFeature
+        language="en"
+        buildLocalizedPath={buildLocalizedPath}
+        context={{ intent: 'project', projectId: 'online_converter' }}
+        onContextChange={vi.fn()}
+      />,
+    );
+    openBuilder();
+
+    fireEvent.change(screen.getByLabelText('Message'), {
+      target: { value: 'Synthetic case-study context check' },
+    });
+    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Test Visitor' } });
+    fireEvent.change(screen.getByLabelText('Email address'), {
+      target: { value: 'visitor@example.test' },
+    });
+    fireEvent.submit(screen.getByRole('button', { name: /send with FormSubmit/i }).closest('form')!);
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    const body = init.body as FormData;
+    expect(body.get('message')).toContain(
+      'Related project (selected on the portfolio): Online Converter',
+    );
+    expect(body.get('_subject')).toBe('Project inquiry related to Online Converter');
+    expect(body.get('_honey')).toBe('');
+    expect(body.get('_captcha')).toBe('false');
+    expect([...body.keys()]).toEqual(['name', 'email', 'message', '_subject', '_honey', '_captcha']);
   });
 
   it('passes honeypot values to FormSubmit without exposing a CAPTCHA or focus target', async () => {
