@@ -16,6 +16,7 @@ dist-ssr
 output/
 .playwright-cli/
 test-results/
+.wrangler/
 
 # Editor directories and files
 .vscode/*
