@@ -138,10 +138,43 @@ describe('ContactBriefFeature', () => {
     const [endpoint, init] = fetchMock.mock.calls[0] as [string, RequestInit];
     const body = init.body as FormData;
     expect(endpoint).toBe('https://formsubmit.co/ajax/evyatarhazan3.14@gmail.com');
-    expect([...body.keys()]).toEqual(['name', 'email', 'message', '_subject']);
+    expect([...body.keys()]).toEqual(['name', 'email', 'message', '_subject', '_honey', '_captcha']);
     expect(body.get('message')).toContain('Synthetic portfolio fixture');
+    expect(body.get('_honey')).toBe('');
+    expect(body.get('_captcha')).toBe('false');
     expect([...body.keys()]).not.toContain('intent');
     expect(await screen.findByText(/confirmed delivery/i)).toBeInTheDocument();
+  });
+
+  it('passes honeypot values to FormSubmit without exposing a CAPTCHA or focus target', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ success: true }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
+    openBuilder();
+
+    const honeypot = document.querySelector<HTMLInputElement>('input[name="_honey"]');
+    expect(honeypot).not.toBeNull();
+    expect(honeypot).toHaveAttribute('hidden');
+    expect(honeypot).toHaveAttribute('tabindex', '-1');
+    expect(document.querySelector('iframe[src*="recaptcha"], script[src*="recaptcha"]')).toBeNull();
+
+    fireEvent.change(honeypot!, { target: { value: 'synthetic bot payload' } });
+    fireEvent.change(screen.getByLabelText('Message'), {
+      target: { value: 'Synthetic spam-protection integration check' },
+    });
+    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Synthetic Bot' } });
+    fireEvent.change(screen.getByLabelText('Email address'), {
+      target: { value: 'bot@example.test' },
+    });
+    fireEvent.submit(screen.getByRole('button', { name: /send with FormSubmit/i }).closest('form')!);
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    const body = fetchMock.mock.calls[0]![1]!.body as FormData;
+    expect(body.get('_honey')).toBe('synthetic bot payload');
+    expect(body.get('_captcha')).toBe('false');
   });
 
   it('renders allowlisted project context and clears it through the caller', () => {
