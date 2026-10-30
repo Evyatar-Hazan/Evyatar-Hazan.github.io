@@ -36,6 +36,8 @@ const EntryMeta = ({ post, language }: { post: BlogPost; language: BlogLanguage 
       <span className="blog-archive-read-time"><Clock aria-hidden="true" />{post.readTime}</span>
       <span className="blog-archive-meta-divider" aria-hidden="true" />
       <span className="blog-archive-depth">{t(`blog.library.depths.${post.depth}`)}</span>
+      <span className="blog-archive-meta-divider" aria-hidden="true" />
+      <span>{t('blog.languageLabel', { language: t(`blog.languages.${post.language}`) })}</span>
     </div>
   );
 };
