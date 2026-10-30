@@ -345,7 +345,7 @@ describe('App', () => {
     expect(screen.getByText(language === 'he'
       ? /התהליך הזה הוא מה ששומר על הסקרנות שלי/
       : /That process is what keeps me curious/)).toBeInTheDocument();
-    expect(document.querySelectorAll('[aria-controls="capability-panel"]')).toHaveLength(7);
+    expect(document.querySelectorAll('[aria-controls="capability-panel"]')).toHaveLength(6);
     expect(document.querySelectorAll('[data-professional-timeline] [data-timeline-entry]')).toHaveLength(4);
     expect(screen.getByRole('heading', {
       level: 3,
@@ -369,16 +369,13 @@ describe('App', () => {
     await waitFor(() => expect(document.querySelector('#capability-panel')).toHaveAttribute('data-capability-id', 'automation'));
     expect(screen.getByText(/do not publicly verify every named device-automation tool/i)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: /AI & computer vision/ }));
-    expect(window.location.search).toContain('capability=aiCv');
-    expect(window.location.search).toContain('ref=profile');
-    expect(window.location.hash).toBe('#capability-explorer-title');
-    expect(document.querySelector('#capability-panel')).toHaveAttribute('data-capability-id', 'aiCv');
-    expect(screen.getByText(/No canonical public project or article/i)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /AI & computer vision/ })).not.toBeInTheDocument();
 
-    window.history.pushState({}, '', '/en/about/?capability=missing');
+    window.history.pushState({}, '', '/en/about/?capability=aiCv&ref=profile#capability-explorer-title');
     fireEvent.popState(window);
     await waitFor(() => expect(document.querySelector('#capability-panel')).toHaveAttribute('data-capability-id', 'webMobile'));
+    expect(window.location.search).toContain('ref=profile');
+    expect(window.location.hash).toBe('#capability-explorer-title');
   });
 
   it('labels capability knowledge as used, learning, or exploring', async () => {

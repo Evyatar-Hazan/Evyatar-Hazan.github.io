@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import type { LocalizedPathBuilder } from '../../contracts/portfolio';
 import { CapabilityProof } from './CapabilityProof';
@@ -11,14 +11,14 @@ const buildPath = vi.fn<LocalizedPathBuilder>((language, target) => {
 });
 
 describe('CapabilityProof', () => {
-  it('renders all groups and separates demonstrations from verified outcomes', () => {
+  it('renders every evidenced group and separates demonstrations from verified outcomes', () => {
     const { container } = render(<CapabilityProof language="en" buildPath={buildPath} />);
 
     expect(screen.getByRole('heading', { name: 'Trace the capability to shipped work.' })).toBeInTheDocument();
-    expect(container.querySelectorAll('[data-capability-id]')).toHaveLength(7);
-    expect(screen.getAllByText('Demonstrated in')).toHaveLength(7);
-    expect(screen.getAllByText('Measured outcomes')).toHaveLength(7);
-    expect(screen.getAllByText(/No measured outcome is published/)).toHaveLength(2);
+    expect(container.querySelectorAll('[data-capability-id]')).toHaveLength(6);
+    expect(screen.getAllByText('Demonstrated in')).toHaveLength(6);
+    expect(screen.getAllByText('Measured outcomes')).toHaveLength(6);
+    expect(screen.getAllByText(/No measured outcome is published/)).toHaveLength(1);
     expect(screen.getAllByText('October 29, 2026')).toHaveLength(14);
     expect(screen.getAllByText('Verified on')).toHaveLength(14);
   });
@@ -45,14 +45,12 @@ describe('CapabilityProof', () => {
     });
   });
 
-  it('states the AI/CV evidence gap without creating a false result', () => {
+  it('does not publish AI/CV as a capability without public evidence', () => {
     const { container } = render(<CapabilityProof language="en" buildPath={buildPath} />);
     const aiGroup = container.querySelector('[data-capability-id="aiCv"]');
 
-    expect(aiGroup).not.toBeNull();
-    expect(within(aiGroup as HTMLElement).getByText(/No canonical public project or article/)).toBeInTheDocument();
-    expect(within(aiGroup as HTMLElement).getByText(/No measured outcome is published/)).toBeInTheDocument();
-    expect(within(aiGroup as HTMLElement).queryByRole('link')).not.toBeInTheDocument();
+    expect(aiGroup).toBeNull();
+    expect(screen.queryByRole('button', { name: /AI & computer vision/ })).not.toBeInTheDocument();
   });
 
   it('exports the approved t04 slot registration', () => {
