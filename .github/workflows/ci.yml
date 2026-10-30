@@ -15,7 +15,8 @@ permissions:
   deployments: write
 
 concurrency:
-  group: pages
+  # PR checks can run independently, while main deployments stay serialized.
+  group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || 'pages' }}
   cancel-in-progress: false
 
 jobs:
