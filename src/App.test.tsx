@@ -334,8 +334,15 @@ describe('App', () => {
 
     expect(await screen.findByRole('heading', { level: 1, name: language === 'he' ? 'אביתר חזן' : 'Evyatar Hazan' })).toBeInTheDocument();
     expect(screen.getByText('Full Stack Developer')).toBeInTheDocument();
-    expect(screen.getAllByRole('link', { name: 'GitHub' }).some((link) => link.getAttribute('href') === 'https://github.com/Evyatar-Hazan')).toBe(true);
-    expect(screen.getAllByRole('link', { name: 'LinkedIn' }).some((link) => link.getAttribute('href') === 'https://www.linkedin.com/in/evyatar-hazan-662235210/')).toBe(true);
+    const professionalLinks = within(screen.getByRole('navigation', {
+      name: language === 'he' ? 'קישורים מקצועיים מאומתים' : 'Verified professional links',
+    }));
+    expect(professionalLinks.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/Evyatar-Hazan');
+    expect(professionalLinks.getByRole('link', { name: 'GitHub' })).toHaveAttribute('target', '_blank');
+    expect(professionalLinks.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', 'https://www.linkedin.com/in/evyatar-hazan-662235210/');
+    expect(professionalLinks.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('target', '_blank');
+    expect(professionalLinks.getByRole('link', { name: language === 'he' ? 'אימייל' : 'Email' })).toHaveAttribute('href', 'mailto:evyatarhazan3.14@gmail.com');
+    expect(professionalLinks.getByRole('link', { name: language === 'he' ? 'אימייל' : 'Email' })).not.toHaveAttribute('target');
     expect(screen.getByRole('link', { name: language === 'he' ? 'לצפייה בראיות מהפרויקטים' : 'View project evidence' })).toHaveAttribute('href', `/${language}/projects/`);
     expect(screen.getByRole('link', { name: language === 'he' ? 'להתחיל שיחה' : 'Start a conversation' })).toHaveAttribute('href', `/${language}/contact/`);
     expect(document.querySelectorAll('[aria-controls="capability-panel"]')).toHaveLength(7);

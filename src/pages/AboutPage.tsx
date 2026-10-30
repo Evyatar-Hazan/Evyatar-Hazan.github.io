@@ -6,6 +6,7 @@ import {
   FolderKanban,
   Github,
   Linkedin,
+  Mail,
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +28,9 @@ const pageCopy = {
     lead: 'I connect product thinking, frontend, backend, infrastructure, and verification into systems that are clear to use and maintain.',
     projects: 'View project evidence',
     contact: 'Start a conversation',
+    professionalLinks: 'Verified professional links',
+    professionalLinksIntro: 'Public profiles and a direct email channel, collected in one place.',
+    email: 'Email',
     storyEyebrow: '01 / Professional story',
     storyTitle: 'A practical end-to-end view of product work.',
     capabilitiesEyebrow: '02 / Capability explorer',
@@ -49,6 +53,9 @@ const pageCopy = {
     lead: 'אני מחבר חשיבה מוצרית, Frontend, Backend, תשתיות ואימות למערכות ברורות לשימוש ולתחזוקה.',
     projects: 'לצפייה בראיות מהפרויקטים',
     contact: 'להתחיל שיחה',
+    professionalLinks: 'קישורים מקצועיים מאומתים',
+    professionalLinksIntro: 'פרופילים ציבוריים וערוץ אימייל ישיר, מרוכזים במקום אחד.',
+    email: 'אימייל',
     storyEyebrow: '01 / הסיפור המקצועי',
     storyTitle: 'מבט מעשי מקצה לקצה על עבודת מוצר.',
     capabilitiesEyebrow: '02 / מפת יכולות',
@@ -138,10 +145,15 @@ const AboutPage = () => {
           </div>
           <div className="border-s-2 border-primary-500 ps-6">
             <p className="max-w-2xl text-xl font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 sm:text-2xl">{copy.lead}</p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a href={profileLinks.github} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 border border-neutral-300 px-4 py-2 text-sm font-black hover:border-primary-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:border-neutral-700"><Github aria-hidden="true" className="h-4 w-4" />GitHub</a>
-              <a href={profileLinks.linkedin} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 border border-neutral-300 px-4 py-2 text-sm font-black hover:border-primary-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:border-neutral-700"><Linkedin aria-hidden="true" className="h-4 w-4" />LinkedIn</a>
-            </div>
+            <nav aria-label={copy.professionalLinks} data-professional-links className="mt-8">
+              <p className="font-mono text-[0.66rem] font-black uppercase tracking-[0.16em] text-primary-700 dark:text-primary-400">{copy.professionalLinks}</p>
+              <p className="mt-2 max-w-xl text-sm leading-6 text-neutral-600 dark:text-neutral-400">{copy.professionalLinksIntro}</p>
+              <ul className="mt-4 flex flex-wrap gap-3">
+                <li><a data-professional-link="github" href={profileLinks.github} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 border border-neutral-300 px-4 py-2 text-sm font-black hover:border-primary-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:border-neutral-700"><Github aria-hidden="true" className="h-4 w-4" />GitHub</a></li>
+                <li><a data-professional-link="linkedin" href={profileLinks.linkedin} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 border border-neutral-300 px-4 py-2 text-sm font-black hover:border-primary-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:border-neutral-700"><Linkedin aria-hidden="true" className="h-4 w-4" />LinkedIn</a></li>
+                <li><a data-professional-link="email" href={profileLinks.email} className="inline-flex min-h-11 items-center gap-2 border border-neutral-300 px-4 py-2 text-sm font-black hover:border-primary-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:border-neutral-700"><Mail aria-hidden="true" className="h-4 w-4" />{copy.email}</a></li>
+              </ul>
+            </nav>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row">
               <Link to={localizedPath(language, { route: 'projects' })} className="inline-flex min-h-12 items-center justify-between gap-4 bg-neutral-950 px-5 py-3 text-sm font-black text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:bg-surface-raised dark:text-content-primary">{copy.projects}<ArrowIcon aria-hidden="true" className="h-4 w-4" /></Link>
               <Link to={localizedPath(language, { route: 'contact' })} className="inline-flex min-h-12 items-center justify-between gap-4 border border-neutral-950 px-5 py-3 text-sm font-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:border-content-primary">{copy.contact}<ArrowIcon aria-hidden="true" className="h-4 w-4" /></Link>
