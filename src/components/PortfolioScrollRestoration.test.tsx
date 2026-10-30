@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, useLocation, useNavigate } from 'react-router-dom';
+import { MemoryRouter, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import PortfolioScrollRestoration from './PortfolioScrollRestoration';
 
@@ -14,10 +14,18 @@ const originalInnerHeight = Object.getOwnPropertyDescriptor(window, 'innerHeight
 const NavigationHarness = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   return (
     <main id="main-content" tabIndex={-1}>
-      <span>{location.pathname}</span>
+      <span>{location.pathname}{location.search}</span>
+      <label>
+        Search
+        <input
+          value={searchParams.get('q') ?? ''}
+          onChange={(event) => setSearchParams({ q: event.target.value }, { replace: true })}
+        />
+      </label>
       <button type="button" onClick={() => navigate('/detail')}>Open detail</button>
       <button type="button" onClick={() => navigate(-1)}>Back</button>
     </main>
@@ -70,6 +78,26 @@ describe('PortfolioScrollRestoration', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Back' }));
     await waitFor(() => expect(screen.getByText('/projects')).toBeInTheDocument());
     expect(scrollTo).toHaveBeenLastCalledWith({ left: 0, top: 1280, behavior: 'auto' });
+  });
+
+  it('does not steal focus or reset scroll for search-only URL updates', async () => {
+    render(
+      <MemoryRouter initialEntries={['/blog']}>
+        <PortfolioScrollRestoration />
+        <NavigationHarness />
+      </MemoryRouter>,
+    );
+
+    const search = screen.getByRole('textbox', { name: 'Search' });
+    scrollY = 640;
+    scrollTo.mockClear();
+    search.focus();
+    fireEvent.change(search, { target: { value: 'u' } });
+
+    await waitFor(() => expect(screen.getByText('/blog?q=u')).toBeInTheDocument());
+    expect(document.activeElement).toBe(search);
+    expect(scrollTo).not.toHaveBeenCalled();
+    expect(scrollY).toBe(640);
   });
 
   it('keeps retrying while lazy content is still expanding the page', async () => {
