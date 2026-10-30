@@ -357,6 +357,7 @@
     "newerPost": "הרשומה הקודמת",
     "olderPost": "הרשומה הבאה",
     "readPost": "קרא פוסט",
+    "readerOutcome": "מה יישאר לך מהקריאה",
     "languageLabel": "שפה: {{language}}",
     "languages": {
       "en": "אנגלית",
@@ -373,7 +374,7 @@
       "description": "חפשו בכל ספריית העבודה או צמצמו אותה לפי נושא ורמת עומק.",
       "searchFormLabel": "חיפוש וסינון בספריית הידע",
       "searchLabel": "חיפוש בכל הרשומות",
-      "searchPlaceholder": "כותרת, תקציר או תגית",
+      "searchPlaceholder": "כותרת, תקציר, תוצאה או תגית",
       "clearSearch": "ניקוי החיפוש",
       "filtersLabel": "סינון לפי נושא",
       "topicFiltersLabel": "סינון לפי נושא",

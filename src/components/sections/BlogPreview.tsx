@@ -73,6 +73,10 @@ const ArticleLink = ({ post, language, featured = false, index }: ArticleLinkPro
           </Link>
         </h3>
         <p>{post.excerpt}</p>
+        <div className="writing-article-outcome">
+          <span>{t('blog.readerOutcome')}</span>
+          <p>{post.readerOutcome}</p>
+        </div>
 
         <div className="writing-article-footer">
           <ul aria-label={t('blogPreview.topics')}>
