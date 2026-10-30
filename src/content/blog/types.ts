@@ -12,6 +12,7 @@ export type BlogPostMeta = {
   readTime: string;
   tags: string[];
   featured: boolean;
+  editorialRank: number;
 };
 
 export type BlogPost = BlogPostMeta & {
