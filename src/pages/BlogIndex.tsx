@@ -71,6 +71,10 @@ const ArchiveFeature = ({ post, language }: { post: BlogPost; language: BlogLang
         <p className="blog-archive-label">{t('blog.latestEntry')}</p>
         <h2><Link to={localizedPath(language, { route: 'article', id: post.slug as ArticleId })}>{post.title}</Link></h2>
         <p>{post.excerpt}</p>
+        <div className="blog-card-outcome">
+          <span>{t('blog.readerOutcome')}</span>
+          <p>{post.readerOutcome}</p>
+        </div>
         <div className="blog-archive-feature-footer">
           <ul aria-label={t('blog.articleTopics')}>
             {post.tags.map((tag) => <li key={tag}>{tag}</li>)}
@@ -125,6 +129,10 @@ const ArchiveEntry = ({
           </Link>
         </h2>
         <p><HighlightedSearchText text={post.excerpt} query={query} /></p>
+        <div className="blog-card-outcome">
+          <span>{t('blog.readerOutcome')}</span>
+          <p><HighlightedSearchText text={post.readerOutcome} query={query} /></p>
+        </div>
         <div className="blog-archive-entry-footer">
           <ul aria-label={t('blog.articleTopics')}>
             {post.tags.slice(0, 3).map((tag) => (
@@ -160,7 +168,7 @@ const BlogIndex = () => {
     if (!normalizedQuery) return true;
 
     const searchableText = normalizeBlogSearchText(
-      [post.title, post.excerpt, ...post.tags].join(' '),
+      [post.title, post.excerpt, post.readerOutcome, ...post.tags].join(' '),
       language,
     );
     return searchableText.includes(normalizedQuery);
