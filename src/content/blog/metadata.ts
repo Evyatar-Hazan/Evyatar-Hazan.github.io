@@ -1,6 +1,47 @@
 import type { BlogLanguage, BlogPostMeta } from './types';
 
 /**
+ * Lower values appear first. Keep the rank language-neutral so the Hebrew and
+ * English libraries share one deliberate editorial order. Leave gaps between
+ * values so a new article can be inserted without renumbering the collection.
+ */
+export const editorialRankBySlug = {
+  'credible-portfolio': 10,
+  'deployment-is-product': 20,
+  'retries-should-not-duplicate-data': 30,
+  'tests-need-honest-environments': 40,
+  'one-bad-date-should-not-blank-a-screen': 50,
+  'failed-render-should-not-destroy-good-output': 60,
+  'privacy-safe-product-analytics': 70,
+  'performance-optimizations-need-product-verification': 80,
+  'accessibility-contrast-is-product-quality': 90,
+  'spa-routes-need-real-http': 100,
+  'initial-html-should-contain-the-article': 110,
+  'shared-container-is-a-layout-contract': 120,
+  'focus-tests-need-an-unfocused-baseline': 130,
+  'monetization-needs-product-guardrails': 140,
+  'seo-discovery-is-product-work': 150,
+  'small-project-architecture': 160,
+  'catering-whatsapp': 170,
+  'google-translate-name-bug': 180,
+  'java-program-execution': 190,
+  'data-types-java-typescript-python': 200,
+  'what-variable-stores': 210,
+  'java-unicode-string-length': 220,
+  'processes-threads-concurrency': 230,
+  'operating-system-under-apps': 240,
+  'virtualization-virtual-machines': 250,
+  'what-the-cpu-really-does': 260,
+  'boot-process-power-button': 270,
+  'file-permissions-user-access': 280,
+  'files-folders-paths': 290,
+  'what-is-inside-a-file': 300,
+  'ram-vs-storage': 310,
+  'hardware-input-output-devices': 320,
+  'binary-bitwise-java': 330,
+} as const;
+
+/**
  * Canonical lightweight metadata for every localized post. Keep post copy here;
  * posts.ts only binds each record to its MDX component so metadata consumers do
  * not pull the article bodies into their bundle.
@@ -666,9 +707,24 @@ const metadata = {
       tags: ['Portfolio', 'Product', 'Credibility'],
       featured: false,
     },
-} as const satisfies Record<string, BlogPostMeta>;
+} as const satisfies Record<string, Omit<BlogPostMeta, 'editorialRank'>>;
 
-export const blogPostMetadata = Object.values(metadata);
+type BlogMetadataKey = keyof typeof metadata;
+
+const rankedMetadata = {} as Record<BlogMetadataKey, BlogPostMeta>;
+for (const key of Object.keys(metadata) as BlogMetadataKey[]) {
+  const post = metadata[key];
+  rankedMetadata[key] = { ...post, editorialRank: editorialRankBySlug[post.slug] };
+}
+
+export const blogPostMetadataByKey = rankedMetadata;
+
+export const compareBlogPostValue = (left: BlogPostMeta, right: BlogPostMeta) =>
+  left.editorialRank - right.editorialRank
+  || Date.parse(right.date) - Date.parse(left.date)
+  || left.slug.localeCompare(right.slug);
+
+export const blogPostMetadata = Object.values(blogPostMetadataByKey).sort(compareBlogPostValue);
 
 export const getLatestBlogPostMetadata = (language: BlogLanguage, limit = 3) =>
   blogPostMetadata
@@ -677,6 +733,4 @@ export const getLatestBlogPostMetadata = (language: BlogLanguage, limit = 3) =>
     .slice(0, Math.max(0, limit));
 
 export const getBlogPostMetadata = (slug: string, language: BlogLanguage) =>
-  metadata[`${slug}:${language}` as keyof typeof metadata];
-
-export const blogPostMetadataByKey = metadata;
+  blogPostMetadataByKey[`${slug}:${language}` as BlogMetadataKey];

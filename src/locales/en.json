@@ -354,7 +354,7 @@
     "articleTopics": "Article topics",
     "articleOutline": "Article map",
     "moreWriting": "Continue reading",
-    "newerPost": "Newer entry",
+    "newerPost": "Previous entry",
     "olderPost": "Next entry",
     "readPost": "Read post",
     "languageLabel": "Language: {{language}}",
@@ -397,7 +397,7 @@
     "subtitle": "Concise lessons from building products, solving failures, and improving user experiences.",
     "read": "Open the entry",
     "viewAll": "View all articles",
-    "latest": "Latest entry",
+    "editorialPick": "Editor's pick",
     "note": "Practical article",
     "topics": "Article topics",
     "signal": "Problem. Solution. Lesson."

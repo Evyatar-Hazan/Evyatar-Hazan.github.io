@@ -64,6 +64,21 @@ beforeEach(() => {
 });
 
 describe('BlogIndex knowledge library', () => {
+  it('uses the explicit editorial rank for the default order in both languages', () => {
+    const englishPosts = getBlogPosts('en');
+    const hebrewPosts = getBlogPosts('he');
+
+    expect(englishPosts[0]).toMatchObject({
+      slug: 'credible-portfolio',
+      editorialRank: 10,
+    });
+    expect(hebrewPosts.map(({ slug }) => slug)).toEqual(englishPosts.map(({ slug }) => slug));
+    expect(englishPosts.map(({ editorialRank }) => editorialRank)).toEqual(
+      [...englishPosts.map(({ editorialRank }) => editorialRank)].sort((left, right) => left - right),
+    );
+    expect(new Set(englishPosts.map(({ editorialRank }) => editorialRank)).size).toBe(englishPosts.length);
+  });
+
   it('derives the topic list deterministically from existing tags', () => {
     expect(getPopularBlogTopics(getBlogPosts('en'))).toEqual([
       'Frontend',
@@ -82,6 +97,7 @@ describe('BlogIndex knowledge library', () => {
     renderBlog();
 
     expect(document.querySelector('.blog-archive-feature')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'What I learned from building a credible portfolio' })).toBeInTheDocument();
     expect(document.querySelectorAll('[data-reading-route]')).toHaveLength(3);
     expect(resultCards()).toHaveLength(12);
 

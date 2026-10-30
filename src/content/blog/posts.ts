@@ -64,7 +64,7 @@ import VirtualizationVirtualMachinesEn from './virtualization-virtual-machines.e
 import VirtualizationVirtualMachinesHe from './virtualization-virtual-machines.he.mdx';
 import WhatVariableStoresEn from './what-variable-stores.en.mdx';
 import WhatVariableStoresHe from './what-variable-stores.he.mdx';
-import { blogPostMetadataByKey } from './metadata';
+import { blogPostMetadataByKey, compareBlogPostValue } from './metadata';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
@@ -337,7 +337,7 @@ export const blogPosts: BlogPost[] = [
 export const getBlogPosts = (language: BlogLanguage) =>
   blogPosts
     .filter((post) => post.language === language)
-    .sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
+    .sort(compareBlogPostValue);
 
 export const getBlogPost = (slug: string | undefined, language: BlogLanguage) =>
   blogPosts.find((post) => post.slug === slug && post.language === language);
