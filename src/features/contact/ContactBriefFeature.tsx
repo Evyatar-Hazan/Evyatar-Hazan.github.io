@@ -98,7 +98,7 @@ const localizedUi = {
     emailAction: 'Open email draft',
     whatsappAction: 'Open WhatsApp draft',
     privacyTitle: 'Privacy and recovery',
-    privacyPrefix: 'FormSubmit receives your name, email, and the reviewed message only after you press send. The site does not save the brief locally.',
+    privacyPrefix: 'FormSubmit receives your name, email, and the reviewed message only after you press send. A hidden honeypot filters automated submissions without tracking or a CAPTCHA. The site does not save the brief locally.',
     privacyLink: 'Read the privacy notice',
     success: 'FormSubmit confirmed delivery. Your message is on its way.',
     successNextLabel: 'What happens next',
@@ -161,7 +161,7 @@ const localizedUi = {
     emailAction: 'פתיחת טיוטת אימייל',
     whatsappAction: 'פתיחת טיוטת WhatsApp',
     privacyTitle: 'פרטיות והתאוששות',
-    privacyPrefix: 'FormSubmit מקבל את השם, האימייל וההודעה שנבדקה רק לאחר לחיצה על שליחה. האתר אינו שומר את התקציר מקומית.',
+    privacyPrefix: 'FormSubmit מקבל את השם, האימייל וההודעה שנבדקה רק לאחר לחיצה על שליחה. שדה מלכודת מוסתר מסנן שליחות אוטומטיות בלי מעקב ובלי CAPTCHA. האתר אינו שומר את התקציר מקומית.',
     privacyLink: 'למידע נוסף בעמוד הפרטיות',
     success: 'FormSubmit אישר את המסירה. ההודעה בדרך.',
     successNextLabel: 'מה קורה עכשיו',
@@ -211,6 +211,7 @@ const ContactBriefFeature = ({
   const [brief, setBrief] = useState<ContactBriefValues>(emptyContactBrief);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [honeypot, setHoneypot] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formStatus, setFormStatus] = useState<FormStatus>('idle');
@@ -286,6 +287,8 @@ const ContactBriefFeature = ({
       body.set('email', email.trim());
       body.set('message', message);
       body.set('_subject', contextDetails.emailSubject);
+      body.set('_honey', honeypot);
+      body.set('_captcha', 'false');
 
       const response = await fetch(contactFormEndpoint, {
         method: 'POST',
@@ -456,6 +459,16 @@ const ContactBriefFeature = ({
             </section>
 
             <form noValidate onSubmit={handleSubmit} className={cardSurfaceClassName('raised', 'contact-message-review')}>
+              <input
+                type="text"
+                name="_honey"
+                value={honeypot}
+                onChange={(event) => setHoneypot(event.target.value)}
+                autoComplete="off"
+                tabIndex={-1}
+                aria-hidden="true"
+                hidden
+              />
               <SectionHeading className="text-xl font-bold text-neutral-950 dark:text-white">{ui.previewTitle}</SectionHeading>
               <p className="mt-2 text-sm leading-6 text-neutral-600 dark:text-neutral-400">{ui.previewDescription}</p>
               <label htmlFor={`${reactId}-preview`} className="sr-only">{ui.previewTitle}</label>
