@@ -9,6 +9,7 @@ import { usePageSeo } from '../hooks/usePageSeo';
 import type { ArticleId } from '../contracts/portfolio';
 import { localizedPath } from '../routing/portfolioRoutes';
 import RelatedContentLinks, { type RelatedContentItem } from '../components/RelatedContentLinks';
+import BlogCodeBlock from '../components/blog/BlogCodeBlock';
 import { getRelatedProjectRelations } from '../data/contentRelations';
 import { getProjectById } from '../data/profile';
 
@@ -96,6 +97,11 @@ const BlogPost = () => {
   }
 
   const Content = post.Content;
+  const mdxComponents = {
+    pre: (props: React.ComponentPropsWithoutRef<'pre'>) => (
+      <BlogCodeBlock {...props} language={language} />
+    ),
+  };
   const articleNumber = String(postIndex + 1).padStart(2, '0');
   const relatedProjects: RelatedContentItem[] = getRelatedProjectRelations(post.slug).flatMap((relation) => (
     getProjectById(relation.projectId)
@@ -161,7 +167,7 @@ const BlogPost = () => {
           </aside>
 
           <div ref={proseRef} className="blog-prose">
-            <Content />
+            <Content components={mdxComponents} />
           </div>
         </div>
 
