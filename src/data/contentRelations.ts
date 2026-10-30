@@ -19,6 +19,23 @@ export type ProjectCapabilityRelation = {
   reason: Record<PortfolioLanguage, string>;
 };
 
+export type RelatedArticleRelation = {
+  articleId: ArticleId;
+  reason: Record<PortfolioLanguage, string>;
+};
+
+type ArticleRelationTheme = {
+  id: string;
+  articleIds: readonly ArticleId[];
+  reason: Record<PortfolioLanguage, string>;
+};
+
+type ArticleRelationThemeInput = {
+  id: string;
+  articleIds: readonly string[];
+  reason?: Partial<Record<PortfolioLanguage, string>>;
+};
+
 type ProjectArticleRelationInput = {
   projectId: string;
   articleId: string;
@@ -167,6 +184,120 @@ export const projectCapabilityRelations = [
   },
 ] as const satisfies readonly ProjectCapabilityRelation[];
 
+/**
+ * Curated learning paths for article-to-article discovery. These are explicit
+ * editorial groupings rather than tag similarity, so a broad tag such as
+ * "Product" cannot create a plausible-looking but arbitrary recommendation.
+ * Theme order is the recommendation rank; article order is the rank within a
+ * theme. The public selector always removes the current article and caps the
+ * result at three links.
+ */
+export const articleRelationThemes = [
+  {
+    id: 'content-that-remains-discoverable',
+    articleIds: [
+      'initial-html-should-contain-the-article',
+      'credible-portfolio',
+      'seo-discovery-is-product-work',
+      'small-project-architecture',
+      'spa-routes-need-real-http',
+    ],
+    reason: {
+      en: 'Continues the content-discovery path: clear structure, credible writing, and pages that remain reachable.',
+      he: 'ממשיך את מסלול גילוי התוכן: מבנה ברור, כתיבה אמינה ועמודים שנשארים נגישים.',
+    },
+  },
+  {
+    id: 'trustworthy-frontend',
+    articleIds: [
+      'focus-tests-need-an-unfocused-baseline',
+      'shared-container-is-a-layout-contract',
+      'accessibility-contrast-is-product-quality',
+      'one-bad-date-should-not-blank-a-screen',
+      'performance-optimizations-need-product-verification',
+      'google-translate-name-bug',
+    ],
+    reason: {
+      en: 'Continues the trustworthy-frontend path through accessibility, resilient rendering, and real interface behavior.',
+      he: 'ממשיך את מסלול ה־frontend האמין דרך נגישות, רינדור עמיד והתנהגות ממשק אמיתית.',
+    },
+  },
+  {
+    id: 'reliable-delivery',
+    articleIds: [
+      'failed-render-should-not-destroy-good-output',
+      'retries-should-not-duplicate-data',
+      'tests-need-honest-environments',
+      'deployment-is-product',
+      'monetization-needs-product-guardrails',
+    ],
+    reason: {
+      en: 'Continues the reliable-delivery path from safe retries and honest tests to production guardrails.',
+      he: 'ממשיך את מסלול המסירה האמינה מחזרות בטוחות ובדיקות כנות ועד גבולות פרודקשן.',
+    },
+  },
+  {
+    id: 'programming-foundations',
+    articleIds: [
+      'data-types-java-typescript-python',
+      'what-variable-stores',
+      'java-program-execution',
+      'java-unicode-string-length',
+      'binary-bitwise-java',
+    ],
+    reason: {
+      en: 'Continues the programming-foundations path from values and representation to runtime behavior.',
+      he: 'ממשיך את מסלול יסודות התכנות מערכים וייצוג ועד התנהגות בזמן ריצה.',
+    },
+  },
+  {
+    id: 'systems-under-the-app',
+    articleIds: [
+      'operating-system-under-apps',
+      'processes-threads-concurrency',
+      'boot-process-power-button',
+      'hardware-input-output-devices',
+      'what-the-cpu-really-does',
+      'ram-vs-storage',
+      'virtualization-virtual-machines',
+    ],
+    reason: {
+      en: 'Continues the systems path through the layers that run underneath everyday application code.',
+      he: 'ממשיך את מסלול המערכות דרך השכבות שפועלות מתחת לקוד אפליקטיבי יומיומי.',
+    },
+  },
+  {
+    id: 'files-data-and-access',
+    articleIds: [
+      'file-permissions-user-access',
+      'files-folders-paths',
+      'what-is-inside-a-file',
+      'java-unicode-string-length',
+      'binary-bitwise-java',
+    ],
+    reason: {
+      en: 'Continues the files-and-data path from access rules and paths down to bytes and text representation.',
+      he: 'ממשיך את מסלול הקבצים והנתונים מהרשאות ונתיבים ועד בתים וייצוג טקסט.',
+    },
+  },
+  {
+    id: 'product-trust-and-growth',
+    articleIds: [
+      'monetization-needs-product-guardrails',
+      'seo-discovery-is-product-work',
+      'privacy-safe-product-analytics',
+      'small-project-architecture',
+      'deployment-is-product',
+      'credible-portfolio',
+      'catering-whatsapp',
+    ],
+    reason: {
+      en: 'Continues the product-trust path through discovery, measurement, delivery, and focused conversion decisions.',
+      he: 'ממשיך את מסלול אמון המוצר דרך גילוי, מדידה, מסירה והחלטות המרה ממוקדות.',
+    },
+  },
+] as const satisfies readonly ArticleRelationTheme[];
+
 const canonicalCatalogs: RelationCatalogs = {
   caseStudyProjectIds: new Set(
     projects
@@ -185,6 +316,37 @@ const validateReason = (
     ? []
     : [`${relationKey}: missing ${language} editorial reason.`]
 ));
+
+export const getArticleRelationThemeErrors = (
+  themes: readonly ArticleRelationThemeInput[],
+  articleKeys: ReadonlySet<string> = canonicalCatalogs.articleKeys,
+) => {
+  const errors: string[] = [];
+
+  for (const theme of themes) {
+    if (theme.articleIds.length < 2) {
+      errors.push(`${theme.id}: a relation theme needs at least two articles.`);
+    }
+
+    const seenArticleIds = new Set<string>();
+    for (const articleId of theme.articleIds) {
+      if (seenArticleIds.has(articleId)) {
+        errors.push(`${theme.id}:${articleId}: duplicate article in relation theme.`);
+      }
+      seenArticleIds.add(articleId);
+
+      for (const language of ['en', 'he'] as const) {
+        if (!articleKeys.has(`${articleId}:${language}`)) {
+          errors.push(`${theme.id}:${articleId}: missing ${language} article metadata.`);
+        }
+      }
+    }
+
+    errors.push(...validateReason(theme.id, theme.reason));
+  }
+
+  return errors;
+};
 
 export const getProjectArticleRelationErrors = (
   relations: readonly ProjectArticleRelationInput[],
@@ -261,6 +423,10 @@ const capabilityErrors = getProjectCapabilityRelationErrors(projectCapabilityRel
 if (capabilityErrors.length > 0) {
   throw new Error(`Project/capability relation contract failed:\n${capabilityErrors.join('\n')}`);
 }
+const articleThemeErrors = getArticleRelationThemeErrors(articleRelationThemes);
+if (articleThemeErrors.length > 0) {
+  throw new Error(`Article relation theme contract failed:\n${articleThemeErrors.join('\n')}`);
+}
 
 export const getRelatedArticleRelations = (projectId: string) => (
   projectArticleRelations
@@ -271,6 +437,34 @@ export const getRelatedProjectRelations = (articleId: string) => (
   projectArticleRelations
     .filter((relation) => relation.articleId === articleId)
 );
+
+export const getRelatedBlogArticleRelations = (
+  articleId: string,
+  limit = 3,
+): RelatedArticleRelation[] => {
+  const normalizedLimit = Math.max(0, limit);
+  if (normalizedLimit === 0) return [];
+
+  const seenArticleIds = new Set<string>([articleId]);
+  const relations: RelatedArticleRelation[] = [];
+
+  for (const theme of articleRelationThemes) {
+    if (!(theme.articleIds as readonly ArticleId[]).includes(articleId as ArticleId)) continue;
+
+    for (const relatedArticleId of theme.articleIds) {
+      if (seenArticleIds.has(relatedArticleId)) continue;
+      seenArticleIds.add(relatedArticleId);
+      relations.push({
+        articleId: relatedArticleId,
+        reason: theme.reason,
+      });
+
+      if (relations.length >= normalizedLimit) return relations;
+    }
+  }
+
+  return relations;
+};
 
 export const getRelatedCapabilityRelations = (projectId: string) => (
   projectCapabilityRelations.filter((relation) => relation.projectId === projectId)
