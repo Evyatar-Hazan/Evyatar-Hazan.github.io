@@ -10,7 +10,7 @@ The contact funnel records aggregate counts in the free Cloudflare Workers Analy
 - `contact_submit_success`
 - `contact_submit_error`
 
-The Pages Function accepts an object with exactly one property: an approved `event` value. The Analytics Engine data point repeats that event name as its index and blob. No name, email, message content, form value, URL, IP address, user agent, cookie, session ID, or device ID is written to the dataset.
+The site's Cloudflare Pages Advanced Mode Worker accepts an object with exactly one property: an approved `event` value. The Analytics Engine data point repeats that event name as its index and blob. No name, email, message content, form value, URL, IP address, user agent, cookie, session ID, or device ID is written to the dataset.
 
 The client sends events only from `evyatarhazan.com`, `www.evyatarhazan.com`, and `evyatar-hazan.github.io`. Local development and unknown hosts do not send analytics.
 
@@ -34,4 +34,4 @@ References:
 
 - [Analytics Engine pricing](https://developers.cloudflare.com/analytics/analytics-engine/pricing/)
 - [Analytics Engine limits](https://developers.cloudflare.com/analytics/analytics-engine/limits/)
-- [Pages Functions bindings](https://developers.cloudflare.com/pages/functions/bindings/)
+- [Analytics Engine Workers binding](https://developers.cloudflare.com/analytics/analytics-engine/get-started/)
