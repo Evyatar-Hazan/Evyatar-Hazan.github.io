@@ -101,6 +101,8 @@ const localizedUi = {
     privacyPrefix: 'FormSubmit receives your name, email, and the reviewed message only after you press send. A hidden honeypot filters automated submissions without tracking or a CAPTCHA. The site does not save the brief locally.',
     privacyLink: 'Read the privacy notice',
     success: 'FormSubmit confirmed delivery. Your message is on its way.',
+    successNextLabel: 'What happens next',
+    successNext: 'I will review the context and reply with focused questions or a recommended next step. There is no fixed response-time promise.',
     error: 'Delivery was not confirmed. Your brief is still here; retry or use a draft instead.',
     timeout: 'The request timed out before delivery was confirmed. Your brief is still here.',
     retry: 'Retry form delivery',
@@ -162,6 +164,8 @@ const localizedUi = {
     privacyPrefix: 'FormSubmit מקבל את השם, האימייל וההודעה שנבדקה רק לאחר לחיצה על שליחה. שדה מלכודת מוסתר מסנן שליחות אוטומטיות בלי מעקב ובלי CAPTCHA. האתר אינו שומר את התקציר מקומית.',
     privacyLink: 'למידע נוסף בעמוד הפרטיות',
     success: 'FormSubmit אישר את המסירה. ההודעה בדרך.',
+    successNextLabel: 'מה קורה עכשיו',
+    successNext: 'אעבור על ההקשר ואחזור עם שאלות ממוקדות או המלצה לצעד הבא. אין כאן התחייבות לזמן תגובה קבוע.',
     error: 'המסירה לא אושרה. התקציר נשמר כאן; אפשר לנסות שוב או להשתמש בטיוטה.',
     timeout: 'הבקשה הסתיימה לפני שהמסירה אושרה. התקציר נשמר כאן.',
     retry: 'ניסיון שליחה נוסף',
@@ -169,6 +173,7 @@ const localizedUi = {
 } as const;
 
 type FormErrors = Partial<Record<'name' | 'email', string>>;
+type FormErrorField = keyof FormErrors;
 type FormStatus = 'idle' | 'success' | 'error' | 'timeout';
 
 export type ContactBriefFeatureProps = PortfolioSlotProps & {
@@ -226,6 +231,10 @@ const ContactBriefFeature = ({
   const whatsappHref = buildContactWhatsappHref(profileLinks.whatsapp, message);
   const emailHref = buildContactEmailHref(profileLinks.email, language, message, context);
   const privacyHref = buildLocalizedPath(language, { route: 'privacy' });
+
+  const focusErrorField = (field: FormErrorField) => {
+    document.getElementById(`${reactId}-${field}`)?.focus();
+  };
 
   useEffect(() => {
     if (formStatus === 'idle') return;
@@ -490,7 +499,8 @@ const ContactBriefFeature = ({
                     placeholder={ui.namePlaceholder}
                     value={name}
                     aria-invalid={Boolean(errors.name)}
-                    aria-describedby={`${reactId}-identity-hint${errors.name ? ` ${reactId}-name-error` : ''}`}
+                    aria-describedby={`${reactId}-identity-hint`}
+                    aria-errormessage={errors.name ? `${reactId}-name-error` : undefined}
                     onChange={(event) => { setName(event.target.value); setErrors((current) => ({ ...current, name: undefined })); }}
                     className={inputClassName}
                   />
@@ -510,7 +520,8 @@ const ContactBriefFeature = ({
                     placeholder={ui.emailPlaceholder}
                     value={email}
                     aria-invalid={Boolean(errors.email)}
-                    aria-describedby={`${reactId}-identity-hint${errors.email ? ` ${reactId}-email-error` : ''}`}
+                    aria-describedby={`${reactId}-identity-hint`}
+                    aria-errormessage={errors.email ? `${reactId}-email-error` : undefined}
                     onChange={(event) => { setEmail(event.target.value); setErrors((current) => ({ ...current, email: undefined })); }}
                     className={inputClassName}
                   />
@@ -522,7 +533,13 @@ const ContactBriefFeature = ({
               {Object.keys(errors).length > 0 && (
                 <div ref={errorSummaryRef} tabIndex={-1} role="alert" className="contact-error-summary">
                   <strong>{ui.errorSummary}</strong>
-                  <ul>{Object.values(errors).filter(Boolean).map((error) => <li key={error}>{error}</li>)}</ul>
+                  <ul>
+                    {(Object.entries(errors) as [FormErrorField, string][]).map(([field, error]) => (
+                      <li key={field}>
+                        <button type="button" onClick={() => focusErrorField(field)}>{error}</button>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
 
@@ -546,12 +563,18 @@ const ContactBriefFeature = ({
                   tabIndex={-1}
                   role="status"
                   aria-live="polite"
+                  aria-atomic="true"
                   className={`contact-delivery-status is-${formStatus}`}
                 >
                   {formStatus === 'success'
                     ? <CheckCircle2 aria-hidden="true" />
                     : <XCircle aria-hidden="true" />}
-                  <p>{statusMessage}</p>
+                  {formStatus === 'success' ? (
+                    <div className="contact-delivery-status__copy">
+                      <p>{statusMessage}</p>
+                      <p><strong>{ui.successNextLabel}:</strong> {ui.successNext}</p>
+                    </div>
+                  ) : <p>{statusMessage}</p>}
                   {formStatus !== 'success' && (
                     <button type="submit" disabled={isSubmitting}>{ui.retry}</button>
                   )}
