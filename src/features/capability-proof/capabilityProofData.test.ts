@@ -6,12 +6,16 @@ import {
 } from './capabilityProofData';
 
 describe('capability proof data', () => {
-  it('covers every canonical capability group exactly once', () => {
+  it('defines every canonical capability but publishes only groups with public proof', () => {
     expect(Object.keys(capabilityProofDefinitions)).toEqual(
       portfolioCapabilityGroups.map((group) => group.id),
     );
-    expect(getCapabilityProofGroups('en')).toHaveLength(7);
-    expect(getCapabilityProofGroups('he')).toHaveLength(7);
+    expect(getCapabilityProofGroups('en')).toHaveLength(6);
+    expect(getCapabilityProofGroups('he')).toHaveLength(6);
+
+    getCapabilityProofGroups('en').forEach((group) => {
+      expect(group.demonstrations.length).toBeGreaterThan(0);
+    });
   });
 
   it.each(['en', 'he'] as const)('resolves every mapped project and article in %s', (language) => {
@@ -23,11 +27,11 @@ describe('capability proof data', () => {
     });
   });
 
-  it('keeps unsupported AI/CV claims explicit instead of borrowing unrelated evidence', () => {
+  it('removes unsupported AI/CV claims instead of borrowing unrelated evidence', () => {
     const aiGroup = getCapabilityProofGroups('en').find((group) => group.id === 'aiCv');
 
-    expect(aiGroup?.demonstrations).toEqual([]);
-    expect(aiGroup?.publicEvidenceGap).toMatch(/No canonical public project or article/);
+    expect(capabilityProofDefinitions.aiCv.demonstrations).toEqual([]);
+    expect(aiGroup).toBeUndefined();
   });
 
   it('promotes only projects with verified public evidence to measured outcomes', () => {
@@ -40,7 +44,6 @@ describe('capability proof data', () => {
     expect(measuredProjectIds).toEqual({
       webMobile: ['nis_boutique', 'online_converter', 'emergency_protocol', 'united_hatzalah'],
       languages: [],
-      aiCv: [],
       devops: ['online_converter', 'emergency_protocol', 'united_hatzalah'],
       databases: ['emergency_protocol', 'united_hatzalah'],
       automation: ['online_converter'],
@@ -63,5 +66,19 @@ describe('capability proof data', () => {
       'article:performance-optimizations-need-product-verification',
     ]);
     expect(automation?.publicEvidenceGap).toMatch(/do not publicly verify every named/);
+  });
+
+  it('separates publicly used skills from active learning and exploration', () => {
+    const groups = getCapabilityProofGroups('en');
+    const statuses = new Map(groups.flatMap((group) => (
+      group.skillStatuses.map((skill) => [skill.name, skill.status] as const)
+    )));
+
+    expect(statuses.get('TypeScript')).toBe('used');
+    expect(statuses.get('Java')).toBe('learning');
+    expect(statuses.get('Python')).toBe('learning');
+    expect(statuses.get('Next.js')).toBe('exploring');
+    expect(statuses.has('YOLOv5')).toBe(false);
+    expect(new Set(statuses.values())).toEqual(new Set(['used', 'learning', 'exploring']));
   });
 });

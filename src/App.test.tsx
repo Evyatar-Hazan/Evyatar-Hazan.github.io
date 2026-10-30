@@ -334,6 +334,14 @@ describe('App', () => {
 
     expect(await screen.findByRole('heading', { level: 1, name: language === 'he' ? 'אביתר חזן' : 'Evyatar Hazan' })).toBeInTheDocument();
     expect(screen.getByText('Full Stack Developer')).toBeInTheDocument();
+    const biography = document.querySelector('main > section:first-of-type [data-professional-bio]');
+    expect(biography).toBeInTheDocument();
+    expect(biography).toHaveTextContent(
+      language === 'he'
+        ? 'אני אביתר, מפתח Full Stack שבונה מוצרי Web ומובייל מהגדרת המוצר ועד לאימות בפרודקשן.'
+        : 'I’m Evyatar, a full-stack developer building web and mobile products from product framing through production verification.',
+    );
+    expect(biography?.textContent?.trim().split(/\s+/).length).toBeLessThanOrEqual(45);
     const professionalLinks = within(screen.getByRole('navigation', {
       name: language === 'he' ? 'קישורים מקצועיים מאומתים' : 'Verified professional links',
     }));
@@ -352,7 +360,7 @@ describe('App', () => {
     expect(screen.getByText(language === 'he'
       ? /התהליך הזה הוא מה ששומר על הסקרנות שלי/
       : /That process is what keeps me curious/)).toBeInTheDocument();
-    expect(document.querySelectorAll('[aria-controls="capability-panel"]')).toHaveLength(7);
+    expect(document.querySelectorAll('[aria-controls="capability-panel"]')).toHaveLength(6);
     expect(document.querySelectorAll('[data-professional-timeline] [data-timeline-entry]')).toHaveLength(4);
     expect(screen.getByRole('heading', {
       level: 3,
@@ -376,16 +384,24 @@ describe('App', () => {
     await waitFor(() => expect(document.querySelector('#capability-panel')).toHaveAttribute('data-capability-id', 'automation'));
     expect(screen.getByText(/do not publicly verify every named device-automation tool/i)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: /AI & computer vision/ }));
-    expect(window.location.search).toContain('capability=aiCv');
-    expect(window.location.search).toContain('ref=profile');
-    expect(window.location.hash).toBe('#capability-explorer-title');
-    expect(document.querySelector('#capability-panel')).toHaveAttribute('data-capability-id', 'aiCv');
-    expect(screen.getByText(/No canonical public project or article/i)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /AI & computer vision/ })).not.toBeInTheDocument();
 
-    window.history.pushState({}, '', '/en/about/?capability=missing');
+    window.history.pushState({}, '', '/en/about/?capability=aiCv&ref=profile#capability-explorer-title');
     fireEvent.popState(window);
     await waitFor(() => expect(document.querySelector('#capability-panel')).toHaveAttribute('data-capability-id', 'webMobile'));
+    expect(window.location.search).toContain('ref=profile');
+    expect(window.location.hash).toBe('#capability-explorer-title');
+  });
+
+  it('labels capability knowledge as used, learning, or exploring', async () => {
+    renderAt('/en/about/?capability=webMobile#capability-explorer-title');
+
+    await waitFor(() => expect(document.querySelector('#capability-panel')).toHaveAttribute('data-capability-id', 'webMobile'));
+    expect(document.querySelector('[data-skill-status="used"]')).toHaveTextContent('React Native');
+    expect(document.querySelector('[data-skill-status="exploring"]')).toHaveTextContent('Next.js');
+
+    fireEvent.click(screen.getByRole('button', { name: /Languages/ }));
+    expect(document.querySelector('[data-skill-status="learning"]')).toHaveTextContent('Java');
   });
 
   it('publishes one conservative Person JSON-LD record on About only', async () => {
