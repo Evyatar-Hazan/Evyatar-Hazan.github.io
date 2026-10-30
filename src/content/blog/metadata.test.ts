@@ -10,6 +10,8 @@ describe('blog card metadata', () => {
       expect(post.readerOutcome.trim().length).toBeGreaterThan(20);
       expect(post.readerOutcome).not.toBe(post.excerpt);
     });
+
+    expect(new Set(blogPostMetadata.map((post) => post.readerOutcome)).size).toBe(66);
   });
 
   it('keeps a Hebrew and English outcome for every article', () => {
