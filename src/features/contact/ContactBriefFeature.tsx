@@ -55,6 +55,7 @@ const localizedUi = {
     clearContext: 'Clear context',
     directTitle: 'Direct contact',
     directDescription: 'No brief is required. A short message is enough to begin.',
+    availabilityNote: 'Reply timing varies with current workload. Send the context first; I will confirm availability and the next realistic step.',
     directSteps: [
       {
         label: '01 / Send',
@@ -116,6 +117,7 @@ const localizedUi = {
     clearContext: 'ניקוי ההקשר',
     directTitle: 'יצירת קשר ישירה',
     directDescription: 'לא חייבים למלא תקציר. הודעה קצרה מספיקה כדי להתחיל.',
+    availabilityNote: 'זמן התגובה משתנה לפי עומס העבודה הנוכחי. שלחו קודם את ההקשר; אחזור עם אישור זמינות והצעד המעשי הבא.',
     directSteps: [
       {
         label: '01 / מה שולחים',
@@ -377,6 +379,7 @@ const ContactBriefFeature = ({
             <div>
               <SectionHeading id={`${reactId}-direct-title`} className="text-2xl font-bold text-neutral-950 dark:text-white">{ui.directTitle}</SectionHeading>
               <p className="mt-2 text-neutral-600 dark:text-neutral-400">{ui.directDescription}</p>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-500 dark:text-neutral-400">{ui.availabilityNote}</p>
             </div>
             <div className="flex flex-wrap gap-3">
               <a className="home-action home-action--primary" href={whatsappHref} target="_blank" rel="noopener noreferrer">
