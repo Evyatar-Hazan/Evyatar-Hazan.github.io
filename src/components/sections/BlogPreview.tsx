@@ -23,16 +23,22 @@ type ArticleMetaProps = {
   language: BlogLanguage;
 };
 
-const ArticleMeta = ({ post, language }: ArticleMetaProps) => (
-  <div className="writing-article-meta">
-    <time dateTime={post.date}>{formatDate(post.date, language)}</time>
-    <span aria-hidden="true">/</span>
-    <span className="inline-flex items-center gap-1.5">
-      <Clock aria-hidden="true" className="h-3.5 w-3.5" />
-      {post.readTime}
-    </span>
-  </div>
-);
+const ArticleMeta = ({ post, language }: ArticleMetaProps) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="writing-article-meta">
+      <time dateTime={post.date}>{formatDate(post.date, language)}</time>
+      <span aria-hidden="true">/</span>
+      <span className="inline-flex items-center gap-1.5">
+        <Clock aria-hidden="true" className="h-3.5 w-3.5" />
+        {post.readTime}
+      </span>
+      <span aria-hidden="true">/</span>
+      <span>{t('blog.languageLabel', { language: t(`blog.languages.${post.language}`) })}</span>
+    </div>
+  );
+};
 
 type ArticleLinkProps = {
   post: BlogPost;
