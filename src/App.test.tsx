@@ -338,6 +338,12 @@ describe('App', () => {
     expect(screen.getAllByRole('link', { name: 'LinkedIn' }).some((link) => link.getAttribute('href') === 'https://www.linkedin.com/in/evyatar-hazan-662235210/')).toBe(true);
     expect(screen.getByRole('link', { name: language === 'he' ? 'לצפייה בראיות מהפרויקטים' : 'View project evidence' })).toHaveAttribute('href', `/${language}/projects/`);
     expect(screen.getByRole('link', { name: language === 'he' ? 'להתחיל שיחה' : 'Start a conversation' })).toHaveAttribute('href', `/${language}/contact/`);
+    const cvLink = screen.getByRole('link', { name: language === 'he' ? 'להורדת קורות החיים' : 'Download CV' });
+    expect(cvLink).toHaveAttribute('href', '/evyatar-hazan-cv.pdf');
+    expect(cvLink).toHaveAttribute('download', 'Evyatar-Hazan-CV.pdf');
+    expect(document.querySelector('time[datetime="2026-07-23"]')).toHaveTextContent(
+      language === 'he' ? 'עודכן ב־23 ביולי 2026' : 'Updated July 23, 2026',
+    );
     expect(document.querySelectorAll('[aria-controls="capability-panel"]')).toHaveLength(7);
     expect(document.querySelector('#delivery-process-title')?.closest('section')?.querySelectorAll('ol > li')).toHaveLength(5);
     expect(document.querySelectorAll('#working-principles [data-principle-id]')).toHaveLength(4);

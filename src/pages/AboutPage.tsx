@@ -2,6 +2,7 @@ import {
   ArrowLeft,
   ArrowRight,
   BookOpenText,
+  Download,
   ExternalLink,
   FolderKanban,
   Github,
@@ -13,7 +14,7 @@ import PersonStructuredData from '../components/PersonStructuredData';
 import ServiceEngagements from '../components/sections/ServiceEngagements';
 import WorkingPrinciples from '../components/sections/WorkingPrinciples';
 import type { PortfolioRouteTarget } from '../contracts/portfolio';
-import { profileLinks } from '../data/profile';
+import { profileLinks, publicCv } from '../data/profile';
 import { getCapabilityProofGroups } from '../features/capability-proof/capabilityProofData';
 import { getHumanAboutContent } from '../features/humanAbout/content';
 import { usePageSeo } from '../hooks/usePageSeo';
@@ -27,6 +28,8 @@ const pageCopy = {
     lead: 'I connect product thinking, frontend, backend, infrastructure, and verification into systems that are clear to use and maintain.',
     projects: 'View project evidence',
     contact: 'Start a conversation',
+    cv: 'Download CV',
+    cvUpdated: 'Updated July 23, 2026',
     storyEyebrow: '01 / Professional story',
     storyTitle: 'A practical end-to-end view of product work.',
     capabilitiesEyebrow: '02 / Capability explorer',
@@ -49,6 +52,8 @@ const pageCopy = {
     lead: 'אני מחבר חשיבה מוצרית, Frontend, Backend, תשתיות ואימות למערכות ברורות לשימוש ולתחזוקה.',
     projects: 'לצפייה בראיות מהפרויקטים',
     contact: 'להתחיל שיחה',
+    cv: 'להורדת קורות החיים',
+    cvUpdated: 'עודכן ב־23 ביולי 2026',
     storyEyebrow: '01 / הסיפור המקצועי',
     storyTitle: 'מבט מעשי מקצה לקצה על עבודת מוצר.',
     capabilitiesEyebrow: '02 / מפת יכולות',
@@ -145,6 +150,19 @@ const AboutPage = () => {
             <div className="mt-5 flex flex-col gap-3 sm:flex-row">
               <Link to={localizedPath(language, { route: 'projects' })} className="inline-flex min-h-12 items-center justify-between gap-4 bg-neutral-950 px-5 py-3 text-sm font-black text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:bg-surface-raised dark:text-content-primary">{copy.projects}<ArrowIcon aria-hidden="true" className="h-4 w-4" /></Link>
               <Link to={localizedPath(language, { route: 'contact' })} className="inline-flex min-h-12 items-center justify-between gap-4 border border-neutral-950 px-5 py-3 text-sm font-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:border-content-primary">{copy.contact}<ArrowIcon aria-hidden="true" className="h-4 w-4" /></Link>
+            </div>
+            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+              <a
+                href={profileLinks.cv}
+                download={publicCv.downloadName}
+                className="inline-flex min-h-11 items-center gap-2 text-sm font-black text-primary-700 underline decoration-2 underline-offset-4 hover:text-primary-900 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500 dark:text-primary-300 dark:hover:text-primary-100"
+              >
+                <Download aria-hidden="true" className="h-4 w-4" />
+                {copy.cv}
+              </a>
+              <time dateTime={publicCv.updatedAt} className="font-mono text-[0.68rem] font-bold uppercase tracking-[0.08em] text-neutral-500 dark:text-neutral-400">
+                {copy.cvUpdated}
+              </time>
             </div>
           </div>
         </div>
