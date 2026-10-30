@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "evyatar-hazan2",
+  "compatibility_date": "2026-10-30",
+  "pages_build_output_dir": "./dist",
+  "analytics_engine_datasets": [
+    {
+      "binding": "CONTACT_FUNNEL",
+      "dataset": "portfolio_contact_funnel"
+    }
+  ]
+}

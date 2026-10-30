@@ -29,7 +29,7 @@ const PrivacyPage = () => {
         },
         {
           title: 'מדידה ותפעול',
-          body: 'השרת וספקי האירוח עשויים לעבד נתוני בקשה טכניים לצורכי אבטחה, תקינות וביצועים. העדפות שפה וערכת נושא נשמרות בדפדפן שלך. המדידה אינה מיועדת לקרוא תוכן אישי או מסמכים רגישים של מבקרים.'
+          body: 'כדי לזהות נשירה בתהליך יצירת הקשר, האתר מודד באמצעות Cloudflare Analytics Engine רק חמישה אירועים: צפייה באזור יצירת הקשר, פתיחת בונה התקציר, ניסיון שליחה, הצלחת שליחה ושגיאת שליחה. האירועים אינם כוללים שם, אימייל, תוכן הודעה או שדות בטופס, מזהה משתמש או מכשיר, כתובת IP, user agent או cookie. הנתונים נשמרים ב-Cloudflare עד שלושה חודשים. העדפות שפה וערכת נושא נשמרות בדפדפן שלך.'
         },
         {
           title: 'פרסום ו-Google AdSense',
@@ -51,7 +51,7 @@ const PrivacyPage = () => {
         },
         {
           title: 'Measurement and operations',
-          body: 'Hosting and infrastructure providers may process technical request data for security, reliability, and performance. Language and theme preferences are stored in your browser. Measurement is not intended to read personal visitor content or private project files.'
+          body: 'To identify drop-off in the contact flow, the site uses Cloudflare Analytics Engine to record only five events: contact view, brief builder start, submit attempt, submit success, and submit error. Events contain no name, email, message or form-field content, user or device identifier, IP address, user agent, or cookie. Cloudflare retains this event data for up to three months. Language and theme preferences are stored in your browser.'
         },
         {
           title: 'Advertising and Google AdSense',
@@ -80,7 +80,7 @@ const PrivacyPage = () => {
             : 'This page explains in plain language how the site works, which contact paths exist, and where the boundary sits between normal browsing and information you intentionally choose to share.'}
         </p>
         <p className="mt-3 text-sm font-medium text-neutral-500 dark:text-neutral-400">
-          {isHebrew ? 'עודכן לאחרונה: 14 ביולי 2026' : 'Last updated: July 14, 2026'}
+          {isHebrew ? 'עודכן לאחרונה: 30 באוקטובר 2026' : 'Last updated: October 30, 2026'}
         </p>
 
         <div className="mt-10 grid min-w-0 gap-5">
@@ -120,6 +120,14 @@ const PrivacyPage = () => {
               className="text-primary-600 hover:text-primary-500 dark:text-primary-400"
             >
               {isHebrew ? 'מדיניות הפרטיות של FormSubmit' : 'FormSubmit privacy policy'}
+            </a>
+            <a
+              href="https://www.cloudflare.com/privacypolicy/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary-600 hover:text-primary-500 dark:text-primary-400"
+            >
+              {isHebrew ? 'מדיניות הפרטיות של Cloudflare' : 'Cloudflare privacy policy'}
             </a>
           </div>
         </div>
