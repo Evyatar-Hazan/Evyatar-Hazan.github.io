@@ -64,4 +64,17 @@ describe('capability proof data', () => {
     ]);
     expect(automation?.publicEvidenceGap).toMatch(/do not publicly verify every named/);
   });
+
+  it('separates publicly used skills from active learning and exploration', () => {
+    const groups = getCapabilityProofGroups('en');
+    const statuses = new Map(groups.flatMap((group) => (
+      group.skillStatuses.map((skill) => [skill.name, skill.status] as const)
+    )));
+
+    expect(statuses.get('TypeScript')).toBe('used');
+    expect(statuses.get('Java')).toBe('learning');
+    expect(statuses.get('Python')).toBe('learning');
+    expect(statuses.get('YOLOv5')).toBe('exploring');
+    expect(new Set(statuses.values())).toEqual(new Set(['used', 'learning', 'exploring']));
+  });
 });

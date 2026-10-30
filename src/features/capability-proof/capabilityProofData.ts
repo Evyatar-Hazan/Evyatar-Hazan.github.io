@@ -2,7 +2,9 @@ import { getBlogPostMetadata } from '../../content/blog/metadata';
 import type { CaseStudyEvidence } from '../../data/caseStudyEvidence';
 import {
   getPortfolioCapabilityGroups,
+  getPortfolioSkillStatus,
   type PortfolioLanguage,
+  type PortfolioSkillStatus,
 } from '../../data/portfolioCapabilities';
 import {
   getFlagshipPortfolioProjects,
@@ -52,6 +54,10 @@ export type CapabilityProofGroup = {
   label: string;
   description: string;
   skills: readonly string[];
+  skillStatuses: Array<{
+    name: string;
+    status: PortfolioSkillStatus;
+  }>;
   demonstrations: CapabilityDemonstration[];
   measuredOutcomes: CapabilityMeasuredOutcome[];
   publicEvidenceGap?: string;
@@ -203,6 +209,10 @@ export const getCapabilityProofGroups = (
 
     return {
       ...group,
+      skillStatuses: group.skills.map((skill) => ({
+        name: skill,
+        status: getPortfolioSkillStatus(skill),
+      })),
       demonstrations: definition.demonstrations.map((reference) => (
         resolveDemonstration(reference, language, projectMap)
       )),
