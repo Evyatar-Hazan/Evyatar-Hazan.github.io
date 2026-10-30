@@ -92,4 +92,30 @@ describe('contact brief message builders', () => {
     expect(query.get('subject')).toBe('New public product inquiry');
     expect(query.get('body')).toBe(message);
   });
+
+  it('formats only fields relevant to a role inquiry', () => {
+    const values = {
+      ...emptyContactBrief,
+      need: 'Synthetic engineering role',
+      existingSituation: 'Example team',
+      issue: 'This project-only value must stay out',
+      desiredOutcome: 'Relevant product systems experience',
+    };
+    const message = buildContactBriefMessage('en', values, undefined, 'job');
+    const href = buildContactEmailHref(
+      'mailto:test@example.com',
+      'en',
+      message,
+      undefined,
+      'job',
+    );
+
+    expect(message).toContain('Inquiry type: Role or opportunity');
+    expect(message).toContain('Role or opportunity: Synthetic engineering role');
+    expect(message).toContain('Company or team: Example team');
+    expect(message).not.toContain('This project-only value must stay out');
+    expect(new URLSearchParams(href.split('?')[1]).get('subject')).toBe(
+      'Role opportunity from the portfolio',
+    );
+  });
 });

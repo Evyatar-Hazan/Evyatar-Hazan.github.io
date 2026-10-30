@@ -27,8 +27,13 @@ import {
   buildContactWhatsappHref,
   contactBriefCopy,
   contactBriefLimits,
+  contactInquiryTypeIds,
   emptyContactBrief,
+  getContactInquiryEmailSubject,
+  getContactInquiryFields,
   type ContactBriefValues,
+  type ContactBriefTextField,
+  type ContactInquiryTypeId,
   type PreferredContactChannel,
 } from './contactBrief';
 import {
@@ -75,6 +80,7 @@ const localizedUi = {
     builderToggle: 'Send a short message',
     builderTitle: 'Add context only if it helps',
     builderDescription: 'These details are optional. Blank answers are left out of the message.',
+    inquiryTypeLegend: 'What would you like to discuss?',
     fields: {
       need: { label: 'Message', placeholder: 'What would you like to build, improve, or solve?' },
       existingSituation: { label: 'What exists today?', placeholder: 'A short description of the current situation' },
@@ -141,6 +147,7 @@ const localizedUi = {
     builderToggle: 'שליחת הודעה קצרה',
     builderTitle: 'מוסיפים הקשר רק אם הוא עוזר',
     builderDescription: 'הפרטים האלה אינם חובה. תשובות ריקות לא יופיעו בהודעה.',
+    inquiryTypeLegend: 'על מה תרצו לדבר?',
     fields: {
       need: { label: 'הודעה', placeholder: 'מה תרצו לבנות, לשפר או לפתור?' },
       existingSituation: { label: 'מה קיים היום?', placeholder: 'תיאור קצר של המצב הנוכחי' },
@@ -176,6 +183,37 @@ const localizedUi = {
     error: 'המסירה לא אושרה. כל השדות נשמרו כאן; אפשר לבדוק את הפרטים, לנסות שוב או להשתמש בטיוטת אימייל או WhatsApp.',
     timeout: 'הבקשה הסתיימה לפני שהמסירה אושרה. כל השדות נשמרו כאן; אפשר לבדוק את הפרטים ולנסות שוב.',
     retry: 'ניסיון שליחה נוסף',
+  },
+} as const;
+
+const inquiryFieldPlaceholders = {
+  en: {
+    job: {
+      need: 'For example: Full Stack Engineer or product engineering lead',
+      existingSituation: 'Company, team, or hiring context',
+      desiredOutcome: 'The experience or strengths that make this worth discussing',
+      timeframe: 'For example: immediate, this quarter, flexible',
+    },
+    collaboration: {
+      need: 'The idea, format, or topic you want to explore together',
+      issue: 'What makes this the right moment to collaborate?',
+      desiredOutcome: 'What should both sides create or learn?',
+      timeframe: 'For example: one session, this quarter, flexible',
+    },
+  },
+  he: {
+    job: {
+      need: 'לדוגמה: Full Stack Engineer או הובלת הנדסת מוצר',
+      existingSituation: 'החברה, הצוות או הקשר הגיוס',
+      desiredOutcome: 'הניסיון או החוזקות שבגללם כדאי לדבר',
+      timeframe: 'לדוגמה: מיידי, ברבעון הקרוב, גמיש',
+    },
+    collaboration: {
+      need: 'הרעיון, הפורמט או הנושא שכדאי לבדוק יחד',
+      issue: 'מה הופך את זה לזמן הנכון לשתף פעולה?',
+      desiredOutcome: 'מה שני הצדדים אמורים ליצור או ללמוד?',
+      timeframe: 'לדוגמה: מפגש אחד, הרבעון הקרוב, גמיש',
+    },
   },
 } as const;
 
@@ -218,7 +256,13 @@ const ContactBriefFeature = ({
   const statusRef = useRef<HTMLDivElement>(null);
   const contactStartTrackedRef = useRef(false);
   const [isBuilderOpen, setIsBuilderOpen] = useState(false);
-  const [brief, setBrief] = useState<ContactBriefValues>(emptyContactBrief);
+  const [inquiryType, setInquiryType] = useState<ContactInquiryTypeId>('project');
+  const [briefs, setBriefs] = useState<Record<ContactInquiryTypeId, ContactBriefValues>>({
+    project: { ...emptyContactBrief },
+    job: { ...emptyContactBrief },
+    collaboration: { ...emptyContactBrief },
+  });
+  const brief = briefs[inquiryType];
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [honeypot, setHoneypot] = useState('');
@@ -232,13 +276,16 @@ const ContactBriefFeature = ({
   );
   const intentOptions = useMemo(() => contactIntentOptions(language), [language]);
   const projectOptions = useMemo(() => contactProjectOptions(language), [language]);
+  const inquiryFields = getContactInquiryFields(language, inquiryType);
+  const inquiryCopy = content.inquiryTypes[inquiryType];
+  const inquiryLabels = inquiryCopy.labels as Partial<Record<ContactBriefTextField, string>>;
 
   const message = useMemo(
-    () => buildContactBriefMessage(language, brief, context),
-    [brief, context, language],
+    () => buildContactBriefMessage(language, brief, context, inquiryType),
+    [brief, context, inquiryType, language],
   );
   const whatsappHref = buildContactWhatsappHref(profileLinks.whatsapp, message);
-  const emailHref = buildContactEmailHref(profileLinks.email, language, message, context);
+  const emailHref = buildContactEmailHref(profileLinks.email, language, message, context, inquiryType);
   const privacyHref = buildLocalizedPath(language, { route: 'privacy' });
 
   const focusErrorField = (field: FormErrorField) => {
@@ -270,7 +317,10 @@ const ContactBriefFeature = ({
     value: ContactBriefValues[Key],
   ) => {
     setFormStatus('idle');
-    setBrief((current) => ({ ...current, [key]: value }));
+    setBriefs((current) => ({
+      ...current,
+      [inquiryType]: { ...current[inquiryType], [key]: value },
+    }));
   };
 
   const updateIntent = (intent: ContactIntentId) => {
@@ -317,7 +367,7 @@ const ContactBriefFeature = ({
       body.set('name', name.trim());
       body.set('email', email.trim());
       body.set('message', message);
-      body.set('_subject', contextDetails.emailSubject);
+      body.set('_subject', getContactInquiryEmailSubject(language, inquiryType, context));
       body.set('_honey', honeypot);
       body.set('_captcha', 'false');
 
@@ -454,6 +504,65 @@ const ContactBriefFeature = ({
 
         {isBuilderOpen && (
           <div id={builderId} className={cardSurfaceClassName('muted', 'contact-brief-layout')}>
+            <section aria-labelledby={`${reactId}-builder-title`}>
+              <SectionHeading id={`${reactId}-builder-title`} className="text-2xl font-bold text-neutral-950 dark:text-white">{ui.builderTitle}</SectionHeading>
+              <p className="mt-2 leading-7 text-neutral-600 dark:text-neutral-400">{ui.builderDescription}</p>
+
+              <fieldset className="contact-inquiry-type mt-6">
+                <legend>{ui.inquiryTypeLegend}</legend>
+                <div>
+                  {contactInquiryTypeIds.map((type) => (
+                    <label key={type} className={inquiryType === type ? 'is-selected' : ''}>
+                      <input
+                        type="radio"
+                        name={`${reactId}-inquiry-type`}
+                        value={type}
+                        checked={inquiryType === type}
+                        onChange={() => { setInquiryType(type); setFormStatus('idle'); }}
+                      />
+                      <span>{content.inquiryTypes[type].label}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+
+              <fieldset className="mt-6 grid gap-4">
+                <legend className="sr-only">{ui.builderTitle}</legend>
+                {inquiryFields.filter((key) => key !== 'need').map((key) => (
+                  <div key={key} className={fieldClassName}>
+                    <label htmlFor={`${reactId}-${key}`}>
+                      {inquiryType === 'project' ? ui.fields[key].label : inquiryLabels[key]}
+                    </label>
+                    <textarea
+                      id={`${reactId}-${key}`}
+                      rows={key === 'timeframe' ? 2 : 3}
+                      maxLength={contactBriefLimits[key]}
+                      value={brief[key]}
+                      placeholder={inquiryType === 'project'
+                        ? ui.fields[key].placeholder
+                        : (inquiryFieldPlaceholders[language][inquiryType] as Partial<Record<ContactBriefTextField, string>>)[key]}
+                      onChange={(event) => updateBrief(key, event.target.value)}
+                      className={inputClassName}
+                    />
+                  </div>
+                ))}
+
+                <div className={fieldClassName}>
+                  <label htmlFor={`${reactId}-preferred-channel`}>{ui.fields.preferredChannel.label}</label>
+                  <select
+                    id={`${reactId}-preferred-channel`}
+                    value={brief.preferredChannel}
+                    onChange={(event) => updateBrief('preferredChannel', event.target.value as PreferredContactChannel)}
+                    className={inputClassName}
+                  >
+                    <option value="">{ui.fields.preferredChannel.placeholder}</option>
+                    <option value="form">{content.channelLabels.form}</option>
+                    <option value="email">{content.channelLabels.email}</option>
+                    <option value="whatsapp">{content.channelLabels.whatsapp}</option>
+                  </select>
+                </div>
+              </fieldset>
+            </section>
             <form noValidate onSubmit={handleSubmit} className={cardSurfaceClassName('raised', 'contact-message-review')}>
               <input
                 type="text"
@@ -469,7 +578,9 @@ const ContactBriefFeature = ({
               <p className="mt-2 text-sm leading-6 text-neutral-600 dark:text-neutral-400">{ui.previewDescription}</p>
 
               <div className={`${fieldClassName} mt-5`}>
-                <label htmlFor={`${reactId}-need`}>{ui.fields.need.label}</label>
+                <label htmlFor={`${reactId}-need`}>
+                  {inquiryType === 'project' ? ui.fields.need.label : inquiryLabels.need}
+                </label>
                 <textarea
                   id={`${reactId}-need`}
                   name="message"
@@ -477,7 +588,9 @@ const ContactBriefFeature = ({
                   rows={4}
                   maxLength={contactBriefLimits.need}
                   value={brief.need}
-                  placeholder={ui.fields.need.placeholder}
+                  placeholder={inquiryType === 'project'
+                    ? ui.fields.need.placeholder
+                    : inquiryFieldPlaceholders[language][inquiryType].need}
                   aria-invalid={Boolean(errors.need)}
                   aria-errormessage={errors.need ? `${reactId}-need-error` : undefined}
                   onChange={(event) => {
@@ -598,43 +711,6 @@ const ContactBriefFeature = ({
               )}
             </form>
 
-            <section aria-labelledby={`${reactId}-builder-title`}>
-              <SectionHeading id={`${reactId}-builder-title`} className="text-2xl font-bold text-neutral-950 dark:text-white">{ui.builderTitle}</SectionHeading>
-              <p className="mt-2 leading-7 text-neutral-600 dark:text-neutral-400">{ui.builderDescription}</p>
-
-              <fieldset className="mt-6 grid gap-4">
-                <legend className="sr-only">{ui.builderTitle}</legend>
-                {(['existingSituation', 'issue', 'desiredOutcome', 'timeframe'] as const).map((key) => (
-                  <div key={key} className={fieldClassName}>
-                    <label htmlFor={`${reactId}-${key}`}>{ui.fields[key].label}</label>
-                    <textarea
-                      id={`${reactId}-${key}`}
-                      rows={key === 'timeframe' ? 2 : 3}
-                      maxLength={contactBriefLimits[key]}
-                      value={brief[key]}
-                      placeholder={ui.fields[key].placeholder}
-                      onChange={(event) => updateBrief(key, event.target.value)}
-                      className={inputClassName}
-                    />
-                  </div>
-                ))}
-
-                <div className={fieldClassName}>
-                  <label htmlFor={`${reactId}-preferred-channel`}>{ui.fields.preferredChannel.label}</label>
-                  <select
-                    id={`${reactId}-preferred-channel`}
-                    value={brief.preferredChannel}
-                    onChange={(event) => updateBrief('preferredChannel', event.target.value as PreferredContactChannel)}
-                    className={inputClassName}
-                  >
-                    <option value="">{ui.fields.preferredChannel.placeholder}</option>
-                    <option value="form">{content.channelLabels.form}</option>
-                    <option value="email">{content.channelLabels.email}</option>
-                    <option value="whatsapp">{content.channelLabels.whatsapp}</option>
-                  </select>
-                </div>
-              </fieldset>
-            </section>
           </div>
         )}
       </div>

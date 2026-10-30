@@ -32,8 +32,8 @@ const ContactPage = () => {
   usePageSeo({
     title: isHebrew ? 'יצירת קשר | אביתר חזן' : 'Contact | Evyatar Hazan',
     description: isHebrew
-      ? 'מרחב פתיחת פרויקט תלוי־הקשר עם WhatsApp, אימייל ו-LinkedIn ישירים ותקציר אופציונלי שנבדק לפני שימוש.'
-      : 'A context-aware project inquiry workspace with direct WhatsApp, email, and LinkedIn contact plus an optional reviewed brief.',
+      ? 'מרחב פנייה תלוי־הקשר לפרויקט, משרה או שיתוף פעולה, עם WhatsApp, אימייל ו-LinkedIn ישירים ותקציר אופציונלי שנבדק לפני שימוש.'
+      : 'A context-aware inquiry workspace for a project, role, or collaboration, with direct WhatsApp, email, and LinkedIn contact plus an optional reviewed brief.',
     path: '/contact/'
   });
 
