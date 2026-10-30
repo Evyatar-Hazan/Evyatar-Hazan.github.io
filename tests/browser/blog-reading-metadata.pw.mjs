@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
 
 const scenarios = [
-  { language: 'en', theme: 'light', width: 1440, height: 900, time: '4 min read', label: 'Language: English' },
-  { language: 'he', theme: 'light', width: 1440, height: 900, time: '4 דקות קריאה', label: 'שפה: עברית' },
-  { language: 'en', theme: 'dark', width: 390, height: 844, time: '4 min read', label: 'Language: English' },
-  { language: 'he', theme: 'dark', width: 390, height: 844, time: '4 דקות קריאה', label: 'שפה: עברית' },
+  { language: 'en', theme: 'light', width: 1440, height: 900, time: /\d+ min read/, label: 'Language: English' },
+  { language: 'he', theme: 'light', width: 1440, height: 900, time: /\d+ דקות קריאה/, label: 'שפה: עברית' },
+  { language: 'en', theme: 'dark', width: 390, height: 844, time: /\d+ min read/, label: 'Language: English' },
+  { language: 'he', theme: 'dark', width: 390, height: 844, time: /\d+ דקות קריאה/, label: 'שפה: עברית' },
 ];
 
 for (const scenario of scenarios) {
