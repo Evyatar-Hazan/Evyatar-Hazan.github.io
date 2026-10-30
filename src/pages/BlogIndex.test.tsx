@@ -126,6 +126,31 @@ describe('BlogIndex knowledge library', () => {
     expect(document.querySelector('[aria-live="polite"]')).toHaveAttribute('data-result-count', '1');
   });
 
+  it.each([
+    ['en', '/en/blog/', 'unfocused baseline', 'unfocused baseline'],
+    ['he', '/he/blog/', 'רינדור', 'רינדור'],
+  ])('highlights matching search text in %s results', (language, url, query, expectedHighlight) => {
+    currentLanguage = language;
+    renderBlog(url);
+
+    fireEvent.change(screen.getByRole('searchbox'), { target: { value: query } });
+
+    const highlights = [...document.querySelectorAll('mark.blog-search-highlight')];
+    expect(highlights.length).toBeGreaterThan(0);
+    expect(highlights.some((highlight) => highlight.textContent === expectedHighlight)).toBe(true);
+    expect(document.querySelector('[aria-live="polite"]')).toHaveAttribute('data-result-count', '1');
+  });
+
+  it('highlights tag matches without changing the accessible result title', () => {
+    renderBlog();
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Search all notes' }), {
+      target: { value: 'monetization' },
+    });
+
+    expect(screen.getByRole('heading', { name: 'Monetization needs product guardrails' })).toBeInTheDocument();
+    expect(document.querySelector('.blog-archive-entry-footer mark')).toHaveTextContent('Monetization');
+  });
+
   it('combines an exact topic filter with search and exposes accessible state', () => {
     renderBlog();
 
