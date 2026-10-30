@@ -55,7 +55,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: site-dist
-          path: dist
+          path: |
+            dist
+            functions
+            wrangler.jsonc
           if-no-files-found: error
 
   visual-regression:
@@ -122,7 +125,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: site-dist
-          path: dist
+          path: .
 
       - name: Deploy with retry
         env:
