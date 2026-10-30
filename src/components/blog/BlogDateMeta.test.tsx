@@ -19,6 +19,7 @@ const post: BlogPostMeta = {
   language: 'en',
   title: 'Sample',
   excerpt: 'Sample excerpt',
+  readerOutcome: 'Understand the result this sample article is designed to deliver.',
   date: '2026-09-06',
   updatedDate: '2026-10-03',
   readTime: '7 min read',

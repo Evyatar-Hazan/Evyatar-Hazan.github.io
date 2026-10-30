@@ -359,6 +359,7 @@
     "newerPost": "Previous entry",
     "olderPost": "Next entry",
     "readPost": "Read post",
+    "readerOutcome": "What you’ll take away",
     "languageLabel": "Language: {{language}}",
     "languages": {
       "en": "English",
@@ -375,7 +376,7 @@
       "description": "Search the full working library or narrow it by topic and depth.",
       "searchFormLabel": "Search and filter the knowledge library",
       "searchLabel": "Search all notes",
-      "searchPlaceholder": "Title, summary, or tag",
+      "searchPlaceholder": "Title, summary, outcome, or tag",
       "clearSearch": "Clear search",
       "filtersLabel": "Filter by topic",
       "topicFiltersLabel": "Filter by topic",

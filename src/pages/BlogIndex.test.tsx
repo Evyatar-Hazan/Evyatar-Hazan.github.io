@@ -9,7 +9,8 @@ const libraryCopy = {
     'blog.title': 'Blog',
     'blog.library.searchFormLabel': 'Search and filter the knowledge library',
     'blog.library.searchLabel': 'Search all notes',
-    'blog.library.searchPlaceholder': 'Title, summary, or tag',
+    'blog.readerOutcome': 'What you’ll take away',
+    'blog.library.searchPlaceholder': 'Title, summary, outcome, or tag',
     'blog.library.clearSearch': 'Clear search',
     'blog.library.filtersLabel': 'Filter by topic',
     'blog.library.topicFiltersLabel': 'Filter by topic',
@@ -30,7 +31,8 @@ const libraryCopy = {
     'blog.title': 'בלוג',
     'blog.library.searchFormLabel': 'חיפוש וסינון בספריית הידע',
     'blog.library.searchLabel': 'חיפוש בכל הרשומות',
-    'blog.library.searchPlaceholder': 'כותרת, תקציר או תגית',
+    'blog.readerOutcome': 'מה יישאר לך מהקריאה',
+    'blog.library.searchPlaceholder': 'כותרת, תקציר, תוצאה או תגית',
     'blog.library.clearSearch': 'ניקוי החיפוש',
     'blog.library.filtersLabel': 'סינון לפי נושא',
     'blog.library.topicFiltersLabel': 'סינון לפי נושא',
@@ -139,6 +141,17 @@ describe('BlogIndex knowledge library', () => {
     expect(resultCards()).toHaveLength(32);
     expect(screen.queryByRole('button', { name: /^Load more notes/ })).not.toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'What I learned from building a credible portfolio' })).toBeInTheDocument();
+  });
+
+  it('gives every visible article card a concise summary and reader outcome', () => {
+    renderBlog();
+
+    const cards = document.querySelectorAll('.blog-archive-feature, .blog-archive-entry');
+    expect(cards.length).toBeGreaterThan(0);
+    cards.forEach((card) => {
+      expect(card.querySelector('.blog-card-outcome span')).toHaveTextContent('What you’ll take away');
+      expect(card.querySelector('.blog-card-outcome p')).not.toBeEmptyDOMElement();
+    });
   });
 
   it.each([

@@ -11,6 +11,7 @@ export type BlogPostMeta = {
   language: BlogLanguage;
   title: string;
   excerpt: string;
+  readerOutcome: string;
   date: string;
   updatedDate?: string;
   readTime: string;
