@@ -136,17 +136,17 @@ describe('BlogIndex knowledge library', () => {
     ['title, including the lead note', 'unfocused baseline', 'A focus test needs an unfocused baseline'],
     ['summary', 'atomic promotion', 'A failed render should not destroy good output'],
     ['tag', 'monetization', 'Monetization needs product guardrails'],
-  ])('searches by %s without requiring submission', (_field, query, expectedTitle) => {
+  ])('searches by %s without requiring submission', async (_field, query, expectedTitle) => {
     renderBlog();
     fireEvent.change(screen.getByRole('searchbox', { name: 'Search all notes' }), { target: { value: query } });
 
     expect(screen.getByRole('heading', { name: expectedTitle })).toBeInTheDocument();
     expect(document.querySelector('.blog-archive-feature')).not.toBeInTheDocument();
     expect(document.querySelector('[aria-live="polite"]')).toHaveAttribute('data-result-count', '1');
-    expect(window.location.search).toContain(`q=${encodeURIComponent(query).replaceAll('%20', '+')}`);
+    await waitFor(() => expect(window.location.search).toContain(`q=${encodeURIComponent(query).replaceAll('%20', '+')}`));
   });
 
-  it('preserves spaces while a multi-word query is typed', () => {
+  it('preserves spaces while a multi-word query is typed', async () => {
     renderBlog();
     const search = screen.getByRole('searchbox', { name: 'Search all notes' });
 
@@ -155,7 +155,7 @@ describe('BlogIndex knowledge library', () => {
     fireEvent.change(search, { target: { value: 'unfocused baseline' } });
 
     expect(search).toHaveValue('unfocused baseline');
-    expect(window.location.search).toContain('q=unfocused+baseline');
+    await waitFor(() => expect(window.location.search).toContain('q=unfocused+baseline'));
     expect(screen.getByRole('heading', { name: 'A focus test needs an unfocused baseline' })).toBeInTheDocument();
   });
 
