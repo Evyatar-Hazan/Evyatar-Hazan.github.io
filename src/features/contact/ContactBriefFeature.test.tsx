@@ -7,7 +7,7 @@ const buildLocalizedPath: LocalizedPathBuilder = (language, target) =>
   `/${language}/${target.route}/`;
 
 const openBuilder = () => {
-  fireEvent.click(screen.getByRole('button', { name: /inquiry brief/i }));
+  fireEvent.click(screen.getByRole('button', { name: /project brief/i }));
 };
 
 afterEach(() => {
@@ -123,7 +123,7 @@ describe('ContactBriefFeature', () => {
 
   it('renders the inquiry taxonomy and relevant fields in Hebrew', () => {
     render(<ContactBriefFeature language="he" buildLocalizedPath={buildLocalizedPath} />);
-    fireEvent.click(screen.getByRole('button', { name: /תקציר פנייה/i }));
+    fireEvent.click(screen.getByRole('button', { name: /תקציר פרויקט/i }));
     fireEvent.click(screen.getByRole('radio', { name: 'משרה או הזדמנות' }));
 
     expect(screen.getByLabelText('החברה או הצוות')).toBeInTheDocument();

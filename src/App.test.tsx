@@ -546,7 +546,7 @@ describe('App', () => {
     expect(screen.getAllByRole('link', { name: 'Email' }).at(-1)).toHaveAttribute('href', expect.stringContaining('mailto:'));
     expect(screen.getAllByRole('link', { name: 'LinkedIn' }).at(-1)).toHaveAttribute('target', '_blank');
 
-    fireEvent.click(screen.getByRole('button', { name: 'Build a short inquiry brief (optional)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Build a short project brief (optional)' }));
     expect(screen.getByLabelText('Name')).toBeRequired();
     expect(screen.getByLabelText('Email address')).toBeRequired();
     expect(screen.getByLabelText('Message review')).toHaveAttribute('readonly');
