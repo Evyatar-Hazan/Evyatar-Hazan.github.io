@@ -11,7 +11,11 @@ export const routeQaViewports = [
 export const routeQaSharedChecks = [
   'direct-load',
   'page-identity',
+  'single-banner-landmark',
   'single-main-landmark',
+  'single-contentinfo-landmark',
+  'named-navigation-landmarks',
+  'skip-link',
   'primary-content',
   'language-and-direction',
   'light-and-dark-theme',
