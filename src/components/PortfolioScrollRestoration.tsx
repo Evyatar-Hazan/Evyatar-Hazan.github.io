@@ -54,6 +54,7 @@ const PortfolioScrollRestoration = () => {
     let attempts = 0;
     let frameId = 0;
     let cancelledByUser = false;
+    let managedFocusTarget: HTMLElement | null = null;
 
     const cancelRestoration = () => {
       cancelledByUser = true;
@@ -81,9 +82,26 @@ const PortfolioScrollRestoration = () => {
     restorePosition();
 
     if (!savedPosition) {
-      frameId = window.requestAnimationFrame(() => {
-        document.querySelector<HTMLElement>('#main-content')?.focus({ preventScroll: true });
-      });
+      const focusCurrentMain = () => {
+        const activeElement = document.activeElement;
+        const focusIsStillManaged = activeElement === document.body
+          || activeElement === managedFocusTarget;
+
+        if (!focusIsStillManaged) return;
+
+        const mainContent = document.querySelector<HTMLElement>('#main-content');
+        if (mainContent && mainContent !== managedFocusTarget) {
+          mainContent.focus({ preventScroll: true });
+          managedFocusTarget = mainContent;
+        }
+
+        attempts += 1;
+        if (attempts < MAX_RESTORE_FRAMES) {
+          frameId = window.requestAnimationFrame(focusCurrentMain);
+        }
+      };
+
+      frameId = window.requestAnimationFrame(focusCurrentMain);
     }
 
     return () => {
