@@ -172,14 +172,15 @@ const blogEntries = [...blogSource.matchAll(/slug:\s*'([^']+)'[\s\S]*?language:\
   }))
   .sort(compareEditorialValue);
 
-const localizedBlogEntries = [...blogSource.matchAll(/slug:\s*'([^']+)'[\s\S]*?language:\s*'(en|he)'[\s\S]*?title:\s*'([^']+)'[\s\S]*?excerpt:\s*'([^']+)'[\s\S]*?date:\s*'([^']+)'[\s\S]*?tags:\s*\[([^\]]*)\]/g)]
+const localizedBlogEntries = [...blogSource.matchAll(/slug:\s*'([^']+)'[\s\S]*?language:\s*'(en|he)'[\s\S]*?title:\s*'([^']+)'[\s\S]*?excerpt:\s*'([^']+)'[\s\S]*?date:\s*'([^']+)'(?:,\s*updatedDate:\s*'([^']+)')?[\s\S]*?tags:\s*\[([^\]]*)\]/g)]
   .map((match) => ({
     slug: match[1],
     language: match[2],
     title: match[3],
     excerpt: match[4],
     date: match[5],
-    tags: match[6].replace(/'/g, '').split(',').map((value) => value.trim()).filter(Boolean)
+    updatedDate: match[6],
+    tags: match[7].replace(/'/g, '').split(',').map((value) => value.trim()).filter(Boolean)
   }))
   .sort(compareEditorialValue);
 
@@ -355,10 +356,15 @@ const staticRoutes = [
 ];
 
 for (const entry of blogEntries) {
+  const localizedEntry = localizedBlogEntries.find((candidate) => (
+    candidate.slug === entry.slug && candidate.language === 'en'
+  ));
+  if (!localizedEntry) throw new Error(`Missing en blog metadata for ${entry.slug}.`);
   staticRoutes.push({
     path: `/blog/${entry.slug}/`,
     title: `${entry.title} | Writing | Evyatar Hazan`,
     description: entry.excerpt,
+    structuredData: { type: 'article', entry: localizedEntry },
     preview: {
       heading: entry.title,
       body: [
@@ -444,6 +450,29 @@ const buildHtmlForRoute = (route) => {
     html = html.replace(
       '</head>',
       `  <script id="person-profile-structured-data" type="application/ld+json">${JSON.stringify(person).replaceAll('<', '\\u003c')}</script>\n</head>`
+    );
+  }
+  if (route.structuredData?.type === 'article') {
+    const { entry } = route.structuredData;
+    const article = {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: entry.title,
+      description: entry.excerpt,
+      datePublished: entry.date,
+      dateModified: entry.updatedDate ?? entry.date,
+      inLanguage: entry.language,
+      mainEntityOfPage: pageUrl,
+      author: {
+        '@type': 'Person',
+        name: 'Evyatar Hazan',
+        url: absoluteUrl(localizedPath(entry.language, '/about/')),
+      },
+      keywords: entry.tags,
+    };
+    html = html.replace(
+      '</head>',
+      `  <script id="blog-article-structured-data" type="application/ld+json">${JSON.stringify(article).replaceAll('<', '\\u003c')}</script>\n</head>`
     );
   }
   html = html.replace('<div id="root"></div>', `${renderPreview(route)}<div id="root"></div>`);
@@ -637,6 +666,7 @@ const localizedSeoForRoute = (route, language) => {
       ...route,
       title: `${entry.title} | כתיבה | אביתר חזן`,
       description: entry.excerpt,
+      structuredData: { type: 'article', entry },
       preview: {
         ...route.preview,
         heading: entry.title,
@@ -825,6 +855,34 @@ for (const route of staticRoutes) {
       ].length;
       if (staticArticleLinkCount < languageEntries.length) {
         throw new Error(`Static blog index ${routePath} exposes ${staticArticleLinkCount}/${languageEntries.length} article links.`);
+      }
+    }
+
+    if (isArticle) {
+      const slug = route.path.split('/')[2];
+      const entry = localizedBlogEntries.find((candidate) => (
+        candidate.slug === slug && candidate.language === language
+      ));
+      if (!entry) throw new Error(`Missing ${language} structured data source for ${routePath}.`);
+      const articleScripts = [...html.matchAll(/id="blog-article-structured-data"/gu)].length;
+      if (articleScripts !== 1) {
+        throw new Error(`Expected one BlogPosting JSON-LD script in ${routePath}, received ${articleScripts}.`);
+      }
+      const scriptMatch = html.match(/<script id="blog-article-structured-data" type="application\/ld\+json">([^<]+)<\/script>/u);
+      const article = JSON.parse(scriptMatch?.[1] ?? '{}');
+      if (
+        article['@type'] !== 'BlogPosting'
+        || article.headline !== entry.title
+        || article.description !== entry.excerpt
+        || article.datePublished !== entry.date
+        || article.dateModified !== (entry.updatedDate ?? entry.date)
+        || article.inLanguage !== language
+        || article.mainEntityOfPage !== absoluteUrl(routePath)
+        || article.author?.name !== 'Evyatar Hazan'
+        || article.author?.url !== absoluteUrl(localizedPath(language, '/about/'))
+        || JSON.stringify(article.keywords) !== JSON.stringify(entry.tags)
+      ) {
+        throw new Error(`BlogPosting JSON-LD does not match visible metadata for ${routePath}.`);
       }
     }
 

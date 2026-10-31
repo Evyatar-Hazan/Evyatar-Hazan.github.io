@@ -18,6 +18,7 @@ import {
 import { getProjectById } from '../data/profile';
 import BlogDateMeta from '../components/blog/BlogDateMeta';
 import { formatLocaleIndex } from '../features/locale-presentation/formatLocale';
+import ArticleStructuredData from '../components/ArticleStructuredData';
 
 type ArticleHeading = { id: string; label: string; level: number };
 
@@ -146,6 +147,7 @@ const BlogPost = () => {
 
   return (
     <main id="main-content" tabIndex={-1} className="blog-article">
+      <ArticleStructuredData post={post} />
       <div className="blog-article-grid" aria-hidden="true" />
       <article ref={articleRef} className="blog-article-shell content-container">
         <Link to={localizedPath(language, { route: 'blog' })} className="blog-article-back">
