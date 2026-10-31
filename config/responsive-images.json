@@ -1,0 +1,44 @@
+[
+  {
+    "src": "/project-nis-boutique.webp",
+    "width": 1440,
+    "height": 900,
+    "widths": [480, 768, 1024, 1440]
+  },
+  {
+    "src": "/project-online-converter.webp",
+    "width": 1440,
+    "height": 900,
+    "widths": [480, 768, 1024, 1440]
+  },
+  {
+    "src": "/project-emergency-protocol.webp",
+    "width": 1440,
+    "height": 900,
+    "widths": [480, 768, 1024, 1440]
+  },
+  {
+    "src": "/project-united-hatzalah.webp",
+    "width": 1440,
+    "height": 900,
+    "widths": [480, 768, 1024, 1440]
+  },
+  {
+    "src": "/case-studies/nis-boutique/mobile-home.webp",
+    "width": 390,
+    "height": 844,
+    "widths": [240, 320, 390]
+  },
+  {
+    "src": "/case-studies/online-converter/mobile-home.webp",
+    "width": 390,
+    "height": 844,
+    "widths": [240, 320, 390]
+  },
+  {
+    "src": "/case-studies/emergency-protocol/mobile-path.webp",
+    "width": 390,
+    "height": 844,
+    "widths": [240, 320, 390]
+  }
+]

@@ -8,6 +8,8 @@ import { HomeSectionHeader } from './HomeSectionPrimitives';
 import './Projects.css';
 import { cardSurfaceClassName } from '../cardSurface';
 import ProjectCardFacts from '../ProjectCardFacts';
+import ResponsiveImage from '../ResponsiveImage';
+import type { ResponsiveImageSource } from '../../data/responsiveImages';
 
 const featuredProjects = projects.filter((project) => project.featured);
 const flagshipProjectId = 'nis_boutique';
@@ -18,7 +20,7 @@ if (!flagshipProject) {
   throw new Error(`Missing flagship project: ${flagshipProjectId}`);
 }
 
-const previewImages: Partial<Record<Project['visual'], string>> = {
+const previewImages: Partial<Record<Project['visual'], ResponsiveImageSource>> = {
   catering: '/project-nis-boutique.webp',
   converter: '/project-online-converter.webp',
   protocol: '/project-emergency-protocol.webp',
@@ -107,11 +109,10 @@ const FeaturedProjectCard = ({
             className="featured-case-card__media"
             aria-label={`${t('projects.openLivePreview')} ${projectTitle}`}
           >
-            <img
-              src={previewImage}
+            <ResponsiveImage
+              source={previewImage}
+              sizes="(max-width: 759px) calc(100vw - 2.5rem), (max-width: 1023px) calc(100vw - 4rem), 804px"
               alt={t(`projects.items.${project.id}.previewTitle`)}
-              width="1440"
-              height="900"
               loading="lazy"
               decoding="async"
             />
@@ -119,11 +120,10 @@ const FeaturedProjectCard = ({
           </a>
         ) : (
           <div className="featured-case-card__media">
-            <img
-              src={previewImage}
+            <ResponsiveImage
+              source={previewImage}
+              sizes="(max-width: 759px) calc(100vw - 2.5rem), (max-width: 1023px) calc(100vw - 4rem), 804px"
               alt={t(`projects.items.${project.id}.previewTitle`)}
-              width="1440"
-              height="900"
               loading="lazy"
               decoding="async"
             />
@@ -207,22 +207,20 @@ const SupportingProjectCard = ({
             className="supporting-project-card__media-link"
             aria-label={`${t('projects.openLivePreview')} ${projectTitle}`}
           >
-            <img
-              src={previewImage}
+            <ResponsiveImage
+              source={previewImage}
+              sizes="(max-width: 759px) calc(100vw - 2.5rem), (max-width: 1279px) calc((100vw - 6rem) / 3), 435px"
               alt={t(`projects.items.${project.id}.previewTitle`)}
-              width="1440"
-              height="900"
               loading="lazy"
               decoding="async"
             />
           </a>
         ) : (
-          <img
+          <ResponsiveImage
             className="supporting-project-card__media"
-            src={previewImage}
+            source={previewImage}
+            sizes="(max-width: 759px) calc(100vw - 2.5rem), (max-width: 1279px) calc((100vw - 6rem) / 3), 435px"
             alt={t(`projects.items.${project.id}.previewTitle`)}
-            width="1440"
-            height="900"
             loading="lazy"
             decoding="async"
           />

@@ -2,6 +2,7 @@ import { ExternalLink } from 'lucide-react';
 import type { LocalizedPathBuilder, ProjectId } from '../contracts/portfolio';
 import type { PortfolioLanguage } from '../data/portfolioCapabilities';
 import { getProductVisualCollection } from '../data/productVisuals';
+import ResponsiveImage from './ResponsiveImage';
 
 type ProductVisualGalleryProps = {
   projectId: ProjectId;
@@ -42,10 +43,11 @@ const ProductVisualGallery = ({
         {collection.visuals.map((visual) => (
           <figure key={visual.id}>
             <div className="product-visual-frame">
-              <img
-                src={visual.src}
-                width={visual.width}
-                height={visual.height}
+              <ResponsiveImage
+                source={visual.src}
+                sizes={visual.width <= 390
+                  ? '(max-width: 759px) calc(100vw - 2.5rem), 390px'
+                  : '(max-width: 759px) calc(100vw - 2.5rem), (max-width: 1279px) calc((100vw - 6rem) / 2), 600px'}
                 alt={visual.alt[language]}
                 aria-describedby={captionIdFor(projectId, visual.id)}
                 loading="lazy"
