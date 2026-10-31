@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import LocalizedHeroLayout from '../components/sections/LocalizedHeroLayout';
 import ProductCompilerVisual from '../components/sections/ProductCompilerVisual';
 import { profileLinks } from '../data/profile';
+import { getStaticRouteSeo } from '../data/routeSeo';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { localizedPath } from '../routing/portfolioRoutes';
 
@@ -11,13 +12,7 @@ const Home = () => {
   const isHebrew = i18n.language === 'he';
   const language = isHebrew ? 'he' : 'en';
 
-  usePageSeo({
-    title: isHebrew ? 'אביתר חזן | Full Stack Developer' : 'Evyatar Hazan | Full Stack Developer',
-    description: isHebrew
-      ? 'פורטפוליו של אביתר חזן עם אתרים עסקיים, מערכות Full Stack, כלי מוצר, כתיבה מקצועית ודרכי יצירת קשר ישירות.'
-      : 'Portfolio of Evyatar Hazan with business websites, full-stack systems, product tools, technical writing, and direct contact paths.',
-    path: '/'
-  });
+  usePageSeo(getStaticRouteSeo('home', language));
 
   return (
     <section

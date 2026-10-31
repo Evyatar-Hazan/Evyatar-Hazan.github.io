@@ -188,6 +188,8 @@ const localeByLanguage = {
   en: JSON.parse(await readFile(path.join(srcDir, 'locales', 'en.json'), 'utf8')),
   he: JSON.parse(await readFile(path.join(srcDir, 'locales', 'he.json'), 'utf8')),
 };
+const routeSeo = JSON.parse(await readFile(path.join(srcDir, 'data', 'routeSeo.json'), 'utf8'));
+const pageSeo = (routeId, language) => routeSeo[routeId][language];
 const projectsArraySource = profileSource.match(/export const projects: Project\[\] = \[([\s\S]*?)\n\];/u)?.[1] ?? '';
 const projectArchiveIds = [...projectsArraySource.matchAll(/^\s{4}id:\s*'([^']+)'/gmu)].map(([, id]) => id);
 if (projectArchiveIds.length === 0) {
@@ -226,8 +228,7 @@ const extractOverviewParagraph = (caseKey, language = 'en') => {
 const staticRoutes = [
   {
     path: '/',
-    title: 'Evyatar Hazan | Full Stack Developer',
-    description: 'Portfolio of Evyatar Hazan, a full stack developer building business websites, structured tools, automation workflows, and maintainable product systems.',
+    ...pageSeo('home', 'en'),
     preview: {
       heading: 'Evyatar Hazan | Full Stack Developer',
       body: [
@@ -245,8 +246,7 @@ const staticRoutes = [
   },
   {
     path: '/projects/',
-    title: 'Projects | Evyatar Hazan',
-    description: 'A bilingual engineering work dossier with seven projects, documented contributions, public artifacts, filters, and project comparison.',
+    ...pageSeo('projects', 'en'),
     preview: {
       heading: 'Projects',
       body: [
@@ -258,8 +258,7 @@ const staticRoutes = [
   },
   {
     path: '/about/',
-    title: 'About Evyatar Hazan | Professional Profile',
-    description: 'Evidence-backed professional profile for Evyatar Hazan across product work, full-stack systems, infrastructure, automation, delivery, and public projects.',
+    ...pageSeo('about', 'en'),
     structuredData: 'person',
     preview: {
       heading: 'Evyatar Hazan | Full Stack Developer',
@@ -286,8 +285,7 @@ const staticRoutes = [
   },
   {
     path: '/blog/',
-    title: 'Writing | Evyatar Hazan',
-    description: 'Short articles about product engineering, frontend work, live websites, SEO, validation, and deployment.',
+    ...pageSeo('blog', 'en'),
     preview: {
       heading: 'Writing by Evyatar Hazan',
       body: [
@@ -308,8 +306,7 @@ const staticRoutes = [
   {
     path: '/privacy/',
     excludeAds: true,
-    title: 'Privacy | Evyatar Hazan',
-    description: 'Privacy information for Evyatar Hazan portfolio visitors, including contact paths, analytics boundaries, and basic data handling expectations.',
+    ...pageSeo('privacy', 'en'),
     preview: {
       heading: 'Privacy',
       body: [
@@ -325,8 +322,7 @@ const staticRoutes = [
   {
     path: '/contact/',
     excludeAds: true,
-    title: 'Contact | Evyatar Hazan',
-    description: 'A context-aware project inquiry workspace with direct WhatsApp, email, and LinkedIn contact plus an optional reviewed brief.',
+    ...pageSeo('contact', 'en'),
     preview: {
       heading: 'Start a project conversation',
       body: [
@@ -343,8 +339,7 @@ const staticRoutes = [
   {
     path: '/lab/',
     excludeAds: true,
-    title: 'Interface Craft Lab | Evyatar Hazan',
-    description: 'Synthetic interface experiments and a reusable date presenter, clearly separated from client delivery and product metrics.',
+    ...pageSeo('lab', 'en'),
     preview: {
       heading: 'Interface Craft Lab',
       body: [
@@ -508,8 +503,7 @@ const localizedSeoForRoute = (route, language) => {
   if (route.path === '/') {
     return {
       ...route,
-      title: 'אביתר חזן | Full Stack Developer',
-      description: 'פורטפוליו של אביתר חזן עם אתרים עסקיים, מערכות Full Stack, כלי מוצר, כתיבה מקצועית ודרכי יצירת קשר ישירות.',
+      ...pageSeo('home', language),
       preview: {
         ...route.preview,
         heading: 'אביתר חזן | Full Stack Developer',
@@ -527,8 +521,7 @@ const localizedSeoForRoute = (route, language) => {
   if (route.path === '/blog/') {
     return {
       ...route,
-      title: 'בלוג | אביתר חזן',
-      description: 'מאמרים קצרים על פיתוח מוצר, Frontend, אתרים חיים, בדיקות ופריסה.',
+      ...pageSeo('blog', language),
       preview: {
         ...route.preview,
         heading: 'כתיבה מקצועית',
@@ -554,8 +547,7 @@ const localizedSeoForRoute = (route, language) => {
   if (route.path === '/projects/') {
     return {
       ...route,
-      title: 'פרויקטים | אביתר חזן',
-      description: 'תיק עבודות הנדסי דו־לשוני עם שבעה פרויקטים, תרומה מתועדת, נכסים ציבוריים, סינון והשוואת פרויקטים.',
+      ...pageSeo('projects', language),
       preview: {
         ...route.preview,
         heading: 'פרויקטים',
@@ -571,8 +563,7 @@ const localizedSeoForRoute = (route, language) => {
   if (route.path === '/about/') {
     return {
       ...route,
-      title: 'אודות אביתר חזן | פרופיל מקצועי',
-      description: 'פרופיל מקצועי מבוסס ראיות של אביתר חזן: עבודת מוצר, Full Stack, תשתיות, אוטומציה, דרך עבודה ופרויקטים ציבוריים.',
+      ...pageSeo('about', language),
       preview: {
         ...route.preview,
         heading: 'אביתר חזן | Full Stack Developer',
@@ -597,8 +588,7 @@ const localizedSeoForRoute = (route, language) => {
   if (route.path === '/privacy/') {
     return {
       ...route,
-      title: 'פרטיות | אביתר חזן',
-      description: 'מידע בסיסי על פרטיות באתר הפורטפוליו של אביתר חזן, כולל יצירת קשר, שימוש מינימלי במדידה וציפיות טיפול בנתונים.',
+      ...pageSeo('privacy', language),
       preview: {
         ...route.preview,
         heading: 'פרטיות ושקיפות בסיסית',
@@ -610,8 +600,7 @@ const localizedSeoForRoute = (route, language) => {
   if (route.path === '/contact/') {
     return {
       ...route,
-      title: 'יצירת קשר | אביתר חזן',
-      description: 'מרחב פתיחת פרויקט תלוי־הקשר עם WhatsApp, אימייל ו-LinkedIn ישירים ותקציר אופציונלי שנבדק לפני שימוש.',
+      ...pageSeo('contact', language),
       preview: {
         ...route.preview,
         heading: 'פותחים שיחת פרויקט',
@@ -626,8 +615,7 @@ const localizedSeoForRoute = (route, language) => {
   if (route.path === '/lab/') {
     return {
       ...route,
-      title: 'מעבדת ממשק | אביתר חזן',
-      description: 'ניסויי ממשק סינתטיים ורכיב תאריך רב־שימושי, עם הבחנה מפורשת מעבודת לקוח וממדדי מוצר.',
+      ...pageSeo('lab', language),
       preview: {
         ...route.preview,
         heading: 'מעבדת ממשק',
