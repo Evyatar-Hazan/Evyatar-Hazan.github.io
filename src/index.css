@@ -6,6 +6,7 @@
     linear-gradient(to bottom, color-mix(in srgb, var(--color-primary-500) 8%, transparent) 1px, transparent 1px);
   background-size: 32px 32px;
 }
+
 @source not "../experiments";
 @source not "../docs";
 
@@ -6591,5 +6592,21 @@ textarea.contact-workspace-input {
   .featured-case-card__media img {
     transition-duration: 0.01ms !important;
     transform: none !important;
+  }
+}
+
+/* FIX-086: one final reduced-motion contract for every CSS-driven interaction. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  :where(*, *::before, *::after) {
+    scroll-behavior: auto !important;
+    animation-delay: 0ms !important;
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-delay: 0ms !important;
+    transition-duration: 0s !important;
   }
 }

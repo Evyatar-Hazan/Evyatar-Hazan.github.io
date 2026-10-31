@@ -1,4 +1,4 @@
-import { motion, useMotionTemplate, useMotionValue, useTransform } from 'framer-motion';
+import { motion, useMotionTemplate, useMotionValue, useReducedMotion, useTransform } from 'framer-motion';
 import type { ReactNode, MouseEvent } from 'react';
 
 interface CardProps {
@@ -7,6 +7,7 @@ interface CardProps {
 }
 
 const Card = ({ children, className = '' }: CardProps) => {
+  const reduceMotion = useReducedMotion();
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const mouseXPct = useMotionValue(0.5);
@@ -16,6 +17,8 @@ const Card = ({ children, className = '' }: CardProps) => {
   const rotateY = useTransform(mouseXPct, [0, 1], [-2, 2]);
 
   function handleMouseMove({ currentTarget, clientX, clientY }: MouseEvent) {
+    if (reduceMotion) return;
+
     const { left, top, width, height } = currentTarget.getBoundingClientRect();
     const x = clientX - left;
     const y = clientY - top;
@@ -33,15 +36,15 @@ const Card = ({ children, className = '' }: CardProps) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
+      initial={reduceMotion ? false : { opacity: 0, scale: 0.95 }}
+      whileInView={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4 }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{
-        rotateX,
-        rotateY,
+        rotateX: reduceMotion ? 0 : rotateX,
+        rotateY: reduceMotion ? 0 : rotateY,
         transformStyle: "preserve-3d"
       }}
       className={`group relative p-6 bg-white dark:bg-neutral-900/40 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-xl overflow-hidden transition-colors duration-500 transform-gpu ${className}`}

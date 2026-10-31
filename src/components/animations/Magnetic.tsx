@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import type { MouseEvent, ReactNode } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 interface MagneticProps {
   children: ReactNode;
@@ -11,8 +11,11 @@ interface MagneticProps {
 const Magnetic = ({ children, className = '', intensity = 0.3 }: MagneticProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const reduceMotion = useReducedMotion();
 
   const handleMouse = (e: MouseEvent) => {
+    if (reduceMotion) return;
+
     const { clientX, clientY } = e;
     if (ref.current) {
       const { height, width, left, top } = ref.current.getBoundingClientRect();
@@ -31,8 +34,10 @@ const Magnetic = ({ children, className = '', intensity = 0.3 }: MagneticProps) 
       ref={ref}
       onMouseMove={handleMouse}
       onMouseLeave={reset}
-      animate={{ x: position.x, y: position.y }}
-      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+      animate={{ x: reduceMotion ? 0 : position.x, y: reduceMotion ? 0 : position.y }}
+      transition={reduceMotion
+        ? { duration: 0 }
+        : { type: 'spring', stiffness: 150, damping: 15, mass: 0.1 }}
       className={`magnetic inline-flex ${className}`}
     >
       {children}
