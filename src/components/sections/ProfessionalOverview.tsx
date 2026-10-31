@@ -4,6 +4,7 @@ import { getPortfolioCapabilityGroups } from '../../data/portfolioCapabilities';
 import { getHumanAboutContent } from '../../features/humanAbout/content';
 import { HomeSectionHeader } from './HomeSectionPrimitives';
 import { cardSurfaceClassName } from '../cardSurface';
+import { formatLocaleIndex } from '../../features/locale-presentation/formatLocale';
 
 type ProfessionalOverviewProps = PortfolioSlotProps & {
   buildPath: LocalizedPathBuilder;
@@ -110,7 +111,7 @@ const ProfessionalOverview = ({
                   className="professional-overview__capability"
                 >
                   <span aria-hidden="true">
-                    {String(index + 1).padStart(2, '0')}
+                    {formatLocaleIndex(index + 1, language)}
                   </span>
                   <h3>{capability.label}</h3>
                   <p>{capability.description}</p>

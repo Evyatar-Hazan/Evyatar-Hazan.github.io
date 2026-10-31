@@ -34,13 +34,18 @@ describe('CraftLab', () => {
 
     const alert = screen.getByRole('alert');
     expect(alert).toHaveTextContent('The report could not be generated.');
+    expect(alert).toHaveAttribute('aria-live', 'assertive');
+    expect(alert).toHaveAttribute('aria-atomic', 'true');
     expect(alert).toHaveTextContent('Your report filters are still here.');
     expect(screen.getByText('Fictional studio inventory')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Retry safely' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Use sample CSV instead' })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'Retry safely' }));
-    expect(screen.getByRole('status')).toHaveTextContent('The original filters were preserved.');
+    const recoveredStatus = screen.getByRole('status');
+    expect(recoveredStatus).toHaveTextContent('The original filters were preserved.');
+    expect(recoveredStatus).toHaveAttribute('aria-live', 'polite');
+    expect(recoveredStatus).toHaveAttribute('aria-atomic', 'true');
   });
 
   it('simulates upload states without selecting or sending a real file', () => {
@@ -53,20 +58,28 @@ describe('CraftLab', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Load synthetic sample' }));
     expect(screen.getByText('sample-launch-cut.mp4')).toBeInTheDocument();
     expect(screen.getByRole('progressbar')).toHaveAttribute('value', '0');
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'Start simulation' }));
     expect(screen.getByRole('progressbar')).toHaveAttribute('value', '48');
     expect(screen.getByText('Simulated transfer is 48% complete.')).toBeInTheDocument();
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'Simulate failure' }));
     expect(screen.getByText('Needs attention')).toBeInTheDocument();
-    expect(screen.getByText(/sample remains available to retry/i)).toBeInTheDocument();
+    const uploadError = screen.getByRole('alert');
+    expect(uploadError).toHaveTextContent(/sample remains available to retry/i);
+    expect(uploadError).toHaveAttribute('aria-live', 'assertive');
 
     fireEvent.click(screen.getByRole('button', { name: 'Retry simulation' }));
     fireEvent.click(screen.getByRole('button', { name: 'Advance state' }));
     expect(screen.getByText('Processing')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Advance state' }));
-    expect(screen.getByText('Synthetic preview ready for review.')).toBeInTheDocument();
+    const readyStatus = screen.getByRole('status');
+    expect(readyStatus).toHaveTextContent('Synthetic preview ready for review.');
+    expect(readyStatus).toHaveAttribute('aria-live', 'polite');
+    expect(document.querySelectorAll('[role="status"]')).toHaveLength(1);
     expect(fetchMock).not.toHaveBeenCalled();
   });
 

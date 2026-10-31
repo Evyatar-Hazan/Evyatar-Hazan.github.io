@@ -36,7 +36,8 @@
 
 .featured-case-card::before {
   position: absolute;
-  inset: 0 0 auto;
+  inset-block-start: 0;
+  inset-inline: 0;
   z-index: 2;
   height: 2px;
   background: linear-gradient(90deg, var(--project-accent), transparent 74%);
@@ -451,13 +452,8 @@
   .featured-case-card__media {
     min-height: 100%;
     aspect-ratio: auto;
-    border-right: 1px solid color-mix(in srgb, var(--project-accent) 20%, var(--color-neutral-300));
+    border-inline-end: 1px solid color-mix(in srgb, var(--project-accent) 20%, var(--color-neutral-300));
     border-bottom: 0;
-  }
-
-  [dir='rtl'] .featured-case-card__media {
-    border-right: 0;
-    border-left: 1px solid color-mix(in srgb, var(--project-accent) 20%, var(--color-neutral-300));
   }
 }
 

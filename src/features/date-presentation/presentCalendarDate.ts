@@ -1,4 +1,5 @@
 import type { PortfolioLanguage } from '../../data/portfolioCapabilities';
+import { resolvePortfolioLocale } from '../locale-presentation/formatLocale';
 
 export type CalendarDateStyle = 'long' | 'compact';
 export type CalendarDateStatus = 'valid' | 'empty' | 'invalid';
@@ -32,11 +33,6 @@ const isRealCalendarDate = (year: number, month: number, day: number) => (
   && day >= 1
   && day <= daysInMonth(year, month)
 );
-
-const localeByLanguage: Record<PortfolioLanguage, string> = {
-  en: 'en-US',
-  he: 'he-IL',
-};
 
 const formatOptionsByStyle: Record<CalendarDateStyle, Intl.DateTimeFormatOptions> = {
   long: { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' },
@@ -80,7 +76,7 @@ export const presentCalendarDate = (
     return {
       status: 'valid',
       text: new Intl.DateTimeFormat(
-        localeByLanguage[language],
+        resolvePortfolioLocale(language),
         formatOptionsByStyle[style],
       ).format(instant),
       dateTime: input,
