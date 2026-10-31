@@ -5,6 +5,7 @@ import type {
 } from '../../contracts/portfolio';
 import { datePresentationCopy } from './datePresentationCopy';
 import { presentCalendarDate } from './presentCalendarDate';
+import { formatLocaleIndex } from '../locale-presentation/formatLocale';
 
 export type DatePresentationDemoProps = PortfolioSlotProps & {
   buildLocalizedPath: LocalizedPathBuilder;
@@ -130,7 +131,7 @@ export const DatePresentationDemo = ({
           <ul className="mt-4 space-y-3 text-sm text-neutral-300">
             {copy.contract.map((item, index) => (
               <li key={item} className="grid grid-cols-[1.5rem_1fr] gap-2">
-                <span className="font-mono text-primary-300" aria-hidden="true">0{index + 1}</span>
+                <span className="font-mono text-primary-300" aria-hidden="true">{formatLocaleIndex(index + 1, language)}</span>
                 <span>{item}</span>
               </li>
             ))}
