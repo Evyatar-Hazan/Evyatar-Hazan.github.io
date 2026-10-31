@@ -53,4 +53,16 @@ describe('Projects flagship hierarchy', () => {
       expect(card.querySelectorAll('[data-project-fact="status"]')).toHaveLength(1);
     });
   });
+
+  it.each(['en', 'he'] as const)('gives every informative project screenshot purposeful %s alt text', async (language) => {
+    await i18n.changeLanguage(language);
+    const { container } = renderProjects();
+    const images = [...container.querySelectorAll<HTMLImageElement>('[data-project-card] img')];
+
+    expect(images).toHaveLength(4);
+    images.forEach((image) => {
+      expect(image.alt.trim().length).toBeGreaterThan(40);
+      expect(image.alt).not.toMatch(/previewTitle|live preview|תצוגה חיה/iu);
+    });
+  });
 });
