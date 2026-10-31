@@ -50,7 +50,7 @@ const SectionFallback = ({ id, minHeightClassName }: SectionFallbackProps) => (
 );
 
 const PageFallback = ({ id, minHeightClassName }: SectionFallbackProps) => (
-  <main id="main-content" tabIndex={-1}>
+  <main id="main-content" tabIndex={-1} className="page-route-fallback">
     <SectionFallback id={id} minHeightClassName={minHeightClassName} />
   </main>
 );

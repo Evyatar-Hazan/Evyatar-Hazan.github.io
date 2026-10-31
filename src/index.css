@@ -5719,6 +5719,10 @@ body {
   background: var(--home-surface-page);
 }
 
+.page-route-fallback {
+  min-height: 100svh;
+}
+
 .home-section-fallback__rail {
   width: min(calc(100% - (2 * var(--content-container-gutter))), var(--content-container-max));
   height: 0.65rem;
