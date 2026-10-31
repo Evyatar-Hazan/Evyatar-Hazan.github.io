@@ -1,5 +1,9 @@
 import { mkdir } from 'node:fs/promises';
 import { expect, test } from '@playwright/test';
+import {
+  collectUnexpectedConsoleErrors,
+  collectUnexpectedFailedRequests,
+} from './support/console-errors.mjs';
 
 const scenarios = [
   { id: 'desktop-en-light', language: 'en', theme: 'light', viewport: { width: 1440, height: 900 } },
@@ -18,10 +22,8 @@ test.describe('FIX-064 article-card summaries and outcomes', () => {
     test(`${scenario.id} gives every blog card a visible summary and reader outcome`, async ({ page }) => {
       const consoleErrors = [];
       const failedRequests = [];
-      page.on('console', (message) => {
-        if (message.type() === 'error') consoleErrors.push(message.text());
-      });
-      page.on('requestfailed', (request) => failedRequests.push(request.url()));
+      collectUnexpectedConsoleErrors(page, consoleErrors);
+      collectUnexpectedFailedRequests(page, failedRequests);
 
       await page.setViewportSize(scenario.viewport);
       await page.emulateMedia({ colorScheme: scenario.theme, reducedMotion: 'reduce' });

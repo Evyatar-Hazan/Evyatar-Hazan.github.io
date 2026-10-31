@@ -1,4 +1,8 @@
 import { expect, test } from '@playwright/test';
+import {
+  collectUnexpectedConsoleErrors,
+  collectUnexpectedFailedRequests,
+} from './support/console-errors.mjs';
 
 const cases = [
   { name: 'desktop-en-light', language: 'en', theme: 'light', width: 1440, height: 900, label: 'Capability type', reset: 'Reset filters' },
@@ -11,10 +15,8 @@ for (const entry of cases) {
   test(`FIX-041 ${entry.name} filters projects by canonical capability and preserves URL state`, async ({ page }) => {
     const consoleErrors = [];
     const failedRequests = [];
-    page.on('console', (message) => {
-      if (message.type() === 'error') consoleErrors.push(message.text());
-    });
-    page.on('requestfailed', (request) => failedRequests.push(request.url()));
+    collectUnexpectedConsoleErrors(page, consoleErrors);
+    collectUnexpectedFailedRequests(page, failedRequests);
 
     await page.setViewportSize({ width: entry.width, height: entry.height });
     await page.emulateMedia({ colorScheme: entry.theme, reducedMotion: 'reduce' });
