@@ -71,9 +71,9 @@ export const AudienceEntryPaths = ({
                   {path.audience}
                 </p>
 
-                <h2 className="mt-2 text-lg font-black leading-tight tracking-[-0.025em] text-neutral-950 dark:text-white sm:text-xl">
+                <h3 className="mt-2 text-lg font-black leading-tight tracking-[-0.025em] text-neutral-950 dark:text-white sm:text-xl">
                   {path.title}
-                </h2>
+                </h3>
 
                 <p className="mt-3 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
                   {path.description}
