@@ -53,6 +53,7 @@ main > section[id] {
 
   /* Semantic UI colors */
   --color-info-300: #67e8f9;
+  --color-info-700: #0e7490;
   --color-success-50: #ecfdf5;
   --color-success-200: #a7f3d0;
   --color-success-300: #6ee7b7;
@@ -67,6 +68,7 @@ main > section[id] {
   --color-warning-700: #b45309;
   --color-danger-400: #f87171;
   --color-danger-600: #dc2626;
+  --color-danger-700: #b91c1c;
 
   /* Semantic surfaces and content roles. These are intentionally themeable. */
   --color-surface-canvas: #f7f8fa;
@@ -81,6 +83,7 @@ main > section[id] {
   --color-content-inverse: #ffffff;
   --color-border-subtle: #dbe3ee;
   --color-border-strong: #94a3b8;
+  --color-focus-ring: #0369a1;
 }
 
 :root {
@@ -219,6 +222,12 @@ svg.lucide {
   stroke-width: var(--icon-stroke-width);
 }
 
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-focus-ring) !important;
+  outline-offset: 3px !important;
+  --tw-ring-color: var(--color-focus-ring) !important;
+}
+
 .dark {
   color-scheme: dark;
   /* A deliberately layered midnight palette, not a light palette inversion. */
@@ -234,6 +243,7 @@ svg.lucide {
   --color-content-inverse: #0b1220;
   --color-border-subtle: #2a3b56;
   --color-border-strong: #526885;
+  --color-focus-ring: #38bdf8;
   --color-neutral-50: #f8fafc;
   --color-neutral-100: #e8eef6;
   --color-neutral-200: #d5deeb;
@@ -3108,11 +3118,15 @@ body {
 }
 
 .contact-node-tooltip small {
-  color: var(--color-neutral-500);
+  color: var(--color-neutral-600);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 0.45rem;
   font-weight: 850;
   letter-spacing: 0.12em;
+}
+
+.dark .contact-node-tooltip small {
+  color: var(--color-neutral-400);
 }
 
 .contact-node-tooltip strong {
@@ -3981,7 +3995,7 @@ body {
 
 .blog-archive-label {
   margin-top: 2.4rem;
-  color: var(--color-primary-600);
+  color: var(--color-primary-700);
 }
 
 .dark .blog-archive-label {
@@ -6065,9 +6079,13 @@ body {
 .contact-context-card__copy small {
   display: block;
   margin-top: 0.7rem;
-  color: var(--color-neutral-500);
+  color: var(--color-neutral-600);
   font-size: 0.72rem;
   line-height: 1.5;
+}
+
+.dark .contact-context-card__copy small {
+  color: var(--color-neutral-400);
 }
 
 .contact-context-card__controls {
