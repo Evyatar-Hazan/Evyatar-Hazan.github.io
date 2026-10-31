@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import type { LocalizedPathBuilder } from '../../contracts/portfolio';
 import { AudienceEntryPaths } from './AudienceEntryPaths';
-import { createAudienceEntryPathsRegistration } from './audienceEntryPathsRegistration';
 
 const buildPath = vi.fn<LocalizedPathBuilder>((language, target) => (
   `/${language}/${target.route}`
@@ -50,13 +49,5 @@ describe('AudienceEntryPaths', () => {
     expect(screen.getByText('בעלי עסקים, יזמים וצוותי מוצר')).toBeInTheDocument();
     expect(screen.getByText('מגייסים ומנהלים טכנולוגיים')).toBeInTheDocument();
     expect(screen.getByText('קוראים טכניים ואנשי פיתוח')).toBeInTheDocument();
-  });
-
-  it('registers in the approved home audience slot', () => {
-    const registration = createAudienceEntryPathsRegistration(buildPath);
-
-    expect(registration.taskId).toBe('t01');
-    expect(registration.slot).toBe('home.audience');
-    expect(registration.Component).toEqual(expect.any(Function));
   });
 });

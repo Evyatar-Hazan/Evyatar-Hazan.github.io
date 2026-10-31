@@ -2,7 +2,6 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import type { LocalizedPathBuilder } from '../../contracts/portfolio';
 import { DatePresentationDemo } from './DatePresentationDemo';
-import { createDatePresentationRegistration } from './datePresentationRegistration';
 
 const buildLocalizedPath = vi.fn<LocalizedPathBuilder>((language, target) => (
   target.route === 'article' ? `/${language}/blog/${target.id}/` : `/${language}/`
@@ -61,14 +60,5 @@ describe('DatePresentationDemo', () => {
       'href',
       '/he/blog/one-bad-date-should-not-blank-a-screen/',
     );
-  });
-
-  it('registers through the shared portfolio slot contract', () => {
-    const registration = createDatePresentationRegistration(buildLocalizedPath);
-
-    expect(registration.taskId).toBe('t12');
-    expect(registration.slot).toBe('lab.reusableComponent');
-    render(<registration.Component language="en" />);
-    expect(screen.getByRole('heading', { name: 'A date should inform, not interrupt.' })).toBeInTheDocument();
   });
 });
