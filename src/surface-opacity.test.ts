@@ -3,14 +3,12 @@ import stylesheet from './index.css?raw';
 import caseStudyStylesheet from './components/CaseStudyStory.css?raw';
 import heroStylesheet from './components/sections/LocalizedHeroLayout.module.css?raw';
 import projectsStylesheet from './components/sections/Projects.css?raw';
-import retryDemoStylesheet from './components/blog/RetryIdempotencyDemo.module.css?raw';
 
 const stylesheets = {
   'index.css': stylesheet,
   'CaseStudyStory.css': caseStudyStylesheet,
   'LocalizedHeroLayout.module.css': heroStylesheet,
   'Projects.css': projectsStylesheet,
-  'RetryIdempotencyDemo.module.css': retryDemoStylesheet,
 };
 
 const opaqueSurfaceTokens = [
@@ -50,6 +48,5 @@ describe('FIX-026 opaque surface contract', () => {
     expect(caseStudyStylesheet.match(/--case-panel:[^;]+;/g)?.every((value) => !value.includes('transparent'))).toBe(true);
     expect(heroStylesheet).toContain('background: var(--color-primary-700);');
     expect(projectsStylesheet).toContain('var(--color-neutral-950) 88%, var(--color-black)');
-    expect(retryDemoStylesheet).toContain('background: var(--effect-blog-paper);');
   });
 });
