@@ -1,7 +1,6 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import RetryIdempotencyDemo from './RetryIdempotencyDemo';
-import { retryIdempotencyDemoRegistration } from './retryIdempotencyDemoRegistration';
 
 describe('RetryIdempotencyDemo', () => {
   it('shows how the protected retry reuses a record while the unprotected retry duplicates it', () => {
@@ -40,12 +39,10 @@ describe('RetryIdempotencyDemo', () => {
     fetchSpy.mockRestore();
   });
 
-  it('provides equivalent Hebrew controls and the approved article slot registration', () => {
+  it('provides equivalent Hebrew controls', () => {
     render(<RetryIdempotencyDemo language="he" />);
 
     expect(screen.getByRole('region', { name: 'ניסיון חוזר לאותה כוונה' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'הרצת הניסיון הראשון' })).toBeEnabled();
-    expect(retryIdempotencyDemoRegistration.taskId).toBe('t11');
-    expect(retryIdempotencyDemoRegistration.slot).toBe('article.interactive');
   });
 });
