@@ -45,6 +45,7 @@ import {
   type ContactIntentId,
 } from './contactIntent';
 import { trackContactFunnelEvent } from '../../analytics/contactFunnel';
+import { getSystemAnnouncementProps } from '../../accessibility/systemAnnouncements';
 
 export const contactFormEndpoint = 'https://formsubmit.co/ajax/evyatarhazan3.14@gmail.com';
 const submissionTimeoutMs = 12_000;
@@ -253,7 +254,6 @@ const ContactBriefFeature = ({
   const titleId = `${reactId}-title`;
   const statusId = `${reactId}-status`;
   const errorSummaryRef = useRef<HTMLDivElement>(null);
-  const statusRef = useRef<HTMLDivElement>(null);
   const contactStartTrackedRef = useRef(false);
   const [isBuilderOpen, setIsBuilderOpen] = useState(false);
   const [inquiryType, setInquiryType] = useState<ContactInquiryTypeId>('project');
@@ -291,11 +291,6 @@ const ContactBriefFeature = ({
   const focusErrorField = (field: FormErrorField) => {
     document.getElementById(`${reactId}-${field}`)?.focus();
   };
-
-  useEffect(() => {
-    if (formStatus === 'idle') return;
-    statusRef.current?.focus();
-  }, [formStatus]);
 
   useEffect(() => {
     void trackContactFunnelEvent('contact_view');
@@ -687,12 +682,8 @@ const ContactBriefFeature = ({
 
               {formStatus !== 'idle' && (
                 <div
-                  ref={statusRef}
                   id={statusId}
-                  tabIndex={-1}
-                  role="status"
-                  aria-live="polite"
-                  aria-atomic="true"
+                  {...getSystemAnnouncementProps(formStatus === 'success' ? 'success' : 'error')}
                   className={`contact-delivery-status is-${formStatus}`}
                 >
                   {formStatus === 'success'
