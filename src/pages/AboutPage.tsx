@@ -21,6 +21,7 @@ import { getHumanAboutContent } from '../features/humanAbout/content';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { localizedPath } from '../routing/portfolioRoutes';
 import { getProfessionalTimeline } from '../data/professionalTimeline';
+import { getStaticRouteSeo } from '../data/routeSeo';
 import { presentCalendarDate } from '../features/date-presentation/presentCalendarDate';
 import { formatLocaleIndex, formatLocaleNumber } from '../features/locale-presentation/formatLocale';
 
@@ -155,13 +156,7 @@ const AboutPage = () => {
   const activeGroup = groups.find(({ id }) => id === requestedCapability) ?? groups[0];
   const ArrowIcon = language === 'he' ? ArrowLeft : ArrowRight;
 
-  usePageSeo({
-    title: language === 'he' ? 'אודות אביתר חזן | פרופיל מקצועי' : 'About Evyatar Hazan | Professional Profile',
-    description: language === 'he'
-      ? 'פרופיל מקצועי של אביתר חזן שמפריד בין תיאור עצמי והעדפות עבודה לבין ראיות ציבוריות מפרויקטים ומאמרים, עם גבולות מפורשים לפערי מידע.'
-      : 'A professional profile for Evyatar Hazan that separates self-description and working preferences from public project and article evidence, with explicit boundaries for information gaps.',
-    path: '/about/',
-  });
+  usePageSeo(getStaticRouteSeo('about', language));
 
   const selectCapability = (capability: string) => {
     const params = new URLSearchParams(location.search);
