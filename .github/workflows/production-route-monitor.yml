@@ -1,0 +1,113 @@
+name: Production Route Monitor
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: production-route-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    name: Verify production domains and routes
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Check every production route
+        id: route-monitor
+        continue-on-error: true
+        run: node scripts/production-route-monitor.mjs --report-file production-route-monitor.json
+
+      - name: Upload monitor evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-route-monitor-${{ github.run_id }}
+          path: production-route-monitor.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Notify only when monitor state changes
+        if: always()
+        uses: actions/github-script@v8
+        env:
+          MONITOR_OUTCOME: ${{ steps.route-monitor.outcome }}
+        with:
+          script: |
+            const fs = require('node:fs');
+            const title = '[production-route-monitor] Production route health changed';
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+            const report = JSON.parse(fs.readFileSync('production-route-monitor.json', 'utf8'));
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner,
+              repo,
+              state: 'open',
+              per_page: 100,
+            });
+            const existing = issues.find((issue) => issue.title === title && !issue.pull_request);
+
+            if (report.status === 'ok') {
+              if (!existing) {
+                core.info('Production remains healthy; no notification required.');
+                return;
+              }
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: existing.number,
+                body: `Recovered at ${report.checkedAt}. ${report.checkCount} checks passed across ${report.routeCount} routes and both domains.\n\n[Workflow evidence](${runUrl})`,
+              });
+              await github.rest.issues.update({ owner, repo, issue_number: existing.number, state: 'closed' });
+              return;
+            }
+
+            const fingerprintLine = `Fingerprint: \`${report.failureFingerprint}\``;
+            if (existing?.body?.includes(fingerprintLine)) {
+              core.info('The same production failure is still open; suppressing a duplicate notification.');
+              return;
+            }
+
+            const body = [
+              'The scheduled production monitor detected a meaningful route-health change.',
+              '',
+              `Observed: ${report.checkedAt}`,
+              fingerprintLine,
+              `Error: ${report.error}`,
+              '',
+              `[Workflow evidence](${runUrl})`,
+              '',
+              'This issue remains open until a later successful run closes it automatically.',
+            ].join('\n');
+
+            if (existing) {
+              await github.rest.issues.update({ owner, repo, issue_number: existing.number, body });
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: existing.number,
+                body: `The failure fingerprint changed. [Inspect the new evidence](${runUrl}).`,
+              });
+            } else {
+              await github.rest.issues.create({ owner, repo, title, body });
+            }
+
+      - name: Keep the workflow visibly failed while production is unhealthy
+        if: steps.route-monitor.outcome == 'failure'
+        run: exit 1
