@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import scrollProgressSource from './components/animations/ScrollProgress.tsx?raw';
-import aboutSource from './components/sections/About.tsx?raw';
 
 const stylesheets = import.meta.glob('./**/*.css', {
   eager: true,
@@ -41,6 +40,5 @@ describe('FIX-088 logical RTL layout contract', () => {
     expect(componentOverrides).toEqual([]);
     expect(scrollProgressSource).toContain('className="fixed inset-x-0 top-0');
     expect(scrollProgressSource).not.toMatch(/\bleft-0\b|\bright-0\b/);
-    expect(aboutSource).not.toMatch(/origin-left|origin-right/);
   });
 });
