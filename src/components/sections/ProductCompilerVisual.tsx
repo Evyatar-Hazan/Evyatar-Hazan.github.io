@@ -46,14 +46,26 @@ const ProductCompilerVisual = ({
           ))}
         </div>
 
-        <svg className="product-compiler-connectors product-compiler-connectors-desktop" viewBox="0 0 96 360" fill="none">
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          className="product-compiler-connectors product-compiler-connectors-desktop"
+          viewBox="0 0 96 360"
+          fill="none"
+        >
           <path d="M0 58 H24 C42 58 42 180 72 180 H96" />
           <path d="M0 180 H96" />
           <path d="M0 302 H24 C42 302 42 180 72 180 H96" />
           <circle cx="72" cy="180" r="4" />
         </svg>
 
-        <svg className="product-compiler-connectors product-compiler-connectors-mobile" viewBox="0 0 360 52" fill="none">
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          className="product-compiler-connectors product-compiler-connectors-mobile"
+          viewBox="0 0 360 52"
+          fill="none"
+        >
           <path d="M60 0 V14 C60 30 180 24 180 48" />
           <path d="M180 0 V48" />
           <path d="M300 0 V14 C300 30 180 24 180 48" />
