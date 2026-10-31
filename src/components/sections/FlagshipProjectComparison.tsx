@@ -9,6 +9,7 @@ import {
   flagshipProjectComparisonRecords,
   type FlagshipProjectComparisonRecord,
 } from '../../data/flagshipProjectComparison';
+import { formatLocaleIndex } from '../../features/locale-presentation/formatLocale';
 
 export type FlagshipProjectComparisonProps = PortfolioSlotProps & {
   buildPath: LocalizedPathBuilder;
@@ -78,7 +79,7 @@ const FlagshipProjectComparison = ({
                     aria-hidden="true"
                     className="mt-0.5 font-mono text-[0.58rem] font-black text-primary-600 dark:text-primary-400"
                   >
-                    {String(index + 1).padStart(2, '0')}
+                    {formatLocaleIndex(index + 1, language)}
                   </span>
                   <h4 className="text-base font-black leading-snug text-neutral-950 dark:text-white">
                     {title}

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { LocalizedPathBuilder, PortfolioSlotProps } from '../../contracts/portfolio';
 import { getSignatureInteractionCopy } from '../../data/signatureInteraction';
 import styles from './SignatureInteraction.module.css';
+import { formatLocaleIndex } from '../../features/locale-presentation/formatLocale';
 
 export type SignatureInteractionStableIds = {
   section: string;
@@ -74,7 +75,7 @@ const SignatureInteraction = ({
                     aria-controls={stableIds.detail}
                     onClick={() => selectStep(index)}
                   >
-                    <span className={styles.stepIndex}>{String(index + 1).padStart(2, '0')}</span>
+                    <span className={styles.stepIndex}>{formatLocaleIndex(index + 1, language)}</span>
                     <span className={styles.stepLabel}>{step.label}</span>
                     <span className={styles.stepSummary}>{step.summary}</span>
                   </button>

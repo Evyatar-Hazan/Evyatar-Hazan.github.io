@@ -7,6 +7,8 @@ import {
   isCurrentFocusFresh,
   type CurrentFocusLanguage,
 } from '../../data/currentFocus';
+import { presentCalendarDate } from '../../features/date-presentation/presentCalendarDate';
+import { formatLocaleIndex } from '../../features/locale-presentation/formatLocale';
 
 const copy = {
   en: {
@@ -33,13 +35,9 @@ const copy = {
   },
 } as const;
 
-const formatVerifiedDate = (date: string, language: CurrentFocusLanguage) =>
-  new Intl.DateTimeFormat(language === 'he' ? 'he-IL' : 'en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    timeZone: 'UTC',
-  }).format(new Date(`${date}T00:00:00Z`));
+const formatVerifiedDate = (date: string, language: CurrentFocusLanguage) => (
+  presentCalendarDate(date, { language, style: 'compact' }).text
+);
 
 export type CurrentFocusProps = PortfolioSlotProps & {
   localizedPathBuilder: LocalizedPathBuilder;
@@ -99,7 +97,7 @@ const CurrentFocus = ({
               className="flex min-h-64 flex-col bg-neutral-50 p-6 dark:bg-neutral-950 sm:p-8"
             >
               <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-neutral-500 dark:text-neutral-400">
-                {String(index + 1).padStart(2, '0')} / {languageCopy.outcomePrefix}
+                {formatLocaleIndex(index + 1, language)} / {languageCopy.outcomePrefix}
               </p>
               <h3 className="mt-8 text-2xl font-black tracking-[-0.025em] text-neutral-950 dark:text-white">
                 {item.title[language]}

@@ -6,17 +6,12 @@ import { getBlogPosts } from '../../content/blog/posts';
 import type { BlogLanguage, BlogPost } from '../../content/blog/types';
 import type { ArticleId } from '../../contracts/portfolio';
 import { localizedPath } from '../../routing/portfolioRoutes';
+import { presentCalendarDate } from '../../features/date-presentation/presentCalendarDate';
+import { formatLocaleIndex } from '../../features/locale-presentation/formatLocale';
 import { HomeSectionHeader } from './HomeSectionPrimitives';
 import { cardSurfaceClassName } from '../cardSurface';
 
 const languageFromI18n = (language: string): BlogLanguage => (language === 'he' ? 'he' : 'en');
-
-const formatDate = (date: string, language: BlogLanguage) =>
-  new Intl.DateTimeFormat(language === 'he' ? 'he-IL' : 'en-US', {
-    month: 'short',
-    day: '2-digit',
-    year: 'numeric',
-  }).format(new Date(date));
 
 type ArticleMetaProps = {
   post: BlogPost;
@@ -28,7 +23,7 @@ const ArticleMeta = ({ post, language }: ArticleMetaProps) => {
 
   return (
     <div className="writing-article-meta">
-      <time dateTime={post.date}>{formatDate(post.date, language)}</time>
+      <time dateTime={post.date}>{presentCalendarDate(post.date, { language, style: 'compact' }).text}</time>
       <span aria-hidden="true">/</span>
       <span className="inline-flex items-center gap-1.5">
         <Clock aria-hidden="true" className="h-3.5 w-3.5" />
@@ -50,7 +45,7 @@ type ArticleLinkProps = {
 const ArticleLink = ({ post, language, featured = false, index }: ArticleLinkProps) => {
   const { t } = useTranslation();
   const ArrowIcon = language === 'he' ? ArrowLeft : ArrowRight;
-  const issue = String(index + 1).padStart(2, '0');
+  const issue = formatLocaleIndex(index + 1, language);
   return (
     <article
       className={cardSurfaceClassName('interactive', featured ? 'writing-feature' : 'writing-entry')}
@@ -154,7 +149,7 @@ const BlogPreview = () => {
 
         <div className="writing-log">
           <div className="writing-progress" aria-hidden="true">
-            <span>READING LOG / {String(posts.length).padStart(2, '0')}</span>
+            <span>READING LOG / {formatLocaleIndex(posts.length, language)}</span>
             <div>
               <i />
               <b />

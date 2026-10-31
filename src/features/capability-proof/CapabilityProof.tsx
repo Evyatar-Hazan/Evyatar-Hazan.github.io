@@ -10,6 +10,7 @@ import {
   type CapabilityDemonstration,
   type CapabilityMeasuredOutcome,
 } from './capabilityProofData';
+import { formatLocaleIndex } from '../locale-presentation/formatLocale';
 
 type CapabilityProofProps = PortfolioSlotProps & {
   buildPath: LocalizedPathBuilder;
@@ -148,7 +149,7 @@ export const CapabilityProof = ({ language, className = '', buildPath }: Capabil
             >
               <header>
                 <p className="font-mono text-[0.62rem] font-black tracking-[0.18em] text-primary-700 dark:text-primary-400">
-                  {String(index + 1).padStart(2, '0')} / 07
+                  {formatLocaleIndex(index + 1, language)} / {formatLocaleIndex(groups.length, language)}
                 </p>
                 <h3 className="mt-3 text-xl font-black tracking-tight">{group.label}</h3>
                 <p className="mt-3 text-sm leading-6 text-neutral-600 dark:text-neutral-400">{group.description}</p>
