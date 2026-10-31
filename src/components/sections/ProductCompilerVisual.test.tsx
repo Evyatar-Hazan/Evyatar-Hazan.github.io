@@ -34,6 +34,10 @@ describe('ProductCompilerVisual', () => {
     expect(visual.querySelector('[data-compiler-layer="engineering"]')).toHaveTextContent(labels.engineering);
     expect(visual.querySelector('[data-compiler-output="true"]')).toHaveTextContent(labels.ready);
     expect(visual.querySelectorAll('a, button, input, select, textarea, [tabindex]')).toHaveLength(0);
+    visual.querySelectorAll('.product-compiler-connectors').forEach((connector) => {
+      expect(connector).toHaveAttribute('aria-hidden', 'true');
+      expect(connector).toHaveAttribute('focusable', 'false');
+    });
   });
 
   it('keeps RTL on the scene only and does not mirror text or icons', () => {

@@ -10,6 +10,7 @@ import type {
 import { getFlagshipPortfolioProjects } from '../../data/portfolioProjects';
 import { cardSurfaceClassName } from '../../components/cardSurface';
 import { curatedReadingRoutes, type ReadingRouteContentRef } from './curatedReadingRoutes';
+import { formatLocaleNumber } from '../locale-presentation/formatLocale';
 
 export type CuratedReadingRoutesProps = PortfolioSlotProps & {
   buildPath: LocalizedPathBuilder;
@@ -84,7 +85,7 @@ const ReadingRoutesSection = ({ buildPath, className = '', language }: CuratedRe
                 return (
                   <li key={`${item.ref.kind}:${item.ref.id}`}>
                     <div className="reading-route-step-meta">
-                      <span>{copy.step} {index + 1}/{route.items.length}</span>
+                      <span>{copy.step} {formatLocaleNumber(index + 1, language)}/{formatLocaleNumber(route.items.length, language)}</span>
                       <span aria-hidden="true">·</span>
                       <span>{item.ref.kind === 'article' ? copy.article : copy.project}</span>
                       {(isFirst || isLast) && (

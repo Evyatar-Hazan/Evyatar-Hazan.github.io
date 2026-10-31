@@ -1,5 +1,6 @@
 import type { PortfolioSlotProps } from '../../contracts/portfolio';
 import { getHumanAboutContent } from './content';
+import { formatLocaleIndex } from '../locale-presentation/formatLocale';
 
 const HumanAboutSection = ({ language, className = '' }: PortfolioSlotProps) => {
   const content = getHumanAboutContent(language);
@@ -37,7 +38,7 @@ const HumanAboutSection = ({ language, className = '' }: PortfolioSlotProps) => 
                 aria-hidden="true"
                 className="font-mono text-[0.62rem] font-black tracking-[0.16em] text-primary-700 dark:text-primary-400"
               >
-                {String(index + 1).padStart(2, '0')}
+                {formatLocaleIndex(index + 1, language)}
               </p>
               <h3 className="mt-5 text-lg font-black text-neutral-950 dark:text-white">
                 {pillar.title}

@@ -1,5 +1,6 @@
 import { ExternalLink } from 'lucide-react';
 import type { CaseStudyEvidence as CaseStudyEvidenceData } from '../data/caseStudyEvidence';
+import { presentCalendarDate } from '../features/date-presentation/presentCalendarDate';
 
 type CaseStudyEvidenceLabels = {
   sources: string;
@@ -13,12 +14,9 @@ type CaseStudyEvidenceProps = {
   language: string;
 };
 
-const formatEvidenceDate = (date: string, language: string) => (
-  new Intl.DateTimeFormat(language.startsWith('he') ? 'he-IL' : 'en-US', {
-    dateStyle: 'long',
-    timeZone: 'UTC',
-  }).format(new Date(`${date}T00:00:00.000Z`))
-);
+const formatEvidenceDate = (date: string, language: string) => presentCalendarDate(date, {
+  language: language.startsWith('he') ? 'he' : 'en',
+}).text;
 
 const CaseStudyEvidence = ({ evidence, labels, language }: CaseStudyEvidenceProps) => {
   if (evidence.evidenceStatus === 'unknown') {

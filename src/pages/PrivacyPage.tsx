@@ -3,11 +3,15 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { localizedPath } from '../routing/portfolioRoutes';
+import { presentCalendarDate } from '../features/date-presentation/presentCalendarDate';
+
+const PRIVACY_LAST_UPDATED = '2026-10-30';
 
 const PrivacyPage = () => {
   const { i18n } = useTranslation();
   const isHebrew = i18n.language === 'he';
   const language = isHebrew ? 'he' : 'en';
+  const lastUpdated = presentCalendarDate(PRIVACY_LAST_UPDATED, { language });
 
   usePageSeo({
     title: isHebrew ? 'פרטיות | אביתר חזן' : 'Privacy | Evyatar Hazan',
@@ -80,7 +84,8 @@ const PrivacyPage = () => {
             : 'This page explains in plain language how the site works, which contact paths exist, and where the boundary sits between normal browsing and information you intentionally choose to share.'}
         </p>
         <p className="mt-3 text-sm font-medium text-neutral-500 dark:text-neutral-400">
-          {isHebrew ? 'עודכן לאחרונה: 30 באוקטובר 2026' : 'Last updated: October 30, 2026'}
+          {isHebrew ? 'עודכן לאחרונה: ' : 'Last updated: '}
+          <time dateTime={lastUpdated.dateTime ?? undefined}>{lastUpdated.text}</time>
         </p>
 
         <div className="mt-10 grid min-w-0 gap-5">

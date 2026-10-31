@@ -2,6 +2,7 @@ import { motion, useMotionValue, useReducedMotion, useScroll, useTransform } fro
 import { useLayoutEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getPortfolioCapabilityGroups, type PortfolioLanguage } from '../../data/portfolioCapabilities';
+import { formatLocaleIndex } from '../../features/locale-presentation/formatLocale';
 
 const About = () => {
   const { t, i18n } = useTranslation();
@@ -156,7 +157,7 @@ const About = () => {
               className="about-system-step relative z-10 grid grid-cols-[2.35rem_1fr] gap-3 border border-neutral-300/80 p-4 dark:border-neutral-800 sm:p-5 md:block md:min-h-[10.5rem] md:text-center"
             >
               <span className="relative z-10 grid h-9 w-9 place-items-center rounded-full border border-primary-500 bg-neutral-50 font-mono text-[0.62rem] font-black text-primary-700 shadow-[0_0_0_6px_var(--effect-about-module)] dark:bg-neutral-950 dark:text-primary-400 md:mx-auto md:h-10 md:w-10">
-                {String(index + 1).padStart(2, '0')}
+                {formatLocaleIndex(index + 1, language)}
               </span>
               <div className="pt-0.5 md:pt-5">
                 <h3 className="font-black text-neutral-950 dark:text-white sm:text-lg">{t(`about.loop.${step}.title`)}</h3>
@@ -186,7 +187,7 @@ const About = () => {
             <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
               <div>
                 <p className="font-mono text-[0.62rem] font-bold uppercase tracking-[0.18em] text-neutral-500" translate="no">
-                  CAPABILITY MAP / {String(capabilityGroups.length).padStart(2, '0')}
+                  CAPABILITY MAP / {formatLocaleIndex(capabilityGroups.length, language)}
                 </p>
                 <h3 className="mt-2 text-2xl font-black tracking-tight text-neutral-950 dark:text-white sm:text-3xl">
                   {t('about.techStack')}
@@ -216,8 +217,8 @@ const About = () => {
                 {capabilityGroups.map((group, index) => (
                   <motion.article
                     key={group.id}
-                    data-module-index={String(index + 1).padStart(2, '0')}
-                    data-module-total={String(capabilityGroups.length).padStart(2, '0')}
+                    data-module-index={formatLocaleIndex(index + 1, language)}
+                    data-module-total={formatLocaleIndex(capabilityGroups.length, language)}
                     data-skill-count={group.skills.length}
                     variants={reveal}
                     transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
@@ -226,14 +227,14 @@ const About = () => {
                     <div>
                       <div>
                         <span className="font-mono text-[0.56rem] font-black tracking-[0.15em] text-primary-700 dark:text-primary-400">
-                          MODULE / {String(index + 1).padStart(2, '0')}
+                          MODULE / {formatLocaleIndex(index + 1, language)}
                         </span>
                         <h4 className="mt-1 text-base font-black tracking-tight text-neutral-950 dark:text-white">
                           {group.label}
                         </h4>
                       </div>
                       <span className="about-capability-count" aria-hidden="true">
-                        {String(index + 1).padStart(2, '0')} / {String(capabilityGroups.length).padStart(2, '0')}
+                        {formatLocaleIndex(index + 1, language)} / {formatLocaleIndex(capabilityGroups.length, language)}
                       </span>
                     </div>
 

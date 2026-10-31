@@ -17,6 +17,7 @@ import {
 import { localizedPath } from '../routing/portfolioRoutes';
 import { cardSurfaceClassName } from '../components/cardSurface';
 import BlogDateMeta from '../components/blog/BlogDateMeta';
+import { formatLocaleIndex, formatLocaleNumber } from '../features/locale-presentation/formatLocale';
 
 const languageFromI18n = (language: string): BlogLanguage => (language === 'he' ? 'he' : 'en');
 
@@ -60,7 +61,7 @@ const ArchiveFeature = ({ post, language }: { post: BlogPost; language: BlogLang
   return (
     <article className={cardSurfaceClassName('interactive', 'blog-archive-feature')}>
       <div className="blog-archive-index" aria-hidden="true">
-        <strong>01</strong>
+        <strong>{formatLocaleIndex(1, language)}</strong>
         <span>LEAD ENTRY</span>
       </div>
       <div className="blog-archive-feature-copy">
@@ -82,7 +83,7 @@ const ArchiveFeature = ({ post, language }: { post: BlogPost; language: BlogLang
         </div>
       </div>
       <div className="blog-archive-signal" aria-hidden="true">
-        <span>LIVE NOTE / 01</span>
+        <span>LIVE NOTE / {formatLocaleIndex(1, language)}</span>
         <div><i /><i /><i /></div>
         <strong>{post.tags[0]}</strong>
       </div>
@@ -104,7 +105,7 @@ const ArchiveEntry = ({
   const { t } = useTranslation();
   const reduceMotion = useReducedMotion();
   const ArrowIcon = language === 'he' ? ArrowLeft : ArrowRight;
-  const number = String(index + 1).padStart(2, '0');
+  const number = formatLocaleIndex(index + 1, language);
 
   return (
     <motion.article
@@ -149,6 +150,7 @@ const ArchiveEntry = ({
 const BlogIndex = () => {
   const { t, i18n } = useTranslation();
   const language = languageFromI18n(i18n.language);
+  const formatNumber = (value: number) => formatLocaleNumber(value, language);
   const posts = getBlogPosts(language);
   const [searchParams, setSearchParams] = useSearchParams();
   const [visibleCount, setVisibleCount] = useState(BLOG_LIBRARY_PAGE_SIZE);
@@ -234,7 +236,10 @@ const BlogIndex = () => {
       <section className="blog-archive-shell content-container" aria-labelledby="blog-archive-title">
         <header className="blog-archive-header">
           <div>
-            <p className="blog-archive-kicker"><span />{t('blog.library.kicker', { count: posts.length })}</p>
+            <p className="blog-archive-kicker"><span />{t('blog.library.kicker', {
+              count: posts.length,
+              formattedCount: formatNumber(posts.length),
+            })}</p>
             <h1 id="blog-archive-title" tabIndex={-1}>{t('blog.title')}</h1>
           </div>
           <div className="blog-archive-intro">
@@ -352,8 +357,14 @@ const BlogIndex = () => {
               data-result-count={isFiltering ? filteredPosts.length : posts.length}
             >
               {isFiltering
-                ? t('blog.library.resultsCount', { count: filteredPosts.length })
-                : t('blog.library.totalCount', { count: posts.length })}
+                ? t('blog.library.resultsCount', {
+                  count: filteredPosts.length,
+                  formattedCount: formatNumber(filteredPosts.length),
+                })
+                : t('blog.library.totalCount', {
+                  count: posts.length,
+                  formattedCount: formatNumber(posts.length),
+                })}
             </p>
             {isFiltering && (
               <button type="button" onClick={resetLibrary}>{t('blog.library.reset')}</button>
@@ -374,7 +385,7 @@ const BlogIndex = () => {
             </div>
           ) : (
             <div className="blog-library-empty" role="status">
-              <span aria-hidden="true">00</span>
+              <span aria-hidden="true">{formatLocaleIndex(0, language)}</span>
               <h3>{t('blog.library.emptyTitle')}</h3>
               <p>{t('blog.library.emptyDescription')}</p>
               <button type="button" onClick={resetLibrary}>{t('blog.library.reset')}</button>
@@ -388,7 +399,7 @@ const BlogIndex = () => {
                 onClick={() => setVisibleCount((count) => Math.min(count + BLOG_LIBRARY_PAGE_SIZE, archivePosts.length))}
               >
                 {t('blog.library.loadMore')}
-                <span>{Math.min(BLOG_LIBRARY_PAGE_SIZE, archivePosts.length - visibleCount)}</span>
+                <span>{formatNumber(Math.min(BLOG_LIBRARY_PAGE_SIZE, archivePosts.length - visibleCount))}</span>
               </button>
             </div>
           )}
