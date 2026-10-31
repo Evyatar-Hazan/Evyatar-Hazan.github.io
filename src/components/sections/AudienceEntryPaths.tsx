@@ -4,6 +4,7 @@ import type {
 } from '../../contracts/portfolio';
 import { getAudiencePaths } from '../../data/audiencePaths';
 import { cardSurfaceClassName } from '../cardSurface';
+import { formatLocaleIndex } from '../../features/locale-presentation/formatLocale';
 
 export type AudienceEntryPathsProps = PortfolioSlotProps & {
   buildPath: LocalizedPathBuilder;
@@ -63,7 +64,7 @@ export const AudienceEntryPaths = ({
                 )}
               >
                 <p className="font-mono text-[0.62rem] font-black uppercase tracking-[0.14em] text-primary-700 dark:text-primary-400">
-                  {copy.marker} / {String(index + 1).padStart(2, '0')}
+                  {copy.marker} / {formatLocaleIndex(index + 1, language)}
                 </p>
 
                 <p className="mt-3 text-xs font-black uppercase tracking-[0.08em] text-neutral-500 dark:text-neutral-400">

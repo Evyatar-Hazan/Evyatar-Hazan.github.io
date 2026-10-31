@@ -10,6 +10,8 @@ import {
   type ProjectArchiveLifecycle,
 } from '../data/projectArchive';
 import type { PortfolioLanguage } from '../data/portfolioCapabilities';
+import { presentCalendarDate } from '../features/date-presentation/presentCalendarDate';
+import { formatLocaleIndex, formatLocaleNumber } from '../features/locale-presentation/formatLocale';
 
 export type ProjectArchiveMode = 'short' | 'full';
 
@@ -84,21 +86,18 @@ const copy = {
 const formatPeriod = (
   period: ProjectArchiveEntry['period'],
   labels: (typeof copy)[PortfolioLanguage],
+  language: PortfolioLanguage,
 ) => {
   if (!period) return labels.periodUnknown;
-  if (period.endYear === period.startYear) return String(period.startYear);
+  const startYear = formatLocaleNumber(period.startYear, language, { useGrouping: false });
+  if (period.endYear === period.startYear) return startYear;
   return period.endYear === null
-    ? `${period.startYear}–`
-    : `${period.startYear}–${period.endYear}`;
+    ? `${startYear}–`
+    : `${startYear}–${formatLocaleNumber(period.endYear, language, { useGrouping: false })}`;
 };
 
 const formatVerificationDate = (date: string, language: PortfolioLanguage) => (
-  new Intl.DateTimeFormat(language === 'he' ? 'he-IL' : 'en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    timeZone: 'UTC',
-  }).format(new Date(`${date}T00:00:00.000Z`))
+  presentCalendarDate(date, { language, style: 'compact' }).text
 );
 
 const ProjectArchiveLinks = ({
@@ -228,7 +227,7 @@ export const ProjectArchive = ({
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="font-mono text-[0.62rem] font-black text-primary-700 dark:text-primary-400">
-                    {String(index + 1).padStart(2, '0')}
+                    {formatLocaleIndex(index + 1, language)}
                   </span>
                   <h4 id={entryTitleId} className="text-lg font-black text-neutral-950 dark:text-white">
                     {entry.title}
@@ -252,7 +251,7 @@ export const ProjectArchive = ({
               <dl className="grid grid-cols-2 gap-x-4 gap-y-4 text-sm">
                 <div>
                   <dt className="font-mono text-[0.58rem] font-black uppercase tracking-[0.1em] text-neutral-500">{labels.period}</dt>
-                  <dd className="mt-1 font-bold text-neutral-800 dark:text-neutral-200">{formatPeriod(entry.period, labels)}</dd>
+                  <dd className="mt-1 font-bold text-neutral-800 dark:text-neutral-200">{formatPeriod(entry.period, labels, language)}</dd>
                 </div>
                 <div>
                   <dt className="font-mono text-[0.58rem] font-black uppercase tracking-[0.1em] text-neutral-500">{labels.category}</dt>

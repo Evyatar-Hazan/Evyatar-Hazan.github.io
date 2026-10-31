@@ -7,6 +7,7 @@ import {
   buildContactUrl,
   contactContextByServiceEngagement,
 } from '../../features/contact/contactIntent';
+import { formatLocaleIndex } from '../../features/locale-presentation/formatLocale';
 
 type ServiceEngagementsProps = PortfolioSlotProps & {
   buildPath: LocalizedPathBuilder;
@@ -94,7 +95,7 @@ export const ServiceEngagements = ({
 
         <ol className="mt-8 grid border-t border-neutral-300/80 dark:border-neutral-800 lg:grid-cols-3">
           {engagements.map((engagement, index) => {
-            const number = String(index + 1).padStart(2, '0');
+            const number = formatLocaleIndex(index + 1, language);
             const titleId = `service-engagement-${engagement.id}`;
 
             return (

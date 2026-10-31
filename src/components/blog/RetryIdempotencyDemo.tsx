@@ -1,6 +1,7 @@
 import { useId, useState } from 'react';
 import type { PortfolioSlotProps } from '../../contracts/portfolio';
 import styles from './RetryIdempotencyDemo.module.css';
+import { formatLocaleNumber } from '../../features/locale-presentation/formatLocale';
 
 type DemoPhase = 0 | 1 | 2;
 
@@ -101,6 +102,7 @@ type OutcomeCardProps = {
   copy: DemoCopy['unprotected'];
   deliveries: number;
   eventLogLabel: string;
+  language: PortfolioSlotProps['language'];
   phase: DemoPhase;
   records: readonly string[];
   recordsLabel: string;
@@ -113,6 +115,7 @@ const OutcomeCard = ({
   copy: cardCopy,
   deliveries,
   eventLogLabel,
+  language,
   phase,
   records,
   recordsLabel,
@@ -140,11 +143,11 @@ const OutcomeCard = ({
       <dl className={styles.metrics}>
         <div>
           <dt>{recordsLabel}</dt>
-          <dd>{records.length}</dd>
+          <dd>{formatLocaleNumber(records.length, language)}</dd>
         </div>
         <div>
           <dt>{deliveriesLabel}</dt>
-          <dd>{deliveries}</dd>
+          <dd>{formatLocaleNumber(deliveries, language)}</dd>
         </div>
       </dl>
 
@@ -213,6 +216,7 @@ const RetryIdempotencyDemo = ({ language, className }: PortfolioSlotProps) => {
           copy={text.unprotected}
           deliveries={deliveries}
           eventLogLabel={text.eventLog}
+          language={language}
           phase={phase}
           records={unprotectedRecords}
           recordsLabel={text.records}
@@ -223,6 +227,7 @@ const RetryIdempotencyDemo = ({ language, className }: PortfolioSlotProps) => {
           copy={text.protected}
           deliveries={deliveries}
           eventLogLabel={text.eventLog}
+          language={language}
           phase={phase}
           records={protectedRecords}
           recordsLabel={text.records}
