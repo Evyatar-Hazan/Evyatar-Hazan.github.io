@@ -1,5 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import worker from '../public/_worker.js';
+import worker, {
+  baselineSecurityHeaders,
+  documentContentSecurityPolicy,
+} from '../public/_worker.js';
 
 const approvedOrigin = 'https://evyatar-hazan.github.io';
 
@@ -17,6 +20,12 @@ const environment = () => ({
   ASSETS: { fetch: vi.fn() },
 });
 
+const expectBaselineSecurityHeaders = (response) => {
+  for (const [name, value] of Object.entries(baselineSecurityHeaders)) {
+    expect(response.headers.get(name)).toBe(value);
+  }
+};
+
 describe('contact funnel advanced-mode Worker route', () => {
   it('writes only the approved event to Analytics Engine', async () => {
     const env = environment();
@@ -26,6 +35,7 @@ describe('contact funnel advanced-mode Worker route', () => {
     );
 
     expect(result.status).toBe(204);
+    expectBaselineSecurityHeaders(result);
     expect(result.headers.get('Access-Control-Allow-Origin')).toBe(approvedOrigin);
     expect(env.CONTACT_FUNNEL.writeDataPoint).toHaveBeenCalledWith({
       indexes: ['contact_submit_success'],
@@ -62,17 +72,51 @@ describe('contact funnel advanced-mode Worker route', () => {
       env,
     );
     expect(result.status).toBe(204);
+    expectBaselineSecurityHeaders(result);
     expect(result.headers.get('Access-Control-Allow-Origin')).toBe('https://evyatarhazan.com');
     expect(env.CONTACT_FUNNEL.writeDataPoint).not.toHaveBeenCalled();
   });
 
   it('preserves the existing asset fallback for other routes', async () => {
     const env = environment();
-    const assetResponse = new Response('asset');
+    const assetResponse = new Response('asset', {
+      headers: {
+        'Cache-Control': 'public, max-age=600',
+        'Content-Type': 'text/html; charset=utf-8',
+      },
+    });
     env.ASSETS.fetch.mockResolvedValue(assetResponse);
 
     const request = new Request('https://evyatarhazan.com/en/privacy/');
-    expect(await worker.fetch(request, env)).toBe(assetResponse);
+    const result = await worker.fetch(request, env);
+
+    expect(await result.text()).toBe('asset');
+    expect(result.headers.get('Cache-Control')).toBe('public, max-age=600');
+    expect(result.headers.get('Content-Type')).toBe('text/html; charset=utf-8');
+    expect(result.headers.get('Content-Security-Policy')).toBe(documentContentSecurityPolicy);
+    expectBaselineSecurityHeaders(result);
     expect(env.ASSETS.fetch).toHaveBeenCalledWith(request);
+  });
+
+  it('adds baseline headers without attaching a document CSP to JSON API errors', async () => {
+    const env = environment();
+    const result = await worker.fetch(requestFor({ event: 'not-approved' }), env);
+
+    expect(result.status).toBe(400);
+    expect(result.headers.get('Content-Type')).toBe('application/json');
+    expect(result.headers.get('Content-Security-Policy')).toBeNull();
+    expectBaselineSecurityHeaders(result);
+  });
+
+  it('adds baseline headers to Worker redirects while preserving their location', async () => {
+    const env = environment();
+    const result = await worker.fetch(
+      new Request('https://evyatarhazan.com/blog/?lang=he&ref=legacy', { redirect: 'manual' }),
+      env,
+    );
+
+    expect(result.status).toBe(301);
+    expect(result.headers.get('Location')).toBe('https://evyatarhazan.com/he/blog/?ref=legacy');
+    expectBaselineSecurityHeaders(result);
   });
 });
