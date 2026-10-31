@@ -27,7 +27,7 @@ export const documentContentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'none'",
   "object-src 'none'",
-  "script-src 'self' 'sha256-lfEQ4MY7ECA+kkdDrjBPj69IRZcsK/XKicR4Bu0TeKg='",
+  "script-src 'self' 'sha256-lfEQ4MY7ECA+kkdDrjBPj69IRZcsK/XKicR4Bu0TeKg=' https://static.cloudflareinsights.com/beacon.min.js",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
