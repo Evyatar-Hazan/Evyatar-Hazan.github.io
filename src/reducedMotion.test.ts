@@ -13,9 +13,9 @@ describe('FIX-086 reduced-motion contract', () => {
 
   it('applies one global CSS fallback to elements and pseudo-elements', () => {
     expect(stylesheet).toContain(':where(*, *::before, *::after)');
-    expect(stylesheet).toContain('animation-duration: 0.01ms !important');
+    expect(stylesheet).toContain('animation-duration: 0s !important');
     expect(stylesheet).toContain('animation-iteration-count: 1 !important');
-    expect(stylesheet).toContain('transition-duration: 0.01ms !important');
+    expect(stylesheet).toContain('transition-duration: 0s !important');
     expect(stylesheet).toContain('scroll-behavior: auto !important');
   });
 
