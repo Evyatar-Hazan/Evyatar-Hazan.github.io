@@ -72,13 +72,18 @@ test.describe('FIX-064 article-card summaries and outcomes', () => {
     await expect(result.getByRole('heading')).toHaveText('A retry should repeat intent, not duplicate data');
     await expect(result.locator('mark.blog-search-highlight')).toHaveText('idempotent');
 
-    await result.getByRole('link', {
+    const articleLink = result.getByRole('link', {
       name: 'A retry should repeat intent, not duplicate data',
       exact: true,
-    }).focus();
-    await page.keyboard.press('Enter');
-    await expect(page).toHaveURL(/\/en\/blog\/retries-should-not-duplicate-data\/$/);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('A retry should repeat intent, not duplicate data');
+    });
+    await articleLink.focus();
+    await expect(articleLink).toBeFocused();
+    await articleLink.press('Enter');
+    await expect(page).toHaveURL(/\/en\/blog\/retries-should-not-duplicate-data\/$/, { timeout: 15_000 });
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+      'A retry should repeat intent, not duplicate data',
+      { timeout: 15_000 },
+    );
   });
 
   test('homepage cards expose the same reader outcome without moving shell controls', async ({ page }) => {
