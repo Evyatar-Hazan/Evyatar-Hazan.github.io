@@ -2,7 +2,7 @@ import type {
   MouseEventHandler,
   ReactNode,
 } from 'react';
-import { motion, type MotionStyle } from 'framer-motion';
+import { motion, type MotionStyle, useReducedMotion } from 'framer-motion';
 import type {
   LocalizedPathBuilder,
   PortfolioRouteTarget,
@@ -111,13 +111,16 @@ export const LocalizedHeroLayout = ({
   visual,
   className,
   copyStyle,
-}: LocalizedHeroLayoutProps) => (
-  <div
+}: LocalizedHeroLayoutProps) => {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <div
     className={joinClassNames(styles.layout, className)}
     data-language={language}
     data-testid="localized-hero-layout"
   >
-    <motion.div className={styles.copy} style={copyStyle}>
+    <motion.div className={styles.copy} style={reduceMotion ? undefined : copyStyle}>
       <p className={styles.availability}>
         <span className={styles.availabilityIndicator} aria-hidden="true" />
         <span>{copy.availability}</span>
@@ -169,7 +172,8 @@ export const LocalizedHeroLayout = ({
     </motion.div>
 
     {visual && <div className={styles.visual}>{visual}</div>}
-  </div>
-);
+    </div>
+  );
+};
 
 export default LocalizedHeroLayout;
