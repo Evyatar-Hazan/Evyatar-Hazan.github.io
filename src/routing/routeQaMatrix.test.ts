@@ -31,7 +31,11 @@ describe('FIX-003 route QA matrix', () => {
     expect(routeQaSharedChecks).toEqual([
       'direct-load',
       'page-identity',
+      'single-banner-landmark',
       'single-main-landmark',
+      'single-contentinfo-landmark',
+      'named-navigation-landmarks',
+      'skip-link',
       'primary-content',
       'language-and-direction',
       'light-and-dark-theme',
