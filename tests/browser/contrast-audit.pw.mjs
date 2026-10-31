@@ -30,11 +30,11 @@ test.describe('FIX-081 WCAG AA contrast audit', () => {
       localStorage.setItem('i18nextLng', language);
       localStorage.setItem('theme', theme);
     }, scenario);
+    await page.addInitScript({ content: axe.source });
 
     for (const route of routes) {
       await page.goto(`/${scenario.language}${route}`, { waitUntil: 'networkidle' });
       await page.locator('#main-content').waitFor({ state: 'visible' });
-      await page.addScriptTag({ content: axe.source });
 
       const audit = await page.evaluate(async () => window.axe.run(document, {
         runOnly: { type: 'rule', values: ['color-contrast'] },

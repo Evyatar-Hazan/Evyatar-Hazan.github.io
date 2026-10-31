@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { assertSitemapRouteParity } from './sitemap-route-parity.mjs';
@@ -130,6 +131,19 @@ const removeAdSenseScript = (html) => html.replace(
 );
 
 const rootHtml = await readFile(path.join(distDir, 'index.html'), 'utf8');
+const legacyRedirectScript = "const route=document.body.dataset.legacyRoute;const params=new URLSearchParams(location.search);const requestedLanguage=params.get('lang');const language=requestedLanguage==='he'||requestedLanguage==='en'?requestedLanguage:'en';params.delete('lang');const query=params.toString();location.replace('/'+language+route+(query?'?'+query:'')+location.hash);";
+const legacyRedirectScriptHash = createHash('sha256')
+  .update(legacyRedirectScript)
+  .digest('base64');
+const contentSecurityPolicyMeta = rootHtml.match(
+  /<meta http-equiv="Content-Security-Policy"[\s\S]*?\/>/u,
+)?.[0];
+if (!contentSecurityPolicyMeta) {
+  throw new Error('The root document must declare the shared Content Security Policy.');
+}
+if (!contentSecurityPolicyMeta.includes(`'sha256-${legacyRedirectScriptHash}'`)) {
+  throw new Error('The Content Security Policy must allow the exact legacy redirect script hash.');
+}
 
 const blogSource = await readFile(path.join(srcDir, 'content', 'blog', 'metadata.ts'), 'utf8');
 const editorialRankBySlug = new Map(
@@ -714,21 +728,16 @@ const buildLegacyRedirect = (routePath) => {
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  ${contentSecurityPolicyMeta}
   <meta name="robots" content="noindex, follow" />
   <link rel="canonical" href="${absoluteUrl(target)}" />
   <meta http-equiv="refresh" content="0; url=${target}" />
   <title>Redirecting | Evyatar Hazan</title>
 </head>
-<body>
+<body data-legacy-route="${escapeHtml(normalizedRoutePath)}">
   <p>This page moved to <a href="${target}">${target}</a>.</p>
-  <script>
-    const params = new URLSearchParams(location.search);
-    const requestedLanguage = params.get('lang');
-    const language = requestedLanguage === 'he' || requestedLanguage === 'en' ? requestedLanguage : 'en';
-    params.delete('lang');
-    const query = params.toString();
-    location.replace('/' + language + ${JSON.stringify(normalizedRoutePath)} + (query ? '?' + query : '') + location.hash);
-  </script>
+  <script>${legacyRedirectScript}</script>
 </body>
 </html>
 `;

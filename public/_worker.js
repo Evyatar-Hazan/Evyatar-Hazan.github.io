@@ -23,6 +23,44 @@ const approvedContactFunnelOrigins = new Set([
   'https://evyatar-hazan.github.io',
 ]);
 
+export const documentContentSecurityPolicy = [
+  "default-src 'self'",
+  "base-uri 'none'",
+  "object-src 'none'",
+  "script-src 'self' 'sha256-lfEQ4MY7ECA+kkdDrjBPj69IRZcsK/XKicR4Bu0TeKg='",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "font-src 'self' data:",
+  "connect-src 'self' https://evyatarhazan.com https://formsubmit.co",
+  "form-action 'self' https://formsubmit.co",
+  "frame-src 'none'",
+  "frame-ancestors 'none'",
+].join('; ');
+
+export const baselineSecurityHeaders = {
+  'Permissions-Policy': 'camera=(), geolocation=(), microphone=()',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+};
+
+export const withSecurityHeaders = (response) => {
+  const headers = new Headers(response.headers);
+  for (const [name, value] of Object.entries(baselineSecurityHeaders)) {
+    headers.set(name, value);
+  }
+
+  if (headers.get('Content-Type')?.toLowerCase().startsWith('text/html')) {
+    headers.set('Content-Security-Policy', documentContentSecurityPolicy);
+  }
+
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+};
+
 const contactFunnelCorsHeaders = (origin) => ({
   'Access-Control-Allow-Origin': origin,
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -85,7 +123,7 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname === '/api/contact-funnel') {
-      return handleContactFunnelRequest(request, env);
+      return withSecurityHeaders(await handleContactFunnelRequest(request, env));
     }
 
     const legacyPath = canonicalLegacyPath(url.pathname);
@@ -98,9 +136,9 @@ export default {
 
       url.pathname = `/${language}${legacyPath}`;
       url.searchParams.delete('lang');
-      return Response.redirect(url.toString(), 301);
+      return withSecurityHeaders(Response.redirect(url.toString(), 301));
     }
 
-    return env.ASSETS.fetch(request);
+    return withSecurityHeaders(await env.ASSETS.fetch(request));
   },
 };
