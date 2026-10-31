@@ -81,13 +81,15 @@ test.describe('FIX-025 canonical section spacing', () => {
 
   test('keeps case-study chapters on the standard cadence', async ({ page }) => {
     await page.goto('/en/projects/nis_boutique/');
-    expectTokenSpacing(await readSpacing(page, [
+    const targets = [
       { selector: '#visual-proof', startToken: 'compact', endToken: 'standard' },
       { selector: '#challenge', token: 'standard' },
       { selector: '#decisions', token: 'standard' },
       { selector: '#system', token: 'standard' },
       { selector: '#evidence', token: 'standard' },
-    ]));
+    ];
+    await waitForTargets(page, targets);
+    expectTokenSpacing(await readSpacing(page, targets));
   });
 
   test('keeps homepage boundaries margin-free in RTL', async ({ page }) => {
