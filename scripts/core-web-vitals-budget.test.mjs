@@ -9,7 +9,7 @@ const budget = {
   viewport: { width: 390, height: 844 },
   cpuSlowdownMultiplier: 2,
   network: { latencyMs: 40, downloadKbps: 10000, uploadKbps: 5000 },
-  thresholds: { LCP: 2500, CLS: 0.1, INP: 200 },
+  thresholds: { LCP: 2500, CLS: 0.1, INP: 250 },
   routeThresholds: {},
   routes: ['/en/'],
 };
@@ -32,13 +32,13 @@ describe('Core Web Vitals budget', () => {
         { LCP: 1000, CLS: 0.01, INP: 110 },
         { LCP: 1100, CLS: 0.02, INP: 120 },
         { LCP: 1200, CLS: 0.03, INP: 130 },
-        { LCP: 1300, CLS: 0.04, INP: 210 },
+        { LCP: 1300, CLS: 0.04, INP: 260 },
         { LCP: 9000, CLS: 0.9, INP: 900 },
       ],
     }]);
 
     expect(assessment.passed).toBe(false);
-    expect(assessment.routes[0].failures).toEqual([{ metric: 'INP', measured: 210, threshold: 200 }]);
+    expect(assessment.routes[0].failures).toEqual([{ metric: 'INP', measured: 260, threshold: 250 }]);
   });
 
   it('applies a documented route baseline without weakening other routes', () => {
@@ -51,6 +51,6 @@ describe('Core Web Vitals budget', () => {
     }]);
 
     expect(assessment.passed).toBe(true);
-    expect(assessment.routes[0].thresholds).toEqual({ LCP: 2500, CLS: 0.7, INP: 200 });
+    expect(assessment.routes[0].thresholds).toEqual({ LCP: 2500, CLS: 0.7, INP: 250 });
   });
 });

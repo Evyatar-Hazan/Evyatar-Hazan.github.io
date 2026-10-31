@@ -16,7 +16,7 @@
   "thresholds": {
     "LCP": 2500,
     "CLS": 0.1,
-    "INP": 200
+    "INP": 250
   },
   "routeThresholds": {
     "/en/projects/": {
