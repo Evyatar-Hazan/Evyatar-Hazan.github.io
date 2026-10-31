@@ -12,6 +12,7 @@ node_modules
 experiments/portfolio-experience-v2/.npmrc
 dist
 dist-ssr
+public/responsive/
 *.local
 output/
 .playwright-cli/

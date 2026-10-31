@@ -1,0 +1,7 @@
+.responsive-picture {
+  display: block;
+}
+
+.responsive-picture > img {
+  display: block;
+}
