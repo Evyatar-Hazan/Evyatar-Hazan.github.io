@@ -355,6 +355,8 @@
     "updatedOn": "Updated",
     "articleTopics": "Article topics",
     "articleOutline": "Article map",
+    "articleOutlineDesktop": "Article map, desktop",
+    "articleOutlineMobile": "Article map, mobile",
     "moreWriting": "Continue reading",
     "newerPost": "Previous entry",
     "olderPost": "Next entry",

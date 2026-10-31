@@ -182,7 +182,7 @@ const BlogPost = () => {
               <div><motion.i style={{ scaleY: reduceMotion ? 1 : progressScale }} /></div>
             </div>
             {hasArticleOutline && (
-              <nav aria-label={t('blog.articleOutline')}>
+              <nav aria-label={t('blog.articleOutlineDesktop')}>
                 <span>{t('blog.articleOutline')}</span>
                 <ArticleOutlineLinks activeHeading={activeHeading} headings={headings} />
               </nav>
@@ -192,7 +192,7 @@ const BlogPost = () => {
           {hasArticleOutline && (
             <details className="blog-mobile-outline">
               <summary>{t('blog.articleOutline')}</summary>
-              <nav aria-label={t('blog.articleOutline')}>
+              <nav aria-label={t('blog.articleOutlineMobile')}>
                 <ArticleOutlineLinks activeHeading={activeHeading} headings={headings} />
               </nav>
             </details>

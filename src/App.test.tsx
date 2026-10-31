@@ -66,8 +66,17 @@ describe('App', () => {
       expect(window.location.pathname).toBe(expectedPath);
       expect(document.documentElement).toHaveAttribute('lang', language);
       expect(document.documentElement).toHaveAttribute('dir', language === 'he' ? 'rtl' : 'ltr');
+      expect(document.querySelectorAll('header.system-rail-header')).toHaveLength(1);
       expect(document.querySelectorAll('main')).toHaveLength(1);
+      expect(document.querySelectorAll('footer.closing-dock')).toHaveLength(1);
       expect(document.querySelector('#main-content')).toContainElement(document.querySelector(readySelector));
+      expect(document.querySelectorAll('.skip-link[href="#main-content"]')).toHaveLength(1);
+
+      const navigationLabels = [...document.querySelectorAll('nav')].map((navigation) => (
+        navigation.getAttribute('aria-label') ?? navigation.getAttribute('aria-labelledby')
+      ));
+      expect(navigationLabels.every(Boolean)).toBe(true);
+      expect(new Set(navigationLabels).size).toBe(navigationLabels.length);
       expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute(
         'href',
         `https://evyatarhazan.com${expectedPath}`,
