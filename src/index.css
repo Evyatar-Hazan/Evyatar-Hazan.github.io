@@ -3667,6 +3667,10 @@ body {
   gap: 0.9rem;
 }
 
+.blog-library-filter-group {
+  min-width: 0;
+}
+
 .blog-library-search > label,
 .blog-library-filter-group > p {
   display: block;
@@ -5171,6 +5175,71 @@ body {
     grid-template-columns: 1.75rem minmax(0, 1fr) auto;
   }
 
+}
+
+@media (max-width: 359px) {
+  .system-rail-nav {
+    inset-inline: auto;
+    inset-inline-start: 0;
+    width: 100vw;
+    box-sizing: border-box;
+    padding-inline: 0.125rem;
+  }
+
+  .system-rail,
+  [dir='rtl'] .system-rail {
+    gap: 0;
+    padding-inline: 0.125rem;
+  }
+
+  .system-rail-context {
+    display: none;
+  }
+
+  .system-rail-mobile-actions {
+    gap: 0;
+  }
+
+  .closing-dock {
+    padding-inline: 0.5rem;
+  }
+
+  .closing-dock-lead {
+    padding: 0.75rem;
+  }
+
+  .closing-dock-cta {
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+    padding-inline: 0.65rem;
+    overflow-wrap: anywhere;
+    text-align: center;
+  }
+
+  .closing-dock-links,
+  .closing-dock-socials,
+  .closing-dock-system {
+    padding-inline: 0.75rem;
+  }
+
+  .closing-dock-navigation a {
+    min-width: 0;
+    padding-inline: 0.45rem;
+    overflow-wrap: anywhere;
+  }
+
+  .about-dossier .content-container *,
+  .about-dossier .content-container *::before,
+  .about-dossier .content-container *::after {
+    min-inline-size: 0;
+  }
+
+  .about-dossier .content-container a,
+  .about-dossier .content-container button {
+    max-inline-size: 100%;
+    overflow-wrap: anywhere;
+  }
 }
 
 @media (max-width: 767px) and (max-height: 620px) {
