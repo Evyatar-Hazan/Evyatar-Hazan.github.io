@@ -1,5 +1,6 @@
 import { useId, useState } from 'react';
 import type { LocalizedPathBuilder, PortfolioSlotProps } from '../../contracts/portfolio';
+import { getSystemAnnouncementProps } from '../../accessibility/systemAnnouncements';
 import { craftLabContent } from './craftLabContent';
 import './CraftLab.css';
 
@@ -41,14 +42,14 @@ const UsefulErrorExperiment = ({ language }: Pick<CraftLabProps, 'language'>) =>
         </dl>
 
         {state === 'failed' && (
-          <div className="craft-lab__notice craft-lab__notice--error" role="alert">
+          <div className="craft-lab__notice craft-lab__notice--error" {...getSystemAnnouncementProps('error')}>
             <strong>{content.error.alertTitle}</strong>
             <p>{content.error.alertBody}</p>
             <p className="craft-lab__preserved">{content.error.preserved}</p>
           </div>
         )}
         {state === 'recovered' && (
-          <p className="craft-lab__notice craft-lab__notice--success" role="status">
+          <p className="craft-lab__notice craft-lab__notice--success" {...getSystemAnnouncementProps('success')}>
             {content.error.recovered}
           </p>
         )}
@@ -145,7 +146,16 @@ const MediaUploadExperiment = ({ language }: Pick<CraftLabProps, 'language'>) =>
               {content.upload.progressLabel}
             </label>
             <progress id={`${progressId}-bar`} aria-labelledby={progressId} max="100" value={uploadProgress[state]} />
-            <p className="craft-lab__upload-status" aria-live="polite">{content.upload.status[state]}</p>
+            <p
+              className="craft-lab__upload-status"
+              {...(state === 'failed'
+                ? getSystemAnnouncementProps('error')
+                : state === 'ready'
+                  ? getSystemAnnouncementProps('success')
+                  : {})}
+            >
+              {content.upload.status[state]}
+            </p>
           </>
         )}
 

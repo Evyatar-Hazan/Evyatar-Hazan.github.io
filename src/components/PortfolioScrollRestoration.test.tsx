@@ -100,6 +100,35 @@ describe('PortfolioScrollRestoration', () => {
     expect(scrollY).toBe(640);
   });
 
+  it('moves managed route-entry focus from a lazy fallback to the resolved main landmark', () => {
+    const frames: FrameRequestCallback[] = [];
+    Object.defineProperties(window, {
+      requestAnimationFrame: {
+        configurable: true,
+        value: (callback: FrameRequestCallback) => {
+          frames.push(callback);
+          return frames.length;
+        },
+      },
+      cancelAnimationFrame: { configurable: true, value: vi.fn() },
+    });
+
+    const route = (state: 'fallback' | 'resolved') => (
+      <MemoryRouter initialEntries={['/projects']}>
+        <PortfolioScrollRestoration />
+        <main id="main-content" tabIndex={-1} data-testid={state} />
+      </MemoryRouter>
+    );
+    const { rerender } = render(route('fallback'));
+
+    act(() => frames.shift()?.(0));
+    expect(screen.getByTestId('fallback')).toHaveFocus();
+
+    rerender(route('resolved'));
+    act(() => frames.shift()?.(16));
+    expect(screen.getByTestId('resolved')).toHaveFocus();
+  });
+
   it('keeps retrying while lazy content is still expanding the page', async () => {
     const frames: FrameRequestCallback[] = [];
     let scrollHeight = 900;
