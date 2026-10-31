@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { usePageSeo } from '../hooks/usePageSeo';
+import { getStaticRouteSeo } from '../data/routeSeo';
 import ContactBriefFeature from '../features/contact/ContactBriefFeature';
 import { localizedPath } from '../routing/portfolioRoutes';
 import {
@@ -29,13 +30,7 @@ const ContactPage = () => {
     navigate(buildContactUrl(language, nextContext));
   };
 
-  usePageSeo({
-    title: isHebrew ? 'יצירת קשר | אביתר חזן' : 'Contact | Evyatar Hazan',
-    description: isHebrew
-      ? 'מרחב פנייה תלוי־הקשר לפרויקט, משרה או שיתוף פעולה, עם WhatsApp, אימייל ו-LinkedIn ישירים ותקציר אופציונלי שנבדק לפני שימוש.'
-      : 'A context-aware inquiry workspace for a project, role, or collaboration, with direct WhatsApp, email, and LinkedIn contact plus an optional reviewed brief.',
-    path: '/contact/'
-  });
+  usePageSeo(getStaticRouteSeo('contact', language));
 
   return (
     <main id="main-content" tabIndex={-1} className="min-h-screen pt-20">

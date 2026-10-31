@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { projects } from './data/profile';
 import { caseStudyStoryProjectIds } from './data/caseStudyStories';
 import { homepageSectionPurposes } from './contracts/portfolio';
@@ -250,8 +250,10 @@ describe('App', () => {
     fireEvent.click(screen.getByRole('button', { name: 'shell.menu.open' }));
     expect(screen.getByRole('dialog')).toBeInTheDocument();
 
-    window.history.pushState({}, '', '/en/blog/');
-    window.dispatchEvent(new PopStateEvent('popstate'));
+    act(() => {
+      window.history.pushState({}, '', '/en/blog/');
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    });
 
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
   });

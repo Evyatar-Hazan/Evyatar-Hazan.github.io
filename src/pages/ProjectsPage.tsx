@@ -5,6 +5,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import type { ProjectArchiveEntry } from '../data/projectArchive';
 import { getProjectArchiveEntries } from '../data/projectArchive';
 import { getPortfolioCapabilityGroups } from '../data/portfolioCapabilities';
+import { getStaticRouteSeo } from '../data/routeSeo';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { localizedPath } from '../routing/portfolioRoutes';
 import './ProjectsPage.css';
@@ -101,11 +102,7 @@ const ProjectsPage = () => {
   const liveProductCount = entries.filter((entry) => entry.liveUrl).length;
   const formatNumber = (value: number) => formatLocaleNumber(value, language);
 
-  usePageSeo({
-    title: t('projectsHub.seoTitle'),
-    description: t('projectsHub.seoDescription'),
-    path: '/projects/',
-  });
+  usePageSeo(getStaticRouteSeo('projects', language));
 
   useEffect(() => {
     const shouldNormalize = rawCategory !== category
