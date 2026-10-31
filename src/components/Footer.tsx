@@ -9,6 +9,7 @@ import {
   primaryNavigation,
   secondaryNavigation,
 } from '../navigation/portfolioNavigation';
+import { formatLocaleNumber } from '../features/locale-presentation/formatLocale';
 
 const Footer = () => {
   const { t, i18n } = useTranslation();
@@ -17,6 +18,7 @@ const Footer = () => {
   const appVersion = import.meta.env.VITE_APP_VERSION;
   const isHebrew = i18n.language === 'he';
   const language = isHebrew ? 'he' : 'en';
+  const presentedYear = formatLocaleNumber(currentYear, language, { useGrouping: false });
   const ArrowIcon = isHebrew ? ArrowUpLeft : ArrowUpRight;
   const activeId = activeNavigationId(location.pathname, location.hash);
   
@@ -103,7 +105,7 @@ const Footer = () => {
         </div>
 
         <div className="closing-dock-system">
-          <p>{t('footer.copyright', { year: currentYear })}</p>
+          <p>{t('footer.copyright', { year: presentedYear })}</p>
           <div><span>PORTFOLIO SYSTEM</span><i /> <span>VERSION {appVersion}</span></div>
         </div>
       </div>

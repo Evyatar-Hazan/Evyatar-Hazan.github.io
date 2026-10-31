@@ -10,6 +10,7 @@ import { localizedPath } from '../routing/portfolioRoutes';
 import './ProjectsPage.css';
 import { buildContactUrl } from '../features/contact/contactIntent';
 import ProjectCardFacts from '../components/ProjectCardFacts';
+import { formatLocaleIndex, formatLocaleNumber } from '../features/locale-presentation/formatLocale';
 
 const CATEGORY_PARAM = 'category';
 const CAPABILITY_PARAM = 'capability';
@@ -98,6 +99,7 @@ const ProjectsPage = () => {
   const featuredEntries = entries.filter((entry) => entry.featured);
   const caseStudyCount = entries.filter((entry) => entry.caseStudyUrl).length;
   const liveProductCount = entries.filter((entry) => entry.liveUrl).length;
+  const formatNumber = (value: number) => formatLocaleNumber(value, language);
 
   usePageSeo({
     title: t('projectsHub.seoTitle'),
@@ -160,9 +162,9 @@ const ProjectsPage = () => {
           <p>{t('projectsHub.introduction')}</p>
         </div>
         <dl aria-label={t('projectsHub.countsLabel')}>
-          <div><dt>{t('projectsHub.projectsCount')}</dt><dd>{entries.length}</dd></div>
-          <div><dt>{t('projectsHub.caseStudiesCount')}</dt><dd>{caseStudyCount}</dd></div>
-          <div><dt>{t('projectsHub.liveProductsCount')}</dt><dd>{liveProductCount}</dd></div>
+          <div><dt>{t('projectsHub.projectsCount')}</dt><dd>{formatNumber(entries.length)}</dd></div>
+          <div><dt>{t('projectsHub.caseStudiesCount')}</dt><dd>{formatNumber(caseStudyCount)}</dd></div>
+          <div><dt>{t('projectsHub.liveProductsCount')}</dt><dd>{formatNumber(liveProductCount)}</dd></div>
         </dl>
       </header>
 
@@ -177,7 +179,7 @@ const ProjectsPage = () => {
         <div className="projects-hub-featured">
           {featuredEntries.map((entry, index) => (
             <article key={entry.id} data-hub-featured-project={entry.id} data-project-card={entry.id}>
-              <div className="projects-hub-featured-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</div>
+              <div className="projects-hub-featured-index" aria-hidden="true">{formatLocaleIndex(index + 1, language)}</div>
               <div className="projects-hub-featured-main">
                 <div className="projects-hub-project-meta">
                   <span>{entry.category}</span>
@@ -236,7 +238,10 @@ const ProjectsPage = () => {
             </select>
           </label>
           <p className="projects-hub-result-count" aria-live="polite">
-            {t('projectsHub.resultCount', { count: filteredEntries.length })}
+            {t('projectsHub.resultCount', {
+              count: filteredEntries.length,
+              formattedCount: formatNumber(filteredEntries.length),
+            })}
           </p>
         </div>
 
@@ -244,7 +249,7 @@ const ProjectsPage = () => {
           <ol className="projects-hub-list">
             {filteredEntries.map((entry, index) => (
               <li key={entry.id} data-project-id={entry.id} data-project-card={entry.id}>
-                <span className="projects-hub-list-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                <span className="projects-hub-list-index" aria-hidden="true">{formatLocaleIndex(index + 1, language)}</span>
                 <div className="projects-hub-list-copy">
                   <div className="projects-hub-project-meta"><span>{entry.category}</span><LifecycleStatus entry={entry} /></div>
                   <h3>{entry.title}</h3>
@@ -295,7 +300,10 @@ const ProjectsPage = () => {
             ? t('projectsHub.compareEmpty')
             : compareIds.length === 1
               ? t('projectsHub.compareOne')
-              : t('projectsHub.compareReady', { count: compareIds.length }))}
+              : t('projectsHub.compareReady', {
+                count: compareIds.length,
+                formattedCount: formatNumber(compareIds.length),
+              }))}
         </p>
         {comparedEntries.length >= 2 ? (
           <div className="projects-hub-comparison-grid">

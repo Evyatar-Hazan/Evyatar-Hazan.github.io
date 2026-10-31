@@ -21,6 +21,8 @@ import { getHumanAboutContent } from '../features/humanAbout/content';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { localizedPath } from '../routing/portfolioRoutes';
 import { getProfessionalTimeline } from '../data/professionalTimeline';
+import { presentCalendarDate } from '../features/date-presentation/presentCalendarDate';
+import { formatLocaleIndex, formatLocaleNumber } from '../features/locale-presentation/formatLocale';
 
 const pageCopy = {
   en: {
@@ -31,7 +33,7 @@ const pageCopy = {
     projects: 'View project evidence',
     contact: 'Start a conversation',
     cv: 'Download CV',
-    cvUpdated: 'Updated July 23, 2026',
+    cvUpdated: 'Updated ',
     professionalLinks: 'Verified professional links',
     professionalLinksIntro: 'Public profiles and a direct email channel, collected in one place.',
     email: 'Email',
@@ -72,7 +74,7 @@ const pageCopy = {
     projects: 'לצפייה בראיות מהפרויקטים',
     contact: 'להתחיל שיחה',
     cv: 'להורדת קורות החיים',
-    cvUpdated: 'עודכן ב־23 ביולי 2026',
+    cvUpdated: 'עודכן ב־',
     professionalLinks: 'קישורים מקצועיים מאומתים',
     professionalLinksIntro: 'פרופילים ציבוריים וערוץ אימייל ישיר, מרוכזים במקום אחד.',
     email: 'אימייל',
@@ -142,6 +144,7 @@ const deliverySteps: Array<{
 const AboutPage = () => {
   const { i18n } = useTranslation();
   const language = i18n.language === 'he' ? 'he' : 'en';
+  const presentedCvDate = presentCalendarDate(publicCv.updatedAt, { language });
   const copy = pageCopy[language];
   const human = getHumanAboutContent(language);
   const timeline = getProfessionalTimeline(language);
@@ -202,8 +205,8 @@ const AboutPage = () => {
                 <Download aria-hidden="true" className="h-4 w-4" />
                 {copy.cv}
               </a>
-              <time dateTime={publicCv.updatedAt} className="font-mono text-[0.68rem] font-bold uppercase tracking-[0.08em] text-neutral-500 dark:text-neutral-400">
-                {copy.cvUpdated}
+              <time dateTime={presentedCvDate.dateTime ?? undefined} className="font-mono text-[0.68rem] font-bold uppercase tracking-[0.08em] text-neutral-500 dark:text-neutral-400">
+                {copy.cvUpdated}{presentedCvDate.text}
               </time>
             </div>
             <aside data-about-evidence-boundary className="mt-6 border-t border-neutral-300 pt-5 dark:border-neutral-700">
@@ -225,7 +228,7 @@ const AboutPage = () => {
             <p className="max-w-2xl text-lg leading-8 text-neutral-600 dark:text-neutral-300 lg:justify-self-end">{human.introduction}</p>
           </header>
           <div className="grid divide-y divide-neutral-300/80 dark:divide-neutral-800 lg:grid-cols-3 lg:divide-x lg:divide-y-0 rtl:lg:divide-x-reverse">
-            {human.pillars.map((pillar, index) => <article key={pillar.id} className="py-8 lg:px-8 lg:py-12 lg:first:ps-0"><p className="font-mono text-xs font-black text-primary-700 dark:text-primary-400">0{index + 1}</p><h3 className="mt-4 text-2xl font-black">{pillar.title}</h3><p className="mt-4 text-base leading-8 text-neutral-600 dark:text-neutral-400">{pillar.body}</p></article>)}
+            {human.pillars.map((pillar, index) => <article key={pillar.id} className="py-8 lg:px-8 lg:py-12 lg:first:ps-0"><p className="font-mono text-xs font-black text-primary-700 dark:text-primary-400">{formatLocaleIndex(index + 1, language)}</p><h3 className="mt-4 text-2xl font-black">{pillar.title}</h3><p className="mt-4 text-base leading-8 text-neutral-600 dark:text-neutral-400">{pillar.body}</p></article>)}
           </div>
           <div className="border-t border-neutral-300/80 pt-10 dark:border-neutral-800 lg:pt-14">
             <header className="grid gap-5 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
@@ -239,7 +242,7 @@ const AboutPage = () => {
               {timeline.entries.map((entry, index) => (
                 <li key={entry.id} data-timeline-entry={entry.id} className="relative grid gap-3 border-s-2 border-neutral-300 py-7 ps-7 dark:border-neutral-700 sm:grid-cols-[8rem_minmax(12rem,0.75fr)_minmax(0,1.25fr)] sm:items-start sm:gap-6 sm:ps-9">
                   <span aria-hidden="true" className="absolute -start-[0.48rem] top-8 h-3.5 w-3.5 rounded-full border-[3px] border-neutral-50 bg-primary-600 ring-1 ring-primary-600 dark:border-neutral-950 dark:bg-primary-400 dark:ring-primary-400" />
-                  <p className="font-mono text-sm font-black text-primary-700 dark:text-primary-400"><span className="sr-only">{language === 'he' ? `שלב ${index + 1}: ` : `Stage ${index + 1}: `}</span>{entry.period}</p>
+                  <p className="font-mono text-sm font-black text-primary-700 dark:text-primary-400"><span className="sr-only">{language === 'he' ? `שלב ${formatLocaleNumber(index + 1, language)}: ` : `Stage ${formatLocaleNumber(index + 1, language)}: `}</span>{entry.period}</p>
                   <h4 className="text-xl font-black leading-snug">{entry.role}</h4>
                   <p className="max-w-3xl text-sm leading-7 text-neutral-600 dark:text-neutral-400 sm:text-base">{entry.impact}</p>
                 </li>
@@ -264,7 +267,7 @@ const AboutPage = () => {
           </header>
           <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(15rem,0.34fr)_minmax(0,1fr)]">
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1" aria-label={copy.capabilitiesTitle}>
-              {groups.map((group, index) => <button key={group.id} type="button" aria-pressed={activeGroup.id === group.id} aria-controls="capability-panel" onClick={() => selectCapability(group.id)} className="group flex min-h-12 items-center justify-between gap-4 border border-neutral-300 px-4 py-3 text-start text-sm font-black transition-colors hover:border-primary-500 aria-pressed:border-primary-600 aria-pressed:bg-primary-50 aria-pressed:text-primary-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500 dark:border-neutral-700 dark:aria-pressed:bg-primary-950 dark:aria-pressed:text-primary-100"><span><span className="me-3 font-mono text-xs text-neutral-400">{String(index + 1).padStart(2, '0')}</span>{group.label}</span><span aria-hidden="true">→</span></button>)}
+              {groups.map((group, index) => <button key={group.id} type="button" aria-pressed={activeGroup.id === group.id} aria-controls="capability-panel" onClick={() => selectCapability(group.id)} className="group flex min-h-12 items-center justify-between gap-4 border border-neutral-300 px-4 py-3 text-start text-sm font-black transition-colors hover:border-primary-500 aria-pressed:border-primary-600 aria-pressed:bg-primary-50 aria-pressed:text-primary-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500 dark:border-neutral-700 dark:aria-pressed:bg-primary-950 dark:aria-pressed:text-primary-100"><span><span className="me-3 font-mono text-xs text-neutral-400">{formatLocaleIndex(index + 1, language)}</span>{group.label}</span><span aria-hidden="true">→</span></button>)}
             </div>
             <article id="capability-panel" aria-live="polite" data-capability-id={activeGroup.id} className="border border-neutral-300 bg-neutral-50 p-5 dark:border-neutral-700 dark:bg-neutral-950 sm:p-8">
               <div className="grid gap-8 xl:grid-cols-[0.72fr_1.28fr]">
@@ -294,7 +297,7 @@ const AboutPage = () => {
 
       <section aria-labelledby="delivery-process-title" className="section-space relative">
         <div className="content-container"><header className="grid gap-6 border-b border-neutral-300/80 pb-10 dark:border-neutral-800 lg:grid-cols-[0.8fr_1.2fr] lg:items-end"><div><p className="font-mono text-[0.68rem] font-black uppercase tracking-[0.18em] text-primary-700 dark:text-primary-400">{copy.processEyebrow}</p><h2 id="delivery-process-title" className="mt-5 max-w-[14ch] text-[clamp(2.6rem,6vw,5.8rem)] font-black leading-[0.92] tracking-[-0.055em]">{copy.processTitle}</h2></div><p className="text-base leading-8 text-neutral-600 dark:text-neutral-400 lg:justify-self-end">{copy.processIntro}</p></header>
-          <ol className="divide-y divide-neutral-300/80 dark:divide-neutral-800">{deliverySteps.map((step, index) => <li key={step.title.en} className="grid gap-4 py-7 sm:grid-cols-[4rem_minmax(12rem,0.8fr)_minmax(0,1.2fr)_auto] sm:items-center"><span className="font-mono text-3xl font-black text-primary-600 dark:text-primary-400">{String(index + 1).padStart(2, '0')}</span><h3 className="text-xl font-black">{step.title[language]}</h3><p className="text-sm leading-7 text-neutral-600 dark:text-neutral-400">{step.body[language]}</p>{step.target && <Link aria-label={`${step.title[language]} — ${language === 'he' ? 'לצפייה בדוגמה' : 'View example'}`} to={localizedPath(language, step.target)} className="inline-flex min-h-11 items-center gap-2 text-sm font-black text-primary-700 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500 dark:text-primary-300">{language === 'he' ? 'דוגמה' : 'Example'}<ArrowIcon aria-hidden="true" className="h-4 w-4" /></Link>}</li>)}</ol>
+          <ol className="divide-y divide-neutral-300/80 dark:divide-neutral-800">{deliverySteps.map((step, index) => <li key={step.title.en} className="grid gap-4 py-7 sm:grid-cols-[4rem_minmax(12rem,0.8fr)_minmax(0,1.2fr)_auto] sm:items-center"><span className="font-mono text-3xl font-black text-primary-600 dark:text-primary-400">{formatLocaleIndex(index + 1, language)}</span><h3 className="text-xl font-black">{step.title[language]}</h3><p className="text-sm leading-7 text-neutral-600 dark:text-neutral-400">{step.body[language]}</p>{step.target && <Link aria-label={`${step.title[language]} — ${language === 'he' ? 'לצפייה בדוגמה' : 'View example'}`} to={localizedPath(language, step.target)} className="inline-flex min-h-11 items-center gap-2 text-sm font-black text-primary-700 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500 dark:text-primary-300">{language === 'he' ? 'דוגמה' : 'Example'}<ArrowIcon aria-hidden="true" className="h-4 w-4" /></Link>}</li>)}</ol>
         </div>
       </section>
 

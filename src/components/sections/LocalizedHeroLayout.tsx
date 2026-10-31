@@ -9,6 +9,7 @@ import type {
 } from '../../contracts/portfolio';
 import type { PortfolioLanguage } from '../../data/portfolioCapabilities';
 import styles from './LocalizedHeroLayout.module.css';
+import { formatLocaleIndex } from '../../features/locale-presentation/formatLocale';
 
 export type LocalizedHeroCopy = {
   availability: string;
@@ -139,7 +140,7 @@ export const LocalizedHeroLayout = ({
           {proofs.map((proof, index) => (
             <div className={styles.proofItem} key={proof.title}>
               <dt>
-                <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                <span aria-hidden="true">{formatLocaleIndex(index + 1, language)}</span>
                 {proof.title}
               </dt>
               <dd>{proof.description}</dd>

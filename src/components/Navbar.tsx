@@ -13,6 +13,7 @@ import {
 } from '../navigation/portfolioNavigation';
 import { switchPathLanguage } from '../routing/portfolioRoutes';
 import BrandMark from './BrandMark';
+import { formatLocaleIndex } from '../features/locale-presentation/formatLocale';
 
 const focusableSelector = [
   'a[href]',
@@ -144,7 +145,7 @@ const Navbar = () => {
     >
       {mobile && (
         <span className="system-rail-mobile-index" aria-hidden="true">
-          {String(index + 1).padStart(2, '0')}
+          {formatLocaleIndex(index + 1, language)}
         </span>
       )}
       {mobile
