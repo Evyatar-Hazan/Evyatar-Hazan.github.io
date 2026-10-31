@@ -553,11 +553,7 @@
   width: 0.75rem;
   color: var(--color-primary-600);
   font-size: 1.1rem;
-  transform: translateY(-50%);
-}
-
-[dir='rtl'] .craft-lab__connector {
-  transform: translateY(-50%) scaleX(-1);
+  transform: translateY(-50%) scaleX(var(--inline-direction));
 }
 
 .craft-lab__diagram-detail {
