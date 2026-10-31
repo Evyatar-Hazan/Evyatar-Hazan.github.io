@@ -3,18 +3,13 @@ import { CraftLab } from '../features/craft-lab';
 import { DatePresentationDemo } from '../features/date-presentation/DatePresentationDemo';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { localizedPath } from '../routing/portfolioRoutes';
+import { getStaticRouteSeo } from '../data/routeSeo';
 
 const LabPage = () => {
   const { i18n } = useTranslation();
   const language = i18n.language === 'he' ? 'he' : 'en';
 
-  usePageSeo({
-    title: language === 'he' ? 'מעבדת ממשק | אביתר חזן' : 'Interface Craft Lab | Evyatar Hazan',
-    description: language === 'he'
-      ? 'ניסויי ממשק סינתטיים ורכיב תאריך רב־שימושי, עם הבחנה מפורשת מעבודת לקוח וממדדי מוצר.'
-      : 'Synthetic interface experiments and a reusable date presenter, clearly separated from client delivery and product metrics.',
-    path: '/lab/',
-  });
+  usePageSeo(getStaticRouteSeo('lab', language));
 
   return (
     <main id="main-content" tabIndex={-1}>
