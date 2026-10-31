@@ -16,10 +16,12 @@ describe('FIX-098 security policy', () => {
 
   it('permits required first-party behavior without weakening script execution', () => {
     const scriptPolicy = metaPolicy?.split('; ').find((directive) => directive.startsWith('script-src'));
-    expect(scriptPolicy).toContain("script-src 'self' 'sha256-");
+    expect(scriptPolicy).toContain("script-src 'self' https://static.cloudflareinsights.com 'sha256-");
     expect(scriptPolicy).not.toContain("'unsafe-inline'");
     expect(metaPolicy).toContain("style-src 'self' 'unsafe-inline'");
-    expect(metaPolicy).toContain("connect-src 'self' https://evyatarhazan.com https://formsubmit.co");
+    expect(metaPolicy).toContain(
+      "connect-src 'self' https://evyatarhazan.com https://formsubmit.co https://cloudflareinsights.com",
+    );
     expect(metaPolicy).toContain("object-src 'none'");
   });
 });
