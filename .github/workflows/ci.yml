@@ -44,6 +44,18 @@ jobs:
       - name: Validate
         run: npm run validate
 
+      - name: Enforce Core Web Vitals budget
+        run: npm run test:core-web-vitals
+
+      - name: Upload Core Web Vitals report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-web-vitals-report
+          path: output/core-web-vitals/report.json
+          if-no-files-found: ignore
+          retention-days: 14
+
       - name: Upload Pages artifact
         if: github.event_name == 'push'
         uses: actions/upload-pages-artifact@v4
