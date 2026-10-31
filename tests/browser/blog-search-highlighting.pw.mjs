@@ -1,4 +1,8 @@
 import { expect, test } from '@playwright/test';
+import {
+  collectUnexpectedConsoleErrors,
+  collectUnexpectedFailedRequests,
+} from './support/console-errors.mjs';
 
 const cases = [
   {
@@ -25,10 +29,8 @@ for (const entry of cases) {
   test(`FIX-063 ${entry.name} searches and highlights matching blog text`, async ({ page }) => {
     const consoleErrors = [];
     const failedRequests = [];
-    page.on('console', (message) => {
-      if (message.type() === 'error') consoleErrors.push(message.text());
-    });
-    page.on('requestfailed', (request) => failedRequests.push(request.url()));
+    collectUnexpectedConsoleErrors(page, consoleErrors);
+    collectUnexpectedFailedRequests(page, failedRequests);
 
     await page.setViewportSize(entry.viewport);
     await page.emulateMedia({ colorScheme: entry.theme, reducedMotion: 'reduce' });
