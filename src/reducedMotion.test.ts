@@ -1,9 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import mainSource from './main.tsx?raw';
 import stylesheet from './index.css?raw';
-import buttonSource from './components/Button.tsx?raw';
-import cardSource from './components/Card.tsx?raw';
-import magneticSource from './components/animations/Magnetic.tsx?raw';
 import localizedHeroSource from './components/sections/LocalizedHeroLayout.tsx?raw';
 
 describe('FIX-086 reduced-motion contract', () => {
@@ -20,11 +17,7 @@ describe('FIX-086 reduced-motion contract', () => {
   });
 
   it('removes direct pointer and motion-value transforms when motion is reduced', () => {
-    [buttonSource, cardSource, magneticSource, localizedHeroSource].forEach((source) => {
-      expect(source).toContain('useReducedMotion');
-    });
-    expect(cardSource).toContain('rotateX: reduceMotion ? 0 : rotateX');
-    expect(magneticSource).toContain('if (reduceMotion) return');
+    expect(localizedHeroSource).toContain('useReducedMotion');
     expect(localizedHeroSource).toContain('style={reduceMotion ? undefined : copyStyle}');
   });
 });

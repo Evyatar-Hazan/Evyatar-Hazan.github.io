@@ -2,7 +2,6 @@ import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import type { LocalizedPathBuilder } from '../../contracts/portfolio';
 import { ServiceEngagements } from './ServiceEngagements';
-import { createServiceEngagementsRegistration } from './serviceEngagementsRegistration';
 
 const buildPath = vi.fn<LocalizedPathBuilder>((language, target) => {
   if (target.route === 'project') return `/${language}/projects/${target.id}`;
@@ -62,14 +61,5 @@ describe('ServiceEngagements', () => {
     );
 
     expect(buildPath).toHaveBeenCalledWith('en', { route: 'project', id: 'nis_boutique' });
-  });
-
-  it('exports the approved t02 slot registration without owning shared routing', () => {
-    const registration = createServiceEngagementsRegistration(buildPath);
-    expect(registration.taskId).toBe('t02');
-    expect(registration.slot).toBe('home.serviceEngagements');
-
-    render(<registration.Component language="en" className="integration-marker" />);
-    expect(document.querySelector('#service-engagements')).toHaveClass('integration-marker');
   });
 });

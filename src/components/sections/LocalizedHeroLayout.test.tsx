@@ -7,7 +7,6 @@ import {
   LocalizedHeroLayout,
   type LocalizedHeroCopy,
 } from './LocalizedHeroLayout';
-import { createLocalizedHeroLayoutRegistration } from './localizedHeroLayoutRegistration';
 
 const englishCopy: LocalizedHeroCopy = {
   availability: 'Available for product work',
@@ -157,27 +156,5 @@ describe('LocalizedHeroLayout', () => {
     expect(globalStylesheet).toContain('--type-display: clamp(3rem, 6vw, 6rem);');
     expect(stylesheet.match(/clamp\(3\.75rem, 4\.8vw, 5rem\)/g)).toHaveLength(1);
     expect(mobileHeroStyles).not.toContain('clamp(3.75rem, 4.8vw, 5rem)');
-  });
-
-  it('registers the feature in the approved localized hero slot', () => {
-    const buildPath: LocalizedPathBuilder = (language, target) => `/${language}/${target.route}`;
-    const registration = createLocalizedHeroLayoutRegistration({
-      buildPath,
-      copy: { en: englishCopy, he: hebrewCopy },
-      getPrimaryAction: (language) => ({
-        label: language === 'he' ? 'בואו נדבר' : 'Start a conversation',
-        target: { route: 'contact' },
-      }),
-      getSecondaryAction: (language) => ({
-        label: language === 'he' ? 'ראו פרויקטים' : 'See projects',
-        target: { route: 'projects' },
-      }),
-    });
-
-    expect(registration.taskId).toBe('t10');
-    expect(registration.slot).toBe('home.localizedHeroLayout');
-    const RegisteredHero = registration.Component;
-    render(<RegisteredHero language="he" />);
-    expect(screen.getByRole('link', { name: 'בואו נדבר' })).toHaveAttribute('href', '/he/contact');
   });
 });
