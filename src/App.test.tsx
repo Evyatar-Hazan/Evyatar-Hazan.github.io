@@ -445,6 +445,36 @@ describe('App', () => {
     expect(document.querySelector('#person-profile-structured-data')).not.toBeInTheDocument();
   });
 
+  it('publishes one localized BlogPosting JSON-LD record on an article only', async () => {
+    const view = renderAt('/en/blog/retries-should-not-duplicate-data/');
+    await screen.findByRole('heading', { level: 1, name: 'A retry should repeat intent, not duplicate data' });
+    const scripts = document.querySelectorAll('#blog-article-structured-data');
+    expect(scripts).toHaveLength(1);
+    const article = JSON.parse(scripts[0].textContent ?? '{}');
+
+    expect(article).toMatchObject({
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: 'A retry should repeat intent, not duplicate data',
+      datePublished: '2026-09-06',
+      dateModified: '2026-10-03',
+      inLanguage: 'en',
+      mainEntityOfPage: 'https://evyatarhazan.com/en/blog/retries-should-not-duplicate-data/',
+      author: {
+        '@type': 'Person',
+        name: 'Evyatar Hazan',
+        url: 'https://evyatarhazan.com/en/about/',
+      },
+      keywords: ['Backend', 'Data', 'Reliability'],
+    });
+
+    view.unmount();
+    expect(document.querySelector('#blog-article-structured-data')).not.toBeInTheDocument();
+
+    renderAt('/en/blog/');
+    expect(document.querySelector('#blog-article-structured-data')).not.toBeInTheDocument();
+  });
+
   it('redirects the legacy About route while preserving query and hash', async () => {
     renderAt('/about/?lang=he&capability=databases#capability-explorer-title');
 

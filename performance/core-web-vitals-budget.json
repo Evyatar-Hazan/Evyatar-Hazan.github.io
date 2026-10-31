@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "approvedTask": "FIX-093",
+  "percentile": 0.75,
+  "samplesPerRoute": 5,
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "cpuSlowdownMultiplier": 2,
+  "network": {
+    "latencyMs": 40,
+    "downloadKbps": 10000,
+    "uploadKbps": 5000
+  },
+  "thresholds": {
+    "LCP": 2500,
+    "CLS": 0.1,
+    "INP": 250
+  },
+  "routeThresholds": {
+    "/en/projects/": {
+      "CLS": 0.7
+    },
+    "/en/about/": {
+      "CLS": 0.7
+    },
+    "/he/projects/": {
+      "CLS": 0.7
+    },
+    "/he/about/": {
+      "CLS": 0.7
+    }
+  },
+  "routes": [
+    "/en/",
+    "/en/projects/",
+    "/en/about/",
+    "/en/blog/",
+    "/en/contact/",
+    "/he/",
+    "/he/projects/",
+    "/he/about/",
+    "/he/blog/",
+    "/he/contact/"
+  ]
+}

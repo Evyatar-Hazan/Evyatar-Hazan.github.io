@@ -20,6 +20,7 @@
     "qa:seo-metadata": "node scripts/seo-metadata-gate.mjs",
     "qa:console-network": "node scripts/console-network-gate.mjs",
     "qa:domain-parity": "node scripts/domain-parity-gate.mjs",
+    "test:core-web-vitals": "node scripts/core-web-vitals-budget.mjs",
     "qa:production-monitor": "node scripts/production-route-monitor.mjs",
     "test:visual": "node scripts/run-visual-regression.mjs",
     "validate": "node scripts/check-ci-concurrency.mjs && npm run audit:unused && npm run lint && npm run test && npm run test:rollback && npm run build && npm run qa:deep-links && npm run qa:seo-metadata && npm run qa:console-network && npm run test:ui-invariants && npm run test:touch-targets && npm run test:overflow",
@@ -63,6 +64,7 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.48.0",
     "vite": "^8.0.16",
-    "vitest": "^4.1.5"
+    "vitest": "^4.1.5",
+    "web-vitals": "^6.2.3"
   }
 }
