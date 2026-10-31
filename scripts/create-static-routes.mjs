@@ -1,5 +1,6 @@
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { assertSitemapRouteParity } from './sitemap-route-parity.mjs';
 
 const repoRoot = process.cwd();
 const distDir = path.join(repoRoot, 'dist');
@@ -843,12 +844,11 @@ for (const route of staticRoutes) {
 }
 
 const generatedSitemap = await readFile(path.join(distDir, 'sitemap.xml'), 'utf8');
-const sitemapUrlCount = [...generatedSitemap.matchAll(/<loc>/g)].length;
-if (sitemapUrlCount !== staticRoutes.length * languages.length) {
-  throw new Error(`Expected ${staticRoutes.length * languages.length} localized sitemap URLs, received ${sitemapUrlCount}.`);
-}
-if (new RegExp(`<loc>${siteUrl}/(?!en/|he/)`).test(generatedSitemap)) {
-  throw new Error('Legacy URLs must not appear as sitemap locations.');
-}
+const { routeCount: sitemapRouteCount } = assertSitemapRouteParity({
+  routePaths: staticRoutes.map((route) => route.path),
+  languages,
+  sitemapXml: generatedSitemap,
+  siteUrl,
+});
 
-console.log(`Created ${staticRoutes.length * languages.length} localized routes, ${staticRoutes.length} legacy redirect documents, and a reciprocal hreflang sitemap.`);
+console.log(`Created ${sitemapRouteCount} localized routes, ${staticRoutes.length} legacy redirect documents, and a reciprocal hreflang sitemap with exact route parity.`);
