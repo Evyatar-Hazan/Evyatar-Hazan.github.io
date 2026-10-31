@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import type { HTMLMotionProps } from 'framer-motion';
 import type { ReactNode } from 'react';
 
@@ -8,6 +8,7 @@ interface ButtonProps extends HTMLMotionProps<"button"> {
 }
 
 const Button = ({ children, variant = 'primary', className = '', ...props }: ButtonProps) => {
+  const reduceMotion = useReducedMotion();
   const baseStyles = "px-6 py-3 rounded-full font-medium transition-all duration-300 flex items-center justify-center gap-2 disabled:pointer-events-none disabled:opacity-60";
   
   const variants = {
@@ -18,10 +19,10 @@ const Button = ({ children, variant = 'primary', className = '', ...props }: But
 
   return (
     <motion.button
-      whileHover={{ scale: 1.05, y: -2 }}
-      whileTap={{ scale: 0.95 }}
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
+      whileHover={reduceMotion ? undefined : { scale: 1.05, y: -2 }}
+      whileTap={reduceMotion ? undefined : { scale: 0.95 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+      animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
       className={`${baseStyles} ${variants[variant]} ${className}`}
       {...props}
     >
