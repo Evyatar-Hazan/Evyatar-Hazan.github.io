@@ -17,6 +17,7 @@ import {
 } from '../data/contentRelations';
 import { getProjectById } from '../data/profile';
 import BlogDateMeta from '../components/blog/BlogDateMeta';
+import { formatLocaleIndex } from '../features/locale-presentation/formatLocale';
 
 type ArticleHeading = { id: string; label: string; level: number };
 
@@ -120,7 +121,7 @@ const BlogPost = () => {
       <BlogCodeBlock {...props} language={language} />
     ),
   };
-  const articleNumber = String(postIndex + 1).padStart(2, '0');
+  const articleNumber = formatLocaleIndex(postIndex + 1, language);
   const hasArticleOutline = headings.length >= ARTICLE_OUTLINE_MIN_HEADINGS;
   const relatedProjects: RelatedContentItem[] = getRelatedProjectRelations(post.slug).flatMap((relation) => (
     getProjectById(relation.projectId)
@@ -154,7 +155,7 @@ const BlogPost = () => {
         <header className="blog-article-masthead">
           <div className="blog-article-number" aria-hidden="true">
             <strong>{articleNumber}</strong>
-            <span>ENTRY / {String(posts.length).padStart(2, '0')}</span>
+            <span>ENTRY / {formatLocaleIndex(posts.length, language)}</span>
           </div>
           <div className="blog-article-heading">
             <BlogDateMeta

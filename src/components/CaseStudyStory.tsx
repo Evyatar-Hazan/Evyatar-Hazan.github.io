@@ -13,6 +13,7 @@ import type { Project, ProjectCaseStudy } from '../data/profile';
 import CaseStudyEvidence from './CaseStudyEvidence';
 import './CaseStudyStory.css';
 import { buildContactUrl } from '../features/contact/contactIntent';
+import { formatLocaleIndex } from '../features/locale-presentation/formatLocale';
 
 type CaseStudyStoryProps = {
   buildPath: LocalizedPathBuilder;
@@ -163,7 +164,7 @@ const CaseStudyStory = ({
           {coreChapters.map((id, index) => (
             <li key={id}>
               <a href={`#${id}`}>
-                <span>{String(index + 1).padStart(2, '0')}</span>
+                <span>{formatLocaleIndex(index + 1, language)}</span>
                 {chapterLabels[id]}
               </a>
             </li>
@@ -204,7 +205,7 @@ const CaseStudyStory = ({
         <ol className="case-story-decisions">
           {story.decisions.map((decision, index) => (
             <li key={pick(decision.choice, language)}>
-              <span className="case-story-decision-number">{String(index + 1).padStart(2, '0')}</span>
+              <span className="case-story-decision-number">{formatLocaleIndex(index + 1, language)}</span>
               <dl>
                 <div>
                   <dt>{labels.decisionNeed}</dt>
@@ -235,7 +236,7 @@ const CaseStudyStory = ({
         <ol className="case-story-system-flow" aria-label={pick(story.system.caption, language)}>
           {story.system.nodes.map((systemNode, index) => (
             <li key={systemNode.id} data-boundary={systemNode.boundary}>
-              <span className="case-story-node-index">{String(index + 1).padStart(2, '0')}</span>
+              <span className="case-story-node-index">{formatLocaleIndex(index + 1, language)}</span>
               <strong>{pick(systemNode.label, language)}</strong>
               <p>{pick(systemNode.detail, language)}</p>
             </li>

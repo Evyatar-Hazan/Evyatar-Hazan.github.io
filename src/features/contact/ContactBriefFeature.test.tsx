@@ -409,9 +409,42 @@ describe('ContactBriefFeature', () => {
     });
     fireEvent.submit(screen.getByRole('button', { name: /send with FormSubmit/i }).closest('form')!);
 
-    expect(await screen.findByText(/Delivery was not confirmed/i)).toBeInTheDocument();
+    const deliveryError = await screen.findByRole('alert');
+    expect(deliveryError).toHaveTextContent(/Delivery was not confirmed/i);
+    expect(deliveryError).toHaveAttribute('aria-live', 'assertive');
+    expect(deliveryError).toHaveAttribute('aria-atomic', 'true');
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Retry form delivery' })).toBeInTheDocument();
     expect(screen.queryByText(/What happens next/i)).not.toBeInTheDocument();
+  });
+
+  it('announces confirmed delivery once with polite priority without moving focus', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ success: true }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
+    openBuilder();
+
+    fireEvent.change(screen.getByLabelText('Message'), {
+      target: { value: 'Synthetic announcement check' },
+    });
+    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Test Visitor' } });
+    fireEvent.change(screen.getByLabelText('Email address'), {
+      target: { value: 'visitor@example.test' },
+    });
+    const submitButton = screen.getByRole('button', { name: /send with FormSubmit/i });
+    submitButton.focus();
+    fireEvent.submit(submitButton.closest('form')!);
+
+    const deliveryStatus = await screen.findByRole('status');
+    expect(deliveryStatus).toHaveTextContent(/confirmed delivery/i);
+    expect(deliveryStatus).toHaveAttribute('aria-live', 'polite');
+    expect(deliveryStatus).toHaveAttribute('aria-atomic', 'true');
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    expect(deliveryStatus).not.toHaveFocus();
+    expect(document.querySelectorAll('[role="status"]')).toHaveLength(1);
   });
 
   it('links every inline error to its field, announces the summary, and lets keyboard users return to the field', async () => {

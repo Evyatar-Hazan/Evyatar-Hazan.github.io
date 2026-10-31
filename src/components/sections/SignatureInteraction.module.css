@@ -135,7 +135,7 @@
   content: '';
   background: var(--color-neutral-300);
   transform: scaleX(0.38);
-  transform-origin: left center;
+  transform-origin: var(--inline-start-origin) center;
   transition: background-color 220ms ease, transform 220ms ease;
 }
 
@@ -146,10 +146,6 @@
 .stepItem[data-connected='true']::after {
   background: var(--color-primary-500);
   transform: scaleX(1);
-}
-
-[dir='rtl'] .stepItem:not(:last-child)::after {
-  transform-origin: right center;
 }
 
 .stepButton {
@@ -355,11 +351,7 @@
   }
 
   .stepButton[data-active='true'] {
-    transform: translateX(0.35rem);
-  }
-
-  [dir='rtl'] .stepButton[data-active='true'] {
-    transform: translateX(-0.35rem);
+    transform: translateX(var(--inline-shift-sm));
   }
 
   .readout {

@@ -10,6 +10,7 @@ import {
   workingPrinciplesCopy,
   type WorkingPrincipleEvidence,
 } from '../../data/workingPrinciples';
+import { formatLocaleIndex } from '../../features/locale-presentation/formatLocale';
 
 type WorkingPrinciplesProps = PortfolioSlotProps & {
   localizedPath: LocalizedPathBuilder;
@@ -109,7 +110,7 @@ const WorkingPrinciples = ({
             <article className="grid gap-7 py-10 sm:py-12 lg:grid-cols-[6rem_minmax(15rem,0.72fr)_minmax(0,1.28fr)] lg:gap-10 lg:py-16">
               <div className="flex items-center justify-between gap-4 lg:block">
                 <span className="font-mono text-4xl font-black tracking-[-0.06em] text-primary-600 dark:text-primary-400 sm:text-5xl">
-                  {String(index + 1).padStart(2, '0')}
+                  {formatLocaleIndex(index + 1, language)}
                 </span>
                 <span aria-hidden="true" className="h-px flex-1 bg-neutral-300 dark:bg-neutral-800 lg:mt-5 lg:block lg:w-full" />
               </div>
