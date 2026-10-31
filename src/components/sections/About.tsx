@@ -139,8 +139,8 @@ const About = () => {
 
         <div className="about-system-flow relative mt-10 grid gap-3 overflow-x-clip md:mt-14 md:grid-cols-3 md:gap-5">
           <motion.div
-            style={shouldReduceMotion ? undefined : { scaleX: connectorScale }}
-            className="about-system-connector absolute inset-x-[12%] top-[2.45rem] hidden h-px origin-left bg-primary-500/70 md:block rtl:origin-right"
+            style={shouldReduceMotion ? undefined : { scaleX: connectorScale, transformOrigin: 'var(--inline-start-origin)' }}
+            className="about-system-connector absolute inset-x-[12%] top-[2.45rem] hidden h-px bg-primary-500/70 md:block"
             aria-hidden="true"
           />
           <motion.div
@@ -253,8 +253,8 @@ const About = () => {
             {!shouldReduceMotion && (
               <div className="mt-3 h-px overflow-hidden bg-neutral-300/80 dark:bg-neutral-800 md:hidden" aria-hidden="true">
                 <motion.div
-                  style={{ scaleX: capabilityProgress }}
-                  className="h-full origin-left bg-primary-500 rtl:origin-right"
+                  style={{ scaleX: capabilityProgress, transformOrigin: 'var(--inline-start-origin)' }}
+                  className="h-full bg-primary-500"
                 />
               </div>
             )}
