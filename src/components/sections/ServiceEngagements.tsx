@@ -107,7 +107,7 @@ export const ServiceEngagements = ({
                     <p className="font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-primary-700 dark:text-primary-400">
                       Entry / {number}
                     </p>
-                    <span className="font-mono text-4xl font-black tracking-[-0.08em] text-neutral-200 dark:text-neutral-800" aria-hidden="true">
+                    <span className="font-mono text-4xl font-black tracking-[-0.08em] text-neutral-500 dark:text-neutral-600" aria-hidden="true">
                       {number}
                     </span>
                   </div>

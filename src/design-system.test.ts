@@ -106,4 +106,15 @@ describe('canonical design tokens', () => {
     expect(contrastRatio('d5deeb', '0b1220')).toBeGreaterThanOrEqual(4.5);
     expect(contrastRatio('a8b7cb', '0b1220')).toBeGreaterThanOrEqual(4.5);
   });
+
+  it('keeps semantic focus and project-accent colors above WCAG AA contrast thresholds', () => {
+    expect(stylesheet).toContain('--color-focus-ring: #0369a1;');
+    expect(stylesheet).toContain('--color-focus-ring: #38bdf8;');
+    expect(contrastRatio('0369a1', 'ffffff')).toBeGreaterThanOrEqual(3);
+    expect(contrastRatio('0369a1', '0a0a0a')).toBeGreaterThanOrEqual(3);
+    expect(contrastRatio('38bdf8', '0b1220')).toBeGreaterThanOrEqual(3);
+    expect(contrastRatio('0e7490', 'ffffff')).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio('b91c1c', 'ffffff')).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio('047857', 'ffffff')).toBeGreaterThanOrEqual(4.5);
+  });
 });

@@ -23,6 +23,7 @@
 
 .supporting-project-card {
   --project-accent: var(--color-primary-500);
+  --project-accent-ink: var(--color-primary-700);
   position: relative;
   display: flex;
   min-width: 0;
@@ -62,14 +63,21 @@
 
 .supporting-project-card[data-project-visual='converter'] {
   --project-accent: var(--color-info-300);
+  --project-accent-ink: var(--color-info-700);
 }
 
 .supporting-project-card[data-project-visual='protocol'] {
   --project-accent: var(--color-danger-400);
+  --project-accent-ink: var(--color-danger-700);
 }
 
 .supporting-project-card[data-project-visual='branch'] {
   --project-accent: var(--color-success-400);
+  --project-accent-ink: var(--color-success-700);
+}
+
+.dark .supporting-project-card {
+  --project-accent-ink: var(--project-accent);
 }
 
 .featured-case-card__masthead {
@@ -361,11 +369,11 @@
   height: 1.9rem;
   place-items: center;
   border: 1px solid color-mix(in srgb, var(--project-accent) 66%, var(--color-neutral-500));
-  color: var(--project-accent);
+  color: var(--project-accent-ink);
 }
 
 .supporting-project-card__masthead small {
-  color: var(--project-accent);
+  color: var(--project-accent-ink);
   font-size: inherit;
 }
 
