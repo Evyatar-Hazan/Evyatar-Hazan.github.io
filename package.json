@@ -16,6 +16,7 @@
     "qa:deep-links": "node scripts/deep-link-gate.mjs",
     "qa:console-network": "node scripts/console-network-gate.mjs",
     "qa:domain-parity": "node scripts/domain-parity-gate.mjs",
+    "qa:production-monitor": "node scripts/production-route-monitor.mjs",
     "test:visual": "node scripts/run-visual-regression.mjs",
     "validate": "node scripts/check-ci-concurrency.mjs && npm run lint && npm run test && npm run test:rollback && npm run build && npm run qa:deep-links && npm run qa:console-network && npm run test:ui-invariants && npm run test:touch-targets && npm run test:overflow",
     "preview": "vite preview",
