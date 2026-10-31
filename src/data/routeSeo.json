@@ -1,0 +1,79 @@
+{
+  "home": {
+    "path": "/",
+    "en": {
+      "title": "Evyatar Hazan | Full Stack Developer",
+      "description": "Portfolio of Evyatar Hazan with business websites, full-stack systems, product tools, technical writing, and direct contact paths."
+    },
+    "he": {
+      "title": "אביתר חזן | Full Stack Developer",
+      "description": "פורטפוליו של אביתר חזן עם אתרים עסקיים, מערכות Full Stack, כלי מוצר, כתיבה מקצועית ודרכי יצירת קשר ישירות."
+    }
+  },
+  "projects": {
+    "path": "/projects/",
+    "en": {
+      "title": "Projects | Evyatar Hazan",
+      "description": "A bilingual engineering work dossier with seven projects, documented contributions, public artifacts, filters, and project comparison."
+    },
+    "he": {
+      "title": "פרויקטים | אביתר חזן",
+      "description": "תיק עבודות הנדסי דו־לשוני עם שבעה פרויקטים, תרומה מתועדת, נכסים ציבוריים, סינון והשוואת פרויקטים."
+    }
+  },
+  "about": {
+    "path": "/about/",
+    "en": {
+      "title": "About Evyatar Hazan | Professional Profile",
+      "description": "A professional profile for Evyatar Hazan that separates self-description and working preferences from public project and article evidence, with explicit boundaries for information gaps."
+    },
+    "he": {
+      "title": "אודות אביתר חזן | פרופיל מקצועי",
+      "description": "פרופיל מקצועי של אביתר חזן שמפריד בין תיאור עצמי והעדפות עבודה לבין ראיות ציבוריות מפרויקטים ומאמרים, עם גבולות מפורשים לפערי מידע."
+    }
+  },
+  "blog": {
+    "path": "/blog/",
+    "en": {
+      "title": "Blog | Evyatar Hazan",
+      "description": "Short articles about product engineering, frontend work, live websites, validation, and deployment."
+    },
+    "he": {
+      "title": "בלוג | אביתר חזן",
+      "description": "מאמרים קצרים על פיתוח מוצר, Frontend, אתרים חיים, בדיקות ופריסה."
+    }
+  },
+  "privacy": {
+    "path": "/privacy/",
+    "en": {
+      "title": "Privacy | Evyatar Hazan",
+      "description": "Basic privacy information for Evyatar Hazan portfolio visitors, including contact paths, minimal measurement, and data-handling expectations."
+    },
+    "he": {
+      "title": "פרטיות | אביתר חזן",
+      "description": "מידע בסיסי על פרטיות באתר הפורטפוליו של אביתר חזן, כולל יצירת קשר, שימוש מינימלי במדידה וציפיות טיפול בנתונים."
+    }
+  },
+  "contact": {
+    "path": "/contact/",
+    "en": {
+      "title": "Contact | Evyatar Hazan",
+      "description": "A context-aware inquiry workspace for a project, role, or collaboration, with direct WhatsApp, email, and LinkedIn contact plus an optional reviewed brief."
+    },
+    "he": {
+      "title": "יצירת קשר | אביתר חזן",
+      "description": "מרחב פנייה תלוי־הקשר לפרויקט, משרה או שיתוף פעולה, עם WhatsApp, אימייל ו-LinkedIn ישירים ותקציר אופציונלי שנבדק לפני שימוש."
+    }
+  },
+  "lab": {
+    "path": "/lab/",
+    "en": {
+      "title": "Interface Craft Lab | Evyatar Hazan",
+      "description": "Synthetic interface experiments and a reusable date presenter, clearly separated from client delivery and product metrics."
+    },
+    "he": {
+      "title": "מעבדת ממשק | אביתר חזן",
+      "description": "ניסויי ממשק סינתטיים ורכיב תאריך רב־שימושי, עם הבחנה מפורשת מעבודת לקוח וממדדי מוצר."
+    }
+  }
+}

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { localizedPath } from '../routing/portfolioRoutes';
 import { presentCalendarDate } from '../features/date-presentation/presentCalendarDate';
+import { getStaticRouteSeo } from '../data/routeSeo';
 
 const PRIVACY_LAST_UPDATED = '2026-10-30';
 
@@ -13,13 +14,7 @@ const PrivacyPage = () => {
   const language = isHebrew ? 'he' : 'en';
   const lastUpdated = presentCalendarDate(PRIVACY_LAST_UPDATED, { language });
 
-  usePageSeo({
-    title: isHebrew ? 'פרטיות | אביתר חזן' : 'Privacy | Evyatar Hazan',
-    description: isHebrew
-      ? 'מידע בסיסי על פרטיות באתר הפורטפוליו של אביתר חזן, כולל יצירת קשר, שימוש מינימלי במדידה וציפיות טיפול בנתונים.'
-      : 'Basic privacy information for Evyatar Hazan portfolio visitors, including contact paths, minimal measurement, and data-handling expectations.',
-    path: '/privacy/'
-  });
+  usePageSeo(getStaticRouteSeo('privacy', language));
 
   const sections = isHebrew
     ? [

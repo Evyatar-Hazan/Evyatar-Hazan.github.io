@@ -18,6 +18,7 @@ import { localizedPath } from '../routing/portfolioRoutes';
 import { cardSurfaceClassName } from '../components/cardSurface';
 import BlogDateMeta from '../components/blog/BlogDateMeta';
 import { formatLocaleIndex, formatLocaleNumber } from '../features/locale-presentation/formatLocale';
+import { getStaticRouteSeo } from '../data/routeSeo';
 
 const languageFromI18n = (language: string): BlogLanguage => (language === 'he' ? 'he' : 'en');
 
@@ -224,11 +225,7 @@ const BlogIndex = () => {
     updateParams({ q: '', topic: '', depth: '' });
   };
 
-  usePageSeo({
-    title: t('blog.seo.indexTitle'),
-    description: t('blog.seo.indexDescription'),
-    path: '/blog/'
-  });
+  usePageSeo(getStaticRouteSeo('blog', language));
 
   return (
     <main id="main-content" tabIndex={-1} className="blog-archive">
