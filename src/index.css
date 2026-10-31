@@ -98,8 +98,12 @@ main > section[id] {
   --shadow-inset-highlight: inset 0 1px color-mix(in srgb, var(--color-white) 48%, transparent);
   --shadow-card-subtle: 0 14px 34px color-mix(in srgb, var(--color-neutral-950) 10%, transparent);
   --shadow-focus-primary: 0 0 0 3px color-mix(in srgb, var(--color-primary-500) 24%, transparent);
-  --shadow-drawer-start: -24px 0 70px color-mix(in srgb, var(--color-neutral-950) 24%, transparent);
-  --shadow-drawer-end: 24px 0 70px color-mix(in srgb, var(--color-neutral-950) 24%, transparent);
+  --inline-direction: 1;
+  --inline-shift-xs: 0.25rem;
+  --inline-shift-sm: 0.35rem;
+  --inline-shift-md: 0.45rem;
+  --inline-start-origin: 0%;
+  --shadow-drawer: -24px 0 70px color-mix(in srgb, var(--color-neutral-950) 24%, transparent);
   --type-label: 0.875rem;
   --type-body-sm: 0.9375rem;
   --type-body: 1rem;
@@ -200,6 +204,15 @@ main > section[id] {
   --blog-code-action-surface: #283952;
 }
 
+:root[dir='rtl'] {
+  --inline-direction: -1;
+  --inline-shift-xs: -0.25rem;
+  --inline-shift-sm: -0.35rem;
+  --inline-shift-md: -0.45rem;
+  --inline-start-origin: 100%;
+  --shadow-drawer: 24px 0 70px color-mix(in srgb, var(--color-neutral-950) 24%, transparent);
+}
+
 svg.lucide {
   flex: none;
   stroke-width: var(--icon-stroke-width);
@@ -231,8 +244,7 @@ svg.lucide {
   --color-neutral-800: #283952;
   --color-neutral-900: #17243a;
   --color-neutral-950: #0d1626;
-  --shadow-drawer-start: -24px 0 80px color-mix(in srgb, var(--color-black) 72%, transparent);
-  --shadow-drawer-end: 24px 0 80px color-mix(in srgb, var(--color-black) 72%, transparent);
+  --shadow-drawer: -24px 0 80px color-mix(in srgb, var(--color-black) 72%, transparent);
   --home-surface-page: var(--color-surface-canvas);
   --home-surface-muted: var(--color-surface-muted);
   --home-surface-raised: var(--color-surface-raised);
@@ -292,6 +304,10 @@ svg.lucide {
   --blog-code-action-hover: #ffffff;
   --blog-code-action-surface: #283952;
   --effect-blog-shadow: 0 34px 92px color-mix(in srgb, var(--color-black) 52%, transparent);
+}
+
+:root[dir='rtl'].dark {
+  --shadow-drawer: 24px 0 80px color-mix(in srgb, var(--color-black) 72%, transparent);
 }
 
 body {
@@ -2163,11 +2179,8 @@ body {
 .contact-field {
   position: relative;
   border-bottom: 1px solid color-mix(in srgb, var(--color-neutral-500) 27%, transparent);
-  padding: 1rem 0.85rem 1rem 2.75rem;
-}
-
-[dir='rtl'] .contact-field {
-  padding: 1rem 2.75rem 1rem 0.85rem;
+  padding-block: 1rem;
+  padding-inline: 2.75rem 0.85rem;
 }
 
 .contact-field:nth-child(2) {
@@ -2229,11 +2242,22 @@ body {
 
 .contact-field:focus-within {
   background: color-mix(in srgb, var(--color-primary-500) 7%, transparent);
-  box-shadow: inset 3px 0 0 var(--color-primary-500);
 }
 
-[dir='rtl'] .contact-field:focus-within {
-  box-shadow: inset -3px 0 0 var(--color-primary-500);
+.contact-field::after {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 3px;
+  content: '';
+  background: var(--color-primary-500);
+  opacity: 0;
+  transition: opacity 160ms ease;
+  pointer-events: none;
+}
+
+.contact-field:focus-within::after {
+  opacity: 1;
 }
 
 .contact-submit {
@@ -2402,19 +2426,11 @@ body {
     padding: 0.8rem;
   }
 
-  .contact-field,
-  [dir='rtl'] .contact-field {
+  .contact-field {
     grid-column: 1;
     border-inline-start: 0;
-    padding: 0.9rem 2.4rem 0.9rem 0.7rem;
-  }
-
-  [dir='rtl'] .contact-field {
-    padding: 0.9rem 2.4rem 0.9rem 0.7rem;
-  }
-
-  [dir='ltr'] .contact-field {
-    padding: 0.9rem 0.7rem 0.9rem 2.4rem;
+    padding-block: 0.9rem;
+    padding-inline: 2.4rem 0.7rem;
   }
 
   .contact-field::before {
@@ -2492,14 +2508,11 @@ body {
   overflow: hidden;
   border: 1px solid var(--effect-shell-border);
   border-radius: var(--radius-pill);
-  padding: 0.62rem 0.82rem 0.62rem 1.2rem;
+  padding-block: 0.62rem;
+  padding-inline: 1.2rem 0.82rem;
   background: var(--effect-shell-surface);
   box-shadow: var(--effect-shell-shadow);
   pointer-events: auto;
-}
-
-[dir='rtl'] .system-rail {
-  padding: 0.62rem 1.2rem 0.62rem 0.82rem;
 }
 
 .system-rail::before {
@@ -2741,22 +2754,14 @@ body {
     clamp(1rem, 5vw, 1.6rem)
     calc(1rem + env(safe-area-inset-bottom, 0px));
   background: color-mix(in srgb, var(--color-white) 96%, var(--color-primary-50));
-  box-shadow: var(--shadow-drawer-start);
+  box-shadow: var(--shadow-drawer);
   pointer-events: auto;
-}
-
-[dir='rtl'] .system-rail-mobile-menu {
-  box-shadow: var(--shadow-drawer-end);
 }
 
 .dark .system-rail-mobile-menu {
   border-inline-start-color: color-mix(in srgb, var(--color-white) 14%, transparent);
   background: color-mix(in srgb, var(--color-neutral-950) 96%, var(--color-primary-950));
-  box-shadow: var(--shadow-drawer-start);
-}
-
-[dir='rtl'] .dark .system-rail-mobile-menu {
-  box-shadow: var(--shadow-drawer-end);
+  box-shadow: var(--shadow-drawer);
 }
 
 .system-rail-mobile-masthead {
@@ -2930,10 +2935,7 @@ body {
 .system-rail-mobile-arrow {
   width: 1rem;
   height: 1rem;
-}
-
-[dir='rtl'] .system-rail-mobile-arrow {
-  transform: scaleX(-1);
+  transform: scaleX(var(--inline-direction));
 }
 
 .system-rail-mobile-link.is-active {
@@ -3080,7 +3082,6 @@ body {
 }
 
 .contact-node-tooltip {
-  --contact-node-shift: 0.45rem;
   position: absolute;
   inset-inline-end: calc(100% + 0.7rem);
   display: grid;
@@ -3093,16 +3094,12 @@ body {
   opacity: 0;
   color: var(--color-neutral-900);
   text-align: start;
-  transform: translate3d(var(--contact-node-shift), 0, 0);
+  transform: translate3d(var(--inline-shift-md), 0, 0);
   transition:
     opacity 150ms ease,
     transform 150ms cubic-bezier(0.22, 1, 0.36, 1);
   white-space: nowrap;
   pointer-events: none;
-}
-
-[dir='rtl'] .contact-node-tooltip {
-  --contact-node-shift: -0.45rem;
 }
 
 .dark .contact-node-tooltip {
@@ -3542,11 +3539,8 @@ body {
 
 .reading-route-card li {
   position: relative;
-  padding: 0.75rem 1.15rem 0.8rem 2rem;
-}
-
-[dir='rtl'] .reading-route-card li {
-  padding: 0.75rem 2rem 0.8rem 1.15rem;
+  padding-block: 0.75rem 0.8rem;
+  padding-inline: 2rem 1.15rem;
 }
 
 .reading-route-card li + li {
@@ -4508,11 +4502,7 @@ body {
 
 .blog-reading-rail a[aria-current='location'] {
   color: var(--color-primary-600);
-  transform: translateX(0.25rem);
-}
-
-[dir='rtl'] .blog-reading-rail a[aria-current='location'] {
-  transform: translateX(-0.25rem);
+  transform: translateX(var(--inline-shift-xs));
 }
 
 .dark .blog-reading-rail a[aria-current='location'] {

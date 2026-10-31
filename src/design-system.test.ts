@@ -42,8 +42,7 @@ describe('canonical design tokens', () => {
       '--shadow-inset-highlight',
       '--shadow-card-subtle',
       '--shadow-focus-primary',
-      '--shadow-drawer-start',
-      '--shadow-drawer-end',
+      '--shadow-drawer',
     ]) {
       expect(stylesheet, token).toContain(token);
     }
