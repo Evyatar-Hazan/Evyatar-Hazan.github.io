@@ -9,13 +9,8 @@ import ScrollProgress from './components/animations/ScrollProgress';
 import ContactBriefFeature from './features/contact/ContactBriefFeature';
 import AudienceEntryPaths from './components/sections/AudienceEntryPaths';
 import { useTheme } from './hooks/useTheme';
-import BlogIndex from './pages/BlogIndex';
-import BlogPost from './pages/BlogPost';
-import ContactPage from './pages/ContactPage';
 import Home from './pages/Home';
 import NotFoundPage from './pages/NotFoundPage';
-import PrivacyPage from './pages/PrivacyPage';
-import ProjectCaseStudy from './pages/ProjectCaseStudy';
 import {
   defaultPortfolioLanguage,
   getLanguageFromPath,
@@ -27,7 +22,12 @@ import {
 const Projects = lazy(() => import('./components/sections/Projects'));
 const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
 const BlogPreview = lazy(() => import('./components/sections/BlogPreview'));
+const ProjectCaseStudy = lazy(() => import('./pages/ProjectCaseStudy'));
+const BlogIndex = lazy(() => import('./pages/BlogIndex'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
 const LabPage = lazy(() => import('./pages/LabPage'));
 
 type SectionFallbackProps = {
@@ -50,7 +50,7 @@ const SectionFallback = ({ id, minHeightClassName }: SectionFallbackProps) => (
 );
 
 const PageFallback = ({ id, minHeightClassName }: SectionFallbackProps) => (
-  <main id="main-content" tabIndex={-1}>
+  <main id="main-content" tabIndex={-1} className="page-route-fallback">
     <SectionFallback id={id} minHeightClassName={minHeightClassName} />
   </main>
 );
@@ -148,10 +148,34 @@ const AppShell = () => {
               </Suspense>
             </LocalizedRoute>
           )} />
-          <Route path="/:language/projects/:projectId" element={<LocalizedRoute><ProjectCaseStudy /></LocalizedRoute>} />
-          <Route path="/:language/blog" element={<LocalizedRoute><BlogIndex /></LocalizedRoute>} />
-          <Route path="/:language/blog/:slug" element={<LocalizedRoute><BlogPost /></LocalizedRoute>} />
-          <Route path="/:language/contact" element={<LocalizedRoute><ContactPage /></LocalizedRoute>} />
+          <Route path="/:language/projects/:projectId" element={(
+            <LocalizedRoute>
+              <Suspense fallback={<PageFallback id="project-case-study" minHeightClassName="min-h-screen" />}>
+                <ProjectCaseStudy />
+              </Suspense>
+            </LocalizedRoute>
+          )} />
+          <Route path="/:language/blog" element={(
+            <LocalizedRoute>
+              <Suspense fallback={<PageFallback id="blog-index" minHeightClassName="min-h-screen" />}>
+                <BlogIndex />
+              </Suspense>
+            </LocalizedRoute>
+          )} />
+          <Route path="/:language/blog/:slug" element={(
+            <LocalizedRoute>
+              <Suspense fallback={<PageFallback id="blog-post" minHeightClassName="min-h-screen" />}>
+                <BlogPost />
+              </Suspense>
+            </LocalizedRoute>
+          )} />
+          <Route path="/:language/contact" element={(
+            <LocalizedRoute>
+              <Suspense fallback={<PageFallback id="contact-page" minHeightClassName="min-h-screen" />}>
+                <ContactPage />
+              </Suspense>
+            </LocalizedRoute>
+          )} />
           <Route path="/:language/about" element={(
             <LocalizedRoute>
               <Suspense fallback={<PageFallback id="about-page" minHeightClassName="min-h-screen" />}>
@@ -159,7 +183,13 @@ const AppShell = () => {
               </Suspense>
             </LocalizedRoute>
           )} />
-          <Route path="/:language/privacy" element={<LocalizedRoute><PrivacyPage /></LocalizedRoute>} />
+          <Route path="/:language/privacy" element={(
+            <LocalizedRoute>
+              <Suspense fallback={<PageFallback id="privacy-page" minHeightClassName="min-h-screen" />}>
+                <PrivacyPage />
+              </Suspense>
+            </LocalizedRoute>
+          )} />
           <Route path="/:language/lab" element={(
             <LocalizedRoute>
               <Suspense fallback={<PageFallback id="lab" minHeightClassName="min-h-screen" />}>

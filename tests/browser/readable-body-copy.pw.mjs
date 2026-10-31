@@ -40,6 +40,7 @@ for (const language of ['en', 'he']) {
         await page.setViewportSize(viewport);
         await page.goto(`/${language}${route.path}`, { waitUntil: 'domcontentloaded' });
         await page.locator('#main-content').waitFor({ state: 'visible' });
+        await expect(page.locator(route.selectors[0]).first()).toBeVisible();
         await page.evaluate(async () => {
           await document.fonts.ready;
           await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
