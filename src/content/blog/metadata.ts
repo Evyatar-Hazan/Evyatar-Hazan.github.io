@@ -6,6 +6,7 @@ import type { BlogDepth, BlogLanguage, BlogPostMeta } from './types';
  * values so a new article can be inserted without renumbering the collection.
  */
 export const editorialRankBySlug = {
+  'entry-copy-should-explain-the-next-step': 135,
   'credible-portfolio': 10,
   'deployment-is-product': 20,
   'retries-should-not-duplicate-data': 30,
@@ -47,6 +48,28 @@ export const editorialRankBySlug = {
  * not pull the article bodies into their bundle.
  */
 const metadataBase = {
+  'entry-copy-should-explain-the-next-step:he': {
+      slug: 'entry-copy-should-explain-the-next-step',
+      language: 'he',
+      title: 'טקסט הכניסה צריך להסביר את הצעד הבא',
+      excerpt: 'איך שינוי ניסוח בשלושה מסלולי כניסה בפורטפוליו הפריד בין צורך המבקר, טקסט הכפתור והיעד — ומה הבדיקות עדיין לא מוכיחות.',
+      readerOutcome: 'תוכל לבדוק שכותרת, הסבר וכפתור יוצרים צעד הבא ברור, ולהפריד בין אימות ניווט למשוב משתמשים.',
+      date: '2026-11-01',
+      readTime: '4 דקות קריאה',
+      tags: ['Product', 'UX', 'Writing'],
+      featured: false,
+    },
+  'entry-copy-should-explain-the-next-step:en': {
+      slug: 'entry-copy-should-explain-the-next-step',
+      language: 'en',
+      title: 'Entry copy should explain the next step',
+      excerpt: 'How revising three portfolio entry paths connected visitor needs, button copy, and destinations, with clear limits on what tests can prove.',
+      readerOutcome: 'You’ll be able to review titles, descriptions, and buttons as one next step, while separating navigation checks from user feedback.',
+      date: '2026-11-01',
+      readTime: '4 min read',
+      tags: ['Product', 'UX', 'Writing'],
+      featured: false,
+    },
   'focus-tests-need-an-unfocused-baseline:he': {
       slug: 'focus-tests-need-an-unfocused-baseline',
       language: 'he',
@@ -785,6 +808,7 @@ type BlogSlug = (typeof metadataBase)[keyof typeof metadataBase]['slug'];
  * depth, while both localized versions inherit the same classification.
  */
 export const blogDepthBySlug = {
+  'entry-copy-should-explain-the-next-step': 'applied',
   'focus-tests-need-an-unfocused-baseline': 'applied',
   'shared-container-is-a-layout-contract': 'applied',
   'initial-html-should-contain-the-article': 'applied',

@@ -1,0 +1,39 @@
+In a recent update to my portfolio, one change involved the text above three links. The heading changed from “What are you here to explore?” to “What do you need to move forward?”. The destinations remained the contact page, projects, and blog.
+
+It looks like a copy edit. For me, it raised a product question: does the entrance help a visitor choose a next step, or mainly describe how I organized the site?
+
+## Three reasons to visit, three possible next steps
+
+The site data defines three entry paths: one for business owners and product teams, one for recruiters and technical leaders, and one for technical readers. Each has an audience label, title, description, and call to action in both languages.
+
+That structure lets the site offer different actions. Someone with a system to discuss can open contact. Someone assessing previous work can open projects. Someone interested in decisions and tradeoffs can read the technical notes.
+
+These are working assumptions represented in the interface. They are not user research findings. Having three cards does not establish that visitors recognize themselves in one of them.
+
+## Change the sentence's point of view
+
+The business path previously started with “I turn a real need”. It now starts with “Move a real need forward”. The Hebrew version makes the same shift, moving from a statement about what I do toward a need we can advance.
+
+The sentence now centers the thing a visitor wants to accomplish. The description narrows the promise: the first conversation focuses on the need and a useful outcome. The button continues to offer a discussion about a product or system.
+
+Those pieces need to work together. A title describing an outcome, a description establishing context, and a button naming an action form a sequence that can be reviewed. Removing the first-person pronoun alone does not make a sentence useful.
+
+## Copy and destinations have separate responsibilities
+
+In the implementation, labels are localized while destinations remain structured data, such as `{ route: 'contact' }`. Changing a sentence does not require inventing another URL for each language.
+
+That separation also helps review. I can assess what a heading means separately from whether its link reaches the appropriate place. In this change, the revised copy kept the three entry destinations intact.
+
+Localization still needs judgment. Hebrew and English should set the same expectation even when their sentence structures differ. Matching words is no substitute for reading each version on its own.
+
+## What the checks can establish
+
+A separate commit updated the expected headings in the browser check for these entry paths. The expected link list stayed the same. That keeps the new wording aligned with the existing navigation contract.
+
+A check like this can catch a missing heading or an incorrect destination within the scope of its assertions. It cannot establish that the copy is easier to understand, increases inquiries, or improves hiring outcomes. Those questions need user feedback or suitable measurement.
+
+## What I will check next time
+
+When reviewing an entrance, I want to read its title, description, and button as one sequence, then open the destination. Does the page continue the expectation the copy created?
+
+That is what I am taking from this update: entry copy is part of navigation. Reviewing it means checking the step a visitor can actually take, while keeping a clear boundary between what the code verifies and what we still need to learn from people.

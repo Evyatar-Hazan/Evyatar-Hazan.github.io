@@ -1,3 +1,5 @@
+import EntryCopyShouldExplainTheNextStepEn from './entry-copy-should-explain-the-next-step.en.mdx';
+import EntryCopyShouldExplainTheNextStepHe from './entry-copy-should-explain-the-next-step.he.mdx';
 import FocusTestsNeedAnUnfocusedBaselineEn from './focus-tests-need-an-unfocused-baseline.en.mdx';
 import FocusTestsNeedAnUnfocusedBaselineHe from './focus-tests-need-an-unfocused-baseline.he.mdx';
 import SharedContainerIsALayoutContractEn from './shared-container-is-a-layout-contract.en.mdx';
@@ -68,6 +70,14 @@ import { blogPostMetadataByKey, compareBlogPostValue } from './metadata';
 import type { BlogLanguage, BlogPost } from './types';
 
 export const blogPosts: BlogPost[] = [
+  {
+    ...blogPostMetadataByKey['entry-copy-should-explain-the-next-step:he'],
+    Content: EntryCopyShouldExplainTheNextStepHe,
+  },
+  {
+    ...blogPostMetadataByKey['entry-copy-should-explain-the-next-step:en'],
+    Content: EntryCopyShouldExplainTheNextStepEn,
+  },
   {
     ...blogPostMetadataByKey['focus-tests-need-an-unfocused-baseline:he'],
     Content: FocusTestsNeedAnUnfocusedBaselineHe,

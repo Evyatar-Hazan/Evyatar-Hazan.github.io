@@ -117,9 +117,9 @@ describe('BlogIndex knowledge library', () => {
     const hebrewPosts = getBlogPosts('he');
 
     expect(getAvailableBlogDepths(englishPosts)).toEqual(['foundation', 'applied', 'deep-dive']);
-    expect(Object.keys(blogDepthBySlug)).toHaveLength(33);
-    expect(englishPosts).toHaveLength(33);
-    expect(hebrewPosts).toHaveLength(33);
+    expect(Object.keys(blogDepthBySlug)).toHaveLength(34);
+    expect(englishPosts).toHaveLength(34);
+    expect(hebrewPosts).toHaveLength(34);
 
     englishPosts.forEach((post) => {
       expect(post.depth).toBe(blogDepthBySlug[post.slug as keyof typeof blogDepthBySlug]);
@@ -138,7 +138,7 @@ describe('BlogIndex knowledge library', () => {
     fireEvent.click(screen.getByRole('button', { name: /^Load more notes/ }));
     expect(resultCards()).toHaveLength(24);
     fireEvent.click(screen.getByRole('button', { name: /^Load more notes/ }));
-    expect(resultCards()).toHaveLength(32);
+    expect(resultCards()).toHaveLength(33);
     expect(screen.queryByRole('button', { name: /^Load more notes/ })).not.toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'What I learned from building a credible portfolio' })).toBeInTheDocument();
   });

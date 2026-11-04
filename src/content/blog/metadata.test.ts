@@ -18,7 +18,7 @@ describe('blog date metadata', () => {
 
 describe('blog card metadata', () => {
   it('gives every localized article a concise reader outcome', () => {
-    expect(blogPostMetadata).toHaveLength(66);
+    expect(blogPostMetadata).toHaveLength(68);
 
     blogPostMetadata.forEach((post) => {
       expect(post.excerpt.trim().length).toBeGreaterThan(20);
@@ -26,7 +26,7 @@ describe('blog card metadata', () => {
       expect(post.readerOutcome).not.toBe(post.excerpt);
     });
 
-    expect(new Set(blogPostMetadata.map((post) => post.readerOutcome)).size).toBe(66);
+    expect(new Set(blogPostMetadata.map((post) => post.readerOutcome)).size).toBe(68);
   });
 
   it('keeps a Hebrew and English outcome for every article', () => {
@@ -38,7 +38,7 @@ describe('blog card metadata', () => {
       languagesBySlug.set(post.slug, languages);
     });
 
-    expect(languagesBySlug.size).toBe(33);
+    expect(languagesBySlug.size).toBe(34);
     languagesBySlug.forEach((languages) => {
       expect([...languages].sort()).toEqual(['en', 'he']);
     });

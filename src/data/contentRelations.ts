@@ -201,6 +201,7 @@ export const articleRelationThemes = [
       'seo-discovery-is-product-work',
       'small-project-architecture',
       'spa-routes-need-real-http',
+      'entry-copy-should-explain-the-next-step',
     ],
     reason: {
       en: 'Continues the content-discovery path: clear structure, credible writing, and pages that remain reachable.',
