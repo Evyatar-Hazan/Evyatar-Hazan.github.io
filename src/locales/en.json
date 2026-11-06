@@ -193,9 +193,9 @@
       },
       "emergency_protocol": {
         "title": "Emergency Protocol Diagram",
-        "description": "A full-stack tool for learning and practicing a BLS pathway only; not for use during emergencies and without a claim of medical validation.",
-        "summary": "An interactive BLS learning and practice tool with user authentication and discussion features.",
-        "impact": "The project shows how a static document can become a structured product with permissions, database models, and maintainable delivery.",
+        "description": "A learning-and-practice experience for exploring a BLS pathway only. It is not for use during emergencies and makes no claim of medical validation.",
+        "summary": "Explore a BLS pathway step by step, then use sign-in and discussion to review it with other learners.",
+        "impact": "The architecture supports a maintainable learning experience with permissions and collaboration features; it is engineering evidence, not a medical outcome.",
         "previewTitle": "BLS learning screen with a practice step, reporting guidance and review questions",
         "status": "Full stack",
         "problem": "Complex protocols are hard to understand, update, and share across stakeholders.",
