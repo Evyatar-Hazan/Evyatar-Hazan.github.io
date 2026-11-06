@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   buildContactUrl,
+  contactIntentOptions,
   getContactContextDetails,
   parseContactContext,
   sanitizeContactSearch,
@@ -8,6 +9,60 @@ import {
 } from './contactIntent';
 
 describe('contact intent model', () => {
+  it.each([
+    {
+      language: 'en' as const,
+      intent: 'general' as const,
+      title: 'I’m not sure where to start',
+      description: 'My need spans more than one path, or I want to describe it in my own words.',
+    },
+    {
+      language: 'en' as const,
+      intent: 'new-product' as const,
+      title: 'I’m launching a new product or site',
+      description: 'I have a new public-facing idea that needs a clear path to a launch-ready product or site.',
+    },
+    {
+      language: 'en' as const,
+      intent: 'internal-system' as const,
+      title: 'I need an internal or full-stack system',
+      description: 'I need a maintainable system for a manual workflow, operational need, or team process.',
+    },
+    {
+      language: 'en' as const,
+      intent: 'improve-existing' as const,
+      title: 'I want to improve an existing product',
+      description: 'I have a live product that needs a focused improvement to its experience, structure, discoverability, or validation.',
+    },
+    {
+      language: 'he' as const,
+      intent: 'general' as const,
+      title: 'עוד לא ברור לי מאיפה להתחיל',
+      description: 'הצורך שלי משלב כמה מסלולים, או שנוח לי לתאר אותו במילים שלי.',
+    },
+    {
+      language: 'he' as const,
+      intent: 'new-product' as const,
+      title: 'אני רוצה להשיק מוצר או אתר חדש',
+      description: 'יש לי רעיון חדש שצריך מסלול ברור למוצר או לאתר שמוכן להשקה.',
+    },
+    {
+      language: 'he' as const,
+      intent: 'internal-system' as const,
+      title: 'אני צריך מערכת פנימית או Full Stack',
+      description: 'אני צריך להפוך תהליך ידני, צורך תפעולי או עבודה צוותית למערכת שאפשר לתחזק.',
+    },
+    {
+      language: 'he' as const,
+      intent: 'improve-existing' as const,
+      title: 'אני רוצה לשפר מוצר קיים',
+      description: 'יש לי מוצר פעיל שצריך שיפור ממוקד בחוויה, במבנה, בגילוי או בבדיקות.',
+    },
+  ])('keeps $language $intent copy visitor-centered', ({ language, intent, title, description }) => {
+    expect(getContactContextDetails(language, { intent })).toMatchObject({ title, description });
+    expect(contactIntentOptions(language)).toContainEqual({ id: intent, label: title });
+  });
+
   it.each(['general', 'new-product', 'internal-system', 'improve-existing'] as const)(
     'parses the %s intent',
     (intent) => {
