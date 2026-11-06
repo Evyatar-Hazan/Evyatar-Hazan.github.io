@@ -181,12 +181,12 @@ const caseStudies = {
     },
     overview: {
       en: [
-        'People who need to transform technical data should not have to upload it to a server. Online Converter provides a bilingual catalog of 140 converter definitions, including 16 editorially reviewed tools published in both English and Hebrew, while conversion runs locally in the browser.',
-        'That meant treating SEO, internal linking, metadata, categories, examples, FAQ, and technical quality checks as part of the product itself, not as a checklist added at the end.'
+        'When someone needs to convert a draft that may contain sensitive data, uploading it to an unfamiliar service creates a second problem. Online Converter starts with a clear boundary: the core conversion runs locally in the browser, so the input does not need to be sent to a server. The verified surface includes a bilingual catalog of 140 converter definitions, including 16 editorially reviewed tools published in English and Hebrew.',
+        'From that privacy-first foundation, I expanded the utility through a structured registry, metadata, categories, internal links, examples, and quality checks. Together, they help people discover the right tool while keeping the conversion flow consistent.'
       ],
       he: [
-        'מי שצריך להמיר מידע טכני לא אמור להידרש להעלות אותו לשרת. Online Converter מציע קטלוג דו־לשוני של 140 הגדרות ממיר, ובהן 16 כלים שעברו עריכה ופורסמו בעברית ובאנגלית, בעוד ההמרה עצמה רצה מקומית בדפדפן.',
-        'זה דרש להתייחס ל-SEO, קישורים פנימיים, metadata, קטגוריות, דוגמאות, FAQ ובדיקות איכות טכניות כחלק מהמוצר עצמו, לא כרשימה שמוסיפים בסוף.'
+        'כשצריך להמיר טיוטה שעשויה לכלול מידע רגיש, העלאה לשירות לא מוכר יוצרת בעיה נוספת. Online Converter מתחיל בגבול ברור: ההמרה המרכזית מתבצעת מקומית בדפדפן, כך שאין צורך לשלוח את הקלט לשרת. המשטח שאומת כולל קטלוג דו־לשוני של 140 הגדרות ממיר, ובהן 16 כלים שעברו עריכה ופורסמו בעברית ובאנגלית.',
+        'מהבסיס שומר הפרטיות הזה, הרחבתי את הכלי באמצעות registry מובנה, metadata, קטגוריות, קישורים פנימיים, דוגמאות ובדיקות איכות. יחד הם עוזרים לאנשים למצוא את הכלי המתאים, תוך שמירה על זרימת המרה עקבית.'
       ]
     },
     audience: {

@@ -78,6 +78,17 @@ describe('case study product story contract', () => {
     expect(caseStudyStories.united_hatzalah.limitation.en).toMatch(/no .* metric is claimed/i);
   });
 
+  it('opens the Online Converter case study with the sensitive-data scenario and browser boundary', () => {
+    const onlineConverter = projects.find(({ id }) => id === 'online_converter')?.caseStudy;
+    const englishOverview = onlineConverter?.overview.en.join(' ') ?? '';
+    const hebrewOverview = onlineConverter?.overview.he.join(' ') ?? '';
+
+    expect(onlineConverter?.overview.en[0]).toMatch(/sensitive data.*runs (?:locally )?in the browser/is);
+    expect(onlineConverter?.overview.he[0]).toMatch(/מידע רגיש.*מתבצעת (?:מקומית )?בדפדפן/su);
+    expect(englishOverview).toMatch(/bilingual catalog.*discover the right tool/is);
+    expect(hebrewOverview).toMatch(/קטלוג דו־לשוני.*למצוא את הכלי המתאים/su);
+  });
+
   it('cycles deterministically through the four case studies', () => {
     expect(caseStudyStoryProjectIds.map(getNextCaseStudyProjectId)).toEqual([
       'online_converter',
