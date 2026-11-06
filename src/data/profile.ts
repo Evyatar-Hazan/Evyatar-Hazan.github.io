@@ -72,12 +72,12 @@ const caseStudies = {
     },
     overview: {
       en: [
-        'This project was not about adding as many website features as possible. It was about helping a local catering business feel premium, clear, and easy to contact from the first screen.',
-        'The core product decision was to treat WhatsApp as the primary conversion path, then build the page hierarchy, trust elements, imagery, FAQ, and copy around that one action.'
+        'A visitor planning an event needs to understand quickly whether the catering style fits the occasion and how to start an inquiry. The challenge is to present the service, build trust, and make the next step clear without overwhelming them with detail.',
+        'That led to one product decision: make WhatsApp the primary inquiry path, then organize the content hierarchy, trust cues, imagery, FAQ, and copy around that conversation.'
       ],
       he: [
-        'הפרויקט הזה לא היה ניסיון לדחוף כמה שיותר פיצ׳רים לאתר. המטרה היתה לעזור לעסק קייטרינג מקומי להיראות איכותי, ברור וקל ליצירת קשר כבר מהמסך הראשון.',
-        'החלטת המוצר המרכזית היתה להתייחס ל-WhatsApp כערוץ ההמרה הראשי, ואז לבנות סביבו את היררכיית התוכן, אלמנטים של אמון, גלריה, FAQ וקופי.'
+        'מבקר שמתכנן אירוע צריך להבין במהירות אם סגנון הקייטרינג מתאים לאירוע ואיך להתחיל פנייה. האתגר הוא להציג את השירות, לבנות אמון ולהבהיר את הצעד הבא בלי להציף אותו בפרטים.',
+        'מכאן נבעה החלטת מוצר אחת: להפוך את WhatsApp לנתיב הפנייה הראשי, ולארגן סביב השיחה הזו את היררכיית התוכן, רכיבי האמון, התמונות, ה־FAQ והקופי.'
       ]
     },
     audience: {
