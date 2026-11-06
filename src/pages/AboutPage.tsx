@@ -136,8 +136,8 @@ const deliverySteps: Array<{
     target: { route: 'article', id: 'tests-need-honest-environments' },
   },
   {
-    title: { en: 'Hand off and document for maintenance', he: 'מוסרים ומתעדים להמשך תחזוקה' },
-    body: { en: 'Leave a result that can be understood, operated, and changed after the first release.', he: 'משאירים תוצאה שאפשר להבין, לתפעל ולשנות גם אחרי השחרור הראשון.' },
+    title: { en: 'Hand over a system the owner can carry forward', he: 'מוסרים מערכת שבעל המוצר יכול להמשיך לקדם' },
+    body: { en: 'Document the decisions and operating context so the owner—and the next developer—can understand and change the system without depending on its original builder.', he: 'מתעדים את ההחלטות ואת ההקשר התפעולי, כדי שבעל המוצר — והמפתח הבא — יוכלו להבין ולשנות את המערכת בלי תלות במי שבנה אותה.' },
     target: { route: 'article', id: 'deployment-is-product' },
   },
 ];
