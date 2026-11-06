@@ -290,12 +290,12 @@ const caseStudies = {
     },
     overview: {
       en: [
-        'This project organizes a BLS pathway into a tool for learning and practice only. It is not intended for use during an emergency and does not claim medical validation.',
-        'The core value is not only the diagram itself. It is the shift from static documentation toward a permissioned workflow with clear ownership and iteration paths.'
+        'This is a learning and practice product for studying a BLS pathway. It is not intended for use during an emergency, does not replace professional guidance, and makes no claim of medical validation.',
+        'The learning challenge is to make a dense, branching protocol easier to follow, revisit, and discuss without losing track of the current step or where each decision leads.'
       ],
       he: [
-        'הפרויקט מארגן מסלול BLS בכלי למידה ותרגול בלבד. הוא אינו מיועד לשימוש בזמן חירום ואינו מציג טענה לאימות רפואי.',
-        'הערך המרכזי הוא לא רק הדיאגרמה עצמה, אלא המעבר מתיעוד סטטי ל-workflow עם הרשאות, בעלות ברורה ויכולת איטרציה.'
+        'זהו מוצר ללמידה ולתרגול של מסלול BLS. הוא אינו מיועד לשימוש בזמן חירום, אינו מחליף הנחיה מקצועית ואינו מציג טענה לאימות רפואי.',
+        'הקושי הלימודי הוא לעקוב אחר פרוטוקול צפוף ומסועף, לחזור אליו ולדון בו בלי לאבד את השלב הנוכחי או את היעד של כל החלטה.'
       ]
     },
     audience: {
