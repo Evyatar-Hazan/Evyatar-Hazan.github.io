@@ -60,4 +60,33 @@ describe('projects hub visitor-focused copy', () => {
     expect(he.projectsHub.contactPrompt).toContain('רלוונטי');
     expect(he.projectsHub.contactCta).toBe('ספרו לי על המערכת');
   });
+
+  it('explains each lifecycle status plainly without overstating current availability', () => {
+    expect(en.projectsHub.lifecycle).toEqual({
+      active: 'Live when checked',
+      maintained: 'Maintenance documented',
+      archived: 'Moved to archive',
+      historical: 'Past project',
+      undocumented: 'Status not verified',
+    });
+    expect(he.projectsHub.lifecycle).toEqual({
+      active: 'היה חי בבדיקה',
+      maintained: 'תחזוקה תועדה',
+      archived: 'הועבר לארכיון',
+      historical: 'פרויקט עבר',
+      undocumented: 'המצב לא אומת',
+    });
+
+    expect(en.projectsHub.lifecycleNote.active).toContain('does not guarantee it is online now');
+    expect(en.projectsHub.lifecycleNote.maintained).toContain('were not verified');
+    expect(en.projectsHub.lifecycleNote.archived).toContain('No current live version was verified');
+    expect(en.projectsHub.lifecycleNote.historical).toContain('No current live version was verified');
+    expect(en.projectsHub.lifecycleNote.undocumented).toContain('No reliable source was found');
+
+    expect(he.projectsHub.lifecycleNote.active).toContain('אין בכך הבטחה שהוא זמין עכשיו');
+    expect(he.projectsHub.lifecycleNote.maintained).toContain('לא אומתו');
+    expect(he.projectsHub.lifecycleNote.archived).toContain('לא אומתה גרסה חיה נוכחית');
+    expect(he.projectsHub.lifecycleNote.historical).toContain('לא אומתה גרסה חיה נוכחית');
+    expect(he.projectsHub.lifecycleNote.undocumented).toContain('לא נמצא מקור מהימן');
+  });
 });

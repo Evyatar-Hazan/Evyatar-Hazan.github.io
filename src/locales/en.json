@@ -324,18 +324,18 @@
     "publicCodeAvailable": "Public code",
     "lifecycleStatus": "Project status",
     "lifecycle": {
-      "active": "Current / live",
-      "maintained": "Maintained",
-      "archived": "Archived",
-      "historical": "Historical / source only",
-      "undocumented": "Status not documented"
+      "active": "Live when checked",
+      "maintained": "Maintenance documented",
+      "archived": "Moved to archive",
+      "historical": "Past project",
+      "undocumented": "Status not verified"
     },
     "lifecycleNote": {
-      "active": "Public runtime checked on the verification date; not an uptime or ongoing-maintenance promise.",
-      "maintained": "Maintenance was documented on the verification date; not a promise of future availability.",
-      "archived": "The public source documents an archived state.",
-      "historical": "Source-backed portfolio record; no current public runtime is claimed.",
-      "undocumented": "No verified lifecycle source is available."
+      "active": "The public site opened on the date checked. This does not guarantee it is online now or will be maintained.",
+      "maintained": "Maintenance was documented on the date checked. Future updates or availability were not verified.",
+      "archived": "Public evidence shows the project was archived. No current live version was verified.",
+      "historical": "A public source confirms the project existed. No current live version was verified.",
+      "undocumented": "No reliable source was found to verify whether the project is live, maintained, or archived."
     },
     "evidenceStatus": "Evidence status",
     "evidenceVerified": "Documented evidence",
