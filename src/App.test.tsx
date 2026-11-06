@@ -992,14 +992,34 @@ describe('App', () => {
     expect(document.querySelector('link[rel="alternate"]')).not.toBeInTheDocument();
   });
 
-  it('renders a noindex site-level not-found page for unknown routes', () => {
-    renderAt('/en/missing-route/');
+  it('renders bilingual recovery paths on a noindex site-level not-found page', () => {
+    const englishView = renderAt('/en/missing-route/');
 
-    expect(screen.getByRole('heading', { name: 'This page could not be found' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Back to the home page/i })).toHaveAttribute('href', '/en/');
+    expect(screen.getByRole('heading', { name: 'This link broke, but you can keep exploring' })).toBeInTheDocument();
+    expect(screen.getByText(/The page may have moved, the link may be outdated/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Explore the home page/i })).toHaveAttribute('href', '/en/');
+    expect(screen.getByRole('link', { name: /Read the technical writing/i })).toHaveAttribute('href', '/en/blog/');
+    expect(document.querySelector('meta[name="description"]')).toHaveAttribute(
+      'content',
+      'The page may have moved, the link may be outdated, or the address may be mistyped. Return home or continue to the technical writing.',
+    );
     expect(document.querySelector('meta[name="robots"]')).toHaveAttribute('content', 'noindex, follow');
     expect(document.querySelector('link[rel="canonical"]')).not.toBeInTheDocument();
     expect(document.querySelector('link[rel="alternate"]')).not.toBeInTheDocument();
+
+    englishView.unmount();
+    currentLanguage = 'he';
+    renderAt('/he/missing-route/');
+
+    expect(screen.getByRole('heading', { name: 'הקישור נשבר, אבל אפשר להמשיך מכאן' })).toBeInTheDocument();
+    expect(screen.getByText(/ייתכן שהעמוד הועבר, שהקישור התיישן/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /לעמוד הבית ולפרויקטים/i })).toHaveAttribute('href', '/he/');
+    expect(screen.getByRole('link', { name: /לקריאת הכתיבה המקצועית/i })).toHaveAttribute('href', '/he/blog/');
+    expect(document.querySelector('meta[name="description"]')).toHaveAttribute(
+      'content',
+      'ייתכן שהעמוד הועבר, שהקישור התיישן או שנפלה טעות בכתובת. אפשר לחזור לעמוד הבית או להמשיך לכתיבה המקצועית.',
+    );
+    expect(document.querySelector('meta[name="robots"]')).toHaveAttribute('content', 'noindex, follow');
   });
 
   it('closes the mobile menu from the backdrop and restores focus to the trigger', async () => {
