@@ -33,3 +33,14 @@ describe('FIX-101 home-page positioning', () => {
     expect(hebrewTitle).not.toContain('Full Stack Developer');
   });
 });
+
+describe('FIX-102 home-page SEO description', () => {
+  it('connects visitor need, shown results, and the next step in each language', () => {
+    expect(getStaticRouteSeo('home', 'en').description).toBe(
+      'For businesses and product teams planning web work: review live sites, product tools, and documented decisions, then open a relevant case study or get in touch.',
+    );
+    expect(getStaticRouteSeo('home', 'he').description).toBe(
+      'לעסקים ולצוותי מוצר שמתכננים עבודת Web: בחנו אתרים שעלו לאוויר, כלי מוצר והחלטות מתועדות, ואז עברו ל־case study רלוונטי או פנו לשיחה ממוקדת.',
+    );
+  });
+});
