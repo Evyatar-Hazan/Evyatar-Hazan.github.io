@@ -50,8 +50,8 @@ const humanAboutCopy = {
         he: 'סגנון עבודה',
       },
       body: {
-        en: 'I aim for clean, modular code and reusable foundations, with accessibility, clarity, and maintainability treated as design goals. These are working preferences, not a guarantee of a particular outcome.',
-        he: 'אני שואף לקוד נקי ומודולרי ולתשתיות לשימוש חוזר, ומתייחס לנגישות, בהירות ותחזוקתיות כיעדי תכנון. אלה העדפות עבודה, לא הבטחה לתוצאה מסוימת.',
+        en: 'Clean, modular code and reusable foundations are intended to make the product easier for its owner or next team to understand, change, and maintain. Accessibility and clarity remain design goals so future work starts from a clearer foundation. These are working preferences, not a guarantee of a particular outcome.',
+        he: 'קוד נקי ומודולרי ותשתיות לשימוש חוזר נועדו להקל על בעל המוצר או על הצוות הבא להבין את המוצר, לשנות אותו ולתחזק אותו. נגישות ובהירות נשארות חלק מיעדי התכנון, כדי שהמשך העבודה יתחיל מתשתית ברורה יותר. אלה העדפות עבודה, לא הבטחה לתוצאה מסוימת.',
       },
     },
     {
