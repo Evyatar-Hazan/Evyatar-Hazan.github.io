@@ -116,13 +116,13 @@ const deliverySteps: Array<{
   target?: PortfolioRouteTarget;
 }> = [
   {
-    title: { en: 'Clarify the need and desired outcome', he: 'מחדדים את הצורך והתוצאה הרצויה' },
-    body: { en: 'Define the audience, the current constraint, and what should become easier or more reliable.', he: 'מגדירים את הקהל, את האילוץ הנוכחי ואת מה שצריך להפוך לברור, קל או אמין יותר.' },
+    title: { en: 'Frame the decision together', he: 'ממסגרים יחד את ההחלטה' },
+    body: { en: 'Start with your audience, current constraint, and desired outcome; leave with a shared decision question and clear success criteria.', he: 'מתחילים בקהל שלכם, באילוץ הנוכחי ובתוצאה הרצויה; יוצאים עם שאלת החלטה משותפת וקריטריונים ברורים להצלחה.' },
     target: { route: 'project', id: 'nis_boutique' },
   },
   {
-    title: { en: 'Choose the product and architecture decision', he: 'בוחרים החלטת מוצר וארכיטקטורה' },
-    body: { en: 'Shape the smallest coherent system that supports the actual workflow and its constraints.', he: 'מעצבים את המערכת הקוהרנטית הקטנה ביותר שתומכת בתהליך האמיתי ובמגבלותיו.' },
+    title: { en: 'Choose the product and architecture direction', he: 'בוחרים כיוון מוצרי וארכיטקטוני' },
+    body: { en: 'Use that question, the real workflow, and its constraints to compare options; leave with the smallest coherent direction and the tradeoffs we are accepting.', he: 'משתמשים בשאלה, בתהליך האמיתי ובמגבלותיו כדי להשוות חלופות; יוצאים עם הכיוון הקוהרנטי המצומצם ביותר והפשרות שמקבלים במודע.' },
     target: { route: 'article', id: 'small-project-architecture' },
   },
   {
