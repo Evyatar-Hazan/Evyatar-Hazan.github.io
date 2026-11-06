@@ -226,8 +226,8 @@
       "test_yourself": {
         "title": "Test Yourself",
         "description": "A practice and quiz platform with a React client and Express API.",
-        "summary": "A learning platform foundation with client, API, validation scripts, and monorepo structure.",
-        "impact": "Built for educational content that needs to grow gradually without breaking existing quizzes, exercises, or flows.",
+        "summary": "A historical practice project combining quizzes, a React client, and an API; its monorepo structure leaves room to add content and flows over time.",
+        "impact": "The existing implementation demonstrates an end-to-end practice flow. Separating the client, API, and validation scripts supports extending quizzes without claiming a complete product or active usage.",
         "status": "Learning",
         "problem": "Practice systems need to be easy to extend and validate without breaking existing content.",
         "solution": "A TypeScript monorepo with client, API, validation scripts, and CI.",
