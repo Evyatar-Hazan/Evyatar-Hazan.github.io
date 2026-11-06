@@ -8,7 +8,7 @@ describe('FIX-031 hero positioning', () => {
       "What isn't working in your site, system, or workflow?",
     );
     expect(en.home.compiler.headline).toBe(
-      'A clear web product for action and growth.',
+      'A web product for action and growth.',
     );
   });
 
@@ -17,7 +17,7 @@ describe('FIX-031 hero positioning', () => {
       'מה צריך לעבוד טוב יותר באתר, במערכת או בתהליך העבודה?',
     );
     expect(he.home.compiler.headline).toBe(
-      'מוצר Web ברור שמניע לפעולה ולצמיחה.',
+      'מוצר Web לפעולה ולצמיחה.',
     );
   });
 });
