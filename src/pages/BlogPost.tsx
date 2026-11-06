@@ -64,7 +64,9 @@ const BlogPost = () => {
   const progressScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   usePageSeo({
-    title: post ? `${post.title} | ${t('blog.title')}` : t('blog.notFoundSeoTitle'),
+    title: post
+      ? `${post.title} | ${language === 'he' ? 'כתיבה | אביתר חזן' : 'Writing | Evyatar Hazan'}`
+      : t('blog.notFoundSeoTitle'),
     description: post?.excerpt ?? t('blog.notFoundDescription'),
     path: post ? `/blog/${post.slug}/` : '/blog/'
   });
