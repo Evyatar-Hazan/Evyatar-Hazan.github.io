@@ -285,9 +285,9 @@
   },
   "projectsHub": {
     "seoTitle": "Projects | Evyatar Hazan",
-    "seoDescription": "A bilingual engineering work dossier with seven projects, documented contributions, public artifacts, filters, and project comparison.",
+    "seoDescription": "Explore seven engineering projects by the needs they address, documented contributions, technologies, and public evidence available for comparison.",
     "title": "Projects",
-    "introduction": "A working dossier of shipped products, full-stack systems, learning tools, and reusable foundations. Compare the need, contribution, technology, and public evidence without filling the gaps with claims.",
+    "introduction": "See the need each project set out to address, the contribution made, and the technologies and public evidence available. Compare projects to decide where to go deeper based on the problem, the approach, and the available documentation.",
     "countsLabel": "Project collection totals",
     "projectsCount": "Projects",
     "caseStudiesCount": "Case studies",
