@@ -48,3 +48,23 @@ describe('FIX-112 delivery proof', () => {
     });
   });
 });
+
+describe('FIX-113 product and engineering proof', () => {
+  const stackTerms = /Prisma|OAuth|Cloudinary|React Native|APIs?|Admin/i;
+
+  it('connects user experience to reliable implementation in English without a stack dump', () => {
+    const proof = en.home.proof.systems;
+
+    expect(proof.title).toBe('Experience backed by reliable engineering');
+    expect(proof.description).toContain('User journeys and implementation are designed together');
+    expect(`${proof.title} ${proof.description}`).not.toMatch(stackTerms);
+  });
+
+  it('keeps the same visitor-centered promise in Hebrew without a stack dump', () => {
+    const proof = he.home.proof.systems;
+
+    expect(proof.title).toBe('חוויית משתמש שמגובה בהנדסה אמינה');
+    expect(proof.description).toContain('מסע המשתמש והמימוש מתוכננים יחד');
+    expect(`${proof.title} ${proof.description}`).not.toMatch(stackTerms);
+  });
+});
