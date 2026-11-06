@@ -174,13 +174,13 @@
       "nis_boutique": {
         "title": "Nis Boutique Catering",
         "description": "A conversion-focused boutique catering website from Beitar Illit, built around WhatsApp, SEO, and RTL UX.",
-        "summary": "A live business website for a boutique catering brand, guiding visitors from first impression to a WhatsApp conversation.",
-        "impact": "The site brings brand positioning, service categories, gallery, FAQ, and one clear CTA into a shareable marketing asset.",
+        "summary": "A live boutique catering site that helps visitors understand the offer, build confidence through real food and practical answers, then start a WhatsApp inquiry.",
+        "impact": "The result is a live, shareable path from first impression to an informed inquiry; public evidence does not include conversion or inquiry metrics.",
         "previewTitle": "Nis Boutique Catering homepage with an event buffet, gallery and WhatsApp inquiry action",
         "status": "Live",
-        "problem": "A local service business needed a site that communicates quality, earns trust, and drives inquiries without relying on pricing or heavy content.",
+        "problem": "Prospective customers need to judge quality and fit before contacting a local caterer, without working through clutter or a price-heavy brochure.",
         "solution": "A Hebrew landing page with clear messaging hierarchy, service categories, gallery, FAQ, persistent CTA, and custom-domain deployment.",
-        "role": "Discovery, copy, frontend design, motion, SEO, baseline accessibility, and Vercel deployment."
+        "role": "I shaped the customer journey, copy, and RTL frontend, including restrained motion, practical SEO, baseline accessibility, and deployment around that inquiry path."
       },
       "online_converter": {
         "title": "Online Converter",
