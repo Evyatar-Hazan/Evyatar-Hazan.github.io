@@ -64,8 +64,8 @@ const pageCopy = {
     project: 'Project',
     article: 'Article',
     processEyebrow: '03 / Working method',
-    processTitle: 'From a real need to a result that can be checked.',
-    processIntro: 'This is a delivery sequence, not an SLA or a promise about timing.',
+    processTitle: 'A clear path from uncertainty to a result you can check.',
+    processIntro: 'Each step reduces risk and uncertainty, makes decisions easier to verify, and keeps the next move clear—without promising an SLA or delivery time.',
   },
   he: {
     eyebrow: 'כך אני הופך צורך מוצרי למערכת שאפשר לאמת',
@@ -105,8 +105,8 @@ const pageCopy = {
     project: 'פרויקט',
     article: 'מאמר',
     processEyebrow: '03 / דרך העבודה',
-    processTitle: 'מצורך אמיתי לתוצאה שאפשר לבדוק.',
-    processIntro: 'זהו רצף מסירה מקצועי, לא SLA או הבטחה לזמן ביצוע.',
+    processTitle: 'מסלול ברור מאי־ודאות לתוצאה שאפשר לבדוק.',
+    processIntro: 'כל שלב מצמצם סיכון ואי־ודאות, מקל לאמת החלטות ומשאיר את הצעד הבא ברור — בלי להבטיח SLA או זמן מסירה.',
   },
 } as const;
 
