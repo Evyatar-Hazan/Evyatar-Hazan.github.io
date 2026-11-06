@@ -182,14 +182,14 @@
       },
       "online_converter": {
         "title": "Online Converter",
-        "description": "A client-side conversion tool for JSON, CSV, XML, and YAML.",
-        "summary": "A browser tool for converting common data formats without sending content to an external server.",
-        "impact": "Useful for sensitive data or technical drafts, with a short workflow for validation, copying, and downloading.",
+        "description": "A privacy-first bilingual browser product for converting JSON, CSV, XML, and YAML locally.",
+        "summary": "A live bilingual tool catalog that lets people convert common formats in the browser without uploading their input.",
+        "impact": "The public product combines English and Hebrew discovery paths with local processing, validation, copy, and download flows.",
         "previewTitle": "Online Converter homepage with English and Hebrew tool entry points and a no-uploads indicator",
         "status": "Active",
-        "problem": "Developers and technical users need fast data conversion without sending sensitive content to an external server.",
-        "solution": "A React and TypeScript interface with i18n, client-side validation, copy, download, and a short task flow.",
-        "role": "Product planning, frontend architecture, interaction flow, and CI scripts."
+        "problem": "People working with sensitive data or technical drafts need fast conversion without handing the input to an external server.",
+        "solution": "A typed bilingual product model generates discoverable tool paths, while the client-side converter handles validation, copy, and downloads locally.",
+        "role": "Product and information architecture, bilingual content model, privacy-safe frontend flows, SEO, testing, and deployment gates."
       },
       "emergency_protocol": {
         "title": "Emergency Protocol Diagram",
