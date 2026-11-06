@@ -5,7 +5,7 @@ import he from './locales/he.json';
 describe('FIX-031 hero positioning', () => {
   it('leads with the visitor need and the promised outcome in English', () => {
     expect(en.home.compiler.prelude).toBe(
-      'What needs to work better in your website, system, or workflow?',
+      "What isn't working in your site, system, or workflow?",
     );
     expect(en.home.compiler.headline).toBe(
       'Turn it into a web product that works.',
