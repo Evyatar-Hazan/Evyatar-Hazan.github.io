@@ -28,7 +28,7 @@ for (const entry of cases) {
     await expect(fallback).toHaveText('evyatarhazan3.14@gmail.com');
     await expect(fallback).toHaveAttribute('href', /^mailto:evyatarhazan3\.14@gmail\.com/);
 
-    await page.getByLabel(entry.language === 'he' ? 'הודעה' : 'Message').fill('Synthetic fallback check');
+    await page.getByLabel(entry.language === 'he' ? 'במה צריך עזרה?' : 'What do you need help with?').fill('Synthetic fallback check');
     await page.getByLabel(entry.language === 'he' ? 'שם' : 'Name').fill('Synthetic Visitor');
     await page.getByLabel(entry.language === 'he' ? 'כתובת אימייל' : 'Email address').fill('visitor@example.test');
     await page.getByRole('button', {

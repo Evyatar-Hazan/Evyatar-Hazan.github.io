@@ -3,11 +3,11 @@ import { expect, test } from '@playwright/test';
 const scenarios = [
   {
     name: 'desktop-en-light', language: 'en', theme: 'light', width: 1440, height: 900,
-    open: 'Send a short message', message: 'Message', nameLabel: 'Name', email: 'Email address',
+    open: 'Send a short message', message: 'What do you need help with?', nameLabel: 'Name', email: 'Email address',
   },
   {
     name: 'mobile-he-dark', language: 'he', theme: 'dark', width: 390, height: 844,
-    open: 'שליחת הודעה קצרה', message: 'הודעה', nameLabel: 'שם', email: 'כתובת אימייל',
+    open: 'שליחת הודעה קצרה', message: 'במה צריך עזרה?', nameLabel: 'שם', email: 'כתובת אימייל',
   },
 ];
 

@@ -593,10 +593,10 @@ describe('App', () => {
     expect(screen.getAllByRole('link', { name: 'LinkedIn' }).at(-1)).toHaveAttribute('target', '_blank');
 
     fireEvent.click(screen.getByRole('button', { name: 'Send a short message' }));
-    expect(screen.getByLabelText('Message')).toBeRequired();
+    expect(screen.getByLabelText('What do you need help with?')).toBeRequired();
     expect(screen.getByLabelText('Name')).toBeRequired();
     expect(screen.getByLabelText('Email address')).toBeRequired();
-    expect(screen.getByLabelText('What exists today?')).not.toBeRequired();
+    expect(screen.getByLabelText('What are you working with today?')).not.toBeRequired();
   });
 
   it('only renders live links for projects with a liveUrl', async () => {

@@ -54,21 +54,64 @@ describe('ContactBriefFeature', () => {
     expect(screen.getByText(next)).toBeVisible();
   });
 
+  it.each([
+    {
+      language: 'en' as const,
+      open: /send a short message/i,
+      fields: [
+        ['What do you need help with?', 'For example: streamline a manual approval flow'],
+        ['What are you working with today?', 'For example: spreadsheets, an internal tool, or an existing site'],
+        ['Where does the process get stuck?', 'For example: repeated handoffs or unclear ownership'],
+        ['What should improve?', 'For example: one clear flow the team can rely on'],
+        ['When would this be useful?', 'For example: exploring now, this quarter, or flexible'],
+      ],
+      channelLabel: 'How should I reply?',
+      channelPlaceholder: 'Choose a channel, or leave open',
+    },
+    {
+      language: 'he' as const,
+      open: /שליחת הודעה קצרה/i,
+      fields: [
+        ['במה צריך עזרה?', 'למשל: לקצר תהליך אישורים ידני'],
+        ['עם מה עובדים היום?', 'למשל: גיליונות, כלי פנימי או אתר קיים'],
+        ['איפה התהליך נתקע?', 'למשל: העברות חוזרות או אחריות לא ברורה'],
+        ['מה צריך להשתפר?', 'למשל: תהליך אחד ברור שהצוות יכול לסמוך עליו'],
+        ['מתי זה יהיה שימושי?', 'למשל: בודקים עכשיו, ברבעון הקרוב או גמיש'],
+      ],
+      channelLabel: 'איך לחזור אליכם?',
+      channelPlaceholder: 'אפשר לבחור ערוץ או להשאיר פתוח',
+    },
+  ])('gives every project brief field a short, distinct example in $language', ({
+    language,
+    open,
+    fields,
+    channelLabel,
+    channelPlaceholder,
+  }) => {
+    render(<ContactBriefFeature language={language} buildLocalizedPath={buildLocalizedPath} />);
+    fireEvent.click(screen.getByRole('button', { name: open }));
+
+    for (const [label, placeholder] of fields) {
+      expect(screen.getByLabelText(label)).toHaveAttribute('placeholder', placeholder);
+    }
+    expect(screen.getByLabelText(channelLabel)).toHaveDisplayValue(channelPlaceholder);
+  });
+
   it('builds drafts from synthetic brief data and injects the localized privacy link', () => {
     render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
     openBuilder();
 
-    fireEvent.change(screen.getByLabelText('Message'), {
+    fireEvent.change(screen.getByLabelText('What do you need help with?'), {
       target: { value: 'A synthetic scheduling tool' },
     });
-    fireEvent.change(screen.getByLabelText('What is not working?'), {
+    fireEvent.change(screen.getByLabelText('Where does the process get stuck?'), {
       target: { value: 'The current handoff is manual' },
     });
-    fireEvent.change(screen.getByLabelText('Preferred channel'), {
+    fireEvent.change(screen.getByLabelText('How should I reply?'), {
       target: { value: 'whatsapp' },
     });
 
-    fireEvent.change(screen.getByLabelText('What outcome would make this successful?'), {
+    fireEvent.change(screen.getByLabelText('What should improve?'), {
       target: { value: 'A reliable handoff' },
     });
 
@@ -101,14 +144,14 @@ describe('ContactBriefFeature', () => {
     openBuilder();
 
     expect(screen.getByRole('radio', { name: 'Project' })).toBeChecked();
-    expect(screen.getByLabelText('What is not working?')).toBeInTheDocument();
+    expect(screen.getByLabelText('Where does the process get stuck?')).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('radio', { name: 'Role or opportunity' }));
 
     expect(screen.getByLabelText('Role or opportunity', { selector: 'textarea' })).toBeInTheDocument();
     expect(screen.getByLabelText('Company or team')).toBeInTheDocument();
     expect(screen.getByLabelText('Why this looks relevant')).toBeInTheDocument();
-    expect(screen.queryByLabelText('What is not working?')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Where does the process get stuck?')).not.toBeInTheDocument();
 
     fireEvent.change(screen.getByLabelText('Role or opportunity', { selector: 'textarea' }), {
       target: { value: 'Synthetic product engineering role' },
@@ -132,7 +175,7 @@ describe('ContactBriefFeature', () => {
 
     expect(screen.getByLabelText('החברה או הצוות')).toBeInTheDocument();
     expect(screen.getByLabelText('למה זה נראה רלוונטי')).toBeInTheDocument();
-    expect(screen.queryByLabelText('מה לא עובד?')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('איפה התהליך נתקע?')).not.toBeInTheDocument();
   });
 
   it('keeps the short form to exactly three required fields', () => {
@@ -141,10 +184,10 @@ describe('ContactBriefFeature', () => {
 
     const requiredFields = screen.getAllByRole('textbox').filter((field) => field.hasAttribute('required'));
     expect(requiredFields).toHaveLength(3);
-    expect(screen.getByLabelText('Message')).toBeRequired();
+    expect(screen.getByLabelText('What do you need help with?')).toBeRequired();
     expect(screen.getByLabelText('Name')).toBeRequired();
     expect(screen.getByLabelText('Email address')).toBeRequired();
-    expect(screen.getByLabelText('What exists today?')).not.toBeRequired();
+    expect(screen.getByLabelText('What are you working with today?')).not.toBeRequired();
   });
 
   it('does not contact the provider when required short-form fields are missing', () => {
@@ -170,7 +213,7 @@ describe('ContactBriefFeature', () => {
     render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
     openBuilder();
 
-    fireEvent.change(screen.getByLabelText('Message'), {
+    fireEvent.change(screen.getByLabelText('What do you need help with?'), {
       target: { value: 'Synthetic portfolio fixture' },
     });
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Test Visitor' } });
@@ -212,7 +255,7 @@ describe('ContactBriefFeature', () => {
     expect(screen.queryByText('מה קורה עכשיו')).not.toBeInTheDocument();
     expect(screen.queryByText(/אין כאן התחייבות לזמן תגובה קבוע/i)).not.toBeInTheDocument();
 
-    fireEvent.change(screen.getByLabelText('הודעה'), {
+    fireEvent.change(screen.getByLabelText('במה צריך עזרה?'), {
       target: { value: 'בדיקה סינתטית של הצעד הבא' },
     });
     fireEvent.change(screen.getByLabelText('שם'), { target: { value: 'מבקר בדיקה' } });
@@ -242,7 +285,7 @@ describe('ContactBriefFeature', () => {
     );
     openBuilder();
 
-    fireEvent.change(screen.getByLabelText('Message'), {
+    fireEvent.change(screen.getByLabelText('What do you need help with?'), {
       target: { value: 'Synthetic case-study context check' },
     });
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Test Visitor' } });
@@ -279,7 +322,7 @@ describe('ContactBriefFeature', () => {
     expect(document.querySelector('iframe[src*="recaptcha"], script[src*="recaptcha"]')).toBeNull();
 
     fireEvent.change(honeypot!, { target: { value: 'synthetic bot payload' } });
-    fireEvent.change(screen.getByLabelText('Message'), {
+    fireEvent.change(screen.getByLabelText('What do you need help with?'), {
       target: { value: 'Synthetic spam-protection integration check' },
     });
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Synthetic Bot' } });
@@ -329,22 +372,22 @@ describe('ContactBriefFeature', () => {
     render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
     openBuilder();
 
-    fireEvent.change(screen.getByLabelText('Message'), {
+    fireEvent.change(screen.getByLabelText('What do you need help with?'), {
       target: { value: 'Keep this synthetic brief' },
     });
-    fireEvent.change(screen.getByLabelText('What exists today?'), {
+    fireEvent.change(screen.getByLabelText('What are you working with today?'), {
       target: { value: 'A complete synthetic fixture' },
     });
-    fireEvent.change(screen.getByLabelText('What is not working?'), {
+    fireEvent.change(screen.getByLabelText('Where does the process get stuck?'), {
       target: { value: 'The provider request fails' },
     });
-    fireEvent.change(screen.getByLabelText('What outcome would make this successful?'), {
+    fireEvent.change(screen.getByLabelText('What should improve?'), {
       target: { value: 'Retry without retyping anything' },
     });
-    fireEvent.change(screen.getByLabelText('What is the timeframe?'), {
+    fireEvent.change(screen.getByLabelText('When would this be useful?'), {
       target: { value: 'This quarter' },
     });
-    fireEvent.change(screen.getByLabelText('Preferred channel'), {
+    fireEvent.change(screen.getByLabelText('How should I reply?'), {
       target: { value: 'form' },
     });
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Test Visitor' } });
@@ -358,14 +401,14 @@ describe('ContactBriefFeature', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     rejectRequest?.(new Error('synthetic network failure'));
     expect(await screen.findByText(/Delivery was not confirmed/i)).toBeInTheDocument();
-    expect(screen.getByLabelText<HTMLTextAreaElement>('Message').value).toBe(
+    expect(screen.getByLabelText<HTMLTextAreaElement>('What do you need help with?').value).toBe(
       'Keep this synthetic brief',
     );
-    expect(screen.getByLabelText('What exists today?')).toHaveValue('A complete synthetic fixture');
-    expect(screen.getByLabelText('What is not working?')).toHaveValue('The provider request fails');
-    expect(screen.getByLabelText('What outcome would make this successful?')).toHaveValue('Retry without retyping anything');
-    expect(screen.getByLabelText('What is the timeframe?')).toHaveValue('This quarter');
-    expect(screen.getByLabelText('Preferred channel')).toHaveValue('form');
+    expect(screen.getByLabelText('What are you working with today?')).toHaveValue('A complete synthetic fixture');
+    expect(screen.getByLabelText('Where does the process get stuck?')).toHaveValue('The provider request fails');
+    expect(screen.getByLabelText('What should improve?')).toHaveValue('Retry without retyping anything');
+    expect(screen.getByLabelText('When would this be useful?')).toHaveValue('This quarter');
+    expect(screen.getByLabelText('How should I reply?')).toHaveValue('form');
     expect(screen.getByLabelText('Name')).toHaveValue('Test Visitor');
     expect(screen.getByLabelText('Email address')).toHaveValue('visitor@example.test');
     expect(screen.getByRole('link', { name: 'Open email draft' })).toHaveAttribute(
@@ -400,7 +443,7 @@ describe('ContactBriefFeature', () => {
     render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
     openBuilder();
 
-    fireEvent.change(screen.getByLabelText('Message'), {
+    fireEvent.change(screen.getByLabelText('What do you need help with?'), {
       target: { value: 'Synthetic provider confirmation check' },
     });
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Test Visitor' } });
@@ -427,7 +470,7 @@ describe('ContactBriefFeature', () => {
     render(<ContactBriefFeature language="en" buildLocalizedPath={buildLocalizedPath} />);
     openBuilder();
 
-    fireEvent.change(screen.getByLabelText('Message'), {
+    fireEvent.change(screen.getByLabelText('What do you need help with?'), {
       target: { value: 'Synthetic announcement check' },
     });
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Test Visitor' } });
@@ -453,7 +496,7 @@ describe('ContactBriefFeature', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Send a short message' }));
     fireEvent.click(screen.getByRole('button', { name: 'Send with FormSubmit' }));
 
-    const messageField = screen.getByRole('textbox', { name: 'Message' });
+    const messageField = screen.getByRole('textbox', { name: 'What do you need help with?' });
     const nameField = screen.getByRole('textbox', { name: 'Name' });
     const emailField = screen.getByRole('textbox', { name: 'Email address' });
     const alert = screen.getByRole('alert');
