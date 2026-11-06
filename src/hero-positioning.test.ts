@@ -11,7 +11,7 @@ describe('FIX-031 hero positioning', () => {
       'Web products that drive growth.',
     );
     expect(en.home.compiler.description).toBe(
-      'For a public website, an internal system, or a practical tool, the work starts by clarifying the goal, shaping the experience, and building a product ready for delivery and maintenance.',
+      'Whether it’s a public website, internal system, or practical tool, work starts with a clear goal and experience, then builds a product ready to deliver and maintain.',
     );
   });
 
@@ -23,7 +23,7 @@ describe('FIX-031 hero positioning', () => {
       'מוצרי Web שמניעים צמיחה.',
     );
     expect(he.home.compiler.description).toBe(
-      'באתר ציבורי, במערכת פנימית או בכלי עבודה מעשי, העבודה מתחילה בהבהרת היעד, בעיצוב חוויית השימוש ובבניית מוצר שמוכן למסירה ולתחזוקה.',
+      'בין שמדובר באתר ציבורי, במערכת פנימית או בכלי עבודה מעשי, העבודה מתחילה ביעד ובחוויית שימוש ברורים וממשיכה למוצר שמוכן למסירה ולתחזוקה.',
     );
   });
 });
