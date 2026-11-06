@@ -48,4 +48,16 @@ describe('projects hub visitor-focused copy', () => {
     expect(en.projectsHub.compareEmpty).not.toMatch(/dossier|archive|surface/i);
     expect(he.projectsHub.compareEmpty).not.toMatch(/תיקי עבודה|ארכיון|משטח/);
   });
+
+  it('invites owners of existing systems to a concrete fit conversation in both languages', () => {
+    expect(en.projectsHub.contactPrompt).toContain('existing system');
+    expect(en.projectsHub.contactPrompt).toContain("we'll map the need");
+    expect(en.projectsHub.contactPrompt).toContain('relevant');
+    expect(en.projectsHub.contactCta).toBe('Tell me about your system');
+
+    expect(he.projectsHub.contactPrompt).toContain('מערכת קיימת');
+    expect(he.projectsHub.contactPrompt).toContain('נמפה את הצורך');
+    expect(he.projectsHub.contactPrompt).toContain('רלוונטי');
+    expect(he.projectsHub.contactCta).toBe('ספרו לי על המערכת');
+  });
 });
