@@ -21,3 +21,15 @@ describe('FIX-095 canonical route metadata', () => {
     expect(paths.every((path) => path.startsWith('/') && path.endsWith('/'))).toBe(true);
   });
 });
+
+describe('FIX-101 home-page positioning', () => {
+  it('leads with the value offered to businesses and product teams in each language', () => {
+    const englishTitle = getStaticRouteSeo('home', 'en').title;
+    const hebrewTitle = getStaticRouteSeo('home', 'he').title;
+
+    expect(englishTitle).toBe('Web Products for Businesses & Product Teams | Evyatar Hazan');
+    expect(hebrewTitle).toBe('מוצרי Web לעסקים ולצוותי מוצר | אביתר חזן');
+    expect(englishTitle).not.toContain('Full Stack Developer');
+    expect(hebrewTitle).not.toContain('Full Stack Developer');
+  });
+});

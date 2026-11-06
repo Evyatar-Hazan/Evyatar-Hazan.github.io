@@ -2,11 +2,11 @@
   "home": {
     "path": "/",
     "en": {
-      "title": "Evyatar Hazan | Full Stack Developer",
+      "title": "Web Products for Businesses & Product Teams | Evyatar Hazan",
       "description": "Portfolio of Evyatar Hazan with business websites, full-stack systems, product tools, technical writing, and direct contact paths."
     },
     "he": {
-      "title": "אביתר חזן | Full Stack Developer",
+      "title": "מוצרי Web לעסקים ולצוותי מוצר | אביתר חזן",
       "description": "פורטפוליו של אביתר חזן עם אתרים עסקיים, מערכות Full Stack, כלי מוצר, כתיבה מקצועית ודרכי יצירת קשר ישירות."
     }
   },
