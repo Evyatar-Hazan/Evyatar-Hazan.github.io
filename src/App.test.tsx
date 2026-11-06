@@ -354,8 +354,8 @@ describe('App', () => {
     expect(biography).toBeInTheDocument();
     expect(biography).toHaveTextContent(
       language === 'he'
-        ? 'אני אביתר, מפתח Full Stack שבונה מוצרי Web ומובייל מהגדרת המוצר ועד לאימות בפרודקשן.'
-        : 'I’m Evyatar, a full-stack developer building web and mobile products from product framing through production verification.',
+        ? 'אני עוזר לצוותים ולארגונים להפוך תהליכים מורכבים למוצרי Web ומובייל ברורים ונגישים — מהגדרת המוצר והמימוש ועד לאימות בפרודקשן — כדי שהתוצאה תהיה קלה יותר לשימוש, לתפעול ולתחזוקה.'
+        : 'I help teams and organizations turn complex workflows into clear, accessible web and mobile products—from product framing and implementation through production verification—so the result is easier to use, operate, and maintain.',
     );
     expect(biography?.textContent?.trim().split(/\s+/).length).toBeLessThanOrEqual(45);
     const professionalLinks = within(screen.getByRole('navigation', {
