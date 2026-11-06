@@ -4,6 +4,18 @@ import en from './locales/en.json';
 import he from './locales/he.json';
 
 describe('projects hub visitor-focused copy', () => {
+  it('names the destination behind every project action in both languages', () => {
+    expect(en.projects.caseStudy).toBe('View case study');
+    expect(en.projects.liveDemo).toBe('Open live website');
+    expect(en.projects.code).toBe('View source code on GitHub');
+    expect(en.projectsHub.liveProduct).toBe('View live product');
+
+    expect(he.projects.caseStudy).toBe('צפייה בקייס סטאדי');
+    expect(he.projects.liveDemo).toBe('פתיחת האתר החי');
+    expect(he.projects.code).toBe('צפייה בקוד המקור ב־GitHub');
+    expect(he.projectsHub.liveProduct).toBe('צפייה במוצר החי');
+  });
+
   it('explains what visitors can learn, compare, and decide in both languages', () => {
     expect(en.projectsHub.introduction).toContain('See the need each project set out to address');
     expect(en.projectsHub.introduction).toContain('Compare projects to decide where to go deeper');

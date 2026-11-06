@@ -34,7 +34,7 @@ describe('Projects flagship hierarchy', () => {
     expect(flagshipQueries.getByRole('heading', { name: 'The starting point' })).toBeInTheDocument();
     expect(flagshipQueries.getByRole('heading', { name: 'The solution in practice' })).toBeInTheDocument();
     expect(flagshipQueries.getByRole('heading', { name: 'What changed' })).toBeInTheDocument();
-    expect(flagshipQueries.getByRole('link', { name: 'Case study' })).toHaveAttribute(
+    expect(flagshipQueries.getByRole('link', { name: 'View case study' })).toHaveAttribute(
       'href',
       '/en/projects/nis_boutique/',
     );
