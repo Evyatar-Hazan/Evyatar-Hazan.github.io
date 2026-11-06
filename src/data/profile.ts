@@ -176,16 +176,16 @@ const caseStudies = {
       he: 'קייס סטאדי: Online Converter | אביתר חזן'
     },
     seoDescription: {
-      en: 'How I turned a small converter tool into a bilingual growth product with structured SEO, privacy-safe UX, and quality gates.',
-      he: 'איך הפכתי כלי המרה קטן למוצר צמיחה דו-לשוני עם SEO מסודר, UX שומר פרטיות ובדיקות איכות.'
+      en: 'A bilingual catalog of 140 browser-based converter definitions, with local processing, structured SEO, and quality gates.',
+      he: 'קטלוג דו־לשוני של 140 הגדרות ממיר בדפדפן, עם עיבוד מקומי, SEO מסודר ושערי איכות.'
     },
     overview: {
       en: [
-        'Online Converter started as a simple browser utility. The real product challenge was to turn it into a scalable content surface that can attract search traffic in both Hebrew and English.',
+        'People who need to transform technical data should not have to upload it to a server. Online Converter provides a bilingual catalog of 140 converter definitions, including 16 editorially reviewed tools published in both English and Hebrew, while conversion runs locally in the browser.',
         'That meant treating SEO, internal linking, metadata, categories, examples, FAQ, and technical quality checks as part of the product itself, not as a checklist added at the end.'
       ],
       he: [
-        'Online Converter התחיל ככלי דפדפן פשוט. האתגר האמיתי היה להפוך אותו למשטח תוכן סקיילבילי שמסוגל למשוך חיפושים גם בעברית וגם באנגלית.',
+        'מי שצריך להמיר מידע טכני לא אמור להידרש להעלות אותו לשרת. Online Converter מציע קטלוג דו־לשוני של 140 הגדרות ממיר, ובהן 16 כלים שעברו עריכה ופורסמו בעברית ובאנגלית, בעוד ההמרה עצמה רצה מקומית בדפדפן.',
         'זה דרש להתייחס ל-SEO, קישורים פנימיים, metadata, קטגוריות, דוגמאות, FAQ ובדיקות איכות טכניות כחלק מהמוצר עצמו, לא כרשימה שמוסיפים בסוף.'
       ]
     },
