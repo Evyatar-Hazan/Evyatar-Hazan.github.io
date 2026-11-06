@@ -14,11 +14,11 @@
     "path": "/projects/",
     "en": {
       "title": "Projects | Evyatar Hazan",
-      "description": "A bilingual engineering work dossier with seven projects, documented contributions, public artifacts, filters, and project comparison."
+      "description": "Explore seven engineering projects by the needs they address, documented contributions, technologies, and public evidence available for comparison."
     },
     "he": {
       "title": "פרויקטים | אביתר חזן",
-      "description": "תיק עבודות הנדסי דו־לשוני עם שבעה פרויקטים, תרומה מתועדת, נכסים ציבוריים, סינון והשוואת פרויקטים."
+      "description": "גלו שבעה פרויקטים הנדסיים לפי הצורך שהם נועדו לתת לו מענה, התרומה המתועדת, הטכנולוגיות והראיות הציבוריות הזמינות להשוואה."
     }
   },
   "about": {

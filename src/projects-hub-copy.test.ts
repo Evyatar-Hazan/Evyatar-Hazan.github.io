@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { getStaticRouteSeo } from './data/routeSeo';
 import en from './locales/en.json';
 import he from './locales/he.json';
 
@@ -11,6 +12,9 @@ describe('projects hub visitor-focused copy', () => {
     expect(he.projectsHub.introduction).toContain('איזה צורך כל פרויקט נועד לתת לו מענה');
     expect(he.projectsHub.introduction).toContain('השוו בין הפרויקטים כדי לבחור במה להעמיק');
     expect(he.projectsHub.seoDescription).toContain('הראיות הציבוריות הזמינות להשוואה');
+
+    expect(getStaticRouteSeo('projects', 'en').description).toBe(en.projectsHub.seoDescription);
+    expect(getStaticRouteSeo('projects', 'he').description).toBe(he.projectsHub.seoDescription);
   });
 
   it('does not describe the page as an internal work dossier', () => {

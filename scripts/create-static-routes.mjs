@@ -265,7 +265,7 @@ const staticRoutes = [
     preview: {
       heading: 'Projects',
       body: [
-        'A working dossier of shipped products, full-stack systems, learning tools, and reusable foundations. Each record identifies the need, the contribution, the technology, and the public evidence without filling gaps with unsupported claims.',
+        'See the need each project set out to address, the contribution made, and the technologies and public evidence available. Compare projects to decide where to go deeper based on the problem, the approach, and the available documentation.',
         'The collection contains all seven canonical projects. Four include complete case studies, while every project remains discoverable through the public artifacts that currently exist.'
       ],
       links: projectHubLinks('en')
@@ -595,7 +595,7 @@ const localizedSeoForRoute = (route, language) => {
         ...route.preview,
         heading: 'פרויקטים',
         body: [
-          'תיק עבודה של מוצרים שעלו לאוויר, מערכות Full Stack, כלי למידה ותשתיות לשימוש חוזר. כל רשומה מגדירה את הצורך, התרומה, הטכנולוגיה והראיות הציבוריות בלי למלא פערים בטענות לא נתמכות.',
+          'כאן אפשר להבין איזה צורך כל פרויקט נועד לתת לו מענה, מה הייתה התרומה ואילו טכנולוגיות וראיות ציבוריות זמינות. השוו בין הפרויקטים כדי לבחור במה להעמיק לפי הבעיה, דרך הפתרון והתיעוד הזמין.',
           'האוסף כולל את כל שבעת הפרויקטים הקנוניים. לארבעה יש קייס סטאדי מלא, וכל פרויקט נשאר ניתן לגילוי דרך הנכסים הציבוריים שקיימים בפועל.'
         ],
         links: projectHubLinks('he')
