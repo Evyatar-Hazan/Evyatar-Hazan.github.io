@@ -48,7 +48,7 @@
     "viewProjects": "View projects",
     "contactMe": "Contact me",
     "whatsappCta": "Talk on WhatsApp",
-    "whatsappText": "Hi Evyatar, I saw your website and would like to talk about a project.",
+    "whatsappText": "Hi Evyatar, I saw your website and would like to discuss a [website / system / tool]. My main goal is [what I want to achieve].",
     "compiler": {
       "prelude": "What isn't working in your site, system, or workflow?",
       "headline": "Web products that drive growth.",
