@@ -68,22 +68,8 @@ export const caseStudyStories = {
           he: 'להגדיר את WhatsApp כנתיב ההמרה הראשי ולארגן סביבו את העמוד.',
         },
         impact: {
-          en: 'The offer, trust signals, and contact action read as one continuous journey.',
-          he: 'ההצעה, סימני האמון ופעולת הקשר נקראים כמסע אחד רציף.',
-        },
-      },
-      {
-        need: {
-          en: 'Make a Hebrew-first service brand feel premium without slowing the path to contact.',
-          he: 'לתת למותג שירות עברי תחושה איכותית בלי להאט את הדרך ליצירת קשר.',
-        },
-        choice: {
-          en: 'Use RTL-first hierarchy, restrained motion, focused imagery, and concise service framing.',
-          he: 'להשתמש בהיררכיית RTL-first, תנועה מאופקת, מדיה ממוקדת ומסגור שירות תמציתי.',
-        },
-        impact: {
-          en: 'The same product story remains legible on desktop and mobile.',
-          he: 'אותו סיפור מוצר נשאר קריא בדסקטופ ובמובייל.',
+          en: 'The page presents one clear next step without claiming a conversion lift.',
+          he: 'העמוד מציג צעד הבא ברור אחד, בלי לטעון לשיפור בשיעור ההמרה.',
         },
       },
       {
@@ -92,12 +78,26 @@ export const caseStudyStories = {
           he: 'לבנות אמון בלי להפוך את האתר לברושור עמוס מחירים.',
         },
         choice: {
-          en: 'Prioritize service categories, gallery context, FAQ, and direct conversation.',
-          he: 'לתעדף קטגוריות שירות, הקשר חזותי, FAQ ושיחה ישירה.',
+          en: 'Prioritize concise service framing, gallery context, FAQ, and direct conversation.',
+          he: 'לתעדף מסגור שירות תמציתי, גלריה שנותנת הקשר, FAQ ושיחה ישירה.',
         },
         impact: {
-          en: 'The site stays focused on qualification and contact rather than generic filler.',
-          he: 'האתר נשאר ממוקד בהתאמה ובפנייה במקום בתוכן גנרי.',
+          en: 'Visitors can assess service fit before contacting, without implying an inquiry or sales outcome.',
+          he: 'מבקרים יכולים לבחון התאמה לשירות לפני הפנייה, בלי לרמוז על תוצאת פניות או מכירות.',
+        },
+      },
+      {
+        need: {
+          en: 'Make a Hebrew-first service brand feel premium without slowing the path to contact.',
+          he: 'לתת למותג שירות עברי תחושה איכותית בלי להאט את הדרך ליצירת קשר.',
+        },
+        choice: {
+          en: 'Use RTL-first hierarchy, restrained motion, and focused imagery across screen sizes.',
+          he: 'להשתמש בהיררכיית RTL-first, תנועה מאופקת ומדיה ממוקדת בכל גדלי המסך.',
+        },
+        impact: {
+          en: 'The same product story stays legible on desktop and mobile; visual polish is not presented as a business result.',
+          he: 'אותו סיפור מוצר נשאר קריא בדסקטופ ובמובייל; הליטוש החזותי אינו מוצג כתוצאה עסקית.',
         },
       },
     ],

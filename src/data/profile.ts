@@ -112,14 +112,14 @@ const caseStudies = {
     ],
     decisions: {
       en: [
-        'Kept the content tightly scoped so visitors never need to guess what to do next.',
-        'Used RTL-first layout, restrained motion, and image treatment that supports the premium positioning instead of fighting it.',
-        'Avoided pricing-heavy clutter and built the page around trust, service framing, and WhatsApp readiness.'
+        'Made WhatsApp the primary inquiry path, with the page hierarchy and service copy leading to one clear next step.',
+        'Replaced pricing-heavy clutter with concise service framing, gallery context, and FAQ so visitors can assess fit before contacting.',
+        'Built an RTL-first hierarchy with restrained motion and focused imagery so the same premium story stays legible on desktop and mobile.'
       ],
       he: [
-        'שמרתי את התוכן ממוקד כדי שהמבקר לא יצטרך לנחש מה לעשות הלאה.',
-        'השתמשתי בפריסה RTL-first, תנועה מאופקת וטיפול במדיה שתומך במיצוב הפרימיום במקום להפריע לו.',
-        'נמנעתי מעומס של מחירים ופירקתי את העמוד סביב אמון, מסגור השירות ומוכנות ל-WhatsApp.'
+        'הפכתי את WhatsApp לנתיב הפנייה הראשי, כשהיררכיית העמוד וקופי השירות מובילים לצעד הבא ברור אחד.',
+        'החלפתי עומס של מחירים במסגור שירות תמציתי, גלריה שנותנת הקשר ו־FAQ, כדי שמבקרים יוכלו לבחון התאמה לפני הפנייה.',
+        'בניתי היררכיית RTL-first עם תנועה מאופקת ומדיה ממוקדת, כדי שאותו סיפור פרימיום יישאר קריא בדסקטופ ובמובייל.'
       ]
     },
     outcomes: [

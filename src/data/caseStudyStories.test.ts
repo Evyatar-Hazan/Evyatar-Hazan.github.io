@@ -89,6 +89,48 @@ describe('case study product story contract', () => {
     expect(hebrewOverview).toMatch(/קטלוג דו־לשוני.*למצוא את הכלי המתאים/su);
   });
 
+  it('keeps the FIX-159 Nis decision chain distinct, bilingual, and evidence-bounded', () => {
+    const nisProfile = projects.find(({ id }) => id === 'nis_boutique')?.caseStudy;
+    const nisStory = caseStudyStories.nis_boutique;
+
+    expect(nisProfile?.decisions.en).toHaveLength(3);
+    expect(nisProfile?.decisions.he).toHaveLength(3);
+    expect(nisStory.decisions).toHaveLength(3);
+
+    expect(nisProfile?.decisions.en).toEqual([
+      expect.stringMatching(/WhatsApp.*inquiry path/i),
+      expect.stringMatching(/service framing.*gallery context.*FAQ/i),
+      expect.stringMatching(/RTL-first.*desktop and mobile/i),
+    ]);
+    expect(nisProfile?.decisions.he).toEqual([
+      expect.stringMatching(/WhatsApp.*נתיב הפנייה/u),
+      expect.stringMatching(/מסגור שירות.*גלריה.*FAQ/u),
+      expect.stringMatching(/RTL-first.*דסקטופ ובמובייל/u),
+    ]);
+
+    expect(nisStory.decisions.map(({ choice }) => choice.en)).toEqual([
+      expect.stringMatching(/WhatsApp.*conversion path/i),
+      expect.stringMatching(/service framing.*gallery context.*FAQ/i),
+      expect.stringMatching(/RTL-first.*screen sizes/i),
+    ]);
+    expect(nisStory.decisions.map(({ choice }) => choice.he)).toEqual([
+      expect.stringMatching(/WhatsApp.*נתיב ההמרה/u),
+      expect.stringMatching(/מסגור שירות.*גלריה.*FAQ/u),
+      expect.stringMatching(/RTL-first.*גדלי המסך/u),
+    ]);
+
+    expect(nisStory.decisions.map(({ impact }) => impact.en)).toEqual([
+      expect.stringMatching(/without claiming a conversion lift/i),
+      expect.stringMatching(/without implying an inquiry or sales outcome/i),
+      expect.stringMatching(/not presented as a business result/i),
+    ]);
+    expect(nisStory.decisions.map(({ impact }) => impact.he)).toEqual([
+      expect.stringMatching(/בלי לטעון לשיפור בשיעור ההמרה/u),
+      expect.stringMatching(/בלי לרמוז על תוצאת פניות או מכירות/u),
+      expect.stringMatching(/אינו מוצג כתוצאה עסקית/u),
+    ]);
+  });
+
   it('cycles deterministically through the four case studies', () => {
     expect(caseStudyStoryProjectIds.map(getNextCaseStudyProjectId)).toEqual([
       'online_converter',
