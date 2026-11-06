@@ -116,6 +116,34 @@ describe('case study evidence contract', () => {
     expect(runtimeOutcome?.statement.he).toMatch(/עובדת runtime מוגבלת.*לא בדקה תוצאה קלינית.*חירום/su);
   });
 
+  it('explains the Online Converter counts without implying traffic or usage', () => {
+    const project = projects.find(({ id }) => id === 'online_converter');
+    const caseStudy = project?.caseStudy;
+
+    expect(caseStudy).toBeDefined();
+    expect(caseStudy?.proof.en).toContain('140 converter definitions');
+    expect(caseStudy?.proof.en).toContain('16 reviewed tools');
+    expect(caseStudy?.proof.en).toContain('two languages—English and Hebrew');
+    expect(caseStudy?.proof.en).toContain('locally in the browser');
+    expect(caseStudy?.proof.he).toContain('140 הגדרות ממיר');
+    expect(caseStudy?.proof.he).toContain('16 כלים שעברו עריכה');
+    expect(caseStudy?.proof.he).toContain('בשתי שפות—עברית ואנגלית');
+    expect(caseStudy?.proof.he).toContain('מקומית בדפדפן');
+
+    expect(caseStudy?.outcomes[0]?.support).toMatchObject({
+      kind: 'metric',
+      value: '140 / 16 / 2',
+      label: {
+        en: '140 definitions · 16 published tools · 2 languages',
+        he: '140 הגדרות · 16 כלים שפורסמו · 2 שפות',
+      },
+    });
+    expect(caseStudy?.outcomes[1]?.statement.en).toContain('execute in the browser');
+    expect(caseStudy?.outcomes[1]?.statement.he).toContain('פועלים בדפדפן');
+    expect(caseStudy?.outcomes[2]?.statement.en).toContain('No organic-traffic');
+    expect(caseStudy?.outcomes[2]?.statement.he).toContain('לא נטענת עלייה בטראפיק אורגני');
+  });
+
   it('presents the United Hatzalah surfaces as sourced capabilities, not a success metric', () => {
     const unitedHatzalah = projects.find(({ id }) => id === 'united_hatzalah');
 

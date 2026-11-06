@@ -204,8 +204,8 @@ const caseStudies = {
       }
     },
     proof: {
-      en: 'The pinned repository records 140 converter definitions, including 16 editorially reviewed tools published in both English and Hebrew; conversion runs locally in the browser.',
-      he: 'מאגר הקוד המקובע מתעד 140 הגדרות ממיר, ובהן 16 כלים שעברו עריכה ופורסמו בעברית ובאנגלית; ההמרה רצה מקומית בדפדפן.'
+      en: 'The pinned repository documents 140 converter definitions. Of those, 16 reviewed tools are published as static pages in two languages—English and Hebrew—and their conversions run locally in the browser.',
+      he: 'מאגר הקוד המקובע מתעד 140 הגדרות ממיר. מתוכן, 16 כלים שעברו עריכה מפורסמים כעמודים סטטיים בשתי שפות—עברית ואנגלית—וההמרות שלהם רצות מקומית בדפדפן.'
     },
     evidenceStatus: 'verified',
     verifiedAt: '2026-10-29',
@@ -234,13 +234,16 @@ const caseStudies = {
     outcomes: [
       {
         statement: {
-          en: 'The registry contains 140 converter definitions; 16 reviewed tools are published as static pages in two languages.',
-          he: 'ה־registry מכיל 140 הגדרות ממיר; 16 כלים שעברו עריכה מפורסמים כעמודים סטטיים בשתי שפות.',
+          en: 'The codebase holds 140 converter definitions; 16 reviewed tools are available as static pages in two languages—English and Hebrew.',
+          he: 'בסיס הקוד מכיל 140 הגדרות ממיר; 16 כלים שעברו עריכה זמינים כעמודים סטטיים בשתי שפות—עברית ואנגלית.',
         },
         support: {
           kind: 'metric',
           value: '140 / 16 / 2',
-          label: { en: 'definitions / published tools / languages', he: 'הגדרות / כלים מפורסמים / שפות' },
+          label: {
+            en: '140 definitions · 16 published tools · 2 languages',
+            he: '140 הגדרות · 16 כלים שפורסמו · 2 שפות',
+          },
           source: {
             label: { en: 'Pinned repository README', he: 'README בגרסה מקובעת' },
             url: 'https://github.com/Evyatar-Hazan/online-converter/tree/788761e81c4b968bd603b4445d04df9a39eaa6cd',
