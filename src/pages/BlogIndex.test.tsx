@@ -6,7 +6,9 @@ let currentLanguage = 'en';
 
 const libraryCopy = {
   en: {
-    'blog.title': 'Blog',
+    'blog.eyebrow': 'Lessons from real product work',
+    'blog.title': 'Decisions worth reusing',
+    'blog.subtitle': 'Practical lessons and decisions from building, testing, and shipping digital products — written to help you make the next call with more clarity.',
     'blog.library.searchFormLabel': 'Search and filter blog articles',
     'blog.library.searchLabel': 'Search articles',
     'blog.readerOutcome': 'What you’ll take away',
@@ -28,7 +30,9 @@ const libraryCopy = {
     'blog.languages.he': 'Hebrew',
   },
   he: {
-    'blog.title': 'בלוג',
+    'blog.eyebrow': 'לקחים מעבודת מוצר אמיתית',
+    'blog.title': 'החלטות שכדאי לקחת הלאה',
+    'blog.subtitle': 'לקחים והחלטות מעשיות מבנייה, בדיקה ופריסה של מוצרים דיגיטליים — כדי לעזור לכם לקבל את ההחלטה הבאה בבהירות רבה יותר.',
     'blog.library.searchFormLabel': 'חיפוש וסינון במאמרי הבלוג',
     'blog.library.searchLabel': 'חיפוש במאמרים',
     'blog.readerOutcome': 'מה יישאר לך מהקריאה',
@@ -83,6 +87,22 @@ beforeEach(() => {
 });
 
 describe('BlogIndex knowledge library', () => {
+  it('positions the archive as a practical decision library in both languages', () => {
+    const { rerender } = renderBlog('/en/blog/');
+
+    expect(screen.getByRole('heading', { level: 1, name: 'Decisions worth reusing' })).toBeInTheDocument();
+    expect(screen.getByText('Lessons from real product work')).toBeInTheDocument();
+    expect(screen.getByText('Practical lessons and decisions from building, testing, and shipping digital products — written to help you make the next call with more clarity.')).toBeInTheDocument();
+
+    currentLanguage = 'he';
+    window.history.pushState({}, '', '/he/blog/');
+    rerender(<BrowserRouter><BlogIndex /></BrowserRouter>);
+
+    expect(screen.getByRole('heading', { level: 1, name: 'החלטות שכדאי לקחת הלאה' })).toBeInTheDocument();
+    expect(screen.getByText('לקחים מעבודת מוצר אמיתית')).toBeInTheDocument();
+    expect(screen.getByText('לקחים והחלטות מעשיות מבנייה, בדיקה ופריסה של מוצרים דיגיטליים — כדי לעזור לכם לקבל את ההחלטה הבאה בבהירות רבה יותר.')).toBeInTheDocument();
+  });
+
   it('uses the explicit editorial rank for the default order in both languages', () => {
     const englishPosts = getBlogPosts('en');
     const hebrewPosts = getBlogPosts('he');

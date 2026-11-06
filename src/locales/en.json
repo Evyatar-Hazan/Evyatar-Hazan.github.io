@@ -345,9 +345,9 @@
     "contactCta": "Tell me about your system"
   },
   "blog": {
-    "eyebrow": "Useful insights",
-    "title": "Blog",
-    "subtitle": "Short, practical articles about digital products, frontend work, testing, and deployment.",
+    "eyebrow": "Lessons from real product work",
+    "title": "Decisions worth reusing",
+    "subtitle": "Practical lessons and decisions from building, testing, and shipping digital products — written to help you make the next call with more clarity.",
     "featured": "Featured",
     "latestEntry": "Latest entry",
     "publishedOn": "Published",
