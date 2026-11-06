@@ -38,8 +38,8 @@ const humanAboutCopy = {
         he: 'רקע מקצועי',
       },
       body: {
-        en: 'The public examples here cover product interfaces, backend and infrastructure work, test automation, and delivery. Areas without a public example are marked as evidence gaps instead of being presented as proven experience.',
-        he: 'הדוגמאות הציבוריות כאן מכסות ממשקי מוצר, עבודת Backend ותשתיות, אוטומציית בדיקות ומסירה. תחומים שאין להם דוגמה ציבורית מסומנים כפערי ראיות במקום להיות מוצגים כניסיון מוכח.',
+        en: 'The public examples here connect decisions across product interfaces, backend and infrastructure, test automation, and delivery. That makes it possible to consider an interface choice together with the system that supports it and the evidence used to verify it. Areas without a public example remain marked as evidence gaps instead of proven experience.',
+        he: 'הדוגמאות הציבוריות כאן מחברות החלטות בין ממשקי מוצר, Backend ותשתיות, אוטומציית בדיקות ומסירה. כך אפשר לבחון בחירת ממשק יחד עם המערכת שתומכת בה והראיות שמשמשות לאימותה. תחומים שאין להם דוגמה ציבורית נשארים מסומנים כפערי ראיות במקום כניסיון מוכח.',
       },
     },
     {
