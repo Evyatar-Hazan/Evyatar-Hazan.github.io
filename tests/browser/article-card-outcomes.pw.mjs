@@ -67,7 +67,7 @@ test.describe('FIX-064 article-card summaries and outcomes', () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/en/blog/', { waitUntil: 'networkidle' });
 
-    const search = page.getByRole('searchbox', { name: 'Search all notes' });
+    const search = page.getByRole('searchbox', { name: 'Search articles' });
     await search.fill('idempotent');
     const result = page.locator('[data-library-results] .blog-archive-entry');
     await expect(result).toHaveCount(1);

@@ -7,15 +7,15 @@ let currentLanguage = 'en';
 const libraryCopy = {
   en: {
     'blog.title': 'Blog',
-    'blog.library.searchFormLabel': 'Search and filter the knowledge library',
-    'blog.library.searchLabel': 'Search all notes',
+    'blog.library.searchFormLabel': 'Search and filter blog articles',
+    'blog.library.searchLabel': 'Search articles',
     'blog.readerOutcome': 'What you’ll take away',
-    'blog.library.searchPlaceholder': 'Title, summary, outcome, or tag',
+    'blog.library.searchPlaceholder': 'Try “performance”, “testing”, or an outcome',
     'blog.library.clearSearch': 'Clear search',
-    'blog.library.filtersLabel': 'Filter by topic',
-    'blog.library.topicFiltersLabel': 'Filter by topic',
+    'blog.library.filtersLabel': 'Filter articles by topic',
+    'blog.library.topicFiltersLabel': 'Filter articles by topic',
     'blog.library.depthFiltersLabel': 'Filter by depth',
-    'blog.library.allTopics': 'All',
+    'blog.library.allTopics': 'All articles',
     'blog.library.allDepths': 'All levels',
     'blog.library.depths.foundation': 'Foundations',
     'blog.library.depths.applied': 'Applied',
@@ -29,15 +29,15 @@ const libraryCopy = {
   },
   he: {
     'blog.title': 'בלוג',
-    'blog.library.searchFormLabel': 'חיפוש וסינון בספריית הידע',
-    'blog.library.searchLabel': 'חיפוש בכל הרשומות',
+    'blog.library.searchFormLabel': 'חיפוש וסינון במאמרי הבלוג',
+    'blog.library.searchLabel': 'חיפוש במאמרים',
     'blog.readerOutcome': 'מה יישאר לך מהקריאה',
-    'blog.library.searchPlaceholder': 'כותרת, תקציר, תוצאה או תגית',
+    'blog.library.searchPlaceholder': 'למשל: ביצועים, בדיקות או תוצאה',
     'blog.library.clearSearch': 'ניקוי החיפוש',
-    'blog.library.filtersLabel': 'סינון לפי נושא',
-    'blog.library.topicFiltersLabel': 'סינון לפי נושא',
+    'blog.library.filtersLabel': 'סינון מאמרים לפי נושא',
+    'blog.library.topicFiltersLabel': 'סינון מאמרים לפי נושא',
     'blog.library.depthFiltersLabel': 'סינון לפי רמת עומק',
-    'blog.library.allTopics': 'הכול',
+    'blog.library.allTopics': 'כל המאמרים',
     'blog.library.allDepths': 'כל הרמות',
     'blog.library.depths.foundation': 'יסודות',
     'blog.library.depths.applied': 'יישומי',
@@ -160,7 +160,7 @@ describe('BlogIndex knowledge library', () => {
     ['tag', 'monetization', 'Monetization needs product guardrails'],
   ])('searches by %s without requiring submission', async (_field, query, expectedTitle) => {
     renderBlog();
-    fireEvent.change(screen.getByRole('searchbox', { name: 'Search all notes' }), { target: { value: query } });
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Search articles' }), { target: { value: query } });
 
     expect(screen.getByRole('heading', { name: expectedTitle })).toBeInTheDocument();
     expect(document.querySelector('.blog-archive-feature')).not.toBeInTheDocument();
@@ -170,7 +170,7 @@ describe('BlogIndex knowledge library', () => {
 
   it('preserves spaces while a multi-word query is typed', async () => {
     renderBlog();
-    const search = screen.getByRole('searchbox', { name: 'Search all notes' });
+    const search = screen.getByRole('searchbox', { name: 'Search articles' });
 
     fireEvent.change(search, { target: { value: 'unfocused' } });
     fireEvent.change(search, { target: { value: 'unfocused ' } });
@@ -185,7 +185,7 @@ describe('BlogIndex knowledge library', () => {
     currentLanguage = 'he';
     renderBlog('/he/blog/');
 
-    fireEvent.change(screen.getByRole('searchbox', { name: 'חיפוש בכל הרשומות' }), {
+    fireEvent.change(screen.getByRole('searchbox', { name: 'חיפוש במאמרים' }), {
       target: { value: '  candidate  ' },
     });
 
@@ -210,7 +210,7 @@ describe('BlogIndex knowledge library', () => {
 
   it('highlights tag matches without changing the accessible result title', () => {
     renderBlog();
-    fireEvent.change(screen.getByRole('searchbox', { name: 'Search all notes' }), {
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Search articles' }), {
       target: { value: 'monetization' },
     });
 
@@ -233,7 +233,7 @@ describe('BlogIndex knowledge library', () => {
     expect(window.location.search).toContain('depth=applied');
     expect(resultCards()).toHaveLength(1);
 
-    fireEvent.change(screen.getByRole('searchbox', { name: 'Search all notes' }), {
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Search articles' }), {
       target: { value: 'timestamp' },
     });
     expect(resultCards()).toHaveLength(1);
@@ -249,14 +249,14 @@ describe('BlogIndex knowledge library', () => {
 
     expect(window.location.search).toBe('?campaign=portfolio');
     expect(document.querySelector('.blog-archive-feature')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'All' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'All articles' })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByRole('button', { name: 'All levels' })).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('restores direct query state, safely ignores invalid topics, and reacts to history navigation', async () => {
     renderBlog('/en/blog/?ref=direct&q=unicode&topic=Java&depth=applied');
 
-    expect(screen.getByRole('searchbox', { name: 'Search all notes' })).toHaveValue('unicode');
+    expect(screen.getByRole('searchbox', { name: 'Search articles' })).toHaveValue('unicode');
     expect(screen.getByRole('button', { name: 'Java' })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByRole('button', { name: 'Applied' })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByRole('heading', { name: 'Why String.length() does not really count characters' })).toBeInTheDocument();
@@ -264,21 +264,21 @@ describe('BlogIndex knowledge library', () => {
     window.history.pushState({}, '', '/en/blog/?ref=direct&topic=not-a-real-tag&depth=not-a-real-depth');
     window.dispatchEvent(new PopStateEvent('popstate'));
 
-    await waitFor(() => expect(screen.getByRole('searchbox', { name: 'Search all notes' })).toHaveValue(''));
-    expect(screen.getByRole('button', { name: 'All' })).toHaveAttribute('aria-pressed', 'true');
+    await waitFor(() => expect(screen.getByRole('searchbox', { name: 'Search articles' })).toHaveValue(''));
+    expect(screen.getByRole('button', { name: 'All articles' })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByRole('button', { name: 'All levels' })).toHaveAttribute('aria-pressed', 'true');
     expect(window.location.search).toContain('ref=direct');
   });
 
   it('uses localized control copy in RTL and LTR instead of hardcoded labels', () => {
     const { unmount } = renderBlog();
-    expect(screen.getByRole('search', { name: 'Search and filter the knowledge library' })).toBeInTheDocument();
+    expect(screen.getByRole('search', { name: 'Search and filter blog articles' })).toBeInTheDocument();
     unmount();
 
     currentLanguage = 'he';
     renderBlog('/he/blog/');
-    expect(screen.getByRole('search', { name: 'חיפוש וסינון בספריית הידע' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'הכול' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('search', { name: 'חיפוש וסינון במאמרי הבלוג' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'כל המאמרים' })).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('shows reading duration and article language consistently before opening a post', () => {

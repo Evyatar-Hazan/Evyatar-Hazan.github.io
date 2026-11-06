@@ -7,22 +7,22 @@ import {
 const cases = [
   {
     name: 'desktop-en-light', language: 'en', theme: 'light', width: 1440, height: 900,
-    topicLabel: 'Filter by topic', depthLabel: 'Filter by depth', appliedLabel: 'Applied',
+    topicLabel: 'Filter articles by topic', depthLabel: 'Filter by depth', appliedLabel: 'Applied',
     matchingTitle: 'One bad date should not blank an entire screen', resetLabel: 'Reset library',
   },
   {
     name: 'desktop-he-dark', language: 'he', theme: 'dark', width: 1440, height: 900,
-    topicLabel: 'סינון לפי נושא', depthLabel: 'סינון לפי רמת עומק', appliedLabel: 'יישומי',
+    topicLabel: 'סינון מאמרים לפי נושא', depthLabel: 'סינון לפי רמת עומק', appliedLabel: 'יישומי',
     matchingTitle: 'שדה תאריך שבור לא צריך להפיל מסך שלם', resetLabel: 'איפוס הספרייה',
   },
   {
     name: 'mobile-en-dark', language: 'en', theme: 'dark', width: 390, height: 844,
-    topicLabel: 'Filter by topic', depthLabel: 'Filter by depth', appliedLabel: 'Applied',
+    topicLabel: 'Filter articles by topic', depthLabel: 'Filter by depth', appliedLabel: 'Applied',
     matchingTitle: 'One bad date should not blank an entire screen', resetLabel: 'Reset library',
   },
   {
     name: 'mobile-he-light', language: 'he', theme: 'light', width: 390, height: 844,
-    topicLabel: 'סינון לפי נושא', depthLabel: 'סינון לפי רמת עומק', appliedLabel: 'יישומי',
+    topicLabel: 'סינון מאמרים לפי נושא', depthLabel: 'סינון לפי רמת עומק', appliedLabel: 'יישומי',
     matchingTitle: 'שדה תאריך שבור לא צריך להפיל מסך שלם', resetLabel: 'איפוס הספרייה',
   },
 ];
