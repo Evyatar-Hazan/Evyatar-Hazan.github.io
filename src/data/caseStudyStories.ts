@@ -199,8 +199,8 @@ export const caseStudyStories = {
   emergency_protocol: {
     accent: 'amber',
     limitation: {
-      en: 'This is a learning and practice product—not an emergency tool or clinically validated protocol.',
-      he: 'זהו מוצר למידה ותרגול — לא כלי לשעת חירום ולא פרוטוקול שעבר אימות קליני.',
+      en: 'This is a learning and practice product—not an emergency tool or clinically validated protocol. Its HTTP 200 health check is runtime evidence only, not evidence of medical safety, clinical effectiveness, or emergency performance.',
+      he: 'זהו מוצר למידה ותרגול — לא כלי לשעת חירום ולא פרוטוקול שעבר אימות קליני. בדיקת התקינות שהחזירה HTTP 200 היא ראיית runtime בלבד, ולא ראיה לבטיחות רפואית, ליעילות קלינית או לתפקוד בשעת חירום.',
     },
     decisions: [
       {
@@ -266,10 +266,12 @@ export const caseStudyStories = {
     technicalNotes: {
       en: [
         'The public learning client, Pages Functions, and D1 form the deployed architecture described here.',
+        'HTTP 200 from the health route verifies that the route responded at check time; it does not validate the BLS content or demonstrate any clinical or emergency outcome.',
         'Authentication and comments are collaboration features inside a learning product, not clinical functionality.',
       ],
       he: [
         'לקוח הלמידה הציבורי, Pages Functions ו־D1 מרכיבים את הארכיטקטורה הפרוסה שמתוארת כאן.',
+        'HTTP 200 מנתיב התקינות מאמת שהנתיב הגיב בזמן הבדיקה; הוא אינו מאמת את תוכן ה־BLS ואינו מדגים תוצאה קלינית או תוצאה בשעת חירום.',
         'אימות ותגובות הם יכולות שיתוף בתוך מוצר למידה, ולא פונקציונליות קלינית.',
       ],
     },

@@ -106,6 +106,16 @@ describe('case study evidence contract', () => {
     });
   });
 
+  it('limits the Emergency Protocol HTTP 200 evidence to the checked runtime route', () => {
+    const emergencyProtocol = projects.find(({ id }) => id === 'emergency_protocol')?.caseStudy;
+    const runtimeOutcome = emergencyProtocol?.outcomes?.[0];
+
+    expect(emergencyProtocol?.proof.en).toMatch(/proves only .*health route.*does not prove .*clinical.*emergency/is);
+    expect(emergencyProtocol?.proof.he).toMatch(/מוכיח רק .*נתיב התקינות.*אינו מוכיח .*קלינית.*חירום/su);
+    expect(runtimeOutcome?.statement.en).toMatch(/limited runtime fact.*did not test a clinical or emergency outcome/is);
+    expect(runtimeOutcome?.statement.he).toMatch(/עובדת runtime מוגבלת.*לא בדקה תוצאה קלינית.*חירום/su);
+  });
+
   it('rejects an outcome metric without a number or a trustworthy source URL', () => {
     const evidenceWithInvalidOutcome: EvidenceContractEntry = {
       id: 'fixture',

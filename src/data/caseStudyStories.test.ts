@@ -131,6 +131,15 @@ describe('case study product story contract', () => {
     ]);
   });
 
+  it('presents Emergency Protocol health evidence as technical runtime evidence only', () => {
+    const story = caseStudyStories.emergency_protocol;
+
+    expect(story.limitation.en).toMatch(/HTTP 200.*runtime evidence only.*not evidence of .*clinical.*emergency/is);
+    expect(story.limitation.he).toMatch(/HTTP 200.*ראיית runtime בלבד.*לא ראיה.*קלינית.*חירום/su);
+    expect(story.technicalNotes.en.join(' ')).toMatch(/HTTP 200.*does not validate.*clinical or emergency outcome/is);
+    expect(story.technicalNotes.he.join(' ')).toMatch(/HTTP 200.*אינו מאמת.*תוצאה קלינית.*חירום/su);
+  });
+
   it('cycles deterministically through the four case studies', () => {
     expect(caseStudyStoryProjectIds.map(getNextCaseStudyProjectId)).toEqual([
       'online_converter',

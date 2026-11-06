@@ -313,8 +313,8 @@ const caseStudies = {
       }
     },
     proof: {
-      en: 'The live health endpoint returned HTTP 200 on October 29, 2026. The pinned source identifies Cloudflare Pages Functions and D1 as production, while Express and Prisma remain local development only.',
-      he: 'נקודת הקצה החיה לבדיקת תקינות החזירה HTTP 200 ב־29 באוקטובר 2026. המקור המקובע מזהה את Cloudflare Pages Functions ו־D1 כפרודקשן, בעוד Express ו־Prisma נשארים לפיתוח מקומי בלבד.'
+      en: 'On October 29, 2026, the live health endpoint returned HTTP 200. This proves only that the checked production health route was reachable and responded at that moment; it does not prove clinical effectiveness, emergency performance, medical safety, or medical validation. The pinned source identifies Cloudflare Pages Functions and D1 as production, while Express and Prisma remain local development only.',
+      he: 'ב־29 באוקטובר 2026 נקודת הקצה החיה לבדיקת תקינות החזירה HTTP 200. הדבר מוכיח רק שנתיב התקינות שנבדק בפרודקשן היה נגיש והגיב באותו רגע; הוא אינו מוכיח יעילות קלינית, תפקוד בשעת חירום, בטיחות רפואית או אימות רפואי. המקור המקובע מזהה את Cloudflare Pages Functions ו־D1 כפרודקשן, בעוד Express ו־Prisma נשארים לפיתוח מקומי בלבד.'
     },
     evidenceStatus: 'verified',
     verifiedAt: '2026-10-29',
@@ -343,13 +343,13 @@ const caseStudies = {
     outcomes: [
       {
         statement: {
-          en: 'The production health endpoint responded successfully during the evidence check on October 29, 2026.',
-          he: 'נקודת הקצה של הפרודקשן לבדיקת תקינות הגיבה בהצלחה בבדיקת הראיות ב־29 באוקטובר 2026.',
+          en: 'The evidence check verified one limited runtime fact: the production health route was reachable and returned HTTP 200 on October 29, 2026. It did not test a clinical or emergency outcome.',
+          he: 'בדיקת הראיות אימתה עובדת runtime מוגבלת אחת: נתיב התקינות בפרודקשן היה נגיש והחזיר HTTP 200 ב־29 באוקטובר 2026. היא לא בדקה תוצאה קלינית או תוצאה בשעת חירום.',
         },
         support: {
           kind: 'metric',
           value: 'HTTP 200',
-          label: { en: 'live health response', he: 'תגובת תקינות חיה' },
+          label: { en: 'health-route response at evidence check', he: 'תגובת נתיב התקינות בזמן בדיקת הראיות' },
           source: {
             label: { en: 'Open health endpoint', he: 'פתיחת נקודת התקינות' },
             url: 'https://bls-protocol.evyatarhazan.com/api/health',
