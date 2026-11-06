@@ -127,4 +127,16 @@ describe('projects hub visitor-focused copy', () => {
     });
     expect(he.projectsHub.evidenceUndocumented).not.toMatch(/כשל|שגיאה/);
   });
+
+  it('makes filtered counts and empty states actionable in both languages', () => {
+    expect(en.projectsHub.resultCount).toBe('Filtered results: {{formattedCount}}');
+    expect(en.projectsHub.emptyTitle).toContain('selected category and capability');
+    expect(en.projectsHub.emptyDescription).toContain('Change either filter');
+    expect(en.projectsHub.resetFilters).toBe('Show all projects');
+
+    expect(he.projectsHub.resultCount).toBe('תוצאות לאחר סינון: {{formattedCount}}');
+    expect(he.projectsHub.emptyTitle).toContain('הקטגוריה והיכולת שבחרתם');
+    expect(he.projectsHub.emptyDescription).toContain('שנו את אחד המסננים');
+    expect(he.projectsHub.resetFilters).toBe('הצגת כל הפרויקטים');
+  });
 });

@@ -5,10 +5,10 @@ import {
 } from './support/console-errors.mjs';
 
 const cases = [
-  { name: 'desktop-en-light', language: 'en', theme: 'light', width: 1440, height: 900, label: 'Capability type', reset: 'Reset filters' },
-  { name: 'desktop-he-dark', language: 'he', theme: 'dark', width: 1440, height: 900, label: 'סוג יכולת', reset: 'איפוס מסננים' },
-  { name: 'mobile-en-dark', language: 'en', theme: 'dark', width: 390, height: 844, label: 'Capability type', reset: 'Reset filters' },
-  { name: 'mobile-he-light', language: 'he', theme: 'light', width: 390, height: 844, label: 'סוג יכולת', reset: 'איפוס מסננים' },
+  { name: 'desktop-en-light', language: 'en', theme: 'light', width: 1440, height: 900, label: 'Capability type', reset: 'Show all projects' },
+  { name: 'desktop-he-dark', language: 'he', theme: 'dark', width: 1440, height: 900, label: 'סוג יכולת', reset: 'הצגת כל הפרויקטים' },
+  { name: 'mobile-en-dark', language: 'en', theme: 'dark', width: 390, height: 844, label: 'Capability type', reset: 'Show all projects' },
+  { name: 'mobile-he-light', language: 'he', theme: 'light', width: 390, height: 844, label: 'סוג יכולת', reset: 'הצגת כל הפרויקטים' },
 ];
 
 for (const entry of cases) {
