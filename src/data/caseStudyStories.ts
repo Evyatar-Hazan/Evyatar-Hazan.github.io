@@ -287,8 +287,8 @@ export const caseStudyStories = {
           he: 'לפרסם עדכוני סניף שוטפים בלי להפוך כל שינוי תוכן למשימת קוד.',
         },
         choice: {
-          en: 'Pair the public branch site with an administrative content workflow.',
-          he: 'לחבר את אתר הסניף הציבורי לזרימת ניהול תוכן.',
+          en: 'I paired the public branch site with an administrative content workflow.',
+          he: 'חיברתי את אתר הסניף הציבורי לזרימת ניהול תוכן.',
         },
         impact: {
           en: 'Public content and operational updates can move through one product system.',
@@ -301,8 +301,8 @@ export const caseStudyStories = {
           he: 'לשמור מידע ומדיה משתנים של עמותה מסודרים לאורך זמן.',
         },
         choice: {
-          en: 'Use structured data models with a dedicated media workflow.',
-          he: 'להשתמש במודלי נתונים מסודרים ובזרימת מדיה ייעודית.',
+          en: 'I used structured data models with a dedicated media workflow.',
+          he: 'השתמשתי במודלי נתונים מסודרים ובזרימת מדיה ייעודית.',
         },
         impact: {
           en: 'Content, media, and public display have explicit responsibilities.',
@@ -315,8 +315,8 @@ export const caseStudyStories = {
           he: 'לשמור על אמון ציבורי ובמקביל לתמוך בעריכה תפעולית.',
         },
         choice: {
-          en: 'Separate the public experience from the admin workflow and deployment structure.',
-          he: 'להפריד בין החוויה הציבורית לבין זרימת הניהול ומבנה הפריסה.',
+          en: 'I separated the public experience from the admin workflow and deployment structure.',
+          he: 'הפרדתי בין החוויה הציבורית לבין זרימת הניהול ומבנה הפריסה.',
         },
         impact: {
           en: 'The public and management layers can evolve without becoming the same interface.',

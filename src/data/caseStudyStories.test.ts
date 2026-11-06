@@ -93,4 +93,26 @@ describe('case study product story contract', () => {
       expect(caseStudy?.ownership.collaboration.he.trim()).not.toBe('');
     });
   });
+
+  it('keeps United Hatzalah decisions in personal technical voice without claiming branch work', () => {
+    const caseStudy = projects.find(({ id }) => id === 'united_hatzalah')?.caseStudy;
+    const story = caseStudyStories.united_hatzalah;
+
+    expect(caseStudy?.ownership.model.en).toMatch(/software implementation/i);
+    expect(caseStudy?.ownership.collaboration.en).toMatch(/stakeholders supplied/i);
+    expect(caseStudy?.ownership.collaboration.en).toMatch(/do not claim/i);
+    expect(caseStudy?.decisions.en.every((decision) => decision.startsWith('I '))).toBe(true);
+    expect(caseStudy?.decisions.he).toEqual(expect.arrayContaining([
+      expect.stringMatching(/^מימשתי/u),
+      expect.stringMatching(/^בניתי/u),
+      expect.stringMatching(/^התייחסתי/u),
+    ]));
+    expect(story.decisions.every(({ choice }) => choice.en.startsWith('I '))).toBe(true);
+    expect(story.decisions.map(({ choice }) => choice.he)).toEqual([
+      expect.stringMatching(/^חיברתי/u),
+      expect.stringMatching(/^השתמשתי/u),
+      expect.stringMatching(/^הפרדתי/u),
+    ]);
+    expect(JSON.stringify({ caseStudy, story })).not.toMatch(/\bwe\b|בנינו|עבודתנו/iu);
+  });
 });

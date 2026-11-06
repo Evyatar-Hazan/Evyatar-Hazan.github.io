@@ -439,14 +439,14 @@ const caseStudies = {
     ],
     decisions: {
       en: [
-        'Built the content and media workflow so routine updates do not require touching the codebase.',
-        'Kept the data layer structured because nonprofit information tends to evolve in uneven but important ways.',
-        'Treated public trust as part of the product, not only the admin feature set.'
+        'I implemented the content and media workflow so branch stakeholders can publish routine updates without touching the codebase.',
+        'I structured the data layer to keep changing nonprofit information explicit and maintainable.',
+        'I treated public trust as a product constraint by separating the public experience from administrative editing.'
       ],
       he: [
-        'בנינו את זרימת התוכן והמדיה כך שעדכונים שוטפים לא ידרשו מגע בקוד.',
-        'שמרתי על שכבת data מסודרת כי מידע של עמותות נוטה להשתנות בצורה לא אחידה אבל חשובה.',
-        'התייחסתי לאמון הציבורי כחלק מהמוצר, לא רק לפיצ׳רי הניהול.'
+        'מימשתי את זרימת התוכן והמדיה כך שבעלי העניין בסניף יוכלו לפרסם עדכונים שוטפים בלי לגעת בקוד.',
+        'בניתי שכבת data מובנית כדי לשמור מידע משתנה של העמותה מפורש וניתן לתחזוקה.',
+        'התייחסתי לאמון הציבורי כאילוץ מוצר באמצעות הפרדה בין החוויה הציבורית לעריכה הניהולית.'
       ]
     },
     outcomes: [
