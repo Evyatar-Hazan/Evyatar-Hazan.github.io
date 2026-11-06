@@ -367,8 +367,8 @@ describe('App', () => {
     expect(professionalLinks.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('target', '_blank');
     expect(professionalLinks.getByRole('link', { name: language === 'he' ? 'אימייל' : 'Email' })).toHaveAttribute('href', 'mailto:evyatarhazan3.14@gmail.com');
     expect(professionalLinks.getByRole('link', { name: language === 'he' ? 'אימייל' : 'Email' })).not.toHaveAttribute('target');
-    expect(screen.getByRole('link', { name: language === 'he' ? 'לצפייה בראיות מהפרויקטים' : 'View project evidence' })).toHaveAttribute('href', `/${language}/projects/`);
-    expect(screen.getByRole('link', { name: language === 'he' ? 'להתחיל שיחה' : 'Start a conversation' })).toHaveAttribute('href', `/${language}/contact/`);
+    expect(screen.getByRole('link', { name: language === 'he' ? 'לבדוק יכולות דרך הפרויקטים' : 'Explore projects to verify capabilities' })).toHaveAttribute('href', `/${language}/projects/`);
+    expect(screen.getByRole('link', { name: language === 'he' ? 'לשתף צורך ולהגדיר את הצעד הבא' : 'Share your need and define the next step' })).toHaveAttribute('href', `/${language}/contact/`);
     const cvLink = screen.getByRole('link', { name: language === 'he' ? 'להורדת קורות החיים' : 'Download CV' });
     expect(cvLink).toHaveAttribute('href', '/evyatar-hazan-cv.pdf');
     expect(cvLink).toHaveAttribute('download', 'Evyatar-Hazan-CV.pdf');
