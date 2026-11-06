@@ -32,3 +32,19 @@ describe('FIX-031 hero positioning', () => {
     expect(he.home.compiler.buildCta).toBe('תארו את הצורך');
   });
 });
+
+describe('FIX-112 delivery proof', () => {
+  it('connects selected public workflow evidence to a lower-risk handoff in English', () => {
+    expect(en.home.proof.delivery).toEqual({
+      title: 'Delivery that reduces risk',
+      description: 'Selected public work shows how discovery, testing, and live deployment connect a defined outcome to evidence and a maintainable handoff.',
+    });
+  });
+
+  it('keeps the same evidence boundary and visitor benefit in Hebrew', () => {
+    expect(he.home.proof.delivery).toEqual({
+      title: 'מסירה שמפחיתה סיכון',
+      description: 'עבודות ציבוריות נבחרות מראות איך אפיון, בדיקות ופריסה חיה מחברים תוצאה מוגדרת לראיות ולהעברה נוחה לתחזוקה.',
+    });
+  });
+});
