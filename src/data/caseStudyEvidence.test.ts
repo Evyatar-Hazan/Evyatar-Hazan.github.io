@@ -116,6 +116,15 @@ describe('case study evidence contract', () => {
     expect(runtimeOutcome?.statement.he).toMatch(/עובדת runtime מוגבלת.*לא בדקה תוצאה קלינית.*חירום/su);
   });
 
+  it('presents the United Hatzalah surfaces as sourced capabilities, not a success metric', () => {
+    const unitedHatzalah = projects.find(({ id }) => id === 'united_hatzalah');
+
+    expect(unitedHatzalah?.caseStudy?.outcomes[0].support.kind).toBe('source');
+    expect(unitedHatzalah?.caseStudy?.outcomes[0].statement.en).toMatch(/capabilities/i);
+    expect(unitedHatzalah?.caseStudy?.outcomes[0].statement.he).toContain('יכולות');
+    expect(unitedHatzalah?.caseStudy?.outcomes.at(-1)?.support.kind).toBe('boundary');
+  });
+
   it('rejects an outcome metric without a number or a trustworthy source URL', () => {
     const evidenceWithInvalidOutcome: EvidenceContractEntry = {
       id: 'fixture',

@@ -422,8 +422,8 @@ const caseStudies = {
       }
     },
     proof: {
-      en: 'The pinned repository documents three product surfaces—a public website, admin panel, and backend API—inside one full-stack monorepo.',
-      he: 'מאגר הקוד המקובע מתעד שלושה משטחי מוצר—אתר ציבורי, פאנל ניהול ו־Backend API—בתוך מונוריפו Full Stack אחד.'
+      en: 'The pinned repository documents a public website, admin workflow, and backend API as linked capabilities for publishing, routine editing, and structured content operations.',
+      he: 'מאגר הקוד המקובע מתעד אתר ציבורי, זרימת ניהול ו־Backend API כיכולות מחוברות לפרסום, לעריכה שוטפת ולתפעול תוכן מובנה.'
     },
     evidenceStatus: 'verified',
     verifiedAt: '2026-10-29',
@@ -452,13 +452,13 @@ const caseStudies = {
     outcomes: [
       {
         statement: {
-          en: 'The repository separates the public website, administrative editing, and backend operations into explicit product surfaces.',
-          he: 'המאגר מפריד בין האתר הציבורי, עריכת הניהול ופעולות ה־Backend למשטחי מוצר מפורשים.',
+          en: 'The public website, admin workflow, and API provide distinct capabilities to publish information, update content, and manage structured operations.',
+          he: 'האתר הציבורי, זרימת הניהול וה־API מספקים יכולות נפרדות לפרסום מידע, לעדכון תוכן ולניהול פעולות מובנות.',
         },
         support: {
-          kind: 'metric',
-          value: '3',
-          label: { en: 'documented product surfaces', he: 'משטחי מוצר מתועדים' },
+          kind: 'source',
+          value: { en: 'Publish · update · operate', he: 'פרסום · עדכון · תפעול' },
+          label: { en: 'documented delivery capabilities', he: 'יכולות מסירה מתועדות' },
           source: {
             label: { en: 'Pinned repository README', he: 'README בגרסה מקובעת' },
             url: 'https://github.com/Evyatar-Hazan/united-hatzalah-shoham-branch/tree/8b373a20d40e0dd80721e43d5fff9fe4ac78a5d3',
@@ -467,13 +467,13 @@ const caseStudies = {
       },
       {
         statement: {
-          en: 'The public branch website is reachable independently from the administrative workflow described in the source.',
-          he: 'אתר הסניף הציבורי נגיש בנפרד מזרימת הניהול המתוארת בקוד המקור.',
+          en: 'The live public site has its own route, while the documented admin workflow keeps routine content and media updates out of code changes.',
+          he: 'לאתר הציבורי החי יש נתיב משלו, וזרימת הניהול המתועדת מאפשרת לבצע עדכוני תוכן ומדיה שוטפים בלי לשנות קוד.',
         },
         support: {
           kind: 'source',
-          value: { en: 'Live', he: 'חי' },
-          label: { en: 'public website evidence', he: 'ראיית אתר ציבורי' },
+          value: { en: 'Public + admin paths', he: 'נתיבים ציבורי וניהולי' },
+          label: { en: 'independent update capability', he: 'יכולת עדכון עצמאית' },
           source: {
             label: { en: 'Open live website', he: 'פתיחת האתר החי' },
             url: 'https://hatzalah-shoham.evyatarhazan.com/',

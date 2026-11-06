@@ -341,11 +341,11 @@ export const caseStudyStories = {
     },
     technicalNotes: {
       en: [
-        'The documented stack includes React, Express, Prisma, Cloudinary, and structured deployment.',
+        'The documented stack connects React, Express, Prisma, Cloudinary, and structured deployment across public publishing, admin editing, and backend operations.',
         'No adoption, response-time, fundraising, or operational-efficiency metric is claimed.',
       ],
       he: [
-        'הסטאק המתועד כולל React, ‏Express, ‏Prisma, ‏Cloudinary ופריסה מסודרת.',
+        'הסטאק המתועד מחבר React, ‏Express, ‏Prisma, ‏Cloudinary ופריסה מסודרת בין פרסום ציבורי, עריכת ניהול ופעולות Backend.',
         'לא נטען מדד של אימוץ, זמן תגובה, גיוס תרומות או יעילות תפעולית.',
       ],
     },
