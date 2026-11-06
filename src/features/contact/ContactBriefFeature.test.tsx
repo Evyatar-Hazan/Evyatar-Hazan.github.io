@@ -12,6 +12,7 @@ const openBuilder = () => {
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.useRealTimers();
 });
 
 describe('ContactBriefFeature', () => {
@@ -119,6 +120,8 @@ describe('ContactBriefFeature', () => {
       'href',
       '/en/privacy/',
     );
+    expect(screen.getByText(/name, email, and reviewed message are sent through FormSubmit/i)).toBeVisible();
+    expect(screen.getByText(/site does not save the brief locally/i)).toBeVisible();
 
     const emailDraft = screen.getByRole('link', { name: 'Open email draft' });
     const whatsappDraft = screen.getByRole('link', { name: 'Open WhatsApp draft' });
@@ -136,6 +139,18 @@ describe('ContactBriefFeature', () => {
     expect(screen.getByRole('link', { name: 'evyatarhazan3.14@gmail.com' })).toHaveAttribute(
       'href',
       expect.stringMatching(/^mailto:evyatarhazan3\.14@gmail\.com/),
+    );
+  });
+
+  it('explains the same privacy boundary in Hebrew without leading with the provider', () => {
+    render(<ContactBriefFeature language="he" buildLocalizedPath={buildLocalizedPath} />);
+    fireEvent.click(screen.getByRole('button', { name: /שליחת הודעה קצרה/i }));
+
+    expect(screen.getByText(/השם, האימייל וההודעה שנבדקה נשלחים דרך FormSubmit/i)).toBeVisible();
+    expect(screen.getByText(/האתר אינו שומר את התקציר מקומית/i)).toBeVisible();
+    expect(screen.getByRole('link', { name: 'למידע נוסף בעמוד הפרטיות' })).toHaveAttribute(
+      'href',
+      '/he/privacy/',
     );
   });
 
@@ -232,7 +247,8 @@ describe('ContactBriefFeature', () => {
     expect(body.get('_honey')).toBe('');
     expect(body.get('_captcha')).toBe('false');
     expect([...body.keys()]).not.toContain('intent');
-    expect(await screen.findByText(/confirmed delivery/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Email delivery was confirmed/i)).toBeInTheDocument();
+    expect(screen.getByText(/does not mean I have read the message yet/i)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'evyatarhazan3.14@gmail.com' })).toHaveAttribute(
       'href',
       expect.stringMatching(/^mailto:evyatarhazan3\.14@gmail\.com/),
@@ -265,6 +281,7 @@ describe('ContactBriefFeature', () => {
     fireEvent.submit(screen.getByRole('button', { name: /שליחה באמצעות FormSubmit/i }).closest('form')!);
 
     expect(await screen.findByText(/מה קורה עכשיו/i)).toBeInTheDocument();
+    expect(screen.getByText(/האישור אינו אומר שקראתי את ההודעה עדיין/i)).toBeInTheDocument();
     expect(screen.getByText(/שאלות ממוקדות או המלצה לצעד הבא/i)).toBeInTheDocument();
     expect(screen.getByText(/אין כאן התחייבות לזמן תגובה קבוע/i)).toBeInTheDocument();
   });
@@ -400,7 +417,7 @@ describe('ContactBriefFeature', () => {
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     rejectRequest?.(new Error('synthetic network failure'));
-    expect(await screen.findByText(/Delivery was not confirmed/i)).toBeInTheDocument();
+    expect(await screen.findByText(/form did not receive delivery confirmation/i)).toBeInTheDocument();
     expect(screen.getByLabelText<HTMLTextAreaElement>('What do you need help with?').value).toBe(
       'Keep this synthetic brief',
     );
@@ -423,10 +440,10 @@ describe('ContactBriefFeature', () => {
     fireEvent.change(screen.getByLabelText('Email address'), {
       target: { value: 'corrected@example.test' },
     });
-    expect(screen.queryByText(/Every field is still here/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/remain available here/i)).not.toBeInTheDocument();
     fireEvent.submit(form);
 
-    expect(await screen.findByText(/confirmed delivery/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Email delivery was confirmed/i)).toBeInTheDocument();
     expect(fetchMock).toHaveBeenCalledTimes(2);
     const retryBody = (fetchMock.mock.calls[1]![1] as RequestInit).body as FormData;
     expect(retryBody.get('email')).toBe('corrected@example.test');
@@ -453,12 +470,65 @@ describe('ContactBriefFeature', () => {
     fireEvent.submit(screen.getByRole('button', { name: /send with FormSubmit/i }).closest('form')!);
 
     const deliveryError = await screen.findByRole('alert');
-    expect(deliveryError).toHaveTextContent(/Delivery was not confirmed/i);
+    expect(deliveryError).toHaveTextContent(/form did not receive delivery confirmation/i);
     expect(deliveryError).toHaveAttribute('aria-live', 'assertive');
     expect(deliveryError).toHaveAttribute('aria-atomic', 'true');
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Retry form delivery' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Retry the same details' })).toBeInTheDocument();
     expect(screen.queryByText(/What happens next/i)).not.toBeInTheDocument();
+  });
+
+  it('uses the same unconfirmed-delivery recovery copy in Hebrew', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ success: false }),
+    }));
+    render(<ContactBriefFeature language="he" buildLocalizedPath={buildLocalizedPath} />);
+    fireEvent.click(screen.getByRole('button', { name: 'שליחת הודעה קצרה' }));
+    fireEvent.change(screen.getByLabelText('במה צריך עזרה?'), { target: { value: 'בדיקת אישור מסירה' } });
+    fireEvent.change(screen.getByLabelText('שם'), { target: { value: 'מבקר בדיקה' } });
+    fireEvent.change(screen.getByLabelText('כתובת אימייל'), { target: { value: 'visitor@example.test' } });
+    fireEvent.submit(screen.getByRole('button', { name: 'שליחה באמצעות FormSubmit' }).closest('form')!);
+
+    const deliveryError = await screen.findByRole('alert');
+    expect(deliveryError).toHaveTextContent('הטופס לא קיבל אישור מסירה. השם, האימייל וההודעה עדיין זמינים כאן; אפשר לבדוק אותם, לנסות שוב או לפתוח טיוטת אימייל או WhatsApp.');
+    expect(screen.getByRole('button', { name: 'שליחה חוזרת של אותם פרטים' })).toBeInTheDocument();
+    expect(screen.queryByText('מה קורה עכשיו')).not.toBeInTheDocument();
+  });
+
+  it.each([
+    {
+      language: 'en' as const,
+      open: 'Send a short message',
+      messageLabel: 'What do you need help with?',
+      nameLabel: 'Name',
+      emailLabel: 'Email address',
+      submit: 'Send with FormSubmit',
+      timeout: 'The delivery request timed out before confirmation. Your name, email, and message remain available here; retry or use email or WhatsApp instead.',
+      retry: 'Retry the same details',
+    },
+    {
+      language: 'he' as const,
+      open: 'שליחת הודעה קצרה',
+      messageLabel: 'במה צריך עזרה?',
+      nameLabel: 'שם',
+      emailLabel: 'כתובת אימייל',
+      submit: 'שליחה באמצעות FormSubmit',
+      timeout: 'בקשת המסירה הסתיימה לפני שהתקבל אישור. השם, האימייל וההודעה עדיין זמינים כאן; אפשר לנסות שוב או לבחור באימייל או ב-WhatsApp.',
+      retry: 'שליחה חוזרת של אותם פרטים',
+    },
+  ])('gives a precise recovery path after an unconfirmed timeout in $language', async ({ language, open, messageLabel, nameLabel, emailLabel, submit, timeout, retry }) => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new DOMException('Timed out', 'AbortError')));
+    render(<ContactBriefFeature language={language} buildLocalizedPath={buildLocalizedPath} />);
+    fireEvent.click(screen.getByRole('button', { name: open }));
+    fireEvent.change(screen.getByLabelText(messageLabel), { target: { value: 'Synthetic timeout check' } });
+    fireEvent.change(screen.getByLabelText(nameLabel), { target: { value: 'Synthetic Visitor' } });
+    fireEvent.change(screen.getByLabelText(emailLabel), { target: { value: 'visitor@example.test' } });
+    fireEvent.submit(screen.getByRole('button', { name: submit }).closest('form')!);
+
+    expect(await screen.findByText(timeout)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: retry })).toBeInTheDocument();
+    expect(screen.queryByText(language === 'he' ? 'מה קורה עכשיו' : 'What happens next')).not.toBeInTheDocument();
   });
 
   it('announces confirmed delivery once with polite priority without moving focus', async () => {
@@ -482,7 +552,8 @@ describe('ContactBriefFeature', () => {
     fireEvent.submit(submitButton.closest('form')!);
 
     const deliveryStatus = await screen.findByRole('status');
-    expect(deliveryStatus).toHaveTextContent(/confirmed delivery/i);
+    expect(deliveryStatus).toHaveTextContent(/Email delivery was confirmed/i);
+    expect(deliveryStatus).toHaveTextContent(/does not mean I have read the message yet/i);
     expect(deliveryStatus).toHaveAttribute('aria-live', 'polite');
     expect(deliveryStatus).toHaveAttribute('aria-atomic', 'true');
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
