@@ -95,8 +95,8 @@ const caseStudies = {
       }
     },
     proof: {
-      en: 'The public site and pinned repository document a live custom-domain product plus three distinct surfaces: the website, Content Studio, and private media library.',
-      he: 'האתר הציבורי ומאגר הקוד המקובע מתעדים מוצר חי בדומיין מותאם ושלושה משטחים נפרדים: האתר, Content Studio וספריית מדיה פרטית.'
+      en: 'The live bilingual site shows the customer journey to a WhatsApp inquiry, while the pinned repository documents the supporting Content Studio and private media library.',
+      he: 'האתר החי והדו־לשוני מציג את מסע הלקוח עד לפנייה ב־WhatsApp, ומאגר הקוד המקובע מתעד את Content Studio ואת ספריית המדיה הפרטית שתומכים בו.'
     },
     evidenceStatus: 'verified',
     verifiedAt: '2026-10-29',
@@ -125,28 +125,13 @@ const caseStudies = {
     outcomes: [
       {
         statement: {
-          en: 'One repository now separates the public website, editorial Content Studio, and private source-photo library.',
-          he: 'מאגר אחד מפריד כעת בין האתר הציבורי, Content Studio לעריכה וספריית תמונות מקור פרטית.',
-        },
-        support: {
-          kind: 'metric',
-          value: '3',
-          label: { en: 'documented product surfaces', he: 'משטחי מוצר מתועדים' },
-          source: {
-            label: { en: 'Pinned repository README', he: 'README בגרסה מקובעת' },
-            url: 'https://github.com/Evyatar-Hazan/nis-boutique-catering/tree/039f02897190d1e08e16ad7f9f0cbf5e6e3a389f',
-          },
-        },
-      },
-      {
-        statement: {
-          en: 'The customer-facing product is publicly reachable on its custom domain in Hebrew and English.',
-          he: 'המוצר ללקוחות נגיש לציבור בדומיין המותאם שלו בעברית ובאנגלית.',
+          en: 'The live bilingual website gives visitors a direct path from service details to a WhatsApp inquiry.',
+          he: 'האתר החי והדו־לשוני נותן למבקרים נתיב ישיר מפרטי השירות לפנייה ב־WhatsApp.',
         },
         support: {
           kind: 'source',
           value: { en: 'Live', he: 'חי' },
-          label: { en: 'public product evidence', he: 'ראיית מוצר ציבורית' },
+          label: { en: 'public product and inquiry path', he: 'מוצר ציבורי ונתיב פנייה' },
           source: {
             label: { en: 'Open live website', he: 'פתיחת האתר החי' },
             url: 'https://nisboutiquecatering.com/',
@@ -155,13 +140,28 @@ const caseStudies = {
       },
       {
         statement: {
-          en: 'No lead-volume, conversion-rate, or revenue lift is claimed because comparable business analytics were not provided.',
-          he: 'לא נטענת עלייה בכמות הלידים, בשיעור ההמרה או בהכנסות, משום שלא סופקו נתוני אנליטיקה עסקיים להשוואה.',
+          en: 'The public evidence confirms the product and contact route, but it does not establish a conversion rate, inquiry volume, or revenue lift.',
+          he: 'הראיות הציבוריות מאמתות את המוצר ואת נתיב הפנייה, אך אינן מוכיחות שיעור המרה, היקף פניות או עלייה בהכנסות.',
         },
         support: {
           kind: 'boundary',
-          value: { en: 'Not claimed', he: 'לא נטען' },
+          value: { en: 'No conversion metric', he: 'אין מדד המרה' },
           label: { en: 'business-performance boundary', he: 'גבול לביצועים עסקיים' },
+        },
+      },
+      {
+        statement: {
+          en: 'One repository separates the public website, editorial Content Studio, and private source-photo library so publishing work stays distinct from the visitor experience.',
+          he: 'מאגר אחד מפריד בין האתר הציבורי, Content Studio לעריכה וספריית תמונות מקור פרטית, כך שעבודת הפרסום נשארת נפרדת מחוויית המבקר.',
+        },
+        support: {
+          kind: 'metric',
+          value: '3',
+          label: { en: 'documented supporting surfaces', he: 'משטחים תומכים מתועדים' },
+          source: {
+            label: { en: 'Pinned repository README', he: 'README בגרסה מקובעת' },
+            url: 'https://github.com/Evyatar-Hazan/nis-boutique-catering/tree/039f02897190d1e08e16ad7f9f0cbf5e6e3a389f',
+          },
         },
       },
     ]

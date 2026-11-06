@@ -54,8 +54,8 @@ export const caseStudyStories = {
   nis_boutique: {
     accent: 'copper',
     limitation: {
-      en: 'Public evidence does not currently include conversion or inquiry metrics.',
-      he: 'הראיות הציבוריות אינן כוללות כרגע מדדי המרה או פניות.',
+      en: 'Public evidence does not currently include a verified conversion, inquiry-volume, or revenue metric.',
+      he: 'הראיות הציבוריות אינן כוללות כרגע מדד מאומת של המרה, היקף פניות או הכנסות.',
     },
     decisions: [
       {
