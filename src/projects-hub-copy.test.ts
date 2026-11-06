@@ -23,4 +23,12 @@ describe('projects hub visitor-focused copy', () => {
     expect(he.projectsHub.introduction).not.toContain('תיק עבודה');
     expect(he.projectsHub.seoDescription).not.toContain('תיק עבודות');
   });
+
+  it('frames the selected projects around problem, choice, and outcome', () => {
+    expect(en.projectsHub.featuredEyebrow).toBe('Selected projects / 04');
+    expect(en.projectsHub.featuredTitle).toBe('Four projects, from problem to choice to outcome.');
+
+    expect(he.projectsHub.featuredEyebrow).toBe('פרויקטים נבחרים / 04');
+    expect(he.projectsHub.featuredTitle).toBe('ארבעה פרויקטים — מהבעיה, דרך הבחירה ועד לתוצאה.');
+  });
 });
