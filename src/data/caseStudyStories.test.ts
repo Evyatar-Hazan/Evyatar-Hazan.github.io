@@ -31,11 +31,23 @@ describe('case study product story contract', () => {
   });
 
   it('keeps the Emergency Protocol production and local boundaries explicit', () => {
+    const decisions = caseStudyStories.emergency_protocol.decisions;
     const nodes = caseStudyStories.emergency_protocol.system.nodes;
 
+    expect(decisions).toHaveLength(3);
+    expect(decisions[0].choice.en).toMatch(/learning and practice/i);
+    expect(decisions[0].choice.he).toMatch(/למידה ותרגול/u);
+    expect(decisions[1].choice.en).toMatch(/permissioned collaboration/i);
+    expect(decisions[1].choice.he).toMatch(/שיתוף מבוסס הרשאות/u);
+    expect(decisions[2].choice.en).toMatch(/Pages Functions and D1 in production.*Express and Prisma.*local/i);
+    expect(decisions[2].choice.he).toMatch(/Pages Functions.*D1 בפרודקשן.*Express.*Prisma.*מקומית/u);
     expect(nodes.find(({ id }) => id === 'functions')).toMatchObject({ boundary: 'production' });
     expect(nodes.find(({ id }) => id === 'd1')).toMatchObject({ boundary: 'production' });
     expect(nodes.find(({ id }) => id === 'local')).toMatchObject({ boundary: 'local' });
+    expect(caseStudyStories.emergency_protocol.system.caption.en).toMatch(/learning first.*permissioned collaboration second.*production boundary/i);
+    expect(caseStudyStories.emergency_protocol.system.caption.he).toMatch(/קודם למידה.*שיתוף מבוסס הרשאות.*גבול Production/u);
+    expect(caseStudyStories.emergency_protocol.system.boundaryNote?.en).toMatch(/Pages Functions and D1.*production.*Express and Prisma.*local-only/i);
+    expect(caseStudyStories.emergency_protocol.system.boundaryNote?.he).toMatch(/Pages Functions.*D1.*Production.*Express.*Prisma.*מקומיים בלבד/u);
     expect(caseStudyStories.emergency_protocol.system.boundaryNote?.en).toMatch(/not for use during emergencies/i);
     expect(caseStudyStories.emergency_protocol.system.boundaryNote?.he).toMatch(/אינו מיועד לשימוש בזמן חירום/u);
   });

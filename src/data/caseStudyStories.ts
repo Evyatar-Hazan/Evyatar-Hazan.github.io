@@ -219,37 +219,37 @@ export const caseStudyStories = {
       },
       {
         need: {
-          en: 'Support health checks, authentication, and comments in the deployed product.',
-          he: 'לתמוך בבדיקות תקינות, אימות ותגובות במוצר הפרוס.',
+          en: 'Let learners discuss the pathway without turning access or collaboration into clinical authority.',
+          he: 'לאפשר ללומדים לדון במסלול בלי להפוך הרשאה או שיתוף לסמכות קלינית.',
         },
         choice: {
-          en: 'Use Cloudflare Pages Functions and D1 behind the React client in production.',
-          he: 'להשתמש ב־Cloudflare Pages Functions וב־D1 מאחורי לקוח React בפרודקשן.',
+          en: 'Treat authentication and comments as permissioned collaboration inside the learning product.',
+          he: 'להגדיר אימות ותגובות כשיתוף מבוסס הרשאות בתוך מוצר הלמידה.',
         },
         impact: {
-          en: 'The live system has a clear production data and API boundary.',
-          he: 'למערכת החיה יש גבול ברור ל־API ולנתונים בפרודקשן.',
+          en: 'Participation stays tied to the learning context and does not imply medical validation.',
+          he: 'ההשתתפות נשארת קשורה להקשר הלימודי ואינה מרמזת על אימות רפואי.',
         },
       },
       {
         need: {
-          en: 'Keep local backend experimentation from being confused with the deployed architecture.',
-          he: 'למנוע בלבול בין ניסויי backend מקומיים לבין הארכיטקטורה הפרוסה.',
+          en: 'Run those collaboration features in production without confusing local backend experiments with the deployed architecture.',
+          he: 'להפעיל את יכולות השיתוף בפרודקשן בלי לבלבל בין ניסויי backend מקומיים לבין הארכיטקטורה הפרוסה.',
         },
         choice: {
-          en: 'Document Express and Prisma as a separate local development workspace.',
-          he: 'לתעד את Express ו־Prisma כסביבת פיתוח מקומית נפרדת.',
+          en: 'Use Cloudflare Pages Functions and D1 in production, while keeping Express and Prisma in a separate local development workspace.',
+          he: 'להשתמש ב־Cloudflare Pages Functions וב־D1 בפרודקשן, ולהשאיר את Express ו־Prisma בסביבת פיתוח מקומית נפרדת.',
         },
         impact: {
-          en: 'The case study does not present local services as production components.',
-          he: 'הקייס סטאדי אינו מציג שירותים מקומיים כרכיבי Production.',
+          en: 'The live API and data boundary is explicit, and local services are not presented as production components.',
+          he: 'גבול ה־API והנתונים של המערכת החיה מפורש, ושירותים מקומיים אינם מוצגים כרכיבי Production.',
         },
       },
     ],
     system: {
       caption: {
-        en: 'The production path and the local development workspace are intentionally shown as separate boundaries.',
-        he: 'נתיב הפרודקשן וסביבת הפיתוח המקומית מוצגים בכוונה כגבולות נפרדים.',
+        en: 'The architecture follows the product logic: learning first, permissioned collaboration second, then a production boundary kept separate from local development.',
+        he: 'הארכיטקטורה נובעת מהיגיון המוצר: קודם למידה, אחריה שיתוף מבוסס הרשאות, ואז גבול Production שנשמר בנפרד מהפיתוח המקומי.',
       },
       nodes: [
         node('learner', 'public', 'Learner', 'לומד', 'Learning and practice only', 'למידה ותרגול בלבד'),
@@ -259,8 +259,8 @@ export const caseStudyStories = {
         node('local', 'local', 'Express + Prisma', 'Express + Prisma', 'Local development workspace only', 'סביבת פיתוח מקומית בלבד'),
       ],
       boundaryNote: {
-        en: 'Express and Prisma are not presented as the production API. The product is not for use during emergencies and makes no medical-validation claim.',
-        he: 'Express ו־Prisma אינם מוצגים כ־API של הפרודקשן. המוצר אינו מיועד לשימוש בזמן חירום ואינו טוען לאימות רפואי.',
+        en: 'Pages Functions and D1 are the production API and data layer; Express and Prisma remain local-only. The product supports learning and permissioned collaboration, is not for use during emergencies, and makes no medical-validation claim.',
+        he: 'Pages Functions ו־D1 הם שכבות ה־API והנתונים של Production; ‏Express ו־Prisma נשארים מקומיים בלבד. המוצר תומך בלמידה ובשיתוף מבוסס הרשאות, אינו מיועד לשימוש בזמן חירום ואינו טוען לאימות רפואי.',
       },
     },
     technicalNotes: {
