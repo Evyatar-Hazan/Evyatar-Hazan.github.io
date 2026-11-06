@@ -126,13 +126,13 @@ const deliverySteps: Array<{
     target: { route: 'article', id: 'small-project-architecture' },
   },
   {
-    title: { en: 'Build the system', he: 'בונים את המערכת' },
-    body: { en: 'Connect interface, application logic, data, and delivery foundations without hiding their boundaries.', he: 'מחברים ממשק, לוגיקה, נתונים ותשתית מסירה בלי להסתיר את הגבולות ביניהם.' },
+    title: { en: 'Build a result people can use', he: 'בונים תוצאה שאפשר להשתמש בה' },
+    body: { en: 'Turn the chosen workflow into a working interface, connected to the logic and data it needs with clear system boundaries.', he: 'הופכים את התהליך שנבחר לממשק עובד, שמחובר ללוגיקה ולנתונים הנדרשים ושומר על גבולות מערכת ברורים.' },
     target: { route: 'project', id: 'emergency_protocol' },
   },
   {
-    title: { en: 'Test and verify the live result', he: 'בודקים ומאמתים את התוצאה החיה' },
-    body: { en: 'Use automated checks and production readback that match the claim being made.', he: 'משתמשים בבדיקות אוטומטיות וב־readback מהמערכת החיה שמתאימים לטענה שרוצים להוכיח.' },
+    title: { en: 'Verify what the result actually proves', he: 'מאמתים מה התוצאה באמת מוכיחה' },
+    body: { en: 'Check the behavior with the evidence available for that project—automated checks or live readback where they exist—and state what remains unverified.', he: 'בודקים את ההתנהגות בעזרת הראיות הזמינות באותו פרויקט — בדיקות אוטומטיות או readback חי, כשאלה קיימים — ומציינים מה עדיין לא אומת.' },
     target: { route: 'article', id: 'tests-need-honest-environments' },
   },
   {
