@@ -59,16 +59,16 @@ export type Project = {
 const caseStudies = {
   nis_boutique: {
     eyebrow: {
-      en: 'Business website case study',
-      he: 'קייס סטאדי לאתר עסקי'
+      en: 'From event interest to a clear inquiry',
+      he: 'מהתעניינות באירוע לפנייה ברורה'
     },
     seoTitle: {
-      en: 'Nis Boutique Catering Case Study | Evyatar Hazan',
-      he: 'קייס סטאדי: Nis Boutique Catering | אביתר חזן'
+      en: 'Clear Catering Inquiries — Nis Boutique Case Study | Evyatar Hazan',
+      he: 'נתיב פנייה ברור לקייטרינג — Nis Boutique | אביתר חזן'
     },
     seoDescription: {
-      en: 'How I built a conversion-focused boutique catering website around WhatsApp, trust, RTL UX, and practical SEO.',
-      he: 'איך בניתי אתר קייטרינג מוכוון המרה סביב WhatsApp, אמון, חוויית RTL ו-SEO פרקטי.'
+      en: 'A boutique catering site that helps event planners assess fit and reach one clear inquiry path, using WhatsApp, trust cues, and RTL UX to reduce friction.',
+      he: 'אתר קייטרינג בוטיק שעוזר למתכנני אירועים להבין התאמה ולהגיע לנתיב פנייה ברור, בעזרת WhatsApp, סימני אמון וחוויית RTL שמפחיתים חיכוך.'
     },
     overview: {
       en: [
@@ -81,8 +81,8 @@ const caseStudies = {
       ]
     },
     audience: {
-      en: 'Small service businesses that need one strong inquiry path instead of a bloated brochure site.',
-      he: 'עסקי שירות קטנים שצריכים נתיב פנייה אחד חזק, ולא אתר תדמית מנופח.'
+      en: 'A local catering business whose visitors need to assess fit quickly and move into one clear inquiry path.',
+      he: 'עסק קייטרינג מקומי שהמבקרים בו צריכים להבין התאמה במהירות ולעבור לנתיב פנייה ברור אחד.'
     },
     ownership: {
       model: {
