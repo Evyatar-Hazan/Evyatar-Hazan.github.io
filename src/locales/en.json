@@ -373,8 +373,8 @@
     "library": {
       "kicker": "Knowledge library / {{formattedCount}}",
       "eyebrow": "Field index",
-      "title": "Find the note you need",
-      "description": "Search the full working library or narrow it by topic and depth.",
+      "title": "What problem are you trying to solve?",
+      "description": "Find practical answers to questions about product decisions, frontend implementation, testing, and getting work live.",
       "searchFormLabel": "Search and filter the knowledge library",
       "searchLabel": "Search all notes",
       "searchPlaceholder": "Title, summary, outcome, or tag",
