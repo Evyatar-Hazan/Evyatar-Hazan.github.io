@@ -89,4 +89,30 @@ describe('projects hub visitor-focused copy', () => {
     expect(he.projectsHub.lifecycleNote.historical).toContain('לא אומתה גרסה חיה נוכחית');
     expect(he.projectsHub.lifecycleNote.undocumented).toContain('לא נמצא מקור מהימן');
   });
+
+  it('names the public asset visitors can open without presenting missing evidence as a failure', () => {
+    expect(en.projectsHub).toMatchObject({
+      caseStudyAvailable: 'Case study page',
+      liveProductAvailable: 'Live product link',
+      publicCodeAvailable: 'Public source-code link',
+      evidenceStatus: 'Public evidence you can open',
+      evidenceVerified: 'Public evidence links available',
+      evidenceUndocumented: 'No public evidence link documented yet',
+      yes: 'Available to open',
+      no: 'No public link available',
+    });
+    expect(en.projectsHub.evidenceUndocumented).not.toMatch(/failed|error/i);
+
+    expect(he.projectsHub).toMatchObject({
+      caseStudyAvailable: 'עמוד קייס סטאדי',
+      liveProductAvailable: 'קישור למוצר חי',
+      publicCodeAvailable: 'קישור לקוד ציבורי',
+      evidenceStatus: 'ראיה ציבורית שניתן לפתוח',
+      evidenceVerified: 'קישורי ראיה ציבוריים זמינים',
+      evidenceUndocumented: 'עדיין לא תועד קישור לראיה ציבורית',
+      yes: 'זמין לפתיחה',
+      no: 'אין קישור ציבורי זמין',
+    });
+    expect(he.projectsHub.evidenceUndocumented).not.toMatch(/כשל|שגיאה/);
+  });
 });
