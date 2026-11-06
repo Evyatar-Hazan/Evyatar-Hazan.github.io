@@ -809,7 +809,7 @@ describe('App', () => {
   it('serves the localized interface lab with its reusable date presenter', async () => {
     renderAt('/en/lab/');
 
-    expect(await screen.findByRole('heading', { level: 1, name: 'Small states. Serious product decisions.' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 1, name: 'Product thinking, tested in the smallest states.' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: 'A date should inform, not interrupt.' })).toBeInTheDocument();
     expect(screen.getAllByRole('link', { name: 'nav.Lab' }).some((link) => link.getAttribute('href') === '/en/lab/')).toBe(true);
   });

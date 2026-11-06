@@ -62,9 +62,9 @@ type CraftLabContent = {
 export const craftLabContent = {
   en: {
     eyebrow: 'Interface craft lab / 03 experiments',
-    title: 'Small states. Serious product decisions.',
-    introduction: 'Three original interface studies about recovery, trust, and making system behavior understandable.',
-    disclosure: 'These are self-initiated experiments built with synthetic scenarios. They are not delivered client products, customer data, or claims of production use.',
+    title: 'Product thinking, tested in the smallest states.',
+    introduction: 'Three original interface studies showing how I turn failure, progress, and workflow decisions into clear next steps — evidence of the product judgment behind the screens.',
+    disclosure: 'Self-initiated studies using synthetic scenarios and sample data. They demonstrate product thinking; they are not client work, customer data, production systems, or evidence of production results.',
     syntheticLabel: 'Synthetic scenario',
     deliveredWork: 'View delivered work',
     discussProject: 'Discuss a real project',
@@ -125,9 +125,9 @@ export const craftLabContent = {
   },
   he: {
     eyebrow: 'מעבדת ממשקים / 03 ניסויים',
-    title: 'מצבים קטנים. החלטות מוצר רציניות.',
-    introduction: 'שלושה ניסויי ממשק מקוריים על התאוששות, אמון והפיכת התנהגות מערכת למובנת.',
-    disclosure: 'אלה ניסויים עצמאיים שנבנו מתרחישים סינתטיים. הם אינם מוצרי לקוח שנמסרו, מידע של לקוחות או טענה לשימוש בפרודקשן.',
+    title: 'חשיבה מוצרית, במבחן של המצבים הקטנים.',
+    introduction: 'שלושה ניסויי ממשק מקוריים שמראים איך אני הופך כשל, התקדמות והחלטות בתהליך לצעדים ברורים להמשך — עדות לשיקול הדעת המוצרי שמאחורי המסכים.',
+    disclosure: 'ניסויים עצמאיים המבוססים על תרחישים סינתטיים ומידע לדוגמה. הם מדגימים חשיבה מוצרית; הם אינם עבודת לקוח, מידע של לקוחות, מערכות פרודקשן או ראיה לתוצאות בפרודקשן.',
     syntheticLabel: 'תרחיש סינתטי',
     deliveredWork: 'לצפייה בעבודות שנמסרו',
     discussProject: 'לשיחה על פרויקט אמיתי',

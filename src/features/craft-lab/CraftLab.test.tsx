@@ -16,13 +16,24 @@ afterEach(() => {
 
 describe('CraftLab', () => {
   it.each([
-    ['en', 'Small states. Serious product decisions.', 'These are self-initiated experiments built with synthetic scenarios.'],
-    ['he', 'מצבים קטנים. החלטות מוצר רציניות.', 'אלה ניסויים עצמאיים שנבנו מתרחישים סינתטיים.'],
-  ] as const)('identifies the %s lab as synthetic experimentation rather than client delivery', (language, title, disclosure) => {
+    [
+      'en',
+      'Product thinking, tested in the smallest states.',
+      'Three original interface studies showing how I turn failure, progress, and workflow decisions into clear next steps',
+      'Self-initiated studies using synthetic scenarios and sample data. They demonstrate product thinking; they are not client work, customer data, production systems, or evidence of production results.',
+    ],
+    [
+      'he',
+      'חשיבה מוצרית, במבחן של המצבים הקטנים.',
+      'שלושה ניסויי ממשק מקוריים שמראים איך אני הופך כשל, התקדמות והחלטות בתהליך לצעדים ברורים להמשך',
+      'ניסויים עצמאיים המבוססים על תרחישים סינתטיים ומידע לדוגמה. הם מדגימים חשיבה מוצרית; הם אינם עבודת לקוח, מידע של לקוחות, מערכות פרודקשן או ראיה לתוצאות בפרודקשן.',
+    ],
+  ] as const)('positions the %s lab as product-thinking evidence while separating it from client and production work', (language, title, introduction, disclosure) => {
     render(<CraftLab language={language} buildPath={buildPath} />);
 
     expect(screen.getByRole('heading', { level: 1, name: title })).toBeInTheDocument();
-    expect(screen.getAllByText(new RegExp(disclosure))).toHaveLength(2);
+    expect(screen.getByText(new RegExp(introduction))).toBeInTheDocument();
+    expect(screen.getAllByText(disclosure, { exact: true })).toHaveLength(2);
     expect(screen.getAllByText(language === 'he' ? 'תרחיש סינתטי' : 'Synthetic scenario')).toHaveLength(3);
     expect(document.querySelectorAll('[data-experiment]')).toHaveLength(3);
   });
