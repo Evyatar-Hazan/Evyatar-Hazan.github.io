@@ -26,4 +26,9 @@ describe('FIX-031 hero positioning', () => {
       'בין שמדובר באתר ציבורי, במערכת פנימית או בכלי עבודה מעשי, העבודה מתחילה ביעד ובחוויית שימוש ברורים וממשיכה למוצר שמוכן למסירה ולתחזוקה.',
     );
   });
+
+  it('uses a low-friction action for the primary CTA in both languages', () => {
+    expect(en.home.compiler.buildCta).toBe('Describe your need');
+    expect(he.home.compiler.buildCta).toBe('תארו את הצורך');
+  });
 });
