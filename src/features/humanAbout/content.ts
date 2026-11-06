@@ -62,8 +62,8 @@ const humanAboutCopy = {
         he: 'איך עובדים יחד',
       },
       body: {
-        en: 'The documented method starts by clarifying the need and desired outcome, then connects experience, code, infrastructure, verification, and handoff. The examples show the method in practice; they do not promise scope, timing, or results for future work.',
-        he: 'דרך העבודה המתועדת מתחילה בחידוד הצורך והתוצאה הרצויה, ואז מחברת חוויה, קוד, תשתית, אימות ומסירה. הדוגמאות מראות את השיטה בפועל; הן אינן מבטיחות היקף, זמן או תוצאה בעבודה עתידית.',
+        en: 'You bring the need, relevant context, constraints, and the outcome you want to reach. I take responsibility for turning them into a clear plan and connecting experience, code, infrastructure, verification, and handoff, with assumptions and evidence made visible. The intended output is a verified, maintainable implementation with a clear handoff, shaped to the agreed scope; this description does not set a fixed scope, timeline, or result for future work.',
+        he: 'אתם מביאים את הצורך, ההקשר הרלוונטי, האילוצים והתוצאה שתרצו להשיג. באחריותי להפוך אותם לתוכנית ברורה ולחבר חוויה, קוד, תשתית, אימות ומסירה, תוך הצגת ההנחות והראיות. התוצר המיועד הוא מימוש מאומת ותחזוקתי עם העברה ברורה, בהתאם להיקף שסוכם; התיאור אינו קובע מראש היקף, לוח זמנים או תוצאה לעבודה עתידית.',
       },
     },
   ] satisfies readonly HumanAboutPillar[],
