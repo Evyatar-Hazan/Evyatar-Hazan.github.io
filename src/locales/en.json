@@ -216,8 +216,8 @@
       "password_gen": {
         "title": "Password Generator",
         "description": "A privacy-first password generator with a React Native app and reusable core package.",
-        "summary": "A mobile app and reusable core package for generating passwords locally on-device.",
-        "impact": "The project keeps a basic security workflow private and reusable instead of tying it to an external service.",
+        "summary": "Passwords are generated locally on the device, keeping a basic security tool private and independent of external services.",
+        "impact": "The reusable core package is an implementation choice that separates generation logic from the interface and keeps it consistent.",
         "status": "Privacy-first",
         "problem": "A basic security tool must be simple, local, and independent of external services.",
         "solution": "A reusable core package and mobile app that generate passwords locally on the device.",
