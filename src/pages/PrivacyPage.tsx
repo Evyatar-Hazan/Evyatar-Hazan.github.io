@@ -71,12 +71,14 @@ const PrivacyPage = () => {
           {isHebrew ? 'פרטיות' : 'Privacy'}
         </div>
         <h1 className="mt-6 text-4xl font-bold tracking-tight text-neutral-950 dark:text-white md:text-5xl">
-          {isHebrew ? 'פרטיות ושקיפות בסיסית' : 'Basic privacy and transparency'}
+          {isHebrew
+            ? 'מה אתר הפורטפוליו מתעד בגלישה — ומה נשלח רק מבחירתך'
+            : 'What the portfolio records as you browse — and what you send by choice'}
         </h1>
         <p className="body-copy mt-5 text-lg leading-8 text-neutral-600 dark:text-neutral-400">
           {isHebrew
-            ? 'העמוד הזה נועד להסביר בפשטות איך האתר הזה פועל, אילו נתיבים יש ליצירת קשר, ואיפה עובר הגבול בין שימוש רגיל באתר לבין שיתוף מידע ביוזמתך.'
-            : 'This page explains in plain language how the site works, which contact paths exist, and where the boundary sits between normal browsing and information you intentionally choose to share.'}
+            ? 'בגלישה באתר הפורטפוליו נשמרות בדפדפן העדפות השפה וערכת הנושא; בתהליך יצירת הקשר נמדדים חמישה אירועי שימוש בלי שם, אימייל, תוכן הודעה או מזהה משתמש. שם, אימייל והודעה נמסרים רק אם בחרת לשלוח אותם בטופס או בפנייה ישירה.'
+            : 'As you browse the portfolio, language and theme preferences are stored in your browser; the contact flow measures five usage events without your name, email, message content, or a user identifier. Your name, email, and message are provided only when you choose to send them through the form or direct contact.'}
         </p>
         <p className="mt-3 text-sm font-medium text-neutral-500 dark:text-neutral-400">
           {isHebrew ? 'עודכן לאחרונה: ' : 'Last updated: '}

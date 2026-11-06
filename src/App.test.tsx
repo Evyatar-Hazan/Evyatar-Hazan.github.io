@@ -954,15 +954,32 @@ describe('App', () => {
     expect(screen.queryByRole('heading', { name: 'Where AI assisted—and where human control stayed essential' })).not.toBeInTheDocument();
   });
 
-  it('discloses contact-form and advertising data use on the privacy page', () => {
-    renderAt('/en/privacy/');
+  it('discloses contact-form and advertising data use on the privacy page', async () => {
+    const englishView = renderAt('/en/privacy/');
 
+    expect(await screen.findByRole('heading', {
+      name: 'What the portfolio records as you browse — and what you send by choice',
+    })).toBeInTheDocument();
+    expect(screen.getByText(
+      /As you browse the portfolio, language and theme preferences are stored in your browser/i,
+    )).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Advertising and Google AdSense' })).toBeInTheDocument();
     expect(screen.getByText(/FormSubmit processes the submission/i)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /How Google uses information from partner sites/i })).toHaveAttribute(
       'href',
       'https://policies.google.com/technologies/partner-sites'
     );
+
+    englishView.unmount();
+    currentLanguage = 'he';
+    renderAt('/he/privacy/');
+
+    expect(await screen.findByRole('heading', {
+      name: 'מה אתר הפורטפוליו מתעד בגלישה — ומה נשלח רק מבחירתך',
+    })).toBeInTheDocument();
+    expect(screen.getByText(
+      /בגלישה באתר הפורטפוליו נשמרות בדפדפן העדפות השפה וערכת הנושא/,
+    )).toBeInTheDocument();
   });
 
   it('renders a not found state for an unknown blog post', async () => {
