@@ -26,8 +26,8 @@ const humanAboutCopy = {
     he: 'חשיבה מקצה לקצה, בדרך עבודה מעשית.',
   },
   introduction: {
-    en: 'I’m Evyatar, a software developer. This public portfolio focuses on web and mobile products, full-stack systems, automation, accessibility, and the evidence available for each area.',
-    he: 'אני אביתר, מפתח תוכנה. הפורטפוליו הציבורי הזה מתמקד במוצרי Web ומובייל, מערכות Full Stack, אוטומציה, נגישות ובראיות הזמינות לכל תחום.',
+    en: 'For teams shaping a new product, improving an existing flow, or making a system easier to operate, this portfolio shows how interface, full-stack, automation, and accessibility decisions connect—and provides public evidence to help assess fit.',
+    he: 'לצוותים שמגבשים מוצר חדש, משפרים תהליך קיים או הופכים מערכת לקלה יותר לתפעול, הפורטפוליו הזה מראה כיצד החלטות בממשק, ב־Full Stack, באוטומציה ובנגישות מתחברות — ומציג ראיות ציבוריות שעוזרות לבחון התאמה.',
   },
   pillars: [
     {
