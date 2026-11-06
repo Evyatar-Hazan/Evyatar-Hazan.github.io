@@ -260,7 +260,7 @@
     "getInTouchDesc": "Send a few lines about the need, the current state, and what should happen next. If it fits, we can move into a short scope and work plan.",
     "whatsappLbl": "WhatsApp",
     "whatsappDesc": "Open a direct project conversation",
-    "whatsappText": "Hi Evyatar, I saw your website and would like to talk about a project.",
+    "whatsappText": "Hi Evyatar, here's what's blocked, who it affects, and what a useful outcome would look like:",
     "emailLbl": "Email",
     "linkedinLbl": "LinkedIn",
     "form": {
@@ -420,7 +420,7 @@
     "copyright": "© {{year}} Evyatar Hazan. All rights reserved.",
     "status": "One focused conversation is enough to start",
     "title": "Share what’s blocked, who it affects, and what a useful outcome looks like.",
-    "cta": "Start a conversation",
+    "cta": "Share the context",
     "privacy": "Privacy",
     "siteMap": "Site map / 01",
     "navigation": "Footer navigation",
