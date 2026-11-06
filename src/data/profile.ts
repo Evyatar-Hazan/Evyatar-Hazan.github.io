@@ -386,16 +386,16 @@ const caseStudies = {
   },
   united_hatzalah: {
     eyebrow: {
-      en: 'Nonprofit operations case study',
-      he: 'קייס סטאדי לתפעול עמותה'
+      en: 'Public site and branch-managed content',
+      he: 'אתר ציבורי ותוכן בניהול עצמאי של הסניף'
     },
     seoTitle: {
       en: 'United Hatzalah Shoham Branch Case Study | Evyatar Hazan',
       he: 'קייס סטאדי: איחוד הצלה שוהם | אביתר חזן'
     },
     seoDescription: {
-      en: 'How I built a nonprofit branch website and admin workflow that reduces dependency on code changes for routine updates.',
-      he: 'איך בניתי אתר סניף ומערכת ניהול לעמותה שמפחיתים תלות בעדכוני קוד עבור שינויים שוטפים.'
+      en: 'How a public branch site and admin workflow let the Shoham team manage routine content and media without code edits, with no measured time-saving claim.',
+      he: 'איך אתר סניף ציבורי וזרימת ניהול מאפשרים לצוות שוהם לערוך תוכן ומדיה שוטפים בלי שינויי קוד, ללא טענה לחיסכון בזמן שנמדד.'
     },
     overview: {
       en: [
@@ -408,8 +408,8 @@ const caseStudies = {
       ]
     },
     audience: {
-      en: 'Local nonprofits and operational teams that need a reliable public presence without turning every change into a code deployment.',
-      he: 'עמותות מקומיות וצוותים תפעוליים שצריכים נוכחות ציבורית אמינה בלי להפוך כל שינוי לפריסת קוד.'
+      en: 'Branch teams that need a reliable public site and an admin path for routine content and media updates.',
+      he: 'צוותי סניף שצריכים אתר ציבורי אמין ונתיב ניהול לעדכוני תוכן ומדיה שוטפים.'
     },
     ownership: {
       model: {
