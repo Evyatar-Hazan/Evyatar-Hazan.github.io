@@ -48,8 +48,8 @@ const pageCopy = {
     humanNoteTitle: 'Curiosity is part of the work.',
     humanNoteBody: 'I enjoy turning complexity into clarity—in an interface, a system, or a short article that captures something new I learned. That process is what keeps me curious from one project to the next.',
     capabilitiesEyebrow: '02 / Capability explorer',
-    capabilitiesTitle: 'Select a field. Follow the evidence.',
-    capabilitiesIntro: 'Each skill is labeled as used, learning, or exploring. Public work supports “used”; active study stays visibly separate; unsupported claims remain exploratory.',
+    capabilitiesTitle: 'Check whether a capability fits your need.',
+    capabilitiesIntro: 'Used means public work demonstrates implementation; Learning means active structured study; Exploring means interest without public-use evidence. Measured outcomes are shown separately.',
     statusTitle: 'Knowledge status',
     statusLabels: { used: 'Used', learning: 'Learning', exploring: 'Exploring' },
     statusDescriptions: {
@@ -89,8 +89,8 @@ const pageCopy = {
     humanNoteTitle: 'סקרנות היא חלק מהעבודה.',
     humanNoteBody: 'אני נהנה להפוך מורכבות לבהירות — בממשק, במערכת או במאמר קצר שמסכם משהו חדש שלמדתי. התהליך הזה הוא מה ששומר על הסקרנות שלי מפרויקט לפרויקט.',
     capabilitiesEyebrow: '02 / מפת יכולות',
-    capabilitiesTitle: 'בוחרים תחום ועוקבים אחרי הראיות.',
-    capabilitiesIntro: 'כל מיומנות מסומנת כ־Used,‏ Learning או Exploring. עבודה ציבורית תומכת ב־Used, למידה פעילה נשארת נפרדת, וטענה ללא הוכחת שימוש נשארת Exploring.',
+    capabilitiesTitle: 'בודקים אם יכולת מתאימה לצורך שלכם.',
+    capabilitiesIntro: 'Used מציין עבודה ציבורית שמדגימה מימוש; Learning מציין למידה מובנית פעילה; Exploring מציין עניין ללא ראיית שימוש ציבורית. תוצאות מדידות מוצגות בנפרד.',
     statusTitle: 'מצב הידע',
     statusLabels: { used: 'Used', learning: 'Learning', exploring: 'Exploring' },
     statusDescriptions: {
