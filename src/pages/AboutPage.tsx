@@ -27,7 +27,7 @@ import { formatLocaleIndex, formatLocaleNumber } from '../features/locale-presen
 
 const pageCopy = {
   en: {
-    eyebrow: 'Professional profile / evidence dossier',
+    eyebrow: 'How I turn product needs into systems you can verify',
     title: 'Evyatar Hazan',
     role: 'Full Stack Developer',
     bio: 'I’m Evyatar, a full-stack developer building web and mobile products from product framing through production verification. I work across React, Node.js, infrastructure, automation, accessibility, and applied AI.',
@@ -68,7 +68,7 @@ const pageCopy = {
     processIntro: 'This is a delivery sequence, not an SLA or a promise about timing.',
   },
   he: {
-    eyebrow: 'פרופיל מקצועי / תיק ראיות',
+    eyebrow: 'כך אני הופך צורך מוצרי למערכת שאפשר לאמת',
     title: 'אביתר חזן',
     role: 'Full Stack Developer',
     bio: 'אני אביתר, מפתח Full Stack שבונה מוצרי Web ומובייל מהגדרת המוצר ועד לאימות בפרודקשן. אני עובד עם React, Node.js, תשתיות, אוטומציה, נגישות ו־AI יישומי.',

@@ -344,6 +344,11 @@ describe('App', () => {
     renderAt(`/${language}/about/`);
 
     expect(await screen.findByRole('heading', { level: 1, name: language === 'he' ? 'אביתר חזן' : 'Evyatar Hazan' })).toBeInTheDocument();
+    expect(screen.getByText(
+      language === 'he'
+        ? 'כך אני הופך צורך מוצרי למערכת שאפשר לאמת'
+        : 'How I turn product needs into systems you can verify',
+    )).toBeInTheDocument();
     expect(screen.getByText('Full Stack Developer')).toBeInTheDocument();
     const biography = document.querySelector('main > section:first-of-type [data-professional-bio]');
     expect(biography).toBeInTheDocument();
