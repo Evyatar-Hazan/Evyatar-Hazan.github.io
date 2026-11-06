@@ -63,7 +63,7 @@ const ArchiveFeature = ({ post, language }: { post: BlogPost; language: BlogLang
     <article className={cardSurfaceClassName('interactive', 'blog-archive-feature')}>
       <div className="blog-archive-index" aria-hidden="true">
         <strong>{formatLocaleIndex(1, language)}</strong>
-        <span>LEAD ENTRY</span>
+        <span>{t('blog.latestEntry')}</span>
       </div>
       <div className="blog-archive-feature-copy">
         <EntryMeta post={post} language={language} />
@@ -79,12 +79,12 @@ const ArchiveFeature = ({ post, language }: { post: BlogPost; language: BlogLang
             {post.tags.map((tag) => <li key={tag}>{tag}</li>)}
           </ul>
           <Link to={localizedPath(language, { route: 'article', id: post.slug as ArticleId })} className="blog-archive-read">
-            {t('blog.readPost')}<ArrowIcon aria-hidden="true" />
+            {t('blog.readFeaturedPost')}<ArrowIcon aria-hidden="true" />
           </Link>
         </div>
       </div>
       <div className="blog-archive-signal" aria-hidden="true">
-        <span>LIVE NOTE / {formatLocaleIndex(1, language)}</span>
+        <span>{t('blog.featuredTakeaway')} / {formatLocaleIndex(1, language)}</span>
         <div><i /><i /><i /></div>
         <strong>{post.tags[0]}</strong>
       </div>

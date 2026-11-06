@@ -9,6 +9,10 @@ const libraryCopy = {
     'blog.eyebrow': 'Lessons from real product work',
     'blog.title': 'Decisions worth reusing',
     'blog.subtitle': 'Practical lessons and decisions from building, testing, and shipping digital products — written to help you make the next call with more clarity.',
+    'blog.featured': 'Start with the newest article',
+    'blog.latestEntry': 'Newest article',
+    'blog.readFeaturedPost': 'Read the newest article',
+    'blog.featuredTakeaway': 'A practical idea you can use',
     'blog.library.searchFormLabel': 'Search and filter blog articles',
     'blog.library.searchLabel': 'Search articles',
     'blog.readerOutcome': 'What you’ll take away',
@@ -33,6 +37,10 @@ const libraryCopy = {
     'blog.eyebrow': 'לקחים מעבודת מוצר אמיתית',
     'blog.title': 'החלטות שכדאי לקחת הלאה',
     'blog.subtitle': 'לקחים והחלטות מעשיות מבנייה, בדיקה ופריסה של מוצרים דיגיטליים — כדי לעזור לכם לקבל את ההחלטה הבאה בבהירות רבה יותר.',
+    'blog.featured': 'התחילו במאמר החדש',
+    'blog.latestEntry': 'המאמר החדש',
+    'blog.readFeaturedPost': 'לקריאת המאמר החדש',
+    'blog.featuredTakeaway': 'רעיון מעשי שאפשר ליישם',
     'blog.library.searchFormLabel': 'חיפוש וסינון במאמרי הבלוג',
     'blog.library.searchLabel': 'חיפוש במאמרים',
     'blog.readerOutcome': 'מה יישאר לך מהקריאה',
@@ -161,6 +169,20 @@ describe('BlogIndex knowledge library', () => {
     expect(resultCards()).toHaveLength(33);
     expect(screen.queryByRole('button', { name: /^Load more notes/ })).not.toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'What I learned from building a credible portfolio' })).toBeInTheDocument();
+  });
+
+  it.each([
+    ['en', '/en/blog/', 'Start with the newest article', 'Read the newest article', 'Newest article', 'A practical idea you can use'],
+    ['he', '/he/blog/', 'התחילו במאמר החדש', 'לקריאת המאמר החדש', 'המאמר החדש', 'רעיון מעשי שאפשר ליישם'],
+  ])('guides %s readers through the newest article card', (language, url, label, cta, newest, takeaway) => {
+    currentLanguage = language;
+    renderBlog(url);
+
+    const feature = document.querySelector('.blog-archive-feature');
+    expect(feature).toHaveTextContent(label);
+    expect(feature).toHaveTextContent(newest);
+    expect(feature).toHaveTextContent(takeaway);
+    expect(screen.getByRole('link', { name: cta })).toBeInTheDocument();
   });
 
   it('gives every visible article card a concise summary and reader outcome', () => {
