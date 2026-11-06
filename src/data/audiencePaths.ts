@@ -34,8 +34,8 @@ export const audiencePaths: readonly AudiencePath[] = [
     id: 'product-partner',
     priority: 'primary',
     audience: {
-      en: 'Business owners, founders & product teams',
-      he: 'בעלי עסקים, יזמים וצוותי מוצר',
+      en: 'When a product, workflow, or system blocks progress',
+      he: 'כשמוצר, תהליך או מערכת מעכבים התקדמות',
     },
     title: {
       en: 'Move a real need forward with a web product that works.',

@@ -14,7 +14,7 @@ describe('AudienceEntryPaths', () => {
     const paths = screen.getAllByRole('listitem');
     expect(paths).toHaveLength(3);
     expect(paths[0]).toHaveAttribute('data-audience-priority', 'primary');
-    expect(paths[0]).toHaveTextContent('Business owners, founders & product teams');
+    expect(paths[0]).toHaveTextContent('When a product, workflow, or system blocks progress');
     expect(paths[1]).toHaveAttribute('data-audience-priority', 'secondary');
     expect(paths[1]).toHaveTextContent('Recruiters & technical leaders');
     expect(paths[2]).toHaveAttribute('data-audience-priority', 'secondary');
@@ -46,7 +46,7 @@ describe('AudienceEntryPaths', () => {
     render(<AudienceEntryPaths language="he" buildPath={buildPath} />);
 
     expect(screen.getByRole('navigation', { name: 'מה צריך להתקדם?' })).toBeInTheDocument();
-    expect(screen.getByText('בעלי עסקים, יזמים וצוותי מוצר')).toBeInTheDocument();
+    expect(screen.getByText('כשמוצר, תהליך או מערכת מעכבים התקדמות')).toBeInTheDocument();
     expect(screen.getByText('מגייסים ומנהלים טכנולוגיים')).toBeInTheDocument();
     expect(screen.getByText('קוראים טכניים ואנשי פיתוח')).toBeInTheDocument();
   });
