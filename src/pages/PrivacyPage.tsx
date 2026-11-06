@@ -6,7 +6,7 @@ import { localizedPath } from '../routing/portfolioRoutes';
 import { presentCalendarDate } from '../features/date-presentation/presentCalendarDate';
 import { getStaticRouteSeo } from '../data/routeSeo';
 
-const PRIVACY_LAST_UPDATED = '2026-10-30';
+const PRIVACY_LAST_UPDATED = '2026-11-27';
 
 const PrivacyPage = () => {
   const { i18n } = useTranslation();
@@ -24,11 +24,11 @@ const PrivacyPage = () => {
         },
         {
           title: 'יצירת קשר וטופס הפנייה',
-          body: 'אפשר ליצור קשר דרך WhatsApp, אימייל, LinkedIn או טופס הפנייה באתר. בטופס נשלחים השם, כתובת האימייל ותוכן ההודעה שבחרת למסור. הטופס מעובד באמצעות FormSubmit ומועבר לאימייל של בעל האתר; האתר עצמו אינו מפעיל חשבון משתמש או מאגר לידים נפרד.'
+          body: 'המידע בסעיף הזה נוצר רק כשבחרת לפנות דרך WhatsApp, אימייל, LinkedIn או טופס האתר. FormSubmit מעבדת את הטופס ומעבירה לאימייל של בעל האתר את השם, כתובת האימייל וההודעה שבחרת למסור, כדי לאפשר מענה. פרטי הפנייה אינם נכתבים ב-Cloudflare Analytics Engine, והאתר אינו יוצר מהם חשבון משתמש או מאגר לידים נפרד. FormSubmit מצהירה שהיא שומרת הגשות למשך 30 יום; עותק שמגיע באימייל נשמר בהתאם להגדרות של ספק תיבת הדואר ושל בעל האתר.'
         },
         {
-          title: 'מדידה ותפעול',
-          body: 'כדי לזהות נשירה בתהליך יצירת הקשר, האתר מודד באמצעות Cloudflare Analytics Engine רק חמישה אירועים: צפייה באזור יצירת הקשר, פתיחת בונה התקציר, ניסיון שליחה, הצלחת שליחה ושגיאת שליחה. האירועים אינם כוללים שם, אימייל, תוכן הודעה או שדות בטופס, מזהה משתמש או מכשיר, כתובת IP, user agent או cookie. הנתונים נשמרים ב-Cloudflare עד שלושה חודשים. העדפות שפה וערכת נושא נשמרות בדפדפן שלך.'
+          title: 'מדידה והעדפות מקומיות',
+          body: 'מקור המדידה הוא חמש פעולות בלבד בתהליך יצירת הקשר: צפייה באזור, פתיחת בונה התקציר, ניסיון שליחה, הצלחת שליחה ושגיאת שליחה. מטרתן היא לזהות נשירה, והן נכתבות ב-Cloudflare Analytics Engine ללא שם, אימייל, תוכן הודעה או שדות טופס, מזהה משתמש או מכשיר, כתובת IP, user agent או cookie. Cloudflare שומרת את אירועי המדידה האלה למשך שלושה חודשים. בנפרד, בחירות השפה וערכת הנושא נועדו לזכור את העדפות התצוגה שלך ונשמרות רק בדפדפן שלך עד לשינוי או למחיקה; הן אינן נכתבות ב-Analytics Engine.'
         },
         {
           title: 'פרסום ו-Google AdSense',
@@ -46,11 +46,11 @@ const PrivacyPage = () => {
         },
         {
           title: 'Direct contact and the contact form',
-          body: 'You can contact me through WhatsApp, email, LinkedIn, or the site contact form. The form sends the name, email address, and message you choose to provide. FormSubmit processes the submission and forwards it to the site owner by email; this site does not operate user accounts or a separate lead database.'
+          body: 'The information in this section is created only when you choose to make contact through WhatsApp, email, LinkedIn, or the site form. FormSubmit processes the submission and forwards the name, email address, and message you choose to provide to the site owner by email for a response. Contact details are not written to Cloudflare Analytics Engine, and this site does not turn them into a user account or a separate lead database. FormSubmit states that it retains submissions for 30 days; any copy delivered by email is retained according to the mailbox provider\'s and site owner\'s settings.'
         },
         {
-          title: 'Measurement and operations',
-          body: 'To identify drop-off in the contact flow, the site uses Cloudflare Analytics Engine to record only five events: contact view, brief builder start, submit attempt, submit success, and submit error. Events contain no name, email, message or form-field content, user or device identifier, IP address, user agent, or cookie. Cloudflare retains this event data for up to three months. Language and theme preferences are stored in your browser.'
+          title: 'Measurement and local preferences',
+          body: 'The measurement source is limited to five actions in the contact flow: contact view, brief builder start, submit attempt, submit success, and submit error. They are recorded in Cloudflare Analytics Engine to identify drop-off, without a name, email address, message or form-field content, user or device identifier, IP address, user agent, or cookie. Cloudflare retains these measurement events for three months. Separately, your language and theme choices are used to remember display preferences and stay only in your browser until you change or delete them; they are not written to Analytics Engine.'
         },
         {
           title: 'Advertising and Google AdSense',
