@@ -25,7 +25,7 @@ for (const language of ['en', 'he']) {
       await expect(strip.locator('dd')).toHaveCount(3);
       await expect(strip).toHaveAttribute(
         'aria-label',
-        language === 'he' ? 'הוכחות במבט אחד' : 'At-a-glance proof',
+        language === 'he' ? 'מה ניתן לאמת באתר' : 'What you can verify on this site',
       );
 
       if (viewport.id === 'mobile') {
