@@ -714,8 +714,9 @@ describe('App', () => {
     fireEvent.click(screen.getByRole('button', { name: /blog\.library\.loadMore/ }));
     expect(screen.getByRole('heading', { name: 'How I built a business site around WhatsApp' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'What I learned from building a credible portfolio' })).toBeInTheDocument();
-    expect(screen.getByText('shell.context.writing')).toBeInTheDocument();
-    expect(screen.getByText('shell.context.library')).toBeInTheDocument();
+    const routeContext = screen.getByLabelText('shell.routeContext');
+    expect(within(routeContext).getByText('nav.Blog')).toBeInTheDocument();
+    expect(within(routeContext).getByText('shell.context.articleLibrary')).toBeInTheDocument();
   });
 
   it('preserves blog library query state when switching language', async () => {

@@ -253,7 +253,7 @@ const staticRoutes = [
         'Visitors can browse focused project case studies, read the technical notes, inspect live products, and use the contact page for a direct project conversation. English and Hebrew routes are maintained as first-class versions of the same portfolio.'
       ],
       links: [
-        { href: '/blog/', label: 'Writing' },
+        { href: '/blog/', label: 'Articles' },
         { href: '/contact/', label: 'Contact' },
         { href: '/privacy/', label: 'Privacy' }
       ]
@@ -285,7 +285,7 @@ const staticRoutes = [
         'Working principles connect each position to a real example, an exception or boundary, and a public source. Collaboration can start with a public product or site, an internal or full-stack system, or an improvement to an existing system.'
       ],
       links: [
-        { href: '/projects/', label: 'Projects' },
+        { href: '/projects/', label: 'Work' },
         { href: '/projects/nis_boutique/', label: 'Nis Boutique case study' },
         { href: '/projects/online_converter/', label: 'Online Converter case study' },
         { href: '/projects/emergency_protocol/', label: 'Emergency Protocol case study' },
@@ -387,7 +387,7 @@ for (const entry of blogEntries) {
       ],
       article: blogArticleHtml.get(`${entry.slug}:en`) ?? '',
       links: [
-        { href: '/blog/', label: 'All writing' },
+        { href: '/blog/', label: 'All articles' },
         { href: '/contact/', label: 'Contact' }
       ]
     }
@@ -407,7 +407,7 @@ for (const project of projectBlocks) {
       ],
       links: [
         { href: '/', label: 'Home' },
-        { href: '/blog/', label: 'Writing' }
+        { href: '/blog/', label: 'Articles' }
       ]
     }
   });
@@ -528,7 +528,7 @@ notFoundHtml = replaceHeadValue(notFoundHtml, /<meta name="robots" content="[^"]
 notFoundHtml = notFoundHtml.replace(/\s*<link rel="canonical" href="[^"]*" \/>/, '');
 notFoundHtml = notFoundHtml.replace(
   '<div id="root"></div>',
-  '<div id="route-preview" style="max-width:760px;margin:0 auto;padding:80px 24px;font-family:Inter,Arial,sans-serif;color:#111827;background:#ffffff;text-align:center;"><p style="font-weight:700;color:#0284c7;letter-spacing:.2em;">404</p><h1 style="font-size:44px;line-height:1.1;margin:16px 0 20px;">This page could not be found</h1><p style="font-size:18px;line-height:1.8;color:#374151;">The link may have changed or the address may be incorrect. Return to the portfolio or browse the technical writing.</p><nav style="margin-top:28px;"><a href="/" style="margin:0 10px;color:#0369a1;font-weight:700;">Home</a><a href="/blog/" style="margin:0 10px;color:#0369a1;font-weight:700;">Writing</a></nav></div><div id="root"></div>'
+  '<div id="route-preview" style="max-width:760px;margin:0 auto;padding:80px 24px;font-family:Inter,Arial,sans-serif;color:#111827;background:#ffffff;text-align:center;"><p style="font-weight:700;color:#0284c7;letter-spacing:.2em;">404</p><h1 style="font-size:44px;line-height:1.1;margin:16px 0 20px;">This page could not be found</h1><p style="font-size:18px;line-height:1.8;color:#374151;">The link may have changed or the address may be incorrect. Return to the portfolio or browse the technical articles.</p><nav style="margin-top:28px;"><a href="/" style="margin:0 10px;color:#0369a1;font-weight:700;">Home</a><a href="/blog/" style="margin:0 10px;color:#0369a1;font-weight:700;">Articles</a></nav></div><div id="root"></div>'
 );
 await writeFile(path.join(distDir, '404.html'), notFoundHtml);
 
@@ -556,7 +556,15 @@ const localizedSeoForRoute = (route, language) => {
           'אזור הכתיבה הופך את הלקחים האלה למאמרים מעשיים על אמינות, חוזי נתונים, נגישות, פריסה, גילוי בחיפוש וגבולות מוצריים. המאמרים כוללים דוגמאות קונקרטיות ומפרידים בין ראיות שנמסרו בפרודקשן לבין ניסויים או פרשנות אישית.',
           'כל עמוד נועד לענות על צורך ברור: להבין יכולת מקצועית, לעקוב אחרי החלטה טכנית, ללמוד מתקלה אמיתית או להגיע למוצר פעיל. הניווט מחבר בין הפרויקטים, המאמרים והדרכים ליצור קשר בלי להסתיר את המקור או את גבולות הראיות.',
           'אפשר לעבור בין case studies ממוקדים, לקרוא את המאמרים הטכניים, לבדוק מוצרים חיים ולהשתמש בעמוד יצירת הקשר לשיחה ישירה על פרויקט. נתיבי העברית והאנגלית מתוחזקים כגרסאות מלאות של אותו פורטפוליו.'
-        ]
+        ],
+        links: route.preview.links.map((link) => ({
+          ...link,
+          label: ({
+            Articles: 'מאמרים',
+            Contact: 'יצירת קשר',
+            Privacy: 'פרטיות',
+          })[link.label] ?? link.label
+        }))
       }
     };
   }
@@ -620,7 +628,7 @@ const localizedSeoForRoute = (route, language) => {
         links: route.preview.links.map((link) => ({
           ...link,
           label: ({
-            Projects: 'פרויקטים',
+            Work: 'עבודות',
             Contact: 'יצירת קשר',
           })[link.label] ?? link.label
         }))
@@ -685,7 +693,14 @@ const localizedSeoForRoute = (route, language) => {
         ...route.preview,
         heading: entry.title,
         body: [entry.excerpt, `פורסם ${entry.date}. תגיות: ${entry.tags.join(', ')}.`],
-        article: blogArticleHtml.get(`${entry.slug}:${language}`) ?? ''
+        article: blogArticleHtml.get(`${entry.slug}:${language}`) ?? '',
+        links: route.preview.links.map((link) => ({
+          ...link,
+          label: ({
+            'All articles': 'כל המאמרים',
+            Contact: 'יצירת קשר',
+          })[link.label] ?? link.label
+        }))
       }
     };
   }
@@ -703,7 +718,14 @@ const localizedSeoForRoute = (route, language) => {
       preview: {
         ...route.preview,
         heading: title,
-        body: [description, extractOverviewParagraph(project.caseKey, language)]
+        body: [description, extractOverviewParagraph(project.caseKey, language)],
+        links: route.preview.links.map((link) => ({
+          ...link,
+          label: ({
+            Home: 'ראשי',
+            Articles: 'מאמרים',
+          })[link.label] ?? link.label
+        }))
       }
     };
   }

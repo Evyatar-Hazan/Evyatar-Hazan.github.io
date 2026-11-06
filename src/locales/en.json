@@ -1,9 +1,9 @@
 {
   "nav": {
     "Home": "Home",
-    "About": "About",
-    "Projects": "Projects",
-    "Blog": "Blog",
+    "About": "About me",
+    "Projects": "Work",
+    "Blog": "Articles",
     "Contact": "Contact",
     "Lab": "Lab",
     "Privacy": "Privacy"
@@ -28,15 +28,13 @@
       "current": "Current"
     },
     "context": {
-      "project": "Project",
-      "writing": "Writing",
       "system": "System",
-      "contact": "Contact",
-      "profile": "Profile",
-      "library": "Library",
+      "projectCollection": "Project collection",
+      "articleLibrary": "Article library",
       "article": "Article",
       "caseStudy": "Case study",
-      "brief": "Brief"
+      "professionalStory": "Professional story",
+      "contactOptions": "Ways to connect"
     }
   },
   "home": {

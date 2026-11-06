@@ -120,25 +120,25 @@ export const getPortfolioRouteContext = (
   if (section === 'projects' && id) {
     const project = getProjectById(id);
     return {
-      category: t('shell.context.project'),
+      category: t('nav.Projects'),
       detail: project ? t(`projects.items.${id}.title`) : t('shell.context.caseStudy'),
     };
   }
 
   if (section === 'projects') {
-    return { category: t('shell.context.project'), detail: t('shell.context.library') };
+    return { category: t('nav.Projects'), detail: t('shell.context.projectCollection') };
   }
 
   if (section === 'blog' && id) {
     const article = getBlogPostMetadata(id, language);
     return {
-      category: t('shell.context.writing'),
+      category: t('nav.Blog'),
       detail: article?.title ?? t('shell.context.article'),
     };
   }
 
   if (section === 'blog') {
-    return { category: t('shell.context.writing'), detail: t('shell.context.library') };
+    return { category: t('nav.Blog'), detail: t('shell.context.articleLibrary') };
   }
 
   if (section === 'lab') {
@@ -150,11 +150,11 @@ export const getPortfolioRouteContext = (
   }
 
   if (section === 'contact') {
-    return { category: t('shell.context.contact'), detail: t('shell.context.brief') };
+    return { category: t('nav.Contact'), detail: t('shell.context.contactOptions') };
   }
 
   if (section === 'about') {
-    return { category: t('shell.context.profile'), detail: t('nav.About') };
+    return { category: t('nav.About'), detail: t('shell.context.professionalStory') };
   }
 
   return null;

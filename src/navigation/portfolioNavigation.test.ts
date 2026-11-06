@@ -34,6 +34,20 @@ describe('portfolio navigation registry', () => {
     }
   });
 
+  it('uses familiar, visitor-focused labels with natural Hebrew and English pairs', () => {
+    expect({
+      projects: [en.nav.Projects, he.nav.Projects],
+      about: [en.nav.About, he.nav.About],
+      blog: [en.nav.Blog, he.nav.Blog],
+      contact: [en.nav.Contact, he.nav.Contact],
+    }).toEqual({
+      projects: ['Work', 'עבודות'],
+      about: ['About me', 'עליי'],
+      blog: ['Articles', 'מאמרים'],
+      contact: ['Contact', 'צור קשר'],
+    });
+  });
+
   it('uses the real Projects and About routes available in the current route map', () => {
     const projects = portfolioNavigation.find((item) => item.id === 'projects')!;
     const about = portfolioNavigation.find((item) => item.id === 'about')!;
@@ -60,16 +74,28 @@ describe('portfolio navigation registry', () => {
 
   it('derives compact route context from canonical project and article data', () => {
     expect(getPortfolioRouteContext('/en/projects/online_converter/', 'en', t)).toEqual({
-      category: 'shell.context.project',
+      category: 'nav.Projects',
       detail: 'projects.items.online_converter.title',
     });
     expect(getPortfolioRouteContext('/he/blog/catering-whatsapp/', 'he', t)).toEqual({
-      category: 'shell.context.writing',
+      category: 'nav.Blog',
       detail: 'איך בניתי אתר עסקי שמוביל ל-WhatsApp',
     });
     expect(getPortfolioRouteContext('/en/blog/', 'en', t)).toEqual({
-      category: 'shell.context.writing',
-      detail: 'shell.context.library',
+      category: 'nav.Blog',
+      detail: 'shell.context.articleLibrary',
+    });
+    expect(getPortfolioRouteContext('/he/projects/', 'he', t)).toEqual({
+      category: 'nav.Projects',
+      detail: 'shell.context.projectCollection',
+    });
+    expect(getPortfolioRouteContext('/en/about/', 'en', t)).toEqual({
+      category: 'nav.About',
+      detail: 'shell.context.professionalStory',
+    });
+    expect(getPortfolioRouteContext('/he/contact/', 'he', t)).toEqual({
+      category: 'nav.Contact',
+      detail: 'shell.context.contactOptions',
     });
   });
 });

@@ -7,7 +7,7 @@ const scenarios = [
     route: '/en/blog/',
     menuLabel: 'Open navigation menu',
     footerLabel: 'Footer navigation',
-    activeLabel: 'Blog',
+    activeLabel: 'Articles',
   },
   {
     language: 'he',
@@ -15,7 +15,7 @@ const scenarios = [
     route: '/he/blog/',
     menuLabel: 'פתיחת תפריט ניווט',
     footerLabel: 'ניווט תחתון',
-    activeLabel: 'בלוג',
+    activeLabel: 'מאמרים',
   },
 ];
 
@@ -45,6 +45,7 @@ for (const scenario of scenarios) {
     const dialog = page.getByRole('dialog');
     const menuLinks = dialog.getByRole('link');
     const menuDestinations = await menuLinks.evaluateAll((links) => links.map((link) => link.getAttribute('href')));
+    const menuLabels = await dialog.locator('.system-rail-mobile-label, .system-rail-mobile-secondary a').allTextContents();
     expect(await roundedBox(actions)).toEqual(initialActions);
 
     await page.keyboard.press('Escape');
@@ -55,8 +56,10 @@ for (const scenario of scenarios) {
     await footerNavigation.scrollIntoViewIfNeeded();
     const footerLinks = footerNavigation.getByRole('link');
     const footerDestinations = await footerLinks.evaluateAll((links) => links.map((link) => link.getAttribute('href')));
+    const footerLabels = await footerLinks.allTextContents();
 
     expect(footerDestinations).toEqual(menuDestinations);
+    expect(footerLabels).toEqual(menuLabels);
     expect(new Set(footerDestinations).size).toBe(footerDestinations.length);
     await expect(footerLinks).toHaveCount(7);
     await expect(footerNavigation.getByRole('link', { name: scenario.activeLabel }))

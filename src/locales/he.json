@@ -1,9 +1,9 @@
 {
   "nav": {
     "Home": "ראשי",
-    "About": "אודות",
-    "Projects": "פרויקטים",
-    "Blog": "בלוג",
+    "About": "עליי",
+    "Projects": "עבודות",
+    "Blog": "מאמרים",
     "Contact": "צור קשר",
     "Lab": "מעבדה",
     "Privacy": "פרטיות"
@@ -28,15 +28,13 @@
       "current": "נוכחי"
     },
     "context": {
-      "project": "פרויקט",
-      "writing": "כתיבה",
       "system": "מערכת",
-      "contact": "יצירת קשר",
-      "profile": "פרופיל",
-      "library": "ספרייה",
+      "projectCollection": "אוסף פרויקטים",
+      "articleLibrary": "ספריית מאמרים",
       "article": "מאמר",
       "caseStudy": "קייס סטאדי",
-      "brief": "בריף"
+      "professionalStory": "הסיפור המקצועי",
+      "contactOptions": "דרכי יצירת קשר"
     }
   },
   "home": {
