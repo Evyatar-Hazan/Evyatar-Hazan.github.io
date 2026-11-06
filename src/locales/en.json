@@ -235,14 +235,14 @@
       },
       "united_hatzalah": {
         "title": "United Hatzalah Shoham Branch",
-        "description": "A nonprofit branch website and admin interface with React, Express, Prisma, and Cloudinary.",
-        "summary": "A full-stack system for a local branch website, content management, media, and operational data.",
-        "impact": "The project reduces reliance on code changes for every update by introducing content, media, and public display workflows.",
+        "description": "A nonprofit product that routes routine content and media updates through an admin workflow to the branch's public site.",
+        "summary": "Update branch content and media in one admin workflow, then publish both on the public site.",
+        "impact": "The branch team has one path for content, media, and public display; no time saving or efficiency gain has been measured.",
         "previewTitle": "United Hatzalah Shoham branch homepage with volunteer training photos and contact actions",
         "status": "Nonprofit",
-        "problem": "A local branch needs a reliable website and admin workflow without code changes for every update.",
-        "solution": "A full-stack system with media management, database models, API, and structured deployment.",
-        "role": "Frontend, backend, data models, media uploads, and CI workflows."
+        "problem": "Routine content and media updates should not force the branch team to open a code task for every change.",
+        "solution": "A public site paired with an admin workflow, structured data, and managed media.",
+        "role": "Built the public site and admin workflow, including structured data, managed media, and delivery."
       }
     }
   },
