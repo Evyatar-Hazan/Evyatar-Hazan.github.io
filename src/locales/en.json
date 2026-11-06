@@ -204,14 +204,14 @@
       },
       "lev_chedva": {
         "title": "Lev Hedva",
-        "description": "Web and API infrastructure for a nonprofit, including website, client app, and server.",
-        "summary": "A nonprofit monorepo separating the public site, client app, and backend API.",
-        "impact": "The structure supports multiple interfaces around one product while keeping scripts, responsibilities, and code boundaries clear.",
+        "description": "A digital foundation for a nonprofit that needs its public presence and supporting services to stay maintainable as its needs grow.",
+        "summary": "A nonprofit needs a clear public presence today and room for its digital services to grow without every change becoming harder to manage.",
+        "impact": "Separating the public site, client app, and server creates clear boundaries for extending each area when the organization needs it.",
         "previewTitle": "Live preview of Lev Hedva",
         "status": "Monorepo",
-        "problem": "A nonprofit digital property needs to be clear, maintainable, and ready to grow.",
-        "solution": "A separated website, client app, and backend with shared infrastructure and consistent scripts.",
-        "role": "Repository organization, frontend layer, API, and day-to-day developer workflows."
+        "problem": "As a nonprofit's programs and audiences grow, one tightly coupled digital property can make updates and new services harder to manage.",
+        "solution": "The project separates the public site, client app, and server so each can evolve around the organization's needs while sharing a consistent foundation.",
+        "role": "Repository organization, frontend, API, and development workflows shaped around a maintainable path for future organizational needs."
       },
       "password_gen": {
         "title": "Password Generator",
