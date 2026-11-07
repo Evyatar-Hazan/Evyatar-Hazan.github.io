@@ -18,6 +18,15 @@ describe('audience paths', () => {
     ]);
   });
 
+  it('frames the product-partner path around a conflict and a bounded outcome', () => {
+    const productPartner = audiencePaths.find(({ id }) => id === 'product-partner');
+
+    expect(productPartner?.title).toEqual({
+      en: 'Turn a stalled workflow into a focused product decision.',
+      he: 'הופכים תהליך שנתקע להחלטת מוצר ממוקדת.',
+    });
+  });
+
   it('provides complete English and Hebrew copy without employment claims', () => {
     for (const language of ['en', 'he'] as const) {
       const localizedPaths = getAudiencePaths(language);

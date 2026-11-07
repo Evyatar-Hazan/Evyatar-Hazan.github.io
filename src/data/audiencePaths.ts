@@ -38,8 +38,8 @@ export const audiencePaths: readonly AudiencePath[] = [
       he: 'כשמוצר, תהליך או מערכת מעכבים התקדמות',
     },
     title: {
-      en: 'Move a real need forward with a web product that works.',
-      he: 'מקדמים צורך אמיתי בעזרת מוצר Web שעובד.',
+      en: 'Turn a stalled workflow into a focused product decision.',
+      he: 'הופכים תהליך שנתקע להחלטת מוצר ממוקדת.',
     },
     description: {
       en: 'Bring the goal, workflow, or system that is holding the next step back. The first conversation focuses on the need and the useful outcome.',
