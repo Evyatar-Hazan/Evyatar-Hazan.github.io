@@ -42,8 +42,8 @@ export const audiencePaths: readonly AudiencePath[] = [
       he: 'הופכים תהליך שנתקע להחלטת מוצר ממוקדת.',
     },
     description: {
-      en: 'Bring the goal, workflow, or system that is holding the next step back. The first conversation focuses on the need and the useful outcome.',
-      he: 'מביאים את היעד, התהליך או המערכת שמעכבים את הצעד הבא. השיחה הראשונה מתמקדת בצורך ובתוצאה שתהיה שימושית.',
+      en: 'When a workflow or system slows the next step, the team relying on it feels the friction. A first conversation can clarify what is blocked and what a useful outcome would look like.',
+      he: 'כשתהליך או מערכת מאטים את הצעד הבא, הצוות שתלוי בהם מרגיש את החיכוך. שיחה ראשונה יכולה לחדד מה נעצר ואיך תיראה תוצאה שימושית.',
     },
     cta: {
       label: {
