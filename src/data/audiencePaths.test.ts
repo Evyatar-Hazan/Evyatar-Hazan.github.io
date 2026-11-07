@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { audiencePaths, getAudiencePaths } from './audiencePaths';
 
 describe('audience paths', () => {
-  it('keeps product-seeking visitors first, followed by recruiters and readers', () => {
+  it('keeps product-seeking visitors first, followed by professional-fit evaluators and readers', () => {
     expect(audiencePaths.map(({ id, priority }) => ({ id, priority }))).toEqual([
       { id: 'product-partner', priority: 'primary' },
       { id: 'recruiter', priority: 'secondary' },

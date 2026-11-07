@@ -57,8 +57,8 @@ export const audiencePaths: readonly AudiencePath[] = [
     id: 'recruiter',
     priority: 'secondary',
     audience: {
-      en: 'Recruiters & technical leaders',
-      he: 'מגייסים ומנהלים טכנולוגיים',
+      en: 'Assess product engineering fit',
+      he: 'לבחון התאמה מקצועית לפיתוח מוצר',
     },
     title: {
       en: 'See product thinking, engineering, and delivery in practice.',

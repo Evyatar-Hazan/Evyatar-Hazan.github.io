@@ -8,7 +8,7 @@ const buildPath = vi.fn<LocalizedPathBuilder>((language, target) => (
 ));
 
 describe('AudienceEntryPaths', () => {
-  it('renders business visitors first, followed by recruiters and readers', () => {
+  it('renders business visitors first, followed by professional-fit evaluators and readers', () => {
     render(<AudienceEntryPaths language="en" buildPath={buildPath} />);
 
     const paths = screen.getAllByRole('listitem');
@@ -16,7 +16,7 @@ describe('AudienceEntryPaths', () => {
     expect(paths[0]).toHaveAttribute('data-audience-priority', 'primary');
     expect(paths[0]).toHaveTextContent('When a product, workflow, or system blocks progress');
     expect(paths[1]).toHaveAttribute('data-audience-priority', 'secondary');
-    expect(paths[1]).toHaveTextContent('Recruiters & technical leaders');
+    expect(paths[1]).toHaveTextContent('Assess product engineering fit');
     expect(paths[2]).toHaveAttribute('data-audience-priority', 'secondary');
     expect(paths[2]).toHaveTextContent('Technical readers & fellow builders');
   });
@@ -47,7 +47,7 @@ describe('AudienceEntryPaths', () => {
 
     expect(screen.getByRole('navigation', { name: 'מה צריך להתקדם?' })).toBeInTheDocument();
     expect(screen.getByText('כשמוצר, תהליך או מערכת מעכבים התקדמות')).toBeInTheDocument();
-    expect(screen.getByText('מגייסים ומנהלים טכנולוגיים')).toBeInTheDocument();
+    expect(screen.getByText('לבחון התאמה מקצועית לפיתוח מוצר')).toBeInTheDocument();
     expect(screen.getByText('קוראים טכניים ואנשי פיתוח')).toBeInTheDocument();
   });
 });
