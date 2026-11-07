@@ -55,4 +55,17 @@ describe('audience paths', () => {
     const publicCopy = JSON.stringify(audiencePaths).toLowerCase();
     expect(publicCopy).not.toMatch(/open to work|available for hire|seeking a role/);
   });
+
+  it('frames recruiter case studies around contribution, tradeoffs, and project-specific evidence', () => {
+    const recruiterPath = audiencePaths.find(({ id }) => id === 'recruiter');
+
+    expect(recruiterPath?.description.en).toContain('my contribution');
+    expect(recruiterPath?.description.en).toContain('tradeoffs');
+    expect(recruiterPath?.description.en).toContain('evidence available for each project');
+    expect(recruiterPath?.description.en).not.toContain('live result');
+    expect(recruiterPath?.description.he).toContain('התרומה שלי');
+    expect(recruiterPath?.description.he).toContain('הפשרות');
+    expect(recruiterPath?.description.he).toContain('הראיות הזמינות לכל פרויקט');
+    expect(recruiterPath?.description.he).not.toContain('התוצאה החיה');
+  });
 });

@@ -65,8 +65,8 @@ export const audiencePaths: readonly AudiencePath[] = [
       he: 'רואים איך מגדירים בעיה, שוקלים פשרות ומביאים מוצר עובד למסירה.',
     },
     description: {
-      en: 'Selected case studies present the challenge, the solution, the contribution, and the live result in a concise format.',
-      he: 'קייס סטאדיז נבחרים מציגים בקצרה את האתגר, הפתרון, התרומה והתוצאה החיה.',
+      en: 'Selected case studies separate the challenge, my contribution, key tradeoffs, and the evidence available for each project.',
+      he: 'קייס סטאדיז נבחרים מפרידים בין האתגר, התרומה שלי, הפשרות המרכזיות והראיות הזמינות לכל פרויקט.',
     },
     cta: {
       label: {
