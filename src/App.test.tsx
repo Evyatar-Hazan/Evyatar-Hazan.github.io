@@ -328,7 +328,7 @@ describe('App', () => {
       name: language === 'he' ? 'לתאר מה מעכב את ההתקדמות' : "Describe what's blocking progress",
     })).toHaveAttribute('href', `/${language}/contact/`);
     expect(screen.getByRole('link', {
-      name: language === 'he' ? 'לצפייה בעבודות נבחרות' : 'Review selected work',
+      name: language === 'he' ? 'לבחינת התרומה והראיות' : 'Assess contribution and evidence',
     })).toHaveAttribute('href', `/${language}/projects/`);
     expect(screen.getByRole('link', {
       name: language === 'he' ? 'לקריאת הכתיבה הטכנית' : 'Read the technical notes',

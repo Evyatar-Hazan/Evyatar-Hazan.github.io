@@ -70,8 +70,8 @@ export const audiencePaths: readonly AudiencePath[] = [
     },
     cta: {
       label: {
-        en: 'Review selected work',
-        he: 'לצפייה בעבודות נבחרות',
+        en: 'Assess contribution and evidence',
+        he: 'לבחינת התרומה והראיות',
       },
       target: { route: 'projects' },
     },
