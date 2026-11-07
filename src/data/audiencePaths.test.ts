@@ -27,6 +27,18 @@ describe('audience paths', () => {
     });
   });
 
+  it('asks product partners to describe the blocker before assuming a solution', () => {
+    const productPartner = audiencePaths.find(({ id }) => id === 'product-partner');
+
+    expect(productPartner?.cta).toEqual({
+      label: {
+        en: "Describe what's blocking progress",
+        he: 'לתאר מה מעכב את ההתקדמות',
+      },
+      target: { route: 'contact' },
+    });
+  });
+
   it('provides complete English and Hebrew copy without employment claims', () => {
     for (const language of ['en', 'he'] as const) {
       const localizedPaths = getAudiencePaths(language);

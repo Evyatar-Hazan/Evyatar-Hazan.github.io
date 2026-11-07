@@ -47,8 +47,8 @@ export const audiencePaths: readonly AudiencePath[] = [
     },
     cta: {
       label: {
-        en: 'Discuss a product or system',
-        he: 'לדבר על מוצר או מערכת',
+        en: "Describe what's blocking progress",
+        he: 'לתאר מה מעכב את ההתקדמות',
       },
       target: { route: 'contact' },
     },

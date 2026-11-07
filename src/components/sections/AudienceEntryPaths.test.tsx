@@ -25,7 +25,7 @@ describe('AudienceEntryPaths', () => {
     buildPath.mockClear();
     render(<AudienceEntryPaths language="en" buildPath={buildPath} />);
 
-    expect(screen.getByRole('link', { name: /Discuss a product or system/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Describe what's blocking progress/i })).toHaveAttribute(
       'href',
       '/en/contact',
     );

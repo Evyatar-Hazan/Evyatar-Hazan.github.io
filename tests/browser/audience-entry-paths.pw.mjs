@@ -9,7 +9,7 @@ const languages = {
   en: {
     title: 'What do you need to move forward?',
     links: [
-      ['Discuss a product or system', '/en/contact/'],
+      ["Describe what's blocking progress", '/en/contact/'],
       ['Review selected work', '/en/projects/'],
       ['Read the technical notes', '/en/blog/'],
     ],
@@ -17,7 +17,7 @@ const languages = {
   he: {
     title: 'מה צריך להתקדם?',
     links: [
-      ['לדבר על מוצר או מערכת', '/he/contact/'],
+      ['לתאר מה מעכב את ההתקדמות', '/he/contact/'],
       ['לצפייה בעבודות נבחרות', '/he/projects/'],
       ['לקריאת הכתיבה הטכנית', '/he/blog/'],
     ],
