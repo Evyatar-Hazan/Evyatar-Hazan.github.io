@@ -68,4 +68,17 @@ describe('audience paths', () => {
     expect(recruiterPath?.description.he).toContain('הראיות הזמינות לכל פרויקט');
     expect(recruiterPath?.description.he).not.toContain('התוצאה החיה');
   });
+
+  it('frames the technical path around decisions, trade-offs, and validation', () => {
+    const technicalPath = audiencePaths.find(({ id }) => id === 'technical-reader');
+
+    expect(technicalPath?.title.en).toContain('decisions');
+    expect(technicalPath?.title.en).toContain('trade-offs');
+    expect(technicalPath?.title.en).toContain('validation');
+    expect(technicalPath?.title.en).not.toContain('finished product');
+    expect(technicalPath?.title.he).toContain('החלטות');
+    expect(technicalPath?.title.he).toContain('פשרות');
+    expect(technicalPath?.title.he).toContain('אימות');
+    expect(technicalPath?.title.he).not.toContain('המוצר המוגמר');
+  });
 });

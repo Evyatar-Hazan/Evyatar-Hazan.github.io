@@ -84,8 +84,8 @@ export const audiencePaths: readonly AudiencePath[] = [
       he: 'להעמקה בהחלטות הנדסיות',
     },
     title: {
-      en: 'Follow the decisions behind the finished product.',
-      he: 'קוראים את ההחלטות שמאחורי המוצר המוגמר.',
+      en: 'See how decisions, trade-offs, and validation shape the work.',
+      he: 'רואים איך החלטות, פשרות ואימות מעצבים את העבודה.',
     },
     description: {
       en: 'Technical notes unpack the trade-offs, tests, and delivery lessons behind the work.',
