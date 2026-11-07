@@ -33,7 +33,7 @@ describe('AudienceEntryPaths', () => {
       'href',
       '/en/projects',
     );
-    expect(screen.getByRole('link', { name: /Read the technical notes/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Explore engineering decisions/i })).toHaveAttribute(
       'href',
       '/en/blog',
     );

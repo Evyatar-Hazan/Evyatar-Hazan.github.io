@@ -11,7 +11,7 @@ const languages = {
     links: [
       ["Describe what's blocking progress", '/en/contact/'],
       ['Assess contribution and evidence', '/en/projects/'],
-      ['Read the technical notes', '/en/blog/'],
+      ['Explore engineering decisions', '/en/blog/'],
     ],
   },
   he: {
@@ -19,7 +19,7 @@ const languages = {
     links: [
       ['לתאר מה מעכב את ההתקדמות', '/he/contact/'],
       ['לבחינת התרומה והראיות', '/he/projects/'],
-      ['לקריאת הכתיבה הטכנית', '/he/blog/'],
+      ['לעיון בהחלטות הנדסיות', '/he/blog/'],
     ],
   },
 };

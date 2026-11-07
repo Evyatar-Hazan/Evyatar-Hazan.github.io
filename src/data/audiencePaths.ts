@@ -93,8 +93,8 @@ export const audiencePaths: readonly AudiencePath[] = [
     },
     cta: {
       label: {
-        en: 'Read the technical notes',
-        he: 'לקריאת הכתיבה הטכנית',
+        en: 'Explore engineering decisions',
+        he: 'לעיון בהחלטות הנדסיות',
       },
       target: { route: 'blog' },
     },

@@ -331,7 +331,7 @@ describe('App', () => {
       name: language === 'he' ? 'לבחינת התרומה והראיות' : 'Assess contribution and evidence',
     })).toHaveAttribute('href', `/${language}/projects/`);
     expect(screen.getByRole('link', {
-      name: language === 'he' ? 'לקריאת הכתיבה הטכנית' : 'Read the technical notes',
+      name: language === 'he' ? 'לעיון בהחלטות הנדסיות' : 'Explore engineering decisions',
     })).toHaveAttribute('href', `/${language}/blog/`);
     expect(screen.getAllByRole('link', { name: 'nav.Projects' }).some((link) => link.getAttribute('href') === `/${language}/projects/`)).toBe(true);
     expect(screen.getAllByRole('link', { name: 'nav.About' }).some((link) => link.getAttribute('href') === `/${language}/about/`)).toBe(true);
