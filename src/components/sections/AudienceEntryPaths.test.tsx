@@ -18,7 +18,7 @@ describe('AudienceEntryPaths', () => {
     expect(paths[1]).toHaveAttribute('data-audience-priority', 'secondary');
     expect(paths[1]).toHaveTextContent('Assess product engineering fit');
     expect(paths[2]).toHaveAttribute('data-audience-priority', 'secondary');
-    expect(paths[2]).toHaveTextContent('Technical readers & fellow builders');
+    expect(paths[2]).toHaveTextContent('To explore engineering decisions in depth');
   });
 
   it('uses the injected localized route builder for existing destinations', () => {
@@ -48,6 +48,6 @@ describe('AudienceEntryPaths', () => {
     expect(screen.getByRole('navigation', { name: 'מה צריך להתקדם?' })).toBeInTheDocument();
     expect(screen.getByText('כשמוצר, תהליך או מערכת מעכבים התקדמות')).toBeInTheDocument();
     expect(screen.getByText('לבחון התאמה מקצועית לפיתוח מוצר')).toBeInTheDocument();
-    expect(screen.getByText('קוראים טכניים ואנשי פיתוח')).toBeInTheDocument();
+    expect(screen.getByText('להעמקה בהחלטות הנדסיות')).toBeInTheDocument();
   });
 });

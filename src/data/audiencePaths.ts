@@ -80,8 +80,8 @@ export const audiencePaths: readonly AudiencePath[] = [
     id: 'technical-reader',
     priority: 'secondary',
     audience: {
-      en: 'Technical readers & fellow builders',
-      he: 'קוראים טכניים ואנשי פיתוח',
+      en: 'To explore engineering decisions in depth',
+      he: 'להעמקה בהחלטות הנדסיות',
     },
     title: {
       en: 'Follow the decisions behind the finished product.',
