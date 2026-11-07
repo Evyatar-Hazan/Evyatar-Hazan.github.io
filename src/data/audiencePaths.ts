@@ -61,8 +61,8 @@ export const audiencePaths: readonly AudiencePath[] = [
       he: 'לבחון התאמה מקצועית לפיתוח מוצר',
     },
     title: {
-      en: 'See product thinking, engineering, and delivery in practice.',
-      he: 'רואים חשיבה מוצרית, הנדסה ומסירה בפועל.',
+      en: 'See how problems are framed, trade-offs weighed, and working products delivered.',
+      he: 'רואים איך מגדירים בעיה, שוקלים פשרות ומביאים מוצר עובד למסירה.',
     },
     description: {
       en: 'Selected case studies present the challenge, the solution, the contribution, and the live result in a concise format.',
