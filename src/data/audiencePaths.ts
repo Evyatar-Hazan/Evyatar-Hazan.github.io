@@ -88,8 +88,8 @@ export const audiencePaths: readonly AudiencePath[] = [
       he: 'רואים איך החלטות, פשרות ואימות מעצבים את העבודה.',
     },
     description: {
-      en: 'Technical notes unpack the trade-offs, tests, and delivery lessons behind the work.',
-      he: 'הכתיבה הטכנית מפרקת את הפשרות, הבדיקות ולקחי המסירה שמאחורי העבודה.',
+      en: 'Read practical notes that connect a problem and its alternatives to validation, then state what the evidence does—and does not—support.',
+      he: 'קוראים רשומות מעשיות שמחברות בין בעיה וחלופות לבין בדיקה, ומבהירות מה הראיות מאפשרות — ואינן מאפשרות — להסיק.',
     },
     cta: {
       label: {
