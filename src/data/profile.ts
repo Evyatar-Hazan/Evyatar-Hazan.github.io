@@ -399,12 +399,12 @@ const caseStudies = {
     },
     overview: {
       en: [
-        'Nonprofit systems often suffer from a familiar problem: every public update becomes a developer task, even when the content itself is simple.',
-        'This project focused on reducing that dependency by combining a public branch website with an admin workflow for content, media, and operational data.'
+        'When the branch needs to publish a new activity update or replace a photo, the content itself is simple—but getting it onto the public site can still become a developer task.',
+        'The goal was to remove that bottleneck by pairing the public branch website with an admin workflow, so the team can manage content, media, and operational data without editing code.'
       ],
       he: [
-        'מערכות לעמותות סובלות הרבה פעמים מבעיה מוכרת: כל עדכון ציבורי הופך למשימת פיתוח, גם כשהתוכן עצמו פשוט.',
-        'הפרויקט הזה התמקד בהפחתת התלות הזאת באמצעות שילוב בין אתר ציבורי לסניף לבין workflow ניהולי לתוכן, מדיה ונתונים תפעוליים.'
+        'כשהסניף צריך לפרסם עדכון על פעילות או להחליף תמונה, התוכן עצמו פשוט — אבל העלאתו לאתר הציבורי עדיין עלולה להפוך למשימת פיתוח.',
+        'היעד היה להסיר את צוואר הבקבוק הזה באמצעות חיבור אתר הסניף הציבורי לזרימת ניהול, כדי שהצוות יוכל לנהל תוכן, מדיה ונתונים תפעוליים בלי לערוך קוד.'
       ]
     },
     audience: {

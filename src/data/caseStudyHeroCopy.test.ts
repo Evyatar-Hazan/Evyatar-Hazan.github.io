@@ -16,4 +16,24 @@ describe('United Hatzalah case-study hero copy', () => {
     expect(caseStudy?.seoDescription.en).toContain('no measured time-saving claim');
     expect(caseStudy?.seoDescription.he).toContain('ללא טענה לחיסכון בזמן שנמדד');
   });
+
+  it('opens with a typical content update, its bottleneck, and the system goal', () => {
+    expect(caseStudy?.overview.en[0]).toContain('publish a new activity update or replace a photo');
+    expect(caseStudy?.overview.en[0]).toContain('developer task');
+    expect(caseStudy?.overview.en[1]).toContain('remove that bottleneck');
+    expect(caseStudy?.overview.en[1]).toContain('without editing code');
+
+    expect(caseStudy?.overview.he[0]).toContain('לפרסם עדכון על פעילות או להחליף תמונה');
+    expect(caseStudy?.overview.he[0]).toContain('משימת פיתוח');
+    expect(caseStudy?.overview.he[1]).toContain('להסיר את צוואר הבקבוק');
+    expect(caseStudy?.overview.he[1]).toContain('בלי לערוך קוד');
+  });
+
+  it('does not invent cadence, duration, or time savings in the opening', () => {
+    const opening = [...(caseStudy?.overview.en ?? []), ...(caseStudy?.overview.he ?? [])].join(' ');
+
+    expect(opening).not.toMatch(/\d/);
+    expect(opening).not.toMatch(/\b(?:daily|weekly|monthly|minutes?|hours?|days?|time savings?)\b/i);
+    expect(opening).not.toMatch(/(?:בכל יום|יומי|שבועי|חודשי|דקות|שעות|ימים|חיסכון בזמן)/);
+  });
 });
