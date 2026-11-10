@@ -277,16 +277,16 @@ const caseStudies = {
   },
   emergency_protocol: {
     eyebrow: {
-      en: 'Full-stack workflow case study',
-      he: 'קייס סטאדי ל-Workflow של Full Stack'
+      en: 'Learning and practice only',
+      he: 'למידה ותרגול בלבד'
     },
     seoTitle: {
-      en: 'Emergency Protocol Diagram Case Study | Evyatar Hazan',
-      he: 'קייס סטאדי: Emergency Protocol Diagram | אביתר חזן'
+      en: 'Emergency Protocol — Learning and Practice Only | Evyatar Hazan',
+      he: 'Emergency Protocol — למידה ותרגול בלבד | אביתר חזן'
     },
     seoDescription: {
-      en: 'A full-stack learning and practice tool for exploring a BLS pathway, with authentication and discussion features.',
-      he: 'כלי למידה ותרגול Full Stack להיכרות עם מסלול BLS, עם התחברות ודיון.'
+      en: 'Explore a BLS pathway for learning and practice only, with sign-in and discussion. Not for use during emergencies; no medical validation is claimed.',
+      he: 'היכרות עם מסלול BLS ללמידה ולתרגול בלבד, עם התחברות ודיון. לא לשימוש בזמן חירום וללא טענה לאימות רפואי.'
     },
     overview: {
       en: [
@@ -299,8 +299,8 @@ const caseStudies = {
       ]
     },
     audience: {
-      en: 'Learners who want to explore and discuss a BLS pathway in a learning and practice context.',
-      he: 'לומדים שרוצים להכיר מסלול BLS ולדון בו בהקשר של למידה ותרגול.'
+      en: 'Learners who want to explore and discuss a BLS pathway for learning and practice only—not emergency use.',
+      he: 'לומדים שרוצים להכיר מסלול BLS ולדון בו ללמידה ולתרגול בלבד — לא לשימוש בזמן חירום.'
     },
     ownership: {
       model: {

@@ -192,7 +192,7 @@
         "role": "Product and information architecture, bilingual content model, privacy-safe frontend flows, SEO, testing, and deployment gates."
       },
       "emergency_protocol": {
-        "title": "Emergency Protocol Diagram",
+        "title": "Emergency Protocol — Learning and Practice Only",
         "description": "A learning-and-practice experience for exploring a BLS pathway only. It is not for use during emergencies and makes no claim of medical validation.",
         "summary": "Explore a BLS pathway step by step, then use sign-in and discussion to review it with other learners.",
         "impact": "The architecture supports a maintainable learning experience with permissions and collaboration features; it is engineering evidence, not a medical outcome.",
