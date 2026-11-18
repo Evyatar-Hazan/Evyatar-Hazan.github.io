@@ -8,22 +8,22 @@ const cases = [
   {
     name: 'desktop-en-light', language: 'en', theme: 'light', width: 1440, height: 900,
     topicLabel: 'Filter articles by topic', depthLabel: 'Filter by depth', appliedLabel: 'Applied',
-    matchingTitle: 'One bad date should not blank an entire screen', resetLabel: 'Reset library',
+    matchingTitle: 'One bad date should not blank an entire screen', resetLabel: 'Show all articles',
   },
   {
     name: 'desktop-he-dark', language: 'he', theme: 'dark', width: 1440, height: 900,
     topicLabel: 'סינון מאמרים לפי נושא', depthLabel: 'סינון לפי רמת עומק', appliedLabel: 'יישומי',
-    matchingTitle: 'שדה תאריך שבור לא צריך להפיל מסך שלם', resetLabel: 'איפוס הספרייה',
+    matchingTitle: 'שדה תאריך שבור לא צריך להפיל מסך שלם', resetLabel: 'להציג את כל המאמרים',
   },
   {
     name: 'mobile-en-dark', language: 'en', theme: 'dark', width: 390, height: 844,
     topicLabel: 'Filter articles by topic', depthLabel: 'Filter by depth', appliedLabel: 'Applied',
-    matchingTitle: 'One bad date should not blank an entire screen', resetLabel: 'Reset library',
+    matchingTitle: 'One bad date should not blank an entire screen', resetLabel: 'Show all articles',
   },
   {
     name: 'mobile-he-light', language: 'he', theme: 'light', width: 390, height: 844,
     topicLabel: 'סינון מאמרים לפי נושא', depthLabel: 'סינון לפי רמת עומק', appliedLabel: 'יישומי',
-    matchingTitle: 'שדה תאריך שבור לא צריך להפיל מסך שלם', resetLabel: 'איפוס הספרייה',
+    matchingTitle: 'שדה תאריך שבור לא צריך להפיל מסך שלם', resetLabel: 'להציג את כל המאמרים',
   },
 ];
 

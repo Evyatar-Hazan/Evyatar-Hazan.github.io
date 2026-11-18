@@ -389,12 +389,12 @@
         "applied": "Applied",
         "deep-dive": "Deep dive"
       },
-      "resultsCount_one": "{{formattedCount}} matching note",
-      "resultsCount_other": "{{formattedCount}} matching notes",
-      "totalCount": "{{formattedCount}} notes in the library",
-      "reset": "Reset library",
-      "emptyTitle": "No notes match this signal",
-      "emptyDescription": "Try a broader phrase, choose another topic, or reset the library.",
+      "resultsCount_one": "{{formattedCount}} article found. Open it or show all articles.",
+      "resultsCount_other": "{{formattedCount}} articles found. Choose one or show all articles.",
+      "totalCount": "{{formattedCount}} articles available. Search by need or filter by topic and depth.",
+      "reset": "Show all articles",
+      "emptyTitle": "No articles match your search or filters",
+      "emptyDescription": "Try a broader phrase, choose a different topic or depth, or show all articles.",
       "loadMore": "Load more notes"
     },
     "seo": {
