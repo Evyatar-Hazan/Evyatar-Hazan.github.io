@@ -170,6 +170,10 @@ const BlogIndex = () => {
   const isFiltering = normalizedQuery.length > 0 || activeTopic.length > 0 || activeDepth.length > 0;
   const [featuredPost, ...archivePosts] = posts;
 
+  useEffect(() => {
+    void import('./BlogPost');
+  }, []);
+
   const filteredPosts = posts.filter((post) => {
     const matchesTopic = !activeTopic || post.tags.includes(activeTopic);
     const matchesDepth = !activeDepth || post.depth === activeDepth;
