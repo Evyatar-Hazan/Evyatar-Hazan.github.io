@@ -68,7 +68,8 @@ const BlogPost = () => {
       ? `${post.title} | ${language === 'he' ? 'כתיבה | אביתר חזן' : 'Writing | Evyatar Hazan'}`
       : t('blog.notFoundSeoTitle'),
     description: post?.excerpt ?? t('blog.notFoundDescription'),
-    path: post ? `/blog/${post.slug}/` : '/blog/'
+    path: post ? `/blog/${post.slug}/` : '/blog/',
+    robots: post ? 'index, follow' : 'noindex, follow',
   });
 
   useEffect(() => {

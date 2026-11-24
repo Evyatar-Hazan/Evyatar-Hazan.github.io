@@ -970,6 +970,9 @@ describe('App', () => {
 
     expect(await screen.findByRole('heading', { name: 'blog.notFoundTitle' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /blog.backToBlog/i })).toHaveAttribute('href', '/en/blog/');
+    expect(document.querySelector('meta[name="robots"]')).toHaveAttribute('content', 'noindex, follow');
+    expect(document.querySelector('link[rel="canonical"]')).not.toBeInTheDocument();
+    expect(document.querySelector('link[rel="alternate"]')).not.toBeInTheDocument();
   });
 
   it('renders a noindex site-level not-found page for unknown routes', () => {
