@@ -38,23 +38,47 @@ describe('CraftLab', () => {
     expect(document.querySelectorAll('[data-experiment]')).toHaveLength(3);
   });
 
-  it('shows a useful error, preserves context, and offers recovery', () => {
-    render(<CraftLab language="en" buildPath={buildPath} />);
+  it.each([
+    {
+      language: 'en',
+      summary: 'A sample report fails to generate before export. The interface keeps the filters, offers two recovery paths, and confirms when the report is ready.',
+      run: 'Generate sample report',
+      alertTitle: 'The report could not be generated.',
+      preserved: 'Your fictional inventory filters are preserved exactly as selected—there is nothing to rebuild.',
+      workspace: 'Fictional studio inventory',
+      retry: 'Retry the sample export',
+      alternative: 'Open the sample CSV instead',
+      recovered: 'Recovery complete: the sample report is ready, with the original fictional filters preserved.',
+    },
+    {
+      language: 'he',
+      summary: 'יצירת דוח לדוגמה נעצרת לפני הייצוא. הממשק שומר את המסננים, מציע שתי דרכי התאוששות ומאשר כשהדוח מוכן.',
+      run: 'יצירת דוח לדוגמה',
+      alertTitle: 'לא ניתן היה ליצור את הדוח.',
+      preserved: 'מסנני המלאי הבדיוני נשמרו בדיוק כפי שנבחרו — אין צורך לבנות אותם מחדש.',
+      workspace: 'מלאי סטודיו בדיוני',
+      retry: 'ניסיון חוזר לייצוא הדוגמה',
+      alternative: 'פתיחת ה־CSV לדוגמה במקום',
+      recovered: 'ההתאוששות הושלמה: הדוח לדוגמה מוכן, עם המסננים הבדיוניים המקוריים שנשמרו.',
+    },
+  ] as const)('shows a useful $language error, preserves context, and offers recovery', ({ language, summary, run, alertTitle, preserved, workspace, retry, alternative, recovered }) => {
+    render(<CraftLab language={language} buildPath={buildPath} />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Generate sample report' }));
+    expect(screen.getByText(summary, { exact: true })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: run }));
 
     const alert = screen.getByRole('alert');
-    expect(alert).toHaveTextContent('The report could not be generated.');
+    expect(alert).toHaveTextContent(alertTitle);
     expect(alert).toHaveAttribute('aria-live', 'assertive');
     expect(alert).toHaveAttribute('aria-atomic', 'true');
-    expect(alert).toHaveTextContent('Your report filters are still here.');
-    expect(screen.getByText('Fictional studio inventory')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Retry safely' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Use sample CSV instead' })).toBeInTheDocument();
+    expect(alert).toHaveTextContent(preserved);
+    expect(screen.getByText(workspace)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: retry })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: alternative })).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Retry safely' }));
+    fireEvent.click(screen.getByRole('button', { name: retry }));
     const recoveredStatus = screen.getByRole('status');
-    expect(recoveredStatus).toHaveTextContent('The original filters were preserved.');
+    expect(recoveredStatus).toHaveTextContent(recovered);
     expect(recoveredStatus).toHaveAttribute('aria-live', 'polite');
     expect(recoveredStatus).toHaveAttribute('aria-atomic', 'true');
   });
