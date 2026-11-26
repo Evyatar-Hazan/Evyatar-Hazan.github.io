@@ -2,6 +2,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { LocalizedPathBuilder } from '../../contracts/portfolio';
 import CraftLab from './CraftLab';
+import { craftLabContent } from './craftLabContent';
 
 const buildPath = vi.fn<LocalizedPathBuilder>((language, target) => {
   if (target.route === 'projects') return `/${language}/#projects`;
@@ -36,6 +37,38 @@ describe('CraftLab', () => {
     expect(screen.getAllByText(disclosure, { exact: true })).toHaveLength(2);
     expect(screen.getAllByText(language === 'he' ? 'תרחיש סינתטי' : 'Synthetic scenario')).toHaveLength(3);
     expect(document.querySelectorAll('[data-experiment]')).toHaveLength(3);
+  });
+
+  it.each([
+    ['en', 'Make every system state clear', 'Show the decision, not just the flow', 'Synthetic'],
+    ['he', 'להבהיר כל מצב במערכת', 'להציג את ההחלטה, לא רק את הזרימה', 'סינתטי'],
+  ] as const)('connects the %s upload and diagram copy to reusable product principles', (language, uploadTitle, diagramTitle, syntheticTerm) => {
+    const content = craftLabContent[language];
+
+    expect(content.upload.title).toBe(uploadTitle);
+    expect(content.upload.summary).toMatch(/what happened|מה קרה/);
+    expect(Object.values(content.upload.status)).toHaveLength(6);
+    expect(Object.values(content.upload.status).join(' ')).toMatch(new RegExp(syntheticTerm, 'i'));
+    expect(Object.values(content.upload.status)).toEqual(language === 'en' ? [
+      'Load the synthetic sample to inspect the upload flow.',
+      'Synthetic sample queued. No transfer has started.',
+      'Simulated transfer is 48% complete.',
+      'Simulated transfer complete. Processing the sample.',
+      'Synthetic preview ready for review.',
+      'Simulated transfer stopped at 48%. The sample is available to retry.',
+    ] : [
+      'טענו את הדוגמה הסינתטית כדי לבדוק את תהליך ההעלאה.',
+      'הדוגמה הסינתטית בתור. ההעברה טרם התחילה.',
+      'ההעברה המדומה הושלמה ב־48%.',
+      'ההעברה המדומה הושלמה. הדוגמה בעיבוד.',
+      'התצוגה הסינתטית מוכנה לבדיקה.',
+      'ההעברה המדומה נעצרה ב־48%. הדוגמה זמינה לניסיון חוזר.',
+    ]);
+    expect(content.diagram.title).toBe(diagramTitle);
+    expect(content.diagram.summary).toMatch(/why the workflow|למה התהליך/);
+    expect(content.diagram.nodes).toHaveLength(4);
+    expect(content.diagram.nodes.every((node) => node.outcome.length > 40)).toBe(true);
+    expect(content.diagram.nodes.map((node) => node.outcome).join(' ')).toMatch(/synthetic|sample|סינתט/);
   });
 
   it.each([
@@ -104,7 +137,7 @@ describe('CraftLab', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Simulate failure' }));
     expect(screen.getByText('Needs attention')).toBeInTheDocument();
     const uploadError = screen.getByRole('alert');
-    expect(uploadError).toHaveTextContent(/sample remains available to retry/i);
+    expect(uploadError).toHaveTextContent('Simulated transfer stopped at 48%. The sample is available to retry.');
     expect(uploadError).toHaveAttribute('aria-live', 'assertive');
 
     fireEvent.click(screen.getByRole('button', { name: 'Retry simulation' }));
@@ -134,7 +167,7 @@ describe('CraftLab', () => {
     expect(rightsCheck).toHaveFocus();
     expect(rightsCheck).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByText(/Block publication when ownership or consent is unknown/i)).toBeInTheDocument();
-    expect(screen.getByText(/protects both the team and the people represented by the media/i)).toBeInTheDocument();
+    expect(screen.getByText(/stops transparently when evidence is missing while preserving the draft for recovery/i)).toBeInTheDocument();
   });
 
   it('delegates all links to the injected localized path builder', () => {
