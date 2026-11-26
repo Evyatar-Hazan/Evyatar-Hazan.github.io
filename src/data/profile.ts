@@ -221,14 +221,14 @@ const caseStudies = {
     ],
     decisions: {
       en: [
-        'Moved from a small manually managed SPA toward a more content-scalable architecture with registry-driven pages and stronger metadata patterns.',
-        'Kept the core privacy promise: conversions run in the browser and the UX explains that clearly.',
-        'Added quality gates for canonical, hreflang, sitemap, internal links, and performance so scale does not silently degrade trust.'
+        'Made browser-only conversion a product boundary: sensitive input and output stay on the user\'s device, and the interface explains that limit before use.',
+        'Chose structured registries over manually duplicating pages, so new converter definitions can join one bilingual content and navigation model.',
+        'Turned canonical URLs, hreflang, sitemap, internal links, and performance into release gates that catch delivery drift as the registry grows; they protect consistency, not traffic or revenue.'
       ],
       he: [
-        'עברתי מ-SPA קטן שמנוהל ידנית לכיוון ארכיטקטורה יותר סקיילבילית, עם עמודים מבוססי registry ותבניות metadata חזקות יותר.',
-        'שמרתי על הבטחת הפרטיות המרכזית: ההמרות רצות בדפדפן וה-UX מסביר את זה בצורה ברורה.',
-        'הוספתי שערי איכות ל-canonical, hreflang, sitemap, קישורים פנימיים וביצועים כדי שסקייל לא יפגע באמון בשקט.'
+        'קבעתי המרה בדפדפן כגבול מוצרי: קלט ופלט רגישים נשארים במכשיר של המשתמש, והממשק מסביר את הגבול לפני השימוש.',
+        'בחרתי ב־registries מובנים במקום לשכפל עמודים ידנית, כך שהגדרות ממיר חדשות יכולות להצטרף למודל תוכן וניווט דו־לשוני אחד.',
+        'הפכתי canonical, ‏hreflang, ‏sitemap, קישורים פנימיים וביצועים לשערי שחרור שתופסים סטיות במסירה כשה־registry גדל; הם מגנים על עקביות, לא מוכיחים טראפיק או הכנסות.'
       ]
     },
     outcomes: [

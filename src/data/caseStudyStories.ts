@@ -132,44 +132,44 @@ export const caseStudyStories = {
     decisions: [
       {
         need: {
-          en: 'Expand beyond a handful of manually maintained converter pages.',
-          he: 'להתרחב מעבר למספר קטן של עמודי המרה שמתוחזקים ידנית.',
+          en: 'Scale a bilingual converter catalog without hand-building every page and navigation path.',
+          he: 'להרחיב קטלוג ממירים דו־לשוני בלי לבנות ידנית כל עמוד ונתיב ניווט.',
         },
         choice: {
-          en: 'Drive tools and content pages from structured registries and repeatable metadata patterns.',
-          he: 'להניע כלי המרה ועמודי תוכן מתוך registries מסודרים ותבניות metadata חוזרות.',
+          en: 'Drive tools, content, and metadata from structured registries instead of duplicating page definitions.',
+          he: 'להניע כלים, תוכן ו־metadata מתוך registries מובנים במקום לשכפל הגדרות עמוד.',
         },
         impact: {
-          en: 'New tools can join the same bilingual content and navigation model.',
-          he: 'כלים חדשים יכולים להצטרף לאותו מודל תוכן וניווט דו־לשוני.',
+          en: 'New converter definitions can reuse the same bilingual content and navigation model.',
+          he: 'הגדרות ממיר חדשות יכולות להשתמש מחדש באותו מודל תוכן וניווט דו־לשוני.',
         },
       },
       {
         need: {
-          en: 'Let technical users transform sensitive drafts without uploading them.',
-          he: 'לאפשר למשתמשים טכניים להמיר טיוטות רגישות בלי להעלות אותן.',
+          en: 'Give users a clear privacy boundary before they transform sensitive drafts.',
+          he: 'לתת למשתמשים גבול פרטיות ברור לפני המרת טיוטות רגישות.',
         },
         choice: {
-          en: 'Run the core conversion flow in the browser and state that boundary in the interface.',
-          he: 'להריץ את זרימת ההמרה המרכזית בדפדפן ולהציג את הגבול הזה בממשק.',
+          en: 'Keep the core conversion flow in the browser and explain that boundary in the interface before use.',
+          he: 'להשאיר את זרימת ההמרה המרכזית בדפדפן ולהסביר את הגבול בממשק לפני השימוש.',
         },
         impact: {
-          en: 'The privacy promise is visible before a converter is opened.',
-          he: 'הבטחת הפרטיות גלויה עוד לפני פתיחת ממיר.',
+          en: 'Sensitive input and output stay on the user\'s device, and that promise is visible before a converter is opened.',
+          he: 'קלט ופלט רגישים נשארים במכשיר של המשתמש, וההבטחה גלויה לפני פתיחת ממיר.',
         },
       },
       {
         need: {
-          en: 'Keep search discovery coherent as the registry grows.',
-          he: 'לשמור על גילוי עקבי בחיפוש ככל שה־registry גדל.',
+          en: 'Prevent content, locale, and route drift as the registry grows.',
+          he: 'למנוע סטיות בתוכן, בשפה ובנתיבים כשה־registry גדל.',
         },
         choice: {
-          en: 'Validate canonical URLs, hreflang, sitemap, internal links, and performance during delivery.',
-          he: 'לאמת canonical, ‏hreflang, ‏sitemap, קישורים פנימיים וביצועים כחלק מהמסירה.',
+          en: 'Use canonical URLs, hreflang, sitemap, internal links, and performance checks as release gates.',
+          he: 'להשתמש בבדיקות canonical, ‏hreflang, ‏sitemap, קישורים פנימיים וביצועים כשערי שחרור.',
         },
         impact: {
-          en: 'Growth mechanics become a tested product layer instead of a manual afterthought.',
-          he: 'מנגנוני הצמיחה הופכים לשכבת מוצר נבדקת במקום לתוספת ידנית בסוף.',
+          en: 'Inconsistent delivery is caught before release; these gates do not prove traffic, adoption, or revenue.',
+          he: 'מסירה לא עקבית נתפסת לפני השחרור; השערים אינם מוכיחים טראפיק, אימוץ או הכנסות.',
         },
       },
     ],

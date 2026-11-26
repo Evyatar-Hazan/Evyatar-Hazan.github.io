@@ -78,6 +78,29 @@ describe('case study product story contract', () => {
     expect(caseStudyStories.united_hatzalah.limitation.en).toMatch(/no .* metric is claimed/i);
   });
 
+  it('frames the Online Converter decisions as bounded product tradeoffs in both languages', () => {
+    const profileDecisions = projects.find(({ id }) => id === 'online_converter')?.caseStudy?.decisions;
+    const storyDecisions = caseStudyStories.online_converter.decisions;
+    const profileEnglish = profileDecisions?.en.join(' ') ?? '';
+    const profileHebrew = profileDecisions?.he.join(' ') ?? '';
+    const storyEnglish = storyDecisions.flatMap(({ need, choice, impact }) => [need.en, choice.en, impact.en]).join(' ');
+    const storyHebrew = storyDecisions.flatMap(({ need, choice, impact }) => [need.he, choice.he, impact.he]).join(' ');
+
+    expect(profileEnglish).toMatch(/browser-only.+input and output stay on the user's device/i);
+    expect(profileEnglish).toMatch(/structured registries.+bilingual content and navigation model/i);
+    expect(profileEnglish).toMatch(/release gates.+not traffic or revenue/i);
+    expect(profileHebrew).toMatch(/בדפדפן.+קלט ופלט רגישים נשארים במכשיר/u);
+    expect(profileHebrew).toMatch(/registries מובנים.+מודל תוכן וניווט דו־לשוני/u);
+    expect(profileHebrew).toMatch(/שערי שחרור.+לא מוכיחים טראפיק או הכנסות/u);
+
+    expect(storyEnglish).toMatch(/structured registries.+bilingual content and navigation model/i);
+    expect(storyEnglish).toMatch(/privacy boundary.+input and output stay on the user's device/i);
+    expect(storyEnglish).toMatch(/release gates.+do not prove traffic, adoption, or revenue/i);
+    expect(storyHebrew).toMatch(/registries מובנים.+מודל תוכן וניווט דו־לשוני/u);
+    expect(storyHebrew).toMatch(/גבול פרטיות.+קלט ופלט רגישים נשארים במכשיר/u);
+    expect(storyHebrew).toMatch(/שערי שחרור.+אינם מוכיחים טראפיק, אימוץ או הכנסות/u);
+  });
+
   it('opens the Online Converter case study with the sensitive-data scenario and browser boundary', () => {
     const onlineConverter = projects.find(({ id }) => id === 'online_converter')?.caseStudy;
     const englishOverview = onlineConverter?.overview.en.join(' ') ?? '';
