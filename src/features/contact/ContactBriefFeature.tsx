@@ -53,8 +53,8 @@ const submissionTimeoutMs = 12_000;
 const localizedUi = {
   en: {
     eyebrow: 'PROJECT HANDOFF / 01',
-    title: 'Start a project conversation.',
-    description: 'Keep the portfolio context intact, use a direct channel immediately, or shape a short optional brief before you choose how to send it.',
+    title: 'Share the need. Get a clear direction for what comes next.',
+    description: 'Share what you want to build or improve, what exists today, and the result you need. I will review the context and respond with the questions or direction needed to clarify the next practical step, without assuming a fit before we talk.',
     contextTitle: 'Conversation context',
     contextDescription: 'This public context came from the portfolio. No personal details are stored in the URL.',
     contextLabel: 'Starting point',
@@ -120,8 +120,8 @@ const localizedUi = {
   },
   he: {
     eyebrow: 'PROJECT HANDOFF / 01',
-    title: 'פותחים שיחת פרויקט.',
-    description: 'שומרים על ההקשר מהפורטפוליו, פונים מיד בערוץ ישיר או מסדרים תקציר קצר ולא־מחייב לפני שבוחרים איך להשתמש בו.',
+    title: 'שלחו את הצורך. קבלו כיוון ברור להמשך.',
+    description: 'ספרו מה תרצו לבנות או לשפר, מה קיים היום ואיזו תוצאה אתם צריכים. אבדוק את ההקשר ואחזור עם השאלות או הכיוון הדרושים כדי לחדד את הצעד המעשי הבא, בלי להניח מראש שיש התאמה.',
     contextTitle: 'הקשר השיחה',
     contextDescription: 'זהו הקשר ציבורי שהגיע מהפורטפוליו. פרטים אישיים אינם נשמרים בכתובת.',
     contextLabel: 'נקודת פתיחה',

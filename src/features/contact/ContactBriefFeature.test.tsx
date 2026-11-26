@@ -37,19 +37,25 @@ describe('ContactBriefFeature', () => {
   it.each([
     {
       language: 'en' as const,
+      title: 'Share the need. Get a clear direction for what comes next.',
+      description: 'Share what you want to build or improve, what exists today, and the result you need. I will review the context and respond with the questions or direction needed to clarify the next practical step, without assuming a fit before we talk.',
       send: 'The need, the current situation, and the result you want.',
       next: 'I will reply with focused questions and a recommended next step.',
       availability: 'Reply timing varies with current workload. Send the context first; I will confirm availability and the next realistic step.',
     },
     {
       language: 'he' as const,
+      title: 'שלחו את הצורך. קבלו כיוון ברור להמשך.',
+      description: 'ספרו מה תרצו לבנות או לשפר, מה קיים היום ואיזו תוצאה אתם צריכים. אבדוק את ההקשר ואחזור עם השאלות או הכיוון הדרושים כדי לחדד את הצעד המעשי הבא, בלי להניח מראש שיש התאמה.',
       send: 'את הצורך, המצב הנוכחי והתוצאה שרוצים להשיג.',
       next: 'אחזור עם שאלות ממוקדות והמלצה לצעד הבא.',
       availability: 'זמן התגובה משתנה לפי עומס העבודה הנוכחי. שלחו קודם את ההקשר; אחזור עם אישור זמינות והצעד המעשי הבא.',
     },
-  ])('explains what to send, availability, and what happens next in $language', ({ language, send, next, availability }) => {
+  ])('explains what to send, availability, and what happens next in $language', ({ language, title, description, send, next, availability }) => {
     render(<ContactBriefFeature language={language} buildLocalizedPath={buildLocalizedPath} />);
 
+    expect(screen.getByRole('heading', { name: title })).toBeVisible();
+    expect(screen.getByText(description)).toBeVisible();
     expect(screen.getByText(send)).toBeVisible();
     expect(screen.getByText(availability)).toBeVisible();
     expect(screen.getByText(next)).toBeVisible();
