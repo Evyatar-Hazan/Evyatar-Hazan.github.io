@@ -39,26 +39,45 @@ describe('ContactBriefFeature', () => {
       language: 'en' as const,
       title: 'Share the need. Get a clear direction for what comes next.',
       description: 'Share what you want to build or improve, what exists today, and the result you need. I will review the context and respond with the questions or direction needed to clarify the next practical step, without assuming a fit before we talk.',
-      send: 'The need, the current situation, and the result you want.',
-      next: 'I will reply with focused questions and a recommended next step.',
+      directTitle: 'What to send—and what happens next',
+      boundary: 'the message itself is not a commitment to take on the project',
+      send: 'Tell me what you need, what is happening now, and what a useful outcome would look like.',
+      next: 'I will review the note and reply with questions or a clear recommendation.',
+      suitable: 'If the request is suitable, I will explain how we could continue. If not, I will say so plainly.',
       availability: 'Reply timing varies with current workload. Send the context first; I will confirm availability and the next realistic step.',
     },
     {
       language: 'he' as const,
       title: 'שלחו את הצורך. קבלו כיוון ברור להמשך.',
       description: 'ספרו מה תרצו לבנות או לשפר, מה קיים היום ואיזו תוצאה אתם צריכים. אבדוק את ההקשר ואחזור עם השאלות או הכיוון הדרושים כדי לחדד את הצעד המעשי הבא, בלי להניח מראש שיש התאמה.',
-      send: 'את הצורך, המצב הנוכחי והתוצאה שרוצים להשיג.',
-      next: 'אחזור עם שאלות ממוקדות והמלצה לצעד הבא.',
+      directTitle: 'מה שולחים — ומה קורה אחר כך',
+      boundary: 'עצם הפנייה אינה התחייבות לקבל את הפרויקט',
+      send: 'ספרו מה אתם צריכים, מה קורה היום ואיזו תוצאה תהיה שימושית עבורכם.',
+      next: 'אקרא את ההודעה ואחזור עם שאלות או המלצה ברורה.',
+      suitable: 'אם הבקשה מתאימה, אסביר איך אפשר להמשיך. אם לא, אומר זאת בצורה ישירה.',
       availability: 'זמן התגובה משתנה לפי עומס העבודה הנוכחי. שלחו קודם את ההקשר; אחזור עם אישור זמינות והצעד המעשי הבא.',
     },
-  ])('explains what to send, availability, and what happens next in $language', ({ language, title, description, send, next, availability }) => {
+  ])('explains what to send, the conditional next step, and the project boundary in $language', ({
+    language,
+    title,
+    description,
+    directTitle,
+    boundary,
+    send,
+    next,
+    suitable,
+    availability,
+  }) => {
     render(<ContactBriefFeature language={language} buildLocalizedPath={buildLocalizedPath} />);
 
     expect(screen.getByRole('heading', { name: title })).toBeVisible();
     expect(screen.getByText(description)).toBeVisible();
+    expect(screen.getByRole('heading', { name: directTitle })).toBeVisible();
+    expect(screen.getByText(new RegExp(boundary, 'i'))).toBeVisible();
     expect(screen.getByText(send)).toBeVisible();
     expect(screen.getByText(availability)).toBeVisible();
     expect(screen.getByText(next)).toBeVisible();
+    expect(screen.getByText(suitable)).toBeVisible();
   });
 
   it.each([
@@ -259,10 +278,11 @@ describe('ContactBriefFeature', () => {
       'href',
       expect.stringMatching(/^mailto:evyatarhazan3\.14@gmail\.com/),
     );
-    expect(screen.getByText(/What happens next/i)).toBeInTheDocument();
-    expect(screen.getByText(/focused questions or a recommended next step/i)).toBeInTheDocument();
-    expect(screen.getByText(/no fixed response-time promise/i)).toBeInTheDocument();
-    expect(screen.getByRole('status')).toHaveAttribute('aria-atomic', 'true');
+    const successStatus = screen.getByRole('status');
+    expect(within(successStatus).getByText(/What happens next/i)).toBeInTheDocument();
+    expect(within(successStatus).getByText(/focused questions or a recommended next step/i)).toBeInTheDocument();
+    expect(within(successStatus).getByText(/no fixed response-time promise/i)).toBeInTheDocument();
+    expect(successStatus).toHaveAttribute('aria-atomic', 'true');
   });
 
   it('shows the localized next step only after provider-confirmed success', async () => {
@@ -481,7 +501,7 @@ describe('ContactBriefFeature', () => {
     expect(deliveryError).toHaveAttribute('aria-atomic', 'true');
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Retry the same details' })).toBeInTheDocument();
-    expect(screen.queryByText(/What happens next/i)).not.toBeInTheDocument();
+    expect(screen.queryByText('What happens next')).not.toBeInTheDocument();
   });
 
   it('uses the same unconfirmed-delivery recovery copy in Hebrew', async () => {
