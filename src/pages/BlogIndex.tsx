@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Search, X } from 'lucide-react';
-import { Fragment, useEffect, useState, type FormEvent } from 'react';
+import { Fragment, useEffect, useRef, useState, type FormEvent, type MouseEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getBlogPosts } from '../content/blog/posts';
@@ -97,11 +97,13 @@ const ArchiveEntry = ({
   index,
   language,
   query,
+  onArticleNavigate,
 }: {
   post: BlogPost;
   index: number;
   language: BlogLanguage;
   query: string;
+  onArticleNavigate: (event: MouseEvent<HTMLAnchorElement>) => void;
 }) => {
   const { t } = useTranslation();
   const reduceMotion = useReducedMotion();
@@ -124,7 +126,10 @@ const ArchiveEntry = ({
       <div className="blog-archive-entry-copy">
         <EntryMeta post={post} language={language} />
         <h2>
-          <Link to={localizedPath(language, { route: 'article', id: post.slug as ArticleId })}>
+          <Link
+            to={localizedPath(language, { route: 'article', id: post.slug as ArticleId })}
+            onClick={onArticleNavigate}
+          >
             <HighlightedSearchText text={post.title} query={query} />
           </Link>
         </h2>
@@ -139,7 +144,11 @@ const ArchiveEntry = ({
               <li key={tag}><HighlightedSearchText text={tag} query={query} /></li>
             ))}
           </ul>
-          <Link to={localizedPath(language, { route: 'article', id: post.slug as ArticleId })} aria-label={`${t('blog.readPost')}: ${post.title}`}>
+          <Link
+            to={localizedPath(language, { route: 'article', id: post.slug as ArticleId })}
+            aria-label={`${t('blog.readPost')}: ${post.title}`}
+            onClick={onArticleNavigate}
+          >
             {t('blog.readPost')}<ArrowIcon aria-hidden="true" />
           </Link>
         </div>
@@ -155,6 +164,8 @@ const BlogIndex = () => {
   const posts = getBlogPosts(language);
   const [searchParams, setSearchParams] = useSearchParams();
   const [visibleCount, setVisibleCount] = useState(BLOG_LIBRARY_PAGE_SIZE);
+  const articleNavigationPendingRef = useRef(false);
+  const querySyncTimeoutRef = useRef<number | null>(null);
   const urlQuery = searchParams.get('q') ?? '';
   const [queryDraft, setQueryDraft] = useState({ baseUrlQuery: urlQuery, value: urlQuery });
   const query = queryDraft.baseUrlQuery === urlQuery ? queryDraft.value : urlQuery;
@@ -207,17 +218,38 @@ const BlogIndex = () => {
   };
 
   useEffect(() => {
-    if (query === urlQuery) return;
+    if (articleNavigationPendingRef.current || query === urlQuery) return;
 
     const timeoutId = window.setTimeout(() => {
+      querySyncTimeoutRef.current = null;
       const next = new URLSearchParams(searchParams);
       if (query) next.set('q', query);
       else next.delete('q');
       setSearchParams(next, { replace: true });
     }, 150);
+    querySyncTimeoutRef.current = timeoutId;
 
-    return () => window.clearTimeout(timeoutId);
+    return () => {
+      window.clearTimeout(timeoutId);
+      if (querySyncTimeoutRef.current === timeoutId) querySyncTimeoutRef.current = null;
+    };
   }, [query, searchParams, setSearchParams, urlQuery]);
+
+  const cancelPendingQuerySyncForNavigation = (event: MouseEvent<HTMLAnchorElement>) => {
+    const opensAnotherBrowsingContext = event.button !== 0
+      || event.defaultPrevented
+      || event.metaKey
+      || event.ctrlKey
+      || event.shiftKey
+      || event.altKey
+      || event.currentTarget.target === '_blank';
+    if (opensAnotherBrowsingContext) return;
+    articleNavigationPendingRef.current = true;
+    if (querySyncTimeoutRef.current === null) return;
+
+    window.clearTimeout(querySyncTimeoutRef.current);
+    querySyncTimeoutRef.current = null;
+  };
 
   const clearSearch = () => {
     setQueryDraft({ baseUrlQuery: urlQuery, value: '' });
@@ -381,6 +413,7 @@ const BlogIndex = () => {
                   index={index + (isFiltering ? 0 : 1)}
                   language={language}
                   query={normalizedQuery ? query : ''}
+                  onArticleNavigate={cancelPendingQuerySyncForNavigation}
                 />
               ))}
             </div>

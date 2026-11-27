@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -221,6 +221,46 @@ describe('BlogIndex knowledge library', () => {
     expect(search).toHaveValue('unfocused baseline');
     await waitFor(() => expect(window.location.search).toContain('q=unfocused+baseline'));
     expect(screen.getByRole('heading', { name: 'A focus test needs an unfocused baseline' })).toBeInTheDocument();
+  });
+
+  it('cancels a pending query sync for same-tab article navigation but preserves it for a modified click', async () => {
+    vi.useFakeTimers();
+
+    try {
+      const { unmount } = renderBlog();
+      const search = screen.getByRole('searchbox', { name: 'Search articles' });
+      fireEvent.change(search, { target: { value: 'idempotent' } });
+
+      const articleLink = screen.getByRole('link', {
+        name: 'A retry should repeat intent, not duplicate data',
+      });
+      fireEvent.click(articleLink);
+      expect(window.location.pathname).toBe('/en/blog/retries-should-not-duplicate-data/');
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(200);
+      });
+      expect(window.location.href.endsWith('/en/blog/retries-should-not-duplicate-data/')).toBe(true);
+      unmount();
+
+      renderBlog();
+      fireEvent.change(screen.getByRole('searchbox', { name: 'Search articles' }), {
+        target: { value: 'idempotent' },
+      });
+      const modifiedArticleLink = screen.getByRole('link', {
+        name: 'A retry should repeat intent, not duplicate data',
+      });
+      modifiedArticleLink.addEventListener('click', (event) => event.preventDefault(), { once: true });
+      fireEvent.click(modifiedArticleLink, { ctrlKey: true });
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(200);
+      });
+      expect(window.location.pathname).toBe('/en/blog/');
+      expect(window.location.search).toBe('?q=idempotent');
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('searches Hebrew and mixed text using the active language', () => {
