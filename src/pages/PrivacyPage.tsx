@@ -31,12 +31,12 @@ const PrivacyPage = () => {
           body: 'מקור המדידה הוא חמש פעולות בלבד בתהליך יצירת הקשר: צפייה באזור, פתיחת בונה התקציר, ניסיון שליחה, הצלחת שליחה ושגיאת שליחה. מטרתן היא לזהות נשירה, והן נכתבות ב-Cloudflare Analytics Engine ללא שם, אימייל, תוכן הודעה או שדות טופס, מזהה משתמש או מכשיר, כתובת IP, user agent או cookie. Cloudflare שומרת את אירועי המדידה האלה למשך שלושה חודשים. בנפרד, בחירות השפה וערכת הנושא נועדו לזכור את העדפות התצוגה שלך ונשמרות רק בדפדפן שלך עד לשינוי או למחיקה; הן אינן נכתבות ב-Analytics Engine.'
         },
         {
-          title: 'פרסום ו-Google AdSense',
-          body: 'אתר הפורטפוליו אינו טוען מודעות. מוצר Online Converter שפועל ב-online-converter.evyatarhazan.com משתמש ב-Google AdSense, ושם Google ושותפי פרסום עשויים להשתמש ב-cookies, מזהי מכשיר ונתוני שימוש כדי להציג, להתאים ולמדוד מודעות בהתאם להגדרות המשתמש, להסכמה הנדרשת ולדין החל.'
+          title: 'אין מודעות בפורטפוליו הזה',
+          body: 'הפורטפוליו, כולל העמוד הזה, אינו טוען מודעות או Google AdSense. Google AdSense פועל במוצר הנפרד Online Converter בכתובת online-converter.evyatarhazan.com; עמודי הכלים שעברו בדיקה במוצר עשויים להציג מודעות. כאשר מודעות מוצגות שם, Google וספקי צד שלישי עשויים להשתמש ב-cookies, מזהי מכשיר ונתוני שימוש כדי למסור, להתאים ולמדוד פרסום בהתאם להגדרות שלך, להסכמה הנדרשת ולדין החל.'
         },
         {
-          title: 'בחירה ובקשות פרטיות',
-          body: 'אפשר לחסום או למחוק cookies ונתוני אתר דרך הדפדפן. לבקשה בנוגע למידע שנשלח בטופס או ישירות באימייל, אפשר לפנות ל-evyatarhazan3.14@gmail.com.'
+          title: 'הבחירות שלך ובקשות פרטיות',
+          body: 'אפשר לחסום או למחוק cookies, העדפות שפה וערכת נושא ונתוני אתר דרך הדפדפן. הגדרות המודעות של Google רלוונטיות רק ל-Online Converter, ואפשר לנהל אותן בקישור שבהמשך. לבקשה בנוגע למידע שנשלח בטופס או ישירות באימייל, אפשר לפנות ל-evyatarhazan3.14@gmail.com.'
         }
       ]
     : [
@@ -53,12 +53,12 @@ const PrivacyPage = () => {
           body: 'The measurement source is limited to five actions in the contact flow: contact view, brief builder start, submit attempt, submit success, and submit error. They are recorded in Cloudflare Analytics Engine to identify drop-off, without a name, email address, message or form-field content, user or device identifier, IP address, user agent, or cookie. Cloudflare retains these measurement events for three months. Separately, your language and theme choices are used to remember display preferences and stay only in your browser until you change or delete them; they are not written to Analytics Engine.'
         },
         {
-          title: 'Advertising and Google AdSense',
-          body: 'The portfolio site does not load ads. The Online Converter product at online-converter.evyatarhazan.com uses Google AdSense, where Google and its advertising partners may use cookies, device identifiers, and usage data to deliver, personalize, and measure ads, subject to user settings, required consent, and applicable law.'
+          title: 'No ads on this portfolio',
+          body: 'This portfolio, including this page, does not load ads or Google AdSense. Google AdSense operates in the separate Online Converter product at online-converter.evyatarhazan.com; its reviewed tool pages may display ads. When ads are shown there, Google and other third-party vendors may use cookies, device identifiers, and usage data to deliver, personalize, and measure advertising, subject to your settings, required consent, and applicable law.'
         },
         {
           title: 'Your choices and privacy requests',
-          body: 'You can block or delete cookies and site data through your browser. For a request about information submitted through the form or sent directly by email, contact evyatarhazan3.14@gmail.com.'
+          body: 'You can block or delete cookies, language and theme preferences, and site data through your browser. Google ad settings apply only to Online Converter, and you can manage them using the link below. For a request about information submitted through the form or sent directly by email, contact evyatarhazan3.14@gmail.com.'
         }
       ];
 
@@ -96,7 +96,7 @@ const PrivacyPage = () => {
 
         <div className="mt-8 rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-950/70">
           <h2 className="text-lg font-bold text-neutral-950 dark:text-white">
-            {isHebrew ? 'מידע נוסף על שירותי צד שלישי' : 'More about third-party services'}
+            {isHebrew ? 'הפורטפוליו ללא מודעות — בחירות ומדיניות של צד שלישי' : 'Ad-free portfolio — third-party choices and policies'}
           </h2>
           <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold">
             <a
@@ -105,7 +105,7 @@ const PrivacyPage = () => {
               rel="noopener noreferrer"
               className="text-primary-600 hover:text-primary-500 dark:text-primary-400"
             >
-              {isHebrew ? 'איך Google משתמשת במידע מאתרים שותפים' : 'How Google uses information from partner sites'}
+              {isHebrew ? 'השימוש של Google במידע — Online Converter בלבד' : 'Google data use — Online Converter only'}
             </a>
             <a
               href="https://adssettings.google.com/"
@@ -113,7 +113,7 @@ const PrivacyPage = () => {
               rel="noopener noreferrer"
               className="text-primary-600 hover:text-primary-500 dark:text-primary-400"
             >
-              {isHebrew ? 'הגדרות המודעות של Google' : 'Google Ads Settings'}
+              {isHebrew ? 'הגדרות המודעות של Google — Online Converter בלבד' : 'Google ad settings — Online Converter only'}
             </a>
             <a
               href="https://formsubmit.co/privacy.pdf"
@@ -139,7 +139,7 @@ const PrivacyPage = () => {
             to={localizedPath(language, { route: 'contact' })}
             className="inline-flex items-center rounded-full bg-primary-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-primary-500"
           >
-            {isHebrew ? 'מעבר ליצירת קשר' : 'Go to contact'}
+            {isHebrew ? 'שאלה על פרטיות' : 'Ask about privacy'}
           </Link>
           <Link
             to={localizedPath(language, { route: 'blog' })}

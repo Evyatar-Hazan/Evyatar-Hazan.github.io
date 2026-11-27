@@ -954,7 +954,7 @@ describe('App', () => {
     expect(screen.queryByRole('heading', { name: 'Where AI assisted—and where human control stayed essential' })).not.toBeInTheDocument();
   });
 
-  it('discloses contact-form and advertising data use on the privacy page', async () => {
+  it('discloses contact-form use and separates portfolio privacy from Online Converter advertising', async () => {
     const englishView = renderAt('/en/privacy/');
 
     expect(await screen.findByRole('heading', {
@@ -963,9 +963,9 @@ describe('App', () => {
     expect(screen.getByText(
       /As you browse the portfolio, language and theme preferences are stored in your browser/i,
     )).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Advertising and Google AdSense' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'No ads on this portfolio' })).toBeInTheDocument();
     expect(screen.getByText(/FormSubmit processes the submission/i)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /How Google uses information from partner sites/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Google data use — Online Converter only' })).toHaveAttribute(
       'href',
       'https://policies.google.com/technologies/partner-sites'
     );
